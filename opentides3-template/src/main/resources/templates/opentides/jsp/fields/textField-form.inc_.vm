@@ -1,0 +1,3 @@
+<p><label for="${field.fieldName}"><spring:message code="label.${formName}.${field.fieldName}" />: </label>
+	<form:input path="${field.fieldName}"#foreach( $springParam in $field.springParams )${springParam} #end/> #if ( $isRequiredField == "true" )<sup class="required">*</sup>#end</p>
+

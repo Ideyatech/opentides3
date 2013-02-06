@@ -1,0 +1,95 @@
+#*
+Expected parameters:
+  labelCode - label used in message.properties to display as title
+  modelName - name of the bean
+  fields    - array of fields to be displayed in the model
+*#
+
+#set ($perc = "%")
+#set ($d = "$")
+
+<%@ page contentType="text/html;utf-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt_rt"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="ot" uri="http://www.ideyatech.com/tides"%>
+<%@ taglib prefix="idy" tagdir="/WEB-INF/tags"%>
+
+#if ( ${pageType} == "PARENT" )
+<idy:header title_webpage="label.${formName}">
+  <script src="${url_jquery}"></script>
+  <script src="${url_context}/script/ideyatech-${ot_version}/crud.js"></script>
+</idy:header>
+    <!-- BODY -->
+    <div id="bd">
+        <div class="yui-g">
+        <div class="main" id="${formName}">
+            <div class="title-wrapper">
+                <div class="title" id="${formName}-title"><span><spring:message code="label.${formName}" /></span></div>
+            </div> 
+            
+            <div class="contents">
+#else 
+	#set( $numCols = ${fields.size()} + 1 )
+	<td colspan="${numCols}">
+#end
+
+	<ot:form_title isNew="${${modelName}.isNew}" formName="${formName}"/>
+	<div class="content">	
+		<form:form commandName="${modelName}" id="${formName}-form-${${modelName}.id}" action="">
+		<spring:bind path="${modelName}.*">
+		<c:if test="${status.error}">
+			<div class='errorBox'>
+				<!-- this is a hack to crud.js to handle validation messages. -->
+				<c:if test="${${modelName}.isNew}">
+				<!-- <tr id="${prefix}-row-new" -->
+				</c:if>
+				<form:errors path="*" />
+            </div>
+		</c:if>
+		</spring:bind>
+		<div class='fieldsBox'>
+#set( $formClosed = false )
+#foreach( $field in $fields )
+	#if ( $field.isRequiredField == "true" )
+		#set ($isRequiredField = "true")
+		#set ($containsRequiredField = "true" )
+	#else
+		#set ($isRequiredField = "false")
+	#end
+	#if (${field.fieldType} == "multiRecord" && $formClosed == false)
+		</div>
+	</form:form>
+		#set( $formClosed = true)
+	#end
+	#parse("${fieldTemplatePath}${field.fieldType}-form.inc_.vm")	
+#end
+#if ($formClosed == false)
+		</div>
+	</form:form>
+#end
+#if ( $containsRequiredField == "true" )
+		<div class="requiredInfo">
+			<sup class="required">*</sup> Indicates required field.
+		</div>
+#end
+		<div class="button">
+	  		<ot:submit_button id="${${modelName}.id}" page="${formName}.jspx" formName="${formName}-form-${${modelName}.id}" prefix="${prefix}" #if ( ${pageType} == "PARENT" )newPage="true" #end/>
+  			<ot:cancel_button id="${${modelName}.id}" page="${formName}.jspx" prefix="${prefix}" #if ( ${pageType} == "PARENT" )newPage="true" #end/>
+		</div>
+		
+	</div>
+
+#if ( ${pageType} == "PARENT" )
+        	</div>
+        </div>
+        </div>    
+    </div>
+    <!-- END OF BODY -->
+<!-- FOOT -->
+<idy:footer /> 
+#else 
+	</td> 
+#end
+

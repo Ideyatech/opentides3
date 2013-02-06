@@ -1,0 +1,120 @@
+				<hr class="broad"/>
+            	<table class="admin-table">
+            		<thead>
+            		<tr>
+#if ( $field.fieldType == "multiRecord" )
+#set( $multiRecordName = "${field.fieldName}fields")
+#set( $tableFields     = $field.get($multiRecordName) )
+#set( $tableFormName   = $field.formName)
+#set( $tableModelName  = $field.modelName)
+#set( $tablePrefix     = $field.prefix)
+#set( $tablePageType   = $field.pageType)
+#set( $tableTitleField = $field.titleField)
+#set( $tableResults = "${modelName}.${field.modelName}")
+#else 
+#set( $tableFields = $fields )
+#set( $tableFormName = $formName)
+#set( $tableModelName = $modelName)
+#set( $tablePrefix = $prefix)
+#set( $tablePageType = $pageType)
+#set( $tableTitleField = $titleField)
+#set( $tableResults = "results.results")
+#end
+
+## Generate table header.
+#foreach( $tableField in $tableFields )
+#if ( ${tableField.isListed} )
+						<th><ot:header_sort headerField="${tableField.fieldName}" headerLabel="label.${tableFormName}.${tableField.fieldName}" prefix="${ ${tableModelName} }" searchFormId="${tableModelName}Search"/></th>
+#end
+#end
+## End of foreach loop.
+            			<th>&nbsp;</th>
+            		</tr>
+            		</thead>
+            		<tbody id="${tablePrefix}-table-results">
+            		<c:forEach items="${ $tableResults }" var="record" varStatus="status">
+            		<tr id="${tablePrefix}-row-$d{ record.id }" class="row-style-$d{ status.count $perc 2 }">
+## Generate table data
+#foreach( $tableField in $tableFields )
+## Check if field data is viewable in the table.
+#if ( ${tableField.isListed} )
+## Check if SystemCodes/category is used as a parameter in field annotation. 
+#if ( ${tableField.isByCategory} )
+## Check if field annotation used is CheckBox.
+#if ( ${tableField.fieldType} == "checkBox" )
+						<td><c:forEach items="${ record.${tableField.fieldName} }" var="${tableField.fieldName}" varStatus="status">
+							<c:choose>
+								<c:when test="${ status.last == true }">
+									<c:out value="${ ${tableField.fieldName}.value }" />
+								</c:when>
+								<c:otherwise>
+									<c:out value="${ ${tableField.fieldName}.value }, " />
+								</c:otherwise>
+							</c:choose>
+							</c:forEach></td>
+#else
+						<td><c:out value="${ record.${tableField.fieldName}.value }" /></td>
+#end
+## End of inner if statement.
+##Check if List/options is used as a parameter in field annotation.
+#elseif ( $tableField.isByOptions )
+## Check if field annotation used is CheckBox.
+#if ( ${tableField.fieldType} == "checkBox" )
+						<td><c:forEach items="${ record.${tableField.fieldName} }" var="${tableField.fieldName}" varStatus="status">
+							<c:choose>
+								<c:when test="${ status.last == true }">
+									<c:out value="${ ${tableField.fieldName} }" />
+								</c:when>
+								<c:otherwise>
+									<c:out value="${ ${tableField.fieldName} }, " />
+								</c:otherwise>
+							</c:choose>
+							</c:forEach></td>
+#else
+						<td><c:out value="${ record.${tableField.fieldName} }" /></td>
+#end
+## End of inner if statement.
+#elseif ( $tableField.isByObject )
+## Check if field annotation used is CheckBox.
+#if ( ${tableField.fieldType} == "checkBox" )
+						<td><c:forEach items="${ record.${tableField.fieldName} }" var="${tableField.fieldName}" varStatus="status">
+							<c:choose>
+								<c:when test="${ status.last == true }">
+									<c:out value="${ ${tableField.fieldName}.${tableField.objectTitleField} }" />
+								</c:when>
+								<c:otherwise>
+									<c:out value="${ ${tableField.fieldName}.${tableField.objectTitleField} }, " />
+								</c:otherwise>
+							</c:choose>
+							</c:forEach></td>
+#else
+						<td><c:out value="${ record.${tableField.fieldName}.${tableField.objectTitleField} }" /></td>
+#end
+## End of inner if statement.
+#elseif ( $tableField.isDate )
+						<td><fmt:formatDate value="${ record.${tableField.fieldName} }" dateStyle="short" type="DATE" pattern="${tableField.dateFormat}" /></td>
+#else
+						<td><c:out value="${ record.${tableField.fieldName} }" /></td>
+#end
+## End of outer if statement.
+#end
+## End of isListed if statement.
+#end
+## End of foreach loop.
+                  		<td>
+							<ot:update_button id="${record.id}" page="${tableFormName}.jspx" prefix="${tablePrefix}" #if ( ${tablePageType} == "PARENT" )newPage="true" #end/>
+                    		<ot:delete_button id="${record.id}" page="${tableFormName}.jspx" title="#if ( ${tableTitleField} != "" )${ record.${tableTitleField} }#end" prefix="${tablePrefix}"/>                  		
+                  		</td>	
+            		</tr>
+
+            		</c:forEach>
+            		</tbody>
+            		<tr id="${tablePrefix}-row-new">
+## Set the colspan of the new row. 
+#set( $numCols = ${tableFields.size()} + 1 )
+						<td colspan="${numCols}">
+            			</td>
+            		</tr>
+            	</table>
+	            <ot:add_button page="${tableFormName}.jspx" prefix="${tablePrefix}" #if ( ${tablePageType} == "PARENT" )newPage="true" #end/>
+            	

@@ -1,0 +1,50 @@
+package ${package};
+
+import org.springframework.validation.Errors;
+import org.springframework.validation.ValidationUtils;
+import org.springframework.validation.Validator;
+
+## Set counter for email fields
+#set ( $count = 0)
+#foreach( $field in $fields )
+## Check if field is an email.
+#if ( ${field.isEmail} )
+#set ( $count = $count + 1 ) ## Add to count if there is an email field
+#end
+## End of if statement.
+#end
+## End of foreach loop.
+## Check if there is an email field.
+#if ( $count != 0 )
+import org.opentides.util.StringUtil;
+import org.opentides.util.ValidatorUtil;
+#end
+## End of outer if statement
+
+
+import $modelPackage.$className;
+
+public class ${className}Validator implements Validator {
+
+	@SuppressWarnings("unchecked")
+	public boolean supports(Class clazz) {
+		return ${className}.class.isAssignableFrom(clazz);
+	}
+
+	public void validate(Object clazz, Errors errors) {
+#if ( $count != 0 )
+		${className} ${modelName} = (${className}) clazz;
+#end
+#foreach( $field in $fields )
+#if ( $field.isRequiredField )
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "${field.fieldName}", "error.required", new Object[]{"#if ( $field.label != "" )${field.label}#else${field.fieldLabel}#end"});
+#end
+#if ( $field.isEmail )
+		if (!StringUtil.isEmpty(${modelName}.${field.getterName}()) && !ValidatorUtil.isNumeric(${modelName}.${field.getterName}())) {
+			errors.reject("error.invalid-email-address", new Object[]{"#if ( $field.label != "" )${field.label}#else${field.fieldLabel}#end"}, "${field.fieldName}");
+		}
+#end
+#end
+	}
+
+}

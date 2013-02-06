@@ -1,0 +1,20 @@
+<p><label for="${field.fieldName}"><spring:message code="label.${formName}.${field.fieldName}" />: </label>
+#*
+	Checks if what paramater is used in CheckBox Annotation.
+*#
+## SystemCategory/List Type of CheckBox 
+#if ( ${field.isByCategory} )
+	<form:checkboxes path="${field.fieldName}" items="${${field.fieldName}List}" itemValue="id" itemLabel="value" #foreach( $springParam in $field.springParams )${springParam} #end/> #if ( $isRequiredField == "true" )<sup class="required">*</sup>#end</p>
+## Object Type of CheckBox
+#elseif ( ${field.isByObject} )
+	<form:checkboxes path="${field.fieldName}" items="${${field.fieldName}List}" itemValue="id" itemLabel="${field.objectTitleField}" #foreach( $springParam in $field.springParams )${springParam} #end/> #if ( $isRequiredField == "true" )<sup class="required">*</sup>#end</p>
+## Option/Array Type of CheckBox
+#elseif ( $field.isByOptions )
+	<c:forEach items="${${field.fieldName}List}" var="${field.fieldName}2" varStatus="status">
+		<form:checkbox path="${field.fieldName}" value="${${field.fieldName}2}" #foreach( $springParam in $field.springParams )${springParam} #end/> ${${field.fieldName}2}
+	</c:forEach> #if ( $isRequiredField == "true" )<sup class="required">*</sup>#end</p>
+## Boolean Type of CheckBox
+#else
+	<form:checkbox path="${field.fieldName}" #foreach( $springParam in $field.springParams )${springParam} #end/> #if ( $isRequiredField == "true" )<sup class="required">*</sup>#end</p>
+#end
+

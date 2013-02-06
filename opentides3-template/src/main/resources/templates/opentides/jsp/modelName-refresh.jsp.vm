@@ -1,0 +1,87 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt_rt"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="ot" uri="http://www.ideyatech.com/tides"%>
+
+<c:if test="${newRow}">
+<tr id="${prefix}-row-${${modelName}.id}" status="new">
+</c:if>
+#foreach( $field in $fields )
+## Check if field data is viewable in the table.
+#if ( ${field.isListed} )
+## Check if SystemCodes/category is used as a parameter in field annotation. 
+#if ( ${field.isByCategory} )
+## Check if field annotation used is CheckBox.
+#if ( ${field.fieldType} == "checkBox" )
+	<td><c:forEach items="${ ${modelName}.${field.fieldName} }" var="${field.fieldName}" varStatus="status">
+		<c:choose>
+			<c:when test="${ status.last == true }">
+				<c:out value="${ ${field.fieldName}.value }" />
+			</c:when>
+			<c:otherwise>
+				<c:out value="${ ${field.fieldName}.value }, " />
+			</c:otherwise>
+		</c:choose>
+		</c:forEach></td>
+#else
+	<td><c:out value="${ ${modelName}.${field.fieldName}.value }" /></td>
+#end
+## End of inner if statement.
+##Check if List/options is used as a parameter in field annotation.
+#elseif ( $field.isByOptions )
+## Check if field annotation used is CheckBox.
+#if ( ${field.fieldType} == "checkBox" )
+	<td><c:forEach items="${ ${modelName}.${field.fieldName} }" var="${field.fieldName}" varStatus="status">
+		<c:choose>
+			<c:when test="${ status.last == true }">
+				<c:out value="${ ${field.fieldName} }" />
+			</c:when>
+			<c:otherwise>
+				<c:out value="${ ${field.fieldName} }, " />
+			</c:otherwise>
+		</c:choose>
+		</c:forEach></td>
+#else
+	<td><c:out value="${ ${modelName}.$field.fieldName }" /></td>
+#end
+## End of inner if statement. 
+#elseif ( $field.isByObject )
+## Check if field annotation used is CheckBox.
+#if ( ${field.fieldType} == "checkBox" )
+	<td><c:forEach items="${ ${modelName}.${field.fieldName} }" var="${field.fieldName}" varStatus="status">
+		<c:choose>
+			<c:when test="${ status.last == true }">
+				<c:out value="${ ${field.fieldName}.${field.objectTitleField} }" />
+			</c:when>
+			<c:otherwise>
+				<c:out value="${ ${field.fieldName}.${field.objectTitleField} }, " />
+			</c:otherwise>
+		</c:choose>
+		</c:forEach></td>
+#else
+	<td><c:out value="${ ${modelName}.${field.fieldName}.${field.objectTitleField} }" /></td>
+#end
+## End of inner if statement.
+#elseif ( $field.isDate )
+	<td><fmt:formatDate value="${ ${modelName}.${field.fieldName} }" dateStyle="short" type="DATE" pattern="${field.dateFormat}" /></td>
+#else
+	<td><c:out value="${ ${modelName}.$field.fieldName }" /></td>
+#end
+## End of outer if statement.
+#end
+## End
+#end
+## End of isListed if statement.
+## End of foreach loop.
+	<td>
+		<ot:update_button id="${${modelName}.id}" page="${formName}.jspx" prefix="${prefix}"/>
+		<ot:delete_button id="${${modelName}.id}" page="${formName}.jspx" title="#if ( ${titleField} != "" )${${modelName}.${titleField}}#end" prefix="${prefix}"/>                  		
+	</td>
+<c:if test="${newRow}">
+</tr>
+<script language="javascript">
+IDEYATECH.crud.cancelNew('${prefix}-');
+IDEYATECH.crud.refreshTable('${prefix}-table-results', {})
+</script>
+</c:if> 

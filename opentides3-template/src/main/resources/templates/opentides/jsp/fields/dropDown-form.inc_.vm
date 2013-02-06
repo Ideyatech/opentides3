@@ -1,0 +1,13 @@
+<p><label for="${field.fieldName}"><spring:message code="label.${formName}.${field.fieldName}" />: </label>
+#* 
+	Checks if what paramater is used in DropDown Annotation.
+*#
+## SystemCategory/List Type of DropDown
+#if ( ${field.isByCategory} )
+	<form:select path="${field.fieldName}" multiple="false" #foreach( $springParam in $field.springParams )${springParam} #end><form:option value="" /><form:options items="${${field.fieldName}List}" itemLabel="value" itemValue="id" /></form:select> #if ( $isRequiredField == "true" )<sup class="required">*</sup>#end</p>
+#elseif ( ${field.isByObject} )
+	<form:select path="${field.fieldName}" multiple="false" #foreach( $springParam in $field.springParams )${springParam} #end><form:option value="" /><form:options items="${${field.fieldName}List}" itemLabel="${field.objectTitleField}" itemValue="id" /></form:select> #if ( $isRequiredField == "true" )<sup class="required">*</sup>#end</p>
+## Option/Array Type of DropDown
+#else
+	<form:select path="${field.fieldName}" #foreach( $springParam in $field.springParams )${springParam} #end><form:option value="" /><form:options items="${${field.fieldName}List}" /></form:select> #if ( $isRequiredField == "true" )<sup class="required">*</sup>#end</p>
+#end
