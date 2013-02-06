@@ -25,6 +25,14 @@ var opentides3 = (function() {
          'are-you-sure-to-delete': 'Are you sure to delete #primary-value?'
      };
      return {
+    	getSafeValue: function(object, path) {
+		    var i = 0,
+	        path = path.split('.');	        
+		    for (; i < path.length; i++) {
+		    	object = object[path[i]];
+		    }
+		    return $('<div/>').text(object).html();
+    	},
         getMessage: function(code, elem) { 
         	if ($(elem).length) {
         		msg = $(elem).data(code);
@@ -111,7 +119,7 @@ var opentides3 = (function() {
     					row = row + "<td> <i class='icon-edit' data-id='"+result['id']+"'/> " +
     								"<i class='icon-remove' data-id='"+result['id']+"'/></td>";
     				} else {
-        				row = row + '<td>'+result[fieldName]+'</td>';  	  		    					
+        				row = row + '<td>'+opentides3.getSafeValue(result,fieldName)+'</td>';  	  		    					
     				}
     			});
     			tableRow.html(row);
@@ -123,7 +131,7 @@ var opentides3 = (function() {
     					row = row + "<td> <i class='icon-edit' data-id='"+result['id']+"'/> " +
     								"<i class='icon-remove' data-id='"+result['id']+"'/></td>";
     				} else {
-        				row = row + '<td>'+result[fieldName]+'</td>';  	  		    					
+        				row = row + '<td>'+opentides3.getSafeValue(result,fieldName)+'</td>';  	  		    					
     				}
     			});
     			row = row + "</tr>";

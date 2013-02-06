@@ -12,15 +12,15 @@
 <%@ attribute name="label" required="true" type="java.lang.String" %>
 <%@ attribute name="required" required="false" type="java.lang.Boolean" %>
 
+<c:if test="${required}">
+<div class="pull-right">
+	<span class="required">*</span>
+	<span class="bold"><spring:message code="label.required-field"/></span>			
+</div>
+</c:if>
 <div class="control-group">
 	<form:label path="${path}" cssClass="control-label"><spring:message code="${label}"/></form:label>
 	<div class="controls">
 		<form:input path="${path}" />
 	</div>
-	<c:if test="${required}">
-	<div class="pull-right">
-		<span class="required">*</span>
-		<span class="bold"><spring:message code="label.required-field"/></span>			
-	</div>
-	</c:if>
 </div>

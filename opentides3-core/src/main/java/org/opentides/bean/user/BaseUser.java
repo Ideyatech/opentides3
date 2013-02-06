@@ -33,7 +33,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -42,9 +41,12 @@ import javax.persistence.TemporalType;
 import org.eclipse.persistence.annotations.Cache;
 import org.opentides.annotation.Auditable;
 import org.opentides.annotation.PrimaryField;
+import org.opentides.annotation.SearchableFields;
 import org.opentides.bean.BaseEntity;
-import org.opentides.bean.SystemCodes;
 import org.opentides.util.StringUtil;
+import org.opentides.web.json.Views;
+
+import com.fasterxml.jackson.annotation.JsonView;
 
 @Entity
 @Cache
@@ -65,6 +67,7 @@ public class BaseUser extends BaseEntity {
 	private String middleName;
 
 	@Column(name = "EMAIL", unique=true)
+	@JsonView(Views.SearchView.class)
 	private String emailAddress;
 	
 	/*
@@ -76,6 +79,7 @@ public class BaseUser extends BaseEntity {
 	private byte[] image;
 
 	@OneToOne(cascade = CascadeType.ALL, mappedBy = "user", fetch = FetchType.EAGER)
+	@JsonView(Views.SearchView.class)
 	private UserCredential credential;
 
 	@ManyToMany
@@ -84,24 +88,30 @@ public class BaseUser extends BaseEntity {
 	
 	@Column(name = "LASTLOGIN")
 	@Temporal(TemporalType.TIMESTAMP)
+	@JsonView(Views.DisplayView.class)
 	private Date lastLogin;	
 	
 	@Column(name="LANGUAGE")
 	private String language;
 	
 	@Column(name="LAST_LOGIN_IP")
+	@JsonView(Views.DisplayView.class)
 	private String lastLoginIP;
 	
 	@Column(name="PREV_LOGIN_IP")
+	@JsonView(Views.DisplayView.class)
 	private String prevLoginIP;
 
 	@Column(name="LAST_FAILED_IP")
+	@JsonView(Views.DisplayView.class)
 	private String lastFailedIP;
 
 	@Column(name="TOTAL_LOGIN_COUNT")
+	@JsonView(Views.DisplayView.class)
 	private Long totalLoginCount;
 	
 	@Column(name="FAILED_LOGIN_COUNT")
+	@JsonView(Views.DisplayView.class)
 	private Long failedLoginCount;
 		
 	public BaseUser() {
@@ -151,21 +161,42 @@ public class BaseUser extends BaseEntity {
 		if (groups != null)
 			groups.remove(group);
 	}
-
-	public List<String> getSearchableFields() {
-		List<String> props = new ArrayList<String>();
-		props.add("firstName");
-		props.add("lastName");
-		props.add("emailAddress");
-		props.add("office");
-		return props;
-	}
 	
+	/**
+	 * Returns the complete name by concatenating lastName and firstName
+	 * 
+	 * @return
+	 */
+	@JsonView(Views.SearchView.class)
 	public String getCompleteName() {
-		if (StringUtil.isEmpty(this.lastName))
-			return this.lastName + "," + this.firstName + " " + this.middleName;
-		else
-			return this.firstName + " " + this.middleName + " " + this.lastName; 
+		String name = "";
+		if (!StringUtil.isEmpty(getFirstName())) {
+			name += getFirstName() + " ";
+		}
+		if (!StringUtil.isEmpty(getLastName())) {
+			name += getLastName() + " ";
+		}
+		return name;
+	}
+
+	/**
+	 * Returns Last Name, First Name Middle Name
+	 * 
+	 * @return
+	 */
+	@JsonView(Views.SearchView.class)
+	public String getFullName() {
+		String name = "";
+		if (!StringUtil.isEmpty(getLastName())) {
+			name += getLastName() + ", ";
+		}
+		if (!StringUtil.isEmpty(getFirstName())) {
+			name += getFirstName();
+		}
+		if (!StringUtil.isEmpty(getMiddleName())) {
+			name += " " + getMiddleName();
+		}
+		return name;
 	}
 	
 	public boolean hasPermission(String permission) {
@@ -182,6 +213,15 @@ public class BaseUser extends BaseEntity {
 	@Override
 	public String toString() {
 		return getCompleteName();
+	}
+	
+	@SearchableFields
+	public List<String> searchableFields() {
+		List<String> props = new ArrayList<String>();
+		props.add("firstName");
+		props.add("lastName");
+		props.add("emailAddress");
+		return props;
 	}
 	
 	@Override

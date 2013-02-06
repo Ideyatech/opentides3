@@ -275,7 +275,7 @@ public class CrudUtil {
 	public static String buildJpaQueryString(BaseEntity example, boolean exactMatch) {
 		int count = 0;
 		StringBuffer clause = new StringBuffer(" where ");
-		List<String> exampleFields = CacheUtil.getPersistentFields(example);
+		List<String> exampleFields = CacheUtil.getSearchableFields(example);
 		for (String property:exampleFields) {
 			// get the value
 			Object ret = retrieveObjectValue(example, property);
@@ -289,18 +289,23 @@ public class CrudUtil {
 						.append(" like '%")
 						.append(StringUtil.escapeSql(ret.toString(), true))
 						.append("%'");
+					count++;
 				} else if(SystemCodes.class.isAssignableFrom(ret.getClass())) {
 					SystemCodes sc = (SystemCodes) ret;
 					clause.append(property)
 					.append(".key")
 					.append(" = '")
 					.append(sc.getKey()+"'");
+					count++;
 				} else if(BaseEntity.class.isAssignableFrom(ret.getClass())) {
 					BaseEntity be = (BaseEntity) ret;
-					clause.append(property)
-					.append(".id")
-					.append(" = ")
-					.append(be.getId());
+					if (be.getId() != null) {
+						clause.append(property)
+						.append(".id")
+						.append(" = ")
+						.append(be.getId());
+						count++;
+					}
 				} else if (Integer.class.isAssignableFrom(ret.getClass()) ||
 						   Float.class.isAssignableFrom(ret.getClass()) ||
 						   Long.class.isAssignableFrom(ret.getClass()) ||
@@ -311,19 +316,23 @@ public class CrudUtil {
 					clause.append(property)
 						.append(" = ")
 						.append(ret.toString());
+					count++;
 				} else if (Class.class.isAssignableFrom(ret.getClass())){
 					Class clazz = (Class) ret;
 					clause.append(property)
 					.append(" = '")
 					.append(clazz.getName())
 					.append("'");
+					count++;					
+				} else if (Collection.class.isAssignableFrom(ret.getClass())) {
+					// not supported yet
 				} else {
 					clause.append(property)
 						.append(" = '")
 						.append(StringUtil.escapeSql(ret.toString(), false))
 						.append("'");
+					count++;
 				}
-				count++;
 			}
 		}
 	    if (count > 0) 

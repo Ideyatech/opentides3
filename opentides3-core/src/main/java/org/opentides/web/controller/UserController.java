@@ -21,7 +21,10 @@ package org.opentides.web.controller;
 import javax.annotation.PostConstruct;
 
 import org.opentides.bean.user.BaseUser;
+import org.opentides.bean.user.UserCredential;
 import org.opentides.service.UserService;
+import org.opentides.util.SecurityUtil;
+import org.opentides.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,5 +46,19 @@ public class UserController extends BaseCrudController<BaseUser> {
 	@Autowired
 	public void setService(UserService userService) {
 		this.service = userService;
+	}
+	
+	@Override
+	protected void preCreateAction(BaseUser command) {
+		UserCredential credential = command.getCredential();
+		if (!StringUtil.isEmpty(credential.getNewPassword()))
+			credential.setPassword(SecurityUtil.encryptPassword(credential.getNewPassword()));
+	}
+
+	@Override
+	protected void preUpdateAction(BaseUser command) {
+		UserCredential credential = command.getCredential();
+        if (!StringUtil.isEmpty(credential.getNewPassword()))
+            credential.setPassword(SecurityUtil.encryptPassword(credential.getNewPassword()));
 	}
 }

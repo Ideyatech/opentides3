@@ -30,6 +30,10 @@ import org.opentides.annotation.Auditable;
 import org.opentides.annotation.PrimaryField;
 import org.opentides.bean.BaseEntity;
 import org.opentides.util.SecurityUtil;
+import org.opentides.web.json.Views;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
 
 
 @Entity
@@ -42,6 +46,7 @@ public class UserCredential extends BaseEntity {
 	
 	@PrimaryField
 	@Column(name = "USERNAME", unique=true)
+	@JsonView(Views.SearchView.class)
 	private String username;
 	
 	@Column(name = "PASSWORD", nullable=false)
@@ -52,10 +57,12 @@ public class UserCredential extends BaseEntity {
 	private transient String confirmPassword;
 
 	@Column(name="ENABLED")
+	@JsonView(Views.SearchView.class)
 	private Boolean enabled;
 	
 	@OneToOne
     @JoinColumn(name="USERID", nullable=false)
+	@JsonIgnore
 	private BaseUser user;
 	
 	/**

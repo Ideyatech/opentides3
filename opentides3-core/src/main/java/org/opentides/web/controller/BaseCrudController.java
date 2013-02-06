@@ -27,6 +27,7 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.opentides.annotation.FormBind;
 import org.opentides.bean.BaseEntity;
@@ -188,18 +189,26 @@ public abstract class BaseCrudController<T extends BaseEntity> {
     @RequestMapping(method = RequestMethod.POST)
     public @ResponseBody Map<String, Object> save(
     			@FormBind(name="formCommand") T command, 
-    			HttpServletRequest request) {
+    			HttpServletRequest request, HttpServletResponse response, 
+    			BindingResult bindingResult) {
     	boolean isNew = command.isNew();
-    	Map<String, Object> response = new HashMap<String,Object>();
+    	Map<String, Object> model = new HashMap<String,Object>();
     	List<MessageResponse> messages = new ArrayList<MessageResponse>();
+    	if (isNew) 
+    		preCreateAction(request, response, command, bindingResult);
+    	else 
+    		preUpdateAction(request, response, command, bindingResult);    		
         service.save(command);
-        if (isNew)
+    	if (isNew) {
+    		postCreateAction(request, response, command, bindingResult);    		
         	messages.addAll(buildSuccessMessage(command, "add", request.getLocale()));
-        else
+    	} else { 
+    		postUpdateAction(request, response, command, bindingResult);    		
         	messages.addAll(buildSuccessMessage(command, "update", request.getLocale()));
-        response.put("command", command);
-    	response.put("messages", messages);
-        return response;
+    	}
+        model.put("command", command);
+        model.put("messages", messages);
+        return model;
     }
     
     /**
@@ -269,24 +278,142 @@ public abstract class BaseCrudController<T extends BaseEntity> {
         
     @RequestMapping(value="/{id}", method = RequestMethod.DELETE)
     public @ResponseBody Map<String, Object> delete(@PathVariable("id") Long id, 
-    		T command, HttpServletRequest request) {
-    	Map<String, Object> response = new HashMap<String,Object>();
+    		T command, HttpServletRequest request, HttpServletResponse response, 
+    		BindingResult bindingResult) {
+    	Map<String, Object> model = new HashMap<String,Object>();
     	List<MessageResponse> messages = new ArrayList<MessageResponse>();    	
     	if (id >= 0) {
     		try {
+    			preDeleteAction(request, response, bindingResult, id);
     			service.delete(id);
+    			postDeleteAction(request, response, bindingResult, id);
     	    	messages.addAll(buildSuccessMessage(command, "delete", request.getLocale()));
-            	response.put("messages", messages);    	    	
-    	    	return response;    			
+    	    	model.put("messages", messages);    	    	
+    	    	return model;    			
     		} catch (Exception e) {
     			
     		}
     	}
     	messages.addAll(buildSuccessMessage(command, "delete", request.getLocale()));
-    	response.put("messages", messages);    	    	
-    	return response;    			
+    	model.put("messages", messages);    	    	
+    	return model;    			
     }
     
+    /**
+     * Override this method to perform pre-processing on new data being saved.
+     * 
+     * @param command
+     */
+
+    protected void preCreateAction(HttpServletRequest request,
+            HttpServletResponse response, T command, BindingResult bindingResult) {
+        preCreateAction(command);
+    }
+
+    protected void preCreateAction(T command) {
+    }
+
+    /**
+     * Override this method to perform post-processing on new data being saved.
+     * 
+     * @param command
+     */
+
+    protected void postCreateAction(HttpServletRequest request,
+            HttpServletResponse response, T command, BindingResult bindingResult) {
+        postCreateAction(command);
+    }
+
+    protected void postCreateAction(T command) {
+    }
+
+    /**
+     * Override this method to perform pre-processing on data being updated.
+     * 
+     * @param command
+     */
+
+    protected void preUpdateAction(HttpServletRequest request,
+            HttpServletResponse response, T command, BindingResult bindingResult) {
+        preUpdateAction(command);
+    }
+
+    protected void preUpdateAction(T command) {
+    }
+
+    /**
+     * Override this method to perform post-processing on data being updated.
+     * 
+     * @param command
+     */
+
+    protected void postUpdateAction(HttpServletRequest request,
+            HttpServletResponse response, T command, BindingResult bindingResult) {
+        postUpdateAction(command);
+    }
+
+    protected void postUpdateAction(T command) {
+    }
+
+    /**
+     * Override this method to perform pre-processing on data being deleted.
+     * 
+     * @param command
+     */
+
+    protected void preDeleteAction(HttpServletRequest request,
+            HttpServletResponse response, BindingResult bindingResult, Long id) {
+        preDeleteAction(id);
+    }
+
+    protected void preDeleteAction(Long id) {
+    }
+
+    /**
+     * Override this method to perform post-processing on data being deleted.
+     * 
+     * @param command
+     */
+
+    protected void postDeleteAction(HttpServletRequest request,
+            HttpServletResponse response, BindingResult bindingResult, Long id) {
+        postDeleteAction(id);
+    }
+
+    protected void postDeleteAction(Long id) {
+    }
+
+    /**
+     * Override this method to perform pre-processing on data search. 
+     * 
+     * @param command
+     *            criteria used for search
+     */
+
+    protected void preSearchAction(HttpServletRequest request,
+            HttpServletResponse response, T command, BindingResult bindingResult) {
+        preSearchAction(command);
+    }
+
+    protected void preSearchAction(T command) {
+    }
+
+    /**
+     * Override this method to perform post-processing on data search.
+     * 
+     * @param command
+     */
+
+    protected SearchResults<T> postSearchAction(HttpServletRequest request,
+            HttpServletResponse response, T command, BindException errors,
+            SearchResults<T> result) {
+        return postSearchAction(result);
+    }
+
+    protected SearchResults<T> postSearchAction(SearchResults<T> result) {
+        return result;
+    }
+
     protected long countAction(T command) {
         if (command == null) {
             // no command, let's search everything

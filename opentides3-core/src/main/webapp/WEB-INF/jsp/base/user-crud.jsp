@@ -35,10 +35,10 @@
         	<table id="user-results" class="table table-bordered table-striped table-hover table-condensed">
 				<thead>
                	<tr class="table-header">
-                   	<th class="col-1" data-class="expand" data-field-name="firstName"><spring:message code="label.user.first-name"/></th>
-                   	<th class="col-1" data-hide="phone" data-field-name="lastName"><spring:message code="label.user.last-name"/></th>
-                	<th class="col-3" data-hide="phone,tablet" data-field-name="email"><spring:message code="label.user.email"/></th>
+                   	<th class="col-1" data-class="expand" data-field-name="completeName"><spring:message code="label.user.name"/></th>
+                	<th class="col-2" data-hide="phone" data-field-name="emailAddress"><spring:message code="label.user.email"/></th>
                		<th class="col-4" data-hide="phone,tablet" data-field-name="groups"><spring:message code="label.user.groups"/></th>
+               		<th class="col-4" data-hide="phone,tablet" data-field-name="credential.enabled"><spring:message code="label.user.active"/></th>
                 	<th class="col-5" data-field-name="ot3-controls"></th>
                 </tr>
            		</thead>
@@ -55,8 +55,11 @@
 		  	</div>
 			<form:form modelAttribute="formCommand" id="user-form">	
 		  	<div class="modal-body">
-				<app:input path="firstName" label="label.user.name" required="true"/>				
-
+				<app:input path="firstName" label="label.user.first-name" required="true"/>
+				<app:input path="lastName" label="label.user.last-name" required="true"/>
+				<app:input path="emailAddress" label="label.user.email" required="true"/>
+				<app:input path="credential.newPassword" label="label.user.password" required="true"/>
+				<app:input path="credential.confirmPassword" label="label.user.confirm-password" required="true"/>
 		  	</div>
 		 	<div class="modal-footer">
 		    	<button type="button" class="btn btn-primary" data-submit="save"><spring:message code="label.save" /></button>

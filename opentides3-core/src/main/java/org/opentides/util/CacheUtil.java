@@ -33,9 +33,9 @@ import org.apache.log4j.Logger;
 import org.opentides.annotation.Auditable;
 import org.opentides.annotation.FormBind;
 import org.opentides.annotation.FormBind.Load;
+import org.opentides.annotation.SearchableFields;
 import org.opentides.bean.AuditableField;
 import org.opentides.bean.BaseEntity;
-import org.springframework.core.annotation.AnnotationUtils;
 
 /**
  * Helper class to keep a cache of reusable attributes.
@@ -51,6 +51,8 @@ public class CacheUtil {
 	
 	public static final Map<Class<?>, List<String>> persistentFields = new ConcurrentHashMap<Class<?>, List<String>>();
 	
+	public static final Map<Class<?>, List<String>> searchableFields = new ConcurrentHashMap<Class<?>, List<String>>();
+
 	private static final Map<Class<?>, Method> formBindNewMethods = new ConcurrentHashMap<Class<?>, Method>();
 	
 	private static final Map<Class<?>, Method> formBindUpdateMethods = new ConcurrentHashMap<Class<?>, Method>();
@@ -82,9 +84,9 @@ public class CacheUtil {
 	                }
 	            }
 	        }
-	        _log.info(clazz.getSimpleName()+" contains the following auditable fields");
+	        _log.debug(clazz.getSimpleName()+" contains the following auditable fields");
 	        for (AuditableField audit:auditableFields) {
-	            _log.info(audit.getTitle() + ":" + audit.getFieldName());        	
+	            _log.debug(audit.getTitle() + ":" + audit.getFieldName());        	
 	        }
 			auditable.put(obj.getClass(), auditableFields);
 			ret =  auditable.get(obj.getClass());
@@ -115,9 +117,9 @@ public class CacheUtil {
 	        		persistents.add(field.getName());
 	            }
 	        }
-	        _log.info(clazz.getSimpleName()+" contains the following persistent fields");
+	        _log.debug(clazz.getSimpleName()+" contains the following persistent fields");
 	        for (String persistent:persistents) {
-	            _log.info(persistent);        	
+	            _log.debug(persistent);        	
 	        }			
 			persistentFields.put(obj.getClass(), persistents);
 			ret =  persistentFields.get(obj.getClass());
@@ -126,6 +128,43 @@ public class CacheUtil {
 	}
 	
 	/**
+	 * Retrieves searchable fields using getSearchableFields method, if available.
+	 * Otherwise, returns the list of field names that are persisted in database. 
+	 * 
+	 * @param obj
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public static List<String> getSearchableFields(BaseEntity obj) {
+		Class<?> clazz = obj.getClass();
+		List<String> ret = searchableFields.get(clazz);
+		if (ret == null) {
+			// check if method annotated with searchableFields is available
+			List<String> fields = null;
+			for (Method m:clazz.getDeclaredMethods()) {
+				if (m.isAnnotationPresent(SearchableFields.class)) {
+					try {
+						fields = (List<String>) m.invoke(obj);
+					} catch (Exception e) {
+						_log.warn("Unable to execute annotated searchableFields method of " +
+								obj.getClass().getSimpleName(), e);
+					}
+					break;
+				}
+			}
+			if (fields == null) {
+				fields = CacheUtil.getPersistentFields(obj);
+			}
+	        _log.debug(clazz.getSimpleName()+" contains the following searchable fields");
+	        for (String field:fields) {
+	            _log.debug(field);        	
+	        }			
+			searchableFields.put(obj.getClass(), fields);
+			ret =  searchableFields.get(obj.getClass());
+		}
+		return ret;				
+	}
+	/**
 	 * Retrieves the method annotated with @FormBind(mode=Load.NEW), if available. 
 	 * Otherwise, null method is returned.
 	 * 
@@ -133,10 +172,9 @@ public class CacheUtil {
 	 * @return
 	 */
 	public static Method getNewFormBindMethod(Class<?> clazz) {
-		AnnotationUtils.findAnnotation(clazz, FormBind.class);
 		Method method = formBindNewMethods.get(clazz);
 		if (method==null) {
-			for (Method m:clazz.getDeclaredMethods()) {
+			for (Method m:clazz.getMethods()) {
 				if (m.isAnnotationPresent(FormBind.class)) {
 					FormBind ann = m.getAnnotation(FormBind.class);
 					if (ann.mode().equals(Load.NEW)) {
@@ -145,7 +183,7 @@ public class CacheUtil {
 						break;
 					}
 				}
-			}			
+			}	
 		}
 		return method;
 	}
@@ -158,7 +196,6 @@ public class CacheUtil {
 	 * @return
 	 */
 	public static Method getUpdateFormBindMethod(Class<?> clazz) {
-		AnnotationUtils.findAnnotation(clazz, FormBind.class);
 		Method method = formBindUpdateMethods.get(clazz);
 		if (method==null) {
 			for (Method m:clazz.getMethods()) {
