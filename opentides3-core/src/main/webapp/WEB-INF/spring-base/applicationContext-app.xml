@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jee="http://www.springframework.org/schema/jee" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.1.xsd         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd         http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.1.xsd         http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.1.xsd">
+
+	<context:spring-configured />
+
+	<context:annotation-config />
+  
+	<context:component-scan base-package="org.opentides">
+		<context:exclude-filter expression="org.springframework.stereotype.Controller"
+			type="annotation" />
+	</context:component-scan>
+
+	<bean id="entityManagerFactory"
+		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="persistenceUnitName" value="opentidesPU" />
+		<property name="jpaVendorAdapter">
+			<bean
+				class="org.springframework.orm.jpa.vendor.EclipseLinkJpaVendorAdapter">
+				<property name="showSql" value="${jpa.show_sql}" />
+				<property name="generateDdl" value="${jpa.generate_ddl}" />
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory" ref="entityManagerFactory" />
+	</bean>	
+
+	<!-- Aspect Oriented and Annotation Transaction Declaration -->
+	<tx:annotation-driven transaction-manager="transactionManager"/> 
+	
+	<!-- the transactional advice (what 'happens'; see the <aop:advisor/> bean below) -->
+<!-- 	
+  	<tx:advice id="ot3ServiceAdvice" transaction-manager="transactionManager">
+  		<tx:attributes>
+    	<tx:method name="count*" read-only="true"/>
+    	<tx:method name="find*"  read-only="true"/>
+    	<tx:method name="get*"   read-only="true"/>
+    	<tx:method name="is*" 	 read-only="true"/>
+    	<tx:method name="load*"  read-only="true"/>
+    	<tx:method name="*"/>
+  		</tx:attributes>
+  	</tx:advice>
+ -->  
+  <!-- ensure that the above transactional advice runs for any execution
+    of an operation defined by the Service interface -->
+<!--     
+  	<aop:config>
+  		<aop:pointcut id="ot3ServiceTransaction" expression="execution(* org.opentides.service.impl.*ServiceImpl.*(..))"/>
+  		<aop:advisor advice-ref="ot3ServiceAdvice" pointcut-ref="ot3ServiceTransaction"/>
+  	</aop:config>
+ -->
+	<!-- Property file containing custom JPQL queries -->
+	<bean id="jpqlProperties"
+		class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+		<property name="locations">
+			<list>
+				<value>classpath:base/jpql/core.properties</value>
+				<value>${jpql.custom.properties}</value>
+			</list>
+		</property>
+	</bean>
+		
+	<!-- Schema evolve -->
+	<bean id="evolveManager" class="org.opentides.persistence.evolve.DBEvolveManager"
+		autowire="byName">
+		<property name="evolveList">
+			<ref bean="evolveList" />
+		</property>
+	</bean>
+
+	<bean id="defaultSecurityFilterMap" class="org.springframework.beans.factory.config.MapFactoryBean">
+		<property name="sourceMap">
+			<map>
+				<entry key="ACCESS_ALL">
+					<value>1=1</value>
+				</entry>
+				<entry key="ACCESS_OFFICE">
+					<value>(obj.ownerOffice = :office.key OR obj.ownerOffice is null OR
+						obj.ownerOffice='')</value>
+				</entry>
+				<entry key="ACCESS_OWNER">
+					<value>(obj.owner=:credential.username OR obj.owner is null)
+					</value>
+				</entry>
+			</map>
+		</property>
+	</bean>
+
+	<bean id="baseUserSecurityFilterMap" class="org.springframework.beans.factory.config.MapFactoryBean">
+		<property name="sourceMap">
+			<map>
+				<entry key="ACCESS_ALL">
+					<value>1=1</value>
+				</entry>
+				<entry key="ACCESS_OFFICE">
+					<value>obj.office.key = :office.key</value>
+				</entry>
+				<entry key="ACCESS_OWNER">
+					<value>obj.owner=:credential.username</value>
+				</entry>
+			</map>
+		</property>
+	</bean>
+
+</beans>
