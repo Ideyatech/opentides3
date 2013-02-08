@@ -18,26 +18,32 @@
  */
 package org.opentides.service.impl;
 
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import javax.annotation.Resource;
+
+import org.apache.log4j.Logger;
 import org.opentides.bean.user.UserAuthority;
 import org.opentides.bean.user.UserGroup;
 import org.opentides.dao.UserGroupDao;
 import org.opentides.service.UserGroupService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
+@Service("userGroupService")
 public class UserGroupServiceImpl extends BaseCrudServiceImpl<UserGroup>
 		implements UserGroupService {
 
-	private static Map<String, String> authorities;
-	
-	private UserGroupDao userGroupDao;
-	
+	private static Logger _log = Logger.getLogger(UserGroupService.class);
+
+	@Resource(name="authorities")
+	private Map<String, String> authorities;
+		
 	/** inner class to do sorting of the map **/
 	private static class ValueComparer implements Comparator<String> {
 		private Map<String, String>  _data = null;
@@ -62,18 +68,18 @@ public class UserGroupServiceImpl extends BaseCrudServiceImpl<UserGroup>
 		SortedMap<String, String> sortedData = 
 			new TreeMap<String, String>(new UserGroupServiceImpl.ValueComparer(authorities));		
 		sortedData.putAll(authorities);
-		UserGroupServiceImpl.authorities = sortedData;
+		this.authorities = sortedData;
 	}
 	
 	/**
 	 * @return the authorities
 	 */
 	public Map<String, String> getAuthorities() {
-		return UserGroupServiceImpl.authorities;
+		return this.authorities;
 	}
 
 	public UserGroup loadUserGroupByName(String name){
-		return userGroupDao.loadUserGroupByName(name);
+		return ((UserGroupDao)dao).loadUserGroupByName(name);
 	}
 	
 	/**
@@ -81,14 +87,28 @@ public class UserGroupServiceImpl extends BaseCrudServiceImpl<UserGroup>
 	 */
 	@Transactional
 	public boolean removeUserAuthority(UserAuthority role) {
-		return userGroupDao.removeUserAuthority(role);
+		return ((UserGroupDao)dao).removeUserAuthority(role);
 	}
 
-	/**
-	 * @param userGroupDao the userGroupDao to set
-	 */
-	@Autowired
-	public void setUserGroupDao(UserGroupDao userGroupDao) {
-		this.userGroupDao = userGroupDao;
-	}	
+	@Override
+	@Transactional
+	public boolean setupAdminGroup() {
+		boolean exist = false;
+		if (getDao().countAll() > 0) {
+			exist = true;
+		} else {
+			UserGroup userGroup = new UserGroup();
+			userGroup.setName("Administrator");
+			userGroup.setDescription("System Administrators (Default)");
+			List<String> names = new ArrayList<String>();
+			for (String key:authorities.keySet()) {
+				names.add(key);
+			}
+			userGroup.setAuthorityNames(names);
+			getDao().saveEntityModel(userGroup);
+			_log.info("New installation detected, inserted Administrator usergroup to database.");
+		}		
+		return !exist;
+	}
+
 }

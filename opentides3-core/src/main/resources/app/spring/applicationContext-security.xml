@@ -12,10 +12,6 @@
 	<sec:http auto-config='false' use-expressions="true"
 		access-decision-manager-ref="httpRequestAccessDecisionManager">
 		
-		<!-- <sec:intercept-url pattern="/widgetDisplay.jspx*" access="hasIpAddress('127.0.0.1/24') OR hasIpAddress('::1/128')"/> -->
-		<sec:intercept-url pattern="/login*" access="IS_AUTHENTICATED_ANONYMOUSLY" />
-		<sec:intercept-url pattern="/**" access="isAuthenticated()" />
-
 		<sec:form-login login-page="/login"
 			default-target-url="/home" 
 			authentication-failure-url="/login?login_error=authentication-failed" />
@@ -26,10 +22,19 @@
 		<sec:session-management invalid-session-url="/login?login_error=expired-session">
 			<sec:concurrency-control max-sessions="1" expired-url="/login?login_error=invalid-session" session-registry-alias="sessionRegistry" />
 		</sec:session-management>
-<!-- 		
+<!--
 		<sec:custom-filter ref="concurrentSessionPromptFilter" before="CONCURRENT_SESSION_FILTER"/>
 		<sec:custom-filter ref="concurrentSessionRedirectFilter" after="BASIC_AUTH_FILTER"/>
  -->		
+		<!-- <sec:intercept-url pattern="/widgetDisplay.jspx*" access="hasIpAddress('127.0.0.1/24') OR hasIpAddress('::1/128')"/> -->
+		<sec:intercept-url pattern="/login*" access="hasRole('ROLE_ANONYMOUS')" />
+		<sec:intercept-url pattern="/organization/**" access="hasRole('ROLE_ANONYMOUS')" />
+		<sec:intercept-url pattern="/system/**" access="hasRole('ROLE_ANONYMOUS')" />
+<!-- 
+		<sec:intercept-url pattern="/organization**" access="hasRole('ACCESS_ORGANIZATION_TAB')" />
+ -->		
+		<sec:intercept-url pattern="/**" access="isAuthenticated()" />
+
 	</sec:http>
 	
 	
@@ -64,9 +69,9 @@
 	</bean>
 	
 	<!-- to keep track of last login and last login error -->
-	<bean id="loginListener" class="org.opentides.web.listener.LoginListener" autowire="byName" />
+	<bean id="loginListener" class="org.opentides.listener.LoginListener" autowire="byName" />
 	
-	<bean id="logoutHandler" class="org.opentides.web.listener.LogoutListener"
+	<bean id="logoutHandler" class="org.opentides.listener.LogoutListener"
 		autowire="byName">
 		<property name="defaultTargetUrl" value="/login.jspx?login_error=logout" />
 	</bean>
@@ -108,7 +113,7 @@
 		</property>
 	</bean>
 	
-	<bean id="rolesMap" class="org.opentides.bean.MapDBFactoryBean">
+	<bean id="authorities" class="org.opentides.bean.MapDBFactoryBean">
 		<property name="systemCodesDao" ref="systemCodesDao" />
 		<property name="systemCodesCategory" value="SYSTEM_PERMISSION"/>
 		<property name="sourceMap">
@@ -148,10 +153,10 @@
 				</entry>
 		
 				<!-- USERS -->
-				<entry key="MANAGE_USERS_PAGE">
+				<entry key="MANAGE_USER_PAGE">
 					<value>10.02.00.00 Manage Users Page</value>
 				</entry>
-				<entry key="VIEW_USERS">
+				<entry key="VIEW_USER">
 					<value>10.02.01.00 View Users</value>
 				</entry>
 				<entry key="ADD_USER">
@@ -174,17 +179,20 @@
 				</entry>
 				
 				<!-- ROLES -->
-				<entry key="MANAGE_ROLES_PAGE">
+				<entry key="MANAGE_USERGROUP_PAGE">
 					<value>10.03.00.00 Manage Roles</value>
 				</entry>
-				<entry key="ADD_USERGROUP">
+				<entry key="VIEW_USERGROUP">
 					<value>10.03.01.00 Add Role</value>
 				</entry>
+				<entry key="ADD_USERGROUP">
+					<value>10.03.02.00 Add Role</value>
+				</entry>
 				<entry key="EDIT_USERGROUP">
-					<value>10.03.02.00 Edit Role</value>
+					<value>10.03.03.00 Edit Role</value>
 				</entry>
 				<entry key="DELETE_USERGROUP">
-					<value>10.03.03.00 Delete Role</value>
+					<value>10.03.04.00 Delete Role</value>
 				</entry>
 				
 				<!-- SYSTEM -->				
@@ -212,6 +220,18 @@
 				<!-- SYSTEM CODES -->
 				<entry key="MANAGE_SYSTEM_CODES_PAGE">
 					<value>11.02.00.00 Manage System Codes</value>
+				</entry>
+				<entry key="VIEW_SYSTEM_CODES">
+					<value>11.02.01.00 View System Codes</value>
+				</entry>
+				<entry key="ADD_SYSTEM_CODES">
+					<value>11.02.02.00 Add System Codes</value>
+				</entry>
+				<entry key="EDIT_SYSTEM_CODES">
+					<value>11.02.03.00 Edit System Codes</value>
+				</entry>
+				<entry key="DELETE_SYSTEM_CODES">
+					<value>11.02.04.00 Delete System Codes</value>
 				</entry>
 
 				<!-- REPORTS -->				

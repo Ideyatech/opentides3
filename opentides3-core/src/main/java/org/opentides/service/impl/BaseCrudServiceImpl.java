@@ -18,15 +18,21 @@
  */
 package org.opentides.service.impl;
 
+import java.lang.reflect.ParameterizedType;
 import java.util.List;
+
+import javax.annotation.PostConstruct;
 
 import org.opentides.bean.BaseEntity;
 import org.opentides.dao.BaseEntityDao;
 import org.opentides.exception.InvalidImplementationException;
 import org.opentides.service.BaseCrudService;
+import org.opentides.util.NamingUtil;
 import org.opentides.util.StringUtil;
-import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 /**
  * This is a base implementation that supports CRUD operations.
@@ -35,9 +41,16 @@ import org.springframework.transaction.annotation.Transactional;
  *
  */
 public class BaseCrudServiceImpl<T extends BaseEntity> extends
-		BaseServiceDefaultImpl implements BaseCrudService<T>, InitializingBean {
+		BaseServiceDefaultImpl implements BaseCrudService<T> {
 
-	private BaseEntityDao<T, Long> dao;
+	// contains the class type of the bean    
+    private Class<T> entityBeanType;
+    
+    // corresponding dao for the service
+	protected BaseEntityDao<T, Long> dao;
+	
+	@Autowired
+	private BeanFactory beanFactory;
 
 	/**
 	 * Retrieves all the records on this object.
@@ -225,19 +238,27 @@ public class BaseCrudServiceImpl<T extends BaseEntity> extends
 	/**
 	 * Make sure DAO is properly set.
 	 */
+	@PostConstruct
+	@SuppressWarnings("unchecked")
 	public final void afterPropertiesSet() throws Exception {
-		if (dao == null) {
-			throw new IllegalArgumentException("Must specify a dao for "
-					+ getClass().getName());
+		try {
+	        this.entityBeanType = (Class<T>) ((ParameterizedType) getClass()
+	                .getGenericSuperclass()).getActualTypeArguments()[0];	        
+		} catch (ClassCastException cc) {
+			// if dao is extended from the generic dao class
+			this.entityBeanType = (Class<T>) ((ParameterizedType) getClass().getSuperclass()
+	                .getGenericSuperclass()).getActualTypeArguments()[0];
 		}
-	}
-
-	/**
-	 * @param dao
-	 *            the dao to set
-	 */
-	public final void setDao(BaseEntityDao<T, Long> dao) {
-		this.dao = dao;
+		// try setting up service and validator by convention
+		String attributeName = NamingUtil.toAttributeName(this.entityBeanType.getSimpleName());
+        String daoBean   = attributeName + "Dao";
+        
+        if (this.dao==null && beanFactory.containsBean(daoBean))
+        	this.dao = (BaseEntityDao<T,Long>) beanFactory.getBean(daoBean);
+        
+        Assert.notNull(this.dao, this.getClass().getSimpleName() + 
+        					" is not associated with a dao class [" + daoBean +
+        					"]. Please check your configuration.");
 	}
 
 	/**

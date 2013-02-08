@@ -78,6 +78,13 @@ var opentides3 = (function() {
     		}); //.each			
         },
         populateForm: function(form,json) {
+        	if(json.id > 0) {
+        		form.attr("action",json.id);
+        		form.attr("method","put");
+        	} else {
+        		form.attr("action","");
+        		form.attr("method","post");
+        	}
             $.each(json,function(key,value) {
                 var elem = form.find("[name='"+key+"']");
                 // do not bind password or file upload
@@ -164,32 +171,45 @@ var opentides3 = (function() {
 	    		return;
 	    	}
 	    	
-	    	addEditForm.find("[data-submit='save']").on("click", function(){
-  				$.post( 
-	  		    		addEditForm.attr('action'), 	// url
-	  		    		addEditForm.serialize(),		// data
-	  	  		    	function(json) {				// callback
-	  		    			opentides3.displayMessage(json);
-	  		    			if (typeof(json.command) === 'object' &&
-	  		    					json.command.id > 0) {	  		    				
-		  		  				$(settings['form-panel']).modal('hide');
-		  		  				opentides3.displayTableRow(tableElement, json.command);
-	  		    			}
-	  	  		    	}, 'json'); 		
+	    	addEditForm.find("[data-submit='save']").on("click", function() {
+	    		var type="POST";
+	    		if (addEditForm.attr('action').length > 0)
+	    			type = "PUT";
+	    		
+  				$.ajax( {
+  					type: type,
+  					url:addEditForm.attr('action'), 	// url
+  					data:addEditForm.serialize(),		// data
+  					success: function(json) {			// callback
+  		    			opentides3.displayMessage(json);
+  		    			if (typeof(json.command) === 'object' &&
+  		    					json.command.id > 0) {	  		    				
+	  		  				$(settings['form-panel']).modal('hide');
+	  		  				opentides3.displayTableRow(tableElement, json.command);
+  		    			}
+  	  		    	},
+  	  		    	dataType:'json'
+  				});	  		    		
 	    	});
 	    	
 	    	addEditForm.find("[data-submit='save-and-new']").on("click", function(){
-  				$.post( 
-	  		    		addEditForm.attr('action'), 	// url
-	  		    		addEditForm.serialize(),		// data
-	  	  		    	function(json) {				// callback
-	  		    			opentides3.displayMessage(json);
-	  		    			if (typeof(json.command) === 'object' &&
-	  		    					json.command.id > 0) {
-		  		    			opentides3.clearForm(addEditForm);
-		  		    			opentides3.displayTableRow(tableElement, json.command);
-	  		    			}
-	  	  		    	}, 'json');	    		
+	    		var type="POST";
+	    		if (addEditForm.attr('action').length > 0)
+	    			type = "PUT";
+  				$.ajax( {
+  					type: type,
+  					url:addEditForm.attr('action'), 		// url
+  					data:addEditForm.serialize(),			// data
+  					success: function(json) {				// callback
+  		    			opentides3.displayMessage(json);
+  		    			if (typeof(json.command) === 'object' &&
+  		    					json.command.id > 0) {
+	  		    			opentides3.clearForm(addEditForm);
+	  		    			opentides3.displayTableRow(tableElement, json.command);
+  		    			}
+  	  		    	},
+  	  		    	dataType:'json'
+  				});		
 	    	});
 
 	    	$(settings['form-panel']).on('show', function (e) {
@@ -204,6 +224,7 @@ var opentides3 = (function() {
 	  		    		"",										// data
 	  	  		    	function(json) {						// callback
 	  		    			opentides3.populateForm(addEditForm, json);
+	  		    			$(settings['form-panel']).find('[data-submit="save-and-new"]').show();	  		    			
 	  			  			$(settings['form-panel']).modal();
 	  		    		});
 	  			return false;
@@ -320,11 +341,12 @@ var opentides3 = (function() {
 			tableElement.on("click", ".icon-edit", function() {
 				var id = $(this).data('id');
 				$.getJSON(
-	  		    		id,	 							// url - new record
+	  		    		id,	 									// url
 	  		    		"",										// data
 	  	  		    	function(json) {						// callback
 	  		    			var addEditForm = $(settings['form-panel']).find('form:first');
 	  		    			opentides3.populateForm(addEditForm, json);
+	  		    			$(settings['form-panel']).find('[data-submit="save-and-new"]').hide();
 	  			  			$(settings['form-panel']).modal();
 	  		    		});	    					
 			});
@@ -347,8 +369,9 @@ var opentides3 = (function() {
 					    type: 'DELETE',
 					    success: function(json) {
 	  		    			opentides3.displayMessage(json);		    		  		    			
-	  		    			tableRow.fadeOut(300, function(){ $(this).remove();});	    		  		    			
-					    }
+	  		    			tableRow.fadeOut(300, function(){ $(this).remove(); });	    		  		    			
+					    },
+					    dataType:'json'
 					});
 				}
 			})

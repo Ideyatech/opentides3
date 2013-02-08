@@ -44,6 +44,7 @@ import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service(value="userService")
 public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
@@ -70,6 +71,11 @@ public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 
 //	private MailingService mailingService;
 
+	
+	@Autowired
+	public void setUserDao(UserDao userDao) {
+		this.dao = userDao;
+	}
 	/**
 	 * @return the authorities
 	 */
@@ -218,6 +224,7 @@ public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 	 * Ensures that admin user is created into the database. This method is
 	 * called by ApplicationStartupListener to ensure admin user is available
 	 */
+	@Transactional
 	public boolean setupAdminUser() {
 		boolean exist = false;
 		// let's check if there are users in the database
@@ -229,28 +236,18 @@ public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 			BaseUser user = new BaseUser();
 			UserCredential cred = new UserCredential();
 			cred.setUsername("admin");
-			cred.setPassword("ideyatech");
+			cred.setPassword("Opentides3");
 			cred.setEnabled(true);
 			cred.setUser(user);
 			user.setCredential(cred);
-			user.setEmailAddress("admin@ideyatech.com");
-			user.setFirstName("SuperAdmin");
-			user.setLastName("User");
-
-			// create usergroup for user
-			UserGroup userGroup = new UserGroup();
-			userGroup.setName("Super User");
-			userGroup.setDescription("With all authority");
-
-			// Let's super user authority
-			List<String> authorityNames = new ArrayList<String>();
-			authorityNames.add("SUPER_USER");
-			authorityNames.add("ACCESS_ALL");
-			userGroup.setAuthorityNames(authorityNames);
-			userGroupDao.saveEntityModel(userGroup);
-
+			user.setEmailAddress("admin@opentides.com");
+			user.setFirstName("Default");
+			user.setLastName("Admin");
+			
+			UserGroup userGroup = userGroupDao.loadUserGroupByName("Administrator");
 			user.addGroup(userGroup);
 			userDao.saveEntityModel(user);
+			
 			_log.info("New installation detected, inserted admin/ideyatech user to database.");
 		}
 		return !exist;
@@ -378,10 +375,5 @@ public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 	 */
 	public void setResetPasswordMailMessage(MailMessage resetPasswordMailMessage) {
 		this.resetPasswordMailMessage = resetPasswordMailMessage;
-	}
-
-	@Autowired
-	public void setUserDao(UserDao userDao) {
-		super.setDao(userDao);
 	}
 }

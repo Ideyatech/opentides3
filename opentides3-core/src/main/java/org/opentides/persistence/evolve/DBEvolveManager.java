@@ -27,6 +27,10 @@ import org.apache.log4j.Logger;
 import org.opentides.bean.Sequence;
 import org.opentides.dao.SequenceDao;
 import org.opentides.exception.CodeGenerationException;
+import org.opentides.service.UserGroupService;
+import org.opentides.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
@@ -34,11 +38,20 @@ import org.springframework.transaction.annotation.Transactional;
  * @author allantan
  *
  */
+@Service("evolveManager")
 public class DBEvolveManager {
 
+	@Autowired(required=false)
 	private List<DBEvolve> evolveList;
+
+	@Autowired
 	private SequenceDao sequenceDao;
-//	private UserService userService;
+
+	@Autowired
+	private UserService userService;
+
+	@Autowired
+	private UserGroupService userGroupService;
 	
 	private static Logger _log = Logger.getLogger(DBEvolveManager.class);
 
@@ -57,7 +70,8 @@ public class DBEvolveManager {
 			version = new Sequence("DB_VERSION");
 			sequenceDao.saveEntityModel(version);
 			// initialize default admin user
-			// userService.setupAdminUser();
+			userGroupService.setupAdminGroup();
+			userService.setupAdminUser();
 		}
 
 		// skip evolve if there is nothing in the evolve list
@@ -116,6 +130,10 @@ public class DBEvolveManager {
 		this.evolveList = evolveList;
 	}
 
+	/**
+	 * 
+	 * @param sequenceDao
+	 */
 	public void setSequenceDao(SequenceDao sequenceDao) {
 		this.sequenceDao = sequenceDao;
 	}
@@ -123,8 +141,8 @@ public class DBEvolveManager {
 	/**
 	 * @param userService the userService to set
 	 */
-//	public void setUserService(UserService userService) {
-//		this.userService = userService;
-//	}
+	public void setUserService(UserService userService) {
+		this.userService = userService;
+	}
 	
 }

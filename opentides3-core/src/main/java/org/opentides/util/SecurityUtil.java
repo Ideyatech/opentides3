@@ -35,11 +35,7 @@ public class SecurityUtil {
 	private static Logger _log = Logger.getLogger(SecurityUtil.class);
 		
 	private static PasswordEncoder passwordEncoder;
-	
-	// flag to allow null user (user not logged-in) 
-	// turn this flag to false when deploying to production
-	private static Boolean debug = false;
-		
+			
 	/**
 	 * Static helper to retrieve currently logged user.
 	 * @return
@@ -95,22 +91,7 @@ public class SecurityUtil {
 	    } else
 	        return cleartext;
 	}
-	
-	/**
-	 * @param debug the debug to set
-	 */
-	public static void setDebug(Boolean debug) {
-		SecurityUtil.debug = debug;
-	}
-	
-	/**
-     * Getter method for debug.
-     *
-     * @return the debug
-     */
-    public static Boolean getDebug() {
-        return debug;
-    }
+
     /**
      * Setter method for passwordEncoder.
      *

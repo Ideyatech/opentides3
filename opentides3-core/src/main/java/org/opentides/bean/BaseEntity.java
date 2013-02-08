@@ -295,13 +295,13 @@ public abstract class BaseEntity implements Serializable {
      * Sets the userId based on Acegi Context
      */
     public final void setUserId() {
-        if (this.auditUserId == null
-                && SecurityContextHolder.getContext() != null
-                && SecurityContextHolder.getContext().getAuthentication() != null) {
+        if (this.auditUserId == null) {
             final SessionUser user = SecurityUtil.getSessionUser();
-            this.auditUserId = user.getRealId();
-            this.auditOfficeName = user.getOffice();
-            this.auditUsername = user.getUsername();
+            if (user!=null) {
+	            this.auditUserId = user.getRealId();
+	            this.auditOfficeName = user.getOffice();
+	            this.auditUsername = user.getUsername();
+            }        	
         }
     }
 

@@ -30,7 +30,7 @@ import org.opentides.bean.user.UserGroup;
  * @author allantan
  */
 public interface UserGroupService extends BaseCrudService<UserGroup> {
-	
+		
 	/**
 	 * Returns the list of authorities registered in the application.
 	 * The value returned by this method is injected by spring via rolesMap.
@@ -57,4 +57,10 @@ public interface UserGroupService extends BaseCrudService<UserGroup> {
 	 * @return
 	 */
 	public boolean removeUserAuthority(UserAuthority authorities);
+	
+	/**
+	 * Creates the initial usergroup for system administration;
+	 */
+	public boolean setupAdminGroup();
+
 }

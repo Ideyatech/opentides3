@@ -32,6 +32,7 @@ import org.springframework.beans.MutablePropertyValues;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
+import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -78,7 +79,6 @@ public class FormBindMethodProcessor implements HandlerMethodArgumentResolver {
 		FormBind annot = parameter.getParameterAnnotation(FormBind.class);
 		Class<?> clazz = parameter.getDeclaringClass();
 		String name = getName(annot, parameter);
-		String id = nativeRequest.getParameter("id");
 		HttpServletRequest request =
 				 (HttpServletRequest) nativeRequest.getNativeRequest();
 
@@ -96,22 +96,33 @@ public class FormBindMethodProcessor implements HandlerMethodArgumentResolver {
 			if (binder.getBindingResult().hasErrors()) {
 				throw new BindException(binder.getBindingResult());
 			}			
+			String method = request.getMethod().toLowerCase();
 
 			// if target extends BaseEntity and for update, link target to database record
-			if (BaseEntity.class.isAssignableFrom(parameter.getParameterType()) && 
-					!StringUtil.isEmpty(id) && !"0".equals(id)) {	
-				// retrieve from database
+			if ( "put".equals(method) &&
+					BaseEntity.class.isAssignableFrom(parameter.getParameterType()) ) {
+				// now retrieve record from database for updating
 				Method updateForm = CacheUtil.getUpdateFormBindMethod(clazz);
+				// id should be the last segment of the uri
+				String uri = request.getRequestURI();
+				String sid = uri.substring(uri.lastIndexOf("/")+1);
+
 				BaseEntity record = null;
 				if (updateForm==null) {
 					// no annotation, invoke from service
 					Method getService = controller.getClass().getMethod("getService");
+					if (getService == null) {
+						String message = "Cannot find method with @FormBind with update mode. " +
+								   "Also, unable to find service associated to controller." +
+								   "Please specify one that retrieves record from database."; 
+						throw new InvalidImplementationException(message);						
+					}
 					BaseCrudService<? extends BaseEntity> service = 
-							(BaseCrudService<? extends BaseEntity>) getService.invoke(controller);
-					record = (BaseEntity) service.load(id);					
+							(BaseCrudService<? extends BaseEntity>) getService.invoke(controller);					
+					record = (BaseEntity) service.load(sid);					
 				} else {
 					// with annotation, invoke annotation
-					record = (BaseEntity) updateForm.invoke(controller, request);
+					record = (BaseEntity) updateForm.invoke(controller, sid, request);
 				}
 				
 				if (record != null) {
@@ -120,14 +131,16 @@ public class FormBindMethodProcessor implements HandlerMethodArgumentResolver {
 					mavContainer.addAllAttributes(updateBinder.getBindingResult().getModel());
 					return updateBinder.getTarget();
 				} else {
-					String message = "Cannot find method with @FormBind with update mode. " +
-							   "Also, unable to find service associated to controller." +
-							   "Please specify one that retrieves record from database."; 
-					throw new InvalidImplementationException(message);
-				}				
+					String message = "Unable to find "+parameter.getParameterType().getSimpleName()+" with id="+sid+" for update."; 
+					throw new DataRetrievalFailureException(message);
+				}
+			} else if ( "post".equals(method) ) {
+				mavContainer.addAllAttributes(binder.getBindingResult().getModel());
+				return binder.getTarget();
+			} else {
+				throw new InvalidImplementationException("@FormBind argument annotation can only be used on POST or PUT methods.");				
 			}
 		}
-
 		mavContainer.addAllAttributes(binder.getBindingResult().getModel());
 		return binder.getTarget();
 	}

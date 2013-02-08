@@ -93,11 +93,11 @@ public class UserGroup extends BaseEntity{
 		addedList = new ArrayList<UserAuthority>();
 		this.authorityNames = new ArrayList<String>();
 		if (authorityNames == null) {
-			for (UserAuthority role : authorities) {
-				removeList.add(role);
+			for (UserAuthority auth : authorities) {
+				removeList.add(auth);
 			}
-			for (UserAuthority role : removeList) {
-				this.removeAuthority(role);
+			for (UserAuthority auth : removeList) {
+				this.removeAuthority(auth);
 			}
 			return;
 		}
@@ -213,15 +213,15 @@ public class UserGroup extends BaseEntity{
 		return userAuthorityMap;
 	}
 	
-	public void setRoles(Set<UserAuthority> roles) {
-		this.authorities = roles;
+	public void setAuthorities(Set<UserAuthority> authorities) {
+		this.authorities = authorities;
 		syncAuthorityNames();
 	}
 
 	public void syncAuthorityNames() {
 		authorityNames = new ArrayList<String>();
-		for (UserAuthority role : authorities) {
-			authorityNames.add(role.getAuthority());
+		for (UserAuthority auth : authorities) {
+			authorityNames.add(auth.getAuthority());
 		}
 	}
 	

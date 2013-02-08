@@ -90,66 +90,6 @@ public abstract class BaseCrudController<T extends BaseEntity> {
 	protected String singlePage = "";
 	
 	/**
-	 * Converts the binding error messages to list of MessageResponse
-	 * @param bindingResult
-	 */
-	protected List<MessageResponse> convertErrorMessage(String elementClass, BindingResult bindingResult, Locale locale) {
-		List<MessageResponse> errorMessages = new ArrayList<MessageResponse>();
-		if (bindingResult.hasErrors()) {
-			for (ObjectError error:bindingResult.getAllErrors()) {
-				MessageResponse message = new MessageResponse(elementClass, MessageResponse.Type.error,
-						error.getObjectName(), error.getCodes(), error.getArguments());
-				message.setMessage(messageSource.getMessage(message, locale));
-				errorMessages.add(message);
-			}
-		}
-		return errorMessages;
-	}
-	
-	/**
-	 * Builds success message by convention. Default location to top-right.
-	 * 
-	 * Standard convention in order of resolving message is:
-	 *     (1) message.<className>.<code>-success (e.g. message.system-codes.add-success)
-	 *     (2) message.add-success (generic message)
-	 * 
-	 * @see buildSuccessMessage(String elementClass, BaseEntity object, String code, Locale locale)
-	 * 
-	 * @param object
-	 * @param code
-	 * @param locale
-	 * @return
-	 */
-	protected List<MessageResponse> buildSuccessMessage(BaseEntity object, String code, Locale locale) {
-		return this.buildSuccessMessage(notificationLocation, object, code, locale);
-	}
-	
-	/**
-	 * Builds success message by convention.
-	 * Success messages are displayed as notifications only.
-	 * 
-	 * Standard convention in order of resolving message is:
-	 *     (1) message.<className>.<code>-success (e.g. message.system-codes.add-success)
-	 *     (2) message.add-success (generic message)
-	 *     
-	 * @param elementClass
-	 * @param object
-	 * @param code
-	 * @param locale
-	 * @return
-	 */
-	protected List<MessageResponse> buildSuccessMessage(String elementClass, BaseEntity object, String code, Locale locale) {
-		List<MessageResponse> messages = new ArrayList<MessageResponse>();
-		Assert.notNull(object);
-		String prefix = "message." + NamingUtil.toElementName(object.getClass().getSimpleName());
-		String codes = prefix+"."+code+"-success,message."+code+"-success";
-		MessageResponse message = new MessageResponse(elementClass, MessageResponse.Type.notification, codes.split("\\,"), null);
-		message.setMessage(messageSource.getMessage(message, locale));
-    	messages.add(message);
-	    return messages;
-	}
-	
-	/**
 	 * Attaches the validator if available.
 	 * @param request
 	 * @param binder
@@ -180,38 +120,6 @@ public abstract class BaseCrudController<T extends BaseEntity> {
     }
     
     /**
-     * Saves the form.
-     * 
-     * @param command
-     * @param request
-     * @return
-     */
-    @RequestMapping(method = RequestMethod.POST)
-    public @ResponseBody Map<String, Object> save(
-    			@FormBind(name="formCommand") T command, 
-    			HttpServletRequest request, HttpServletResponse response, 
-    			BindingResult bindingResult) {
-    	boolean isNew = command.isNew();
-    	Map<String, Object> model = new HashMap<String,Object>();
-    	List<MessageResponse> messages = new ArrayList<MessageResponse>();
-    	if (isNew) 
-    		preCreateAction(request, response, command, bindingResult);
-    	else 
-    		preUpdateAction(request, response, command, bindingResult);    		
-        service.save(command);
-    	if (isNew) {
-    		postCreateAction(request, response, command, bindingResult);    		
-        	messages.addAll(buildSuccessMessage(command, "add", request.getLocale()));
-    	} else { 
-    		postUpdateAction(request, response, command, bindingResult);    		
-        	messages.addAll(buildSuccessMessage(command, "update", request.getLocale()));
-    	}
-        model.put("command", command);
-        model.put("messages", messages);
-        return model;
-    }
-    
-    /**
      * This is the entry point of a CRUD page which loads the search page.
      * 
      * @param uiModel
@@ -224,8 +132,48 @@ public abstract class BaseCrudController<T extends BaseEntity> {
 		uiModel.addAttribute("formCommand", BeanUtils.instantiate(this.entityBeanType));
         return singlePage;
     }
+    
+    /**
+     * Saves the form.
+     * 
+     * @param command
+     * @param request
+     * @return
+     */
+    @RequestMapping(method = RequestMethod.POST, headers = "Accept=application/json")
+    public @ResponseBody Map<String, Object> create(
+    			@FormBind(name="formCommand") T command, 
+    			HttpServletRequest request, HttpServletResponse response, 
+    			BindingResult bindingResult) {
+    	Map<String, Object> model = new HashMap<String,Object>();
+    	List<MessageResponse> messages = new ArrayList<MessageResponse>();
+   		preCreateAction(request, response, command, bindingResult);
+        service.save(command);
+   		postCreateAction(request, response, command, bindingResult);    		
+       	messages.addAll(buildSuccessMessage(command, "add", request.getLocale()));
+        model.put("command", command);
+        model.put("messages", messages);
+        return model;
+    }
+    
+    @RequestMapping(value="{id}", method = RequestMethod.PUT, headers = "Accept=application/json")
+    public @ResponseBody Map<String, Object> update(
+    			@FormBind(name="formCommand") T command, 
+    			@PathVariable("id") Long id,
+    			HttpServletRequest request, HttpServletResponse response, 
+    			BindingResult bindingResult) {
+    	Map<String, Object> model = new HashMap<String,Object>();
+    	List<MessageResponse> messages = new ArrayList<MessageResponse>();
+   		preUpdateAction(request, response, command, bindingResult);    		
+        service.save(command);
+   		postUpdateAction(request, response, command, bindingResult);    		
+       	messages.addAll(buildSuccessMessage(command, "update", request.getLocale()));
+        model.put("command", command);
+        model.put("messages", messages);
+        return model;
+    }
         
-    @RequestMapping(value="/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
+    @RequestMapping(value="{id}", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseView(Views.FormView.class)
     public @ResponseBody T get(@PathVariable("id") Long id,
     		Model uiModel, HttpServletRequest request) {    	
@@ -246,7 +194,7 @@ public abstract class BaseCrudController<T extends BaseEntity> {
         return search(command, request);
     }    
 
-    private SearchResults<T> search(T command, HttpServletRequest request) {
+    protected final SearchResults<T> search(T command, HttpServletRequest request) {
         SearchResults<T> results = new SearchResults<T>(pageSize, numLinks);
         int page = StringUtil.convertToInt(request.getParameter("p"), 1);
         long startTime = System.currentTimeMillis();
@@ -276,7 +224,7 @@ public abstract class BaseCrudController<T extends BaseEntity> {
         return results;
     }
         
-    @RequestMapping(value="/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value="{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
     public @ResponseBody Map<String, Object> delete(@PathVariable("id") Long id, 
     		T command, HttpServletRequest request, HttpServletResponse response, 
     		BindingResult bindingResult) {
@@ -413,15 +361,6 @@ public abstract class BaseCrudController<T extends BaseEntity> {
     protected SearchResults<T> postSearchAction(SearchResults<T> result) {
         return result;
     }
-
-    protected long countAction(T command) {
-        if (command == null) {
-            // no command, let's search everything
-            return service.countAll();
-        } else {
-            return service.countByExample(command);
-        }
-    }
     
     @SuppressWarnings("unchecked")
 	@PostConstruct
@@ -448,9 +387,86 @@ public abstract class BaseCrudController<T extends BaseEntity> {
         	this.singlePage = "app/"+ 
         			NamingUtil.toElementName(this.entityBeanType.getSimpleName()) +"-crud";
         }
-        Assert.notNull(service, this.getClass().getSimpleName() + "is not associated with a service class. Please check your configruation.");
+        Assert.notNull(service, this.getClass().getSimpleName() + 
+        					" is not associated with a service class [" + serviceBean +
+        					"]. Please check your configuration.");
 	}
+    
 
+    /**
+     * Performs record matching count, used for search.
+     * @param command
+     * @return
+     */
+    protected long countAction(T command) {
+        if (command == null) {
+            // no command, let's search everything
+            return service.countAll();
+        } else {
+            return service.countByExample(command);
+        }
+    }
+
+	/**
+	 * Converts the binding error messages to list of MessageResponse
+	 * @param bindingResult
+	 */
+	protected List<MessageResponse> convertErrorMessage(String elementClass, BindingResult bindingResult, Locale locale) {
+		List<MessageResponse> errorMessages = new ArrayList<MessageResponse>();
+		if (bindingResult.hasErrors()) {
+			for (ObjectError error:bindingResult.getAllErrors()) {
+				MessageResponse message = new MessageResponse(elementClass, MessageResponse.Type.error,
+						error.getObjectName(), error.getCodes(), error.getArguments());
+				message.setMessage(messageSource.getMessage(message, locale));
+				errorMessages.add(message);
+			}
+		}
+		return errorMessages;
+	}
+	
+	/**
+	 * Builds success message by convention. Default location to top-right.
+	 * 
+	 * Standard convention in order of resolving message is:
+	 *     (1) message.<className>.<code>-success (e.g. message.system-codes.add-success)
+	 *     (2) message.add-success (generic message)
+	 * 
+	 * @see buildSuccessMessage(String elementClass, BaseEntity object, String code, Locale locale)
+	 * 
+	 * @param object
+	 * @param code
+	 * @param locale
+	 * @return
+	 */
+	protected List<MessageResponse> buildSuccessMessage(BaseEntity object, String code, Locale locale) {
+		return this.buildSuccessMessage(notificationLocation, object, code, locale);
+	}
+	
+	/**
+	 * Builds success message by convention.
+	 * Success messages are displayed as notifications only.
+	 * 
+	 * Standard convention in order of resolving message is:
+	 *     (1) message.<className>.<code>-success (e.g. message.system-codes.add-success)
+	 *     (2) message.add-success (generic message)
+	 *     
+	 * @param elementClass
+	 * @param object
+	 * @param code
+	 * @param locale
+	 * @return
+	 */
+	protected List<MessageResponse> buildSuccessMessage(String elementClass, BaseEntity object, String code, Locale locale) {
+		List<MessageResponse> messages = new ArrayList<MessageResponse>();
+		Assert.notNull(object);
+		String prefix = "message." + NamingUtil.toElementName(object.getClass().getSimpleName());
+		String codes = prefix+"."+code+"-success,message."+code+"-success";
+		MessageResponse message = new MessageResponse(elementClass, MessageResponse.Type.notification, codes.split("\\,"), null);
+		message.setMessage(messageSource.getMessage(message, locale));
+    	messages.add(message);
+	    return messages;
+	}
+	
 	/**
 	 * @return the service
 	 */

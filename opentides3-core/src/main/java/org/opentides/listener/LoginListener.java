@@ -1,4 +1,4 @@
-package org.opentides.web.listener;
+package org.opentides.listener;
 
 import org.opentides.service.UserService;
 import org.springframework.context.ApplicationListener;

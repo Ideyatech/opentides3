@@ -10,7 +10,11 @@
 		</layout>
 	</appender>
 	
-	<!-- Application Loggers -->
+	<!-- Application Loggers -->	
+	<logger name="org.opentides.context.support.PatternResourceBundleMessageSource">
+		<level value="info" />
+	</logger>
+
 	<logger name="org.opentides">
 		<level value="debug" />
 	</logger>

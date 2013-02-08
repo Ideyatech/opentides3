@@ -23,7 +23,6 @@ import java.util.List;
 import org.opentides.bean.SystemCodes;
 import org.opentides.dao.SystemCodesDao;
 import org.opentides.service.SystemCodesService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -58,11 +57,6 @@ public class SystemCodesServiceImpl extends BaseCrudServiceImpl<SystemCodes>
 	
 	public SystemCodesDao getSystemCodesDao() {
 		return (SystemCodesDao) super.getDao();
-	}
-	
-	@Autowired
-	public void setSystemCodesDao(SystemCodesDao systemCodesDao) {
-		super.setDao(systemCodesDao);
 	}
 
 	@Override

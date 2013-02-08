@@ -21,7 +21,6 @@ package org.opentides.service;
 import java.util.List;
 
 import org.opentides.bean.BaseEntity;
-import org.opentides.dao.BaseEntityDao;
 
 
 /**
@@ -47,5 +46,4 @@ public interface BaseCrudService<T extends BaseEntity> extends BaseService {
 	public T load(Long id, boolean filter);
 	public void delete(String sid);
 	public void delete(Long id);
-	public void setDao(BaseEntityDao<T,Long>  dao);
 }

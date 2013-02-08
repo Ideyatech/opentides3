@@ -51,22 +51,10 @@
 	</mvc:interceptors>
 	
 	<bean id="messageSource"
-		class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
-		<property name="basenames">
-			<ref local="applicationMessages" />
-		</property>
-	</bean>
+		class="org.opentides.context.support.PatternResourceBundleMessageSource" 
+		p:cacheSeconds="${messages.cache.seconds}"
+		p:basenames="classpath:app/languages/*messages.properties,classpath:base/languages/*messages.properties"/>
 
-	<bean id="applicationMessages" class="org.opentides.bean.MergeListFactoryBean">
-		<property name="sourceList">
-			<list>
-				<value>/WEB-INF/languages-base/messages</value>
-				<value>/WEB-INF/languages-base/messages-system-codes</value>
-				<value>/WEB-INF/languages-base/messages-users</value>
-			</list>
-		</property>
-		<property name="secondList" ref="additionalMessages"/>
-	</bean>
 	
 	<!-- Store preferred language configuration in a cookie -->
 	<bean class="org.springframework.web.servlet.i18n.CookieLocaleResolver"
@@ -121,5 +109,10 @@
 	<!-- Enable this for integration of file upload functionality -->
 	<bean id="multipartResolver" 
 		class="org.springframework.web.multipart.commons.CommonsMultipartResolver" />
-			
+	
+	<!-- Register Application Listeners -->
+	<!-- Application Startup Listener -->
+	<bean id="startupListener" class="org.opentides.listener.ApplicationStartupListener">
+		<property name="propertyName" value="${property.name}"/>
+	</bean>
 </beans>

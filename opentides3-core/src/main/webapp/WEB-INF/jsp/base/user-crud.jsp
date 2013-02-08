@@ -23,12 +23,12 @@
             	<app:paging results="${results}" displayPageLinks="false" displaySummary="true"/>
             </div>
             <div class="pull-right">
-                <button id="add-user" class="btn btn-success">
+                <button id="user-add" class="btn btn-success">
                 	<i class="icon-plus-sign icon-white"></i> <spring:message code="label.user.add" />
                 </button>
             </div>
 	    </div>
-                                
+	    
         <div class="clear"></div>                  
 
 		<div id="results-panel" class="row-fluid">
@@ -77,7 +77,7 @@
   		// there is an bug in footable that hides other table elements  		
   		$('.table').footable();
   		$('#user-search').jsonSearch();  		
-  		$('#add-user').jsonForm();
+  		$('#user-add').jsonForm();
   	});
   </script>
 </app:footer>

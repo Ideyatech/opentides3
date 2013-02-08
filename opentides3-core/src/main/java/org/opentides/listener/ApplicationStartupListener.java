@@ -21,10 +21,11 @@ package org.opentides.listener;
 
 import org.apache.log4j.Logger;
 import org.opentides.persistence.evolve.DBEvolveManager;
-import org.opentides.util.SecurityUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.stereotype.Component;
 
 /**
  * This class is configured to be executed during application startup. Checks to
@@ -33,18 +34,17 @@ import org.springframework.context.event.ContextRefreshedEvent;
  * 
  * @author allanctan
  */
-
-public class ApplicationStartupListener implements ApplicationListener {
+@Component
+public class ApplicationStartupListener implements ApplicationListener<ContextRefreshedEvent> {
 
 	private static Logger _log = Logger
 			.getLogger(ApplicationStartupListener.class);
 
 	private static boolean applicationStarted = false;
 
-	private Boolean debug = false;
-
 	private String propertyName;
 
+	@Autowired
 	private DBEvolveManager evolveManager;
 
 	/*
@@ -57,20 +57,9 @@ public class ApplicationStartupListener implements ApplicationListener {
 	public void contextInitialized(ApplicationEvent event) {
 		_log.info("Starting up system using " + propertyName + " properties.");
 
-		_log.info("Initializing debug mode to " + debug);
-		SecurityUtil.setDebug(debug);
-
 		_log.info("Checking for schema evolve...");
 		evolveManager.evolve();
 
-	}
-
-	/**
-	 * @param debug
-	 *            the debug to set
-	 */
-	public void setDebug(Boolean debug) {
-		this.debug = debug;
 	}
 
 	/**
@@ -78,8 +67,8 @@ public class ApplicationStartupListener implements ApplicationListener {
 	 * ContextStartedEvent is not triggered properly. So, we are using
 	 * ContextRefreshedEvent with a static indicator.
 	 */
-	public void onApplicationEvent(ApplicationEvent event) {
-		if (!applicationStarted && (event instanceof ContextRefreshedEvent)) {
+	public void onApplicationEvent(ContextRefreshedEvent event) {
+		if (!applicationStarted) {
 			contextInitialized(event);
 			applicationStarted = true;
 		}

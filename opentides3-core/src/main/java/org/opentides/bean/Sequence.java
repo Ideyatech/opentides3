@@ -16,31 +16,10 @@ import javax.persistence.Table;
  * @author gbusok
  */
 @Entity
-@Table(name = "SEQUENCE")
+@Table(name = "SEQUENCE_")
 public class Sequence extends BaseEntity {
 	
 	private static final long serialVersionUID = -3185573414375387564L;
-	
-	public Sequence() {
-	}
-	
-	public Sequence(String key) {
-		this(key,key,1l);
-	}
-	
-	public Sequence(String key, Long value) {
-		this(key,key,value);
-	}
-
-
-	public Sequence(String name, String key, Long value) {
-		this.name = name;
-		this.key = key;
-		this.value = value;
-	}
-
-	@Column(name = "NAME_")
-	private String name;
 	
 	@Column(name = "KEY_", unique = true)
 	private String key;
@@ -48,21 +27,18 @@ public class Sequence extends BaseEntity {
 	@Column(name = "VALUE_")
 	private Long value;
 
+	public Sequence() {
+	}
 	
-	/**
-	 * @return the name
-	 */
-	public final String getName() {
-		return name;
+	public Sequence(String key) {
+		this(key,1l);
 	}
-
-	/**
-	 * @param name the name to set
-	 */
-	public final void setName(String name) {
-		this.name = name;
+	
+	public Sequence(String key, Long value) {
+		this.key = key;
+		this.value = value;
 	}
-
+	
 	/**
 	 * @return the key
 	 */
@@ -89,17 +65,6 @@ public class Sequence extends BaseEntity {
 	 */
 	public final void setValue(Long value) {
 		this.value = value;
-	}
-
-	/**
-	 * Increment the value
-	 */
-	public final synchronized void incrementValue() {
-		if(this.value == null) {
-			this.value = Long.valueOf(1l);
-		} else {
-			this.value++;
-		}
 	}
 	
 	/**
