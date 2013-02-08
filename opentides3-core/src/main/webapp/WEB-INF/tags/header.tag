@@ -12,7 +12,7 @@
 	response.setDateHeader("Expires", 0); //prevents caching 
 	response.setHeader("Cache-Control", "no-store"); //HTTP 1.1   
 %>
-
+<!-- SET URL CONTEXT AND OT VERSION -->
 <c:set var="url_context" value="${pageContext.request.contextPath}" scope="application" />
 <c:set var="ot_version" value="3.0" scope="application" />
 
