@@ -36,9 +36,9 @@
 		
 	<!-- Handles HTTP GET requests for /resources/** by efficiently serving 
 		up static resources -->
-	<mvc:resources location="/base/css/,/app/css/" mapping="/css/**" />
-	<mvc:resources location="/base/js/,/app/js/" mapping="/js/**" />
-	<mvc:resources location="/base/img/,/app/img/" mapping="/img/**" />
+	<mvc:resources location="/base/css/,/app/css/,/themes/default/css/" mapping="/css/**" />
+	<mvc:resources location="/base/js/,/app/js/,/themes/default/js/" mapping="/js/**" />
+	<mvc:resources location="/base/img/,/app/img/,/themes/default/img/" mapping="/img/**" />
 	<!-- Allows for mapping the DispatcherServlet to "/" by forwarding static 
 		resource requests to the container's default Servlet -->
 	<!-- <mvc:default-servlet-handler /> -->

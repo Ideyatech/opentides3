@@ -66,7 +66,7 @@
 								<a href="${home}">Home</a>
 							</li>
 							<li class="${active eq 'system-codes' ? 'active' : ''}">
-								<a href="${home}/admin/system-codes/">System Codes</a>
+								<a href="${home}/system/system-codes/">System Codes</a>
 							</li>
 						</ul>
 					</div>
