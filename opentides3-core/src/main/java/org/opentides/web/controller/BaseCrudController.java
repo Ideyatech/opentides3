@@ -29,6 +29,7 @@ import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.opentides.annotation.FormBind;
 import org.opentides.bean.BaseEntity;
 import org.opentides.bean.MessageResponse;
@@ -43,13 +44,14 @@ import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
+import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.ui.Model;
 import org.springframework.util.Assert;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.Validator;
-import org.springframework.web.bind.ServletRequestDataBinder;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -65,6 +67,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * @author allantan
  */
 public abstract class BaseCrudController<T extends BaseEntity> {
+	
+    private static Logger _log = Logger.getLogger(BaseCrudController.class);
 		
 	@Value("#{applicationSettings.pageSize}")
 	private Integer pageSize = 20;
@@ -96,9 +100,9 @@ public abstract class BaseCrudController<T extends BaseEntity> {
 	 * @throws Exception
 	 */
 	@InitBinder
-	protected final void initBinder(HttpServletRequest request,
-			ServletRequestDataBinder binder) throws Exception {
-		if (formValidator != null)
+	protected final void initBinder(WebDataBinder binder) throws Exception {		
+		if ((formValidator != null) && (binder.getTarget() != null) &&
+				formValidator.supports(binder.getTarget().getClass()) )
 			binder.setValidator(formValidator);
 	}
 	
@@ -126,10 +130,20 @@ public abstract class BaseCrudController<T extends BaseEntity> {
      * @return
      */
     @RequestMapping(method = RequestMethod.GET, produces = "text/html")
-    public String loadPage(Model uiModel) {
+    public final String loadHtml( @ModelAttribute("searchCommand") T command, 
+    		BindingResult bindingResult, Model uiModel,
+    		HttpServletRequest request, HttpServletResponse response) {
     	uiModel.asMap().clear();
-		uiModel.addAttribute("searchCommand", BeanUtils.instantiate(this.entityBeanType));
-		uiModel.addAttribute("formCommand", BeanUtils.instantiate(this.entityBeanType));
+    	uiModel.addAttribute("formCommand", BeanUtils.instantiate(this.entityBeanType));    	
+    	uiModel.addAttribute("searchCommand", command);    	
+    	if (request.getParameterMap().size() > 0) {
+        	preSearchAction(command, bindingResult, uiModel, request, response);
+        	SearchResults<T> results = search(command, request);
+        	postSearchAction(command, results, bindingResult, uiModel, request, response);
+    		uiModel.addAttribute("results",results);
+    	} else {
+    		onLoadAction(command, bindingResult, uiModel, request, response);    		
+    	}
         return singlePage;
     }
     
@@ -141,15 +155,15 @@ public abstract class BaseCrudController<T extends BaseEntity> {
      * @return
      */
     @RequestMapping(method = RequestMethod.POST, headers = "Accept=application/json")
-    public @ResponseBody Map<String, Object> create(
+    public final @ResponseBody Map<String, Object> create(
     			@FormBind(name="formCommand") T command, 
-    			HttpServletRequest request, HttpServletResponse response, 
-    			BindingResult bindingResult) {
+    			BindingResult bindingResult, Model uiModel,
+    			HttpServletRequest request, HttpServletResponse response) {
     	Map<String, Object> model = new HashMap<String,Object>();
     	List<MessageResponse> messages = new ArrayList<MessageResponse>();
-   		preCreateAction(request, response, command, bindingResult);
+   		preCreateAction(command, bindingResult, uiModel, request, response);
         service.save(command);
-   		postCreateAction(request, response, command, bindingResult);    		
+   		postCreateAction(command, bindingResult, uiModel, request, response);    		
        	messages.addAll(buildSuccessMessage(command, "add", request.getLocale()));
         model.put("command", command);
         model.put("messages", messages);
@@ -157,16 +171,16 @@ public abstract class BaseCrudController<T extends BaseEntity> {
     }
     
     @RequestMapping(value="{id}", method = RequestMethod.PUT, headers = "Accept=application/json")
-    public @ResponseBody Map<String, Object> update(
+    public final @ResponseBody Map<String, Object> update(
     			@FormBind(name="formCommand") T command, 
     			@PathVariable("id") Long id,
-    			HttpServletRequest request, HttpServletResponse response, 
-    			BindingResult bindingResult) {
+    			BindingResult bindingResult, Model uiModel,
+    			HttpServletRequest request, HttpServletResponse response) {
     	Map<String, Object> model = new HashMap<String,Object>();
     	List<MessageResponse> messages = new ArrayList<MessageResponse>();
-   		preUpdateAction(request, response, command, bindingResult);    		
+   		preUpdateAction(command, bindingResult, uiModel, request, response);
         service.save(command);
-   		postUpdateAction(request, response, command, bindingResult);    		
+   		postUpdateAction(command, bindingResult, uiModel, request, response);    		
        	messages.addAll(buildSuccessMessage(command, "update", request.getLocale()));
         model.put("command", command);
         model.put("messages", messages);
@@ -175,8 +189,8 @@ public abstract class BaseCrudController<T extends BaseEntity> {
         
     @RequestMapping(value="{id}", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseView(Views.FormView.class)
-    public @ResponseBody T get(@PathVariable("id") Long id,
-    		Model uiModel, HttpServletRequest request) {    	
+    public final @ResponseBody T get(@PathVariable("id") Long id, Model uiModel,
+			HttpServletRequest request, HttpServletResponse response) {    	
 		T command = null;
     	if (id>0) {
     		command = service.load(id);    		
@@ -188,63 +202,53 @@ public abstract class BaseCrudController<T extends BaseEntity> {
 
     @RequestMapping(method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseView(Views.SearchView.class)
-    public @ResponseBody SearchResults<T> search(
+    public final @ResponseBody SearchResults<T> searchJson(
     		@ModelAttribute("searchCommand") T command, 
-    		BindingResult bindingResult, Model uiModel, HttpServletRequest request) {
-        return search(command, request);
-    }    
-
-    protected final SearchResults<T> search(T command, HttpServletRequest request) {
-        SearchResults<T> results = new SearchResults<T>(pageSize, numLinks);
-        int page = StringUtil.convertToInt(request.getParameter("p"), 1);
-        long startTime = System.currentTimeMillis();
-        results.setCurrPage(page);
-        results.setTotalResults(this.countAction(command));
-        int start = results.getStartIndex();
-        int total = results.getPageSize();
-        if (pageSize > 0) {
-            if (command == null) {
-                // no command, let's search everything
-                results.addResults(service.findAll(start, total));
-            } else {
-                // let's do a query by example
-                results.addResults(service.findByExample(command,
-                        start, total));
-            }
-        } else {
-            if (command == null) {
-                // no command, let's search everything
-                results.addResults(service.findAll());
-            } else {
-                // let's do a query by example
-                results.addResults(service.findByExample(command));
-            }
-        }
-        results.setSearchTime(System.currentTimeMillis() - startTime);
-        return results;
-    }
+    		BindingResult bindingResult, Model uiModel,
+			HttpServletRequest request, HttpServletResponse response) {
+    	preSearchAction(command, bindingResult, uiModel, request, response);
+    	SearchResults<T> results = search(command, request);
+    	postSearchAction(command, results, bindingResult, uiModel, request, response);
+    	return results;
+    }   
         
     @RequestMapping(value="{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
-    public @ResponseBody Map<String, Object> delete(@PathVariable("id") Long id, 
-    		T command, HttpServletRequest request, HttpServletResponse response, 
-    		BindingResult bindingResult) {
+    public final @ResponseBody Map<String, Object> delete(@PathVariable("id") Long id, 
+    		T command, BindingResult bindingResult, Model uiModel,
+			HttpServletRequest request, HttpServletResponse response) {
     	Map<String, Object> model = new HashMap<String,Object>();
     	List<MessageResponse> messages = new ArrayList<MessageResponse>();    	
     	if (id >= 0) {
     		try {
-    			preDeleteAction(request, response, bindingResult, id);
+    			preDeleteAction(id, bindingResult, uiModel, request, response);
     			service.delete(id);
-    			postDeleteAction(request, response, bindingResult, id);
+    			postDeleteAction(id, bindingResult, uiModel, request, response);
     	    	messages.addAll(buildSuccessMessage(command, "delete", request.getLocale()));
     	    	model.put("messages", messages);    	    	
     	    	return model;    			
     		} catch (Exception e) {
-    			
+    			String message = "Failed to delete "+this.entityBeanType+" with id = ["+id+"]";
+    			_log.error(message,e);
+    			throw new DataRetrievalFailureException(message, e);
     		}
+    	} else {
+			String message = "Invalid id = ["+id+"] for delete operation of "+this.entityBeanType;
+			_log.error(message);
+			throw new DataRetrievalFailureException(message);    		
     	}
-    	messages.addAll(buildSuccessMessage(command, "delete", request.getLocale()));
-    	model.put("messages", messages);    	    	
-    	return model;    			
+    }
+    
+    /**
+     * Override this method to perform action when page is initially loaded.
+     * 
+     * @param command
+     */
+
+    protected void onLoadAction(
+    		T command, 
+    		BindingResult bindingResult, Model uiModel,
+			HttpServletRequest request, HttpServletResponse response) {
+    	
     }
     
     /**
@@ -253,8 +257,9 @@ public abstract class BaseCrudController<T extends BaseEntity> {
      * @param command
      */
 
-    protected void preCreateAction(HttpServletRequest request,
-            HttpServletResponse response, T command, BindingResult bindingResult) {
+    protected void preCreateAction(T command, 
+    		BindingResult bindingResult, Model uiModel,
+			HttpServletRequest request, HttpServletResponse response) {
         preCreateAction(command);
     }
 
@@ -267,8 +272,9 @@ public abstract class BaseCrudController<T extends BaseEntity> {
      * @param command
      */
 
-    protected void postCreateAction(HttpServletRequest request,
-            HttpServletResponse response, T command, BindingResult bindingResult) {
+    protected void postCreateAction(T command, 
+    		BindingResult bindingResult, Model uiModel,
+			HttpServletRequest request, HttpServletResponse response) {
         postCreateAction(command);
     }
 
@@ -281,8 +287,9 @@ public abstract class BaseCrudController<T extends BaseEntity> {
      * @param command
      */
 
-    protected void preUpdateAction(HttpServletRequest request,
-            HttpServletResponse response, T command, BindingResult bindingResult) {
+    protected void preUpdateAction(T command, 
+    		BindingResult bindingResult, Model uiModel,
+			HttpServletRequest request, HttpServletResponse response) {
         preUpdateAction(command);
     }
 
@@ -295,8 +302,9 @@ public abstract class BaseCrudController<T extends BaseEntity> {
      * @param command
      */
 
-    protected void postUpdateAction(HttpServletRequest request,
-            HttpServletResponse response, T command, BindingResult bindingResult) {
+    protected void postUpdateAction(T command, 
+    		BindingResult bindingResult, Model uiModel,
+			HttpServletRequest request, HttpServletResponse response) {
         postUpdateAction(command);
     }
 
@@ -309,8 +317,9 @@ public abstract class BaseCrudController<T extends BaseEntity> {
      * @param command
      */
 
-    protected void preDeleteAction(HttpServletRequest request,
-            HttpServletResponse response, BindingResult bindingResult, Long id) {
+    protected void preDeleteAction(Long id,
+    		BindingResult bindingResult, Model uiModel,
+			HttpServletRequest request, HttpServletResponse response) {
         preDeleteAction(id);
     }
 
@@ -323,8 +332,9 @@ public abstract class BaseCrudController<T extends BaseEntity> {
      * @param command
      */
 
-    protected void postDeleteAction(HttpServletRequest request,
-            HttpServletResponse response, BindingResult bindingResult, Long id) {
+    protected void postDeleteAction(Long id,
+    		BindingResult bindingResult, Model uiModel,
+			HttpServletRequest request, HttpServletResponse response) {
         postDeleteAction(id);
     }
 
@@ -338,8 +348,9 @@ public abstract class BaseCrudController<T extends BaseEntity> {
      *            criteria used for search
      */
 
-    protected void preSearchAction(HttpServletRequest request,
-            HttpServletResponse response, T command, BindingResult bindingResult) {
+    protected void preSearchAction(T command, 
+    		BindingResult bindingResult, Model uiModel,
+			HttpServletRequest request, HttpServletResponse response) {
         preSearchAction(command);
     }
 
@@ -352,9 +363,9 @@ public abstract class BaseCrudController<T extends BaseEntity> {
      * @param command
      */
 
-    protected SearchResults<T> postSearchAction(HttpServletRequest request,
-            HttpServletResponse response, T command, BindException errors,
-            SearchResults<T> result) {
+    protected SearchResults<T> postSearchAction(T command, SearchResults<T> result,
+    		BindingResult bindingResult, Model uiModel,
+			HttpServletRequest request, HttpServletResponse response) {
         return postSearchAction(result);
     }
 
@@ -392,7 +403,35 @@ public abstract class BaseCrudController<T extends BaseEntity> {
         					"]. Please check your configuration.");
 	}
     
-
+    protected final SearchResults<T> search(T command, HttpServletRequest request) {
+        SearchResults<T> results = new SearchResults<T>(pageSize, numLinks);
+        int page = StringUtil.convertToInt(request.getParameter("p"), 1);
+        long startTime = System.currentTimeMillis();
+        results.setCurrPage(page);
+        results.setTotalResults(this.countAction(command));
+        int start = results.getStartIndex();
+        int total = results.getPageSize();
+        if (pageSize > 0) {
+            if (command == null) {
+                // no command, let's search everything
+                results.addResults(service.findAll(start, total));
+            } else {
+                // let's do a query by example
+                results.addResults(service.findByExample(command,
+                        start, total));
+            }
+        } else {
+            if (command == null) {
+                // no command, let's search everything
+                results.addResults(service.findAll());
+            } else {
+                // let's do a query by example
+                results.addResults(service.findByExample(command));
+            }
+        }
+        results.setSearchTime(System.currentTimeMillis() - startTime);
+        return results;
+    }
     /**
      * Performs record matching count, used for search.
      * @param command

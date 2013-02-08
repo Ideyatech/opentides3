@@ -20,12 +20,13 @@ package org.opentides.web.controller;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.opentides.bean.user.UserGroup;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * This is the controller class for User.
@@ -40,19 +41,12 @@ public class UserGroupController extends BaseCrudController<UserGroup> {
 	public void init() {
 		singlePage = "/base/usergroup-crud";
 	}
-	
-    /**
-     * This is the entry point of a CRUD page which loads the search page.
-     * 
-     * @param uiModel
-     * @return
-     */
-    @RequestMapping(value="/search", method = RequestMethod.GET, produces = "text/html")
-    public String loadPage(Model uiModel, HttpServletRequest request) {
-    	uiModel.asMap().clear();
-    	uiModel.addAttribute("result", search(null, request));
-        return singlePage;
-    }
 
+	@Override
+	protected void onLoadAction(UserGroup command, BindingResult bindingResult, 
+			Model uiModel, HttpServletRequest request,
+			HttpServletResponse response) {
+		uiModel.addAttribute("results", search(command, request));
+	}
 
 }

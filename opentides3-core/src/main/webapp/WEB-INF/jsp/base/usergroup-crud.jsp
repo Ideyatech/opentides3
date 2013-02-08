@@ -3,13 +3,13 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="app" tagdir="/WEB-INF/tags"%>
-<app:header title_webpage="label.user" />
+<app:header title_webpage="label.usergroup" />
     <!--Content-->
 	<div class="container-fluid">
 	
 		<!--  No Search Panel -->
 
-        <div id="message-panel" class="row-fluid hide">
+        <div id="message-panel" class="row-fluid">
             <div class="pull-left">
             	<app:paging results="${results}" displayPageLinks="false" displaySummary="true"/>
             </div>

@@ -151,8 +151,10 @@ var opentides3 = (function() {
 (function( $ ){
 	/**
 	 * Converts a form into json based submission for opentides.
-	 * Use this method in conjunction with JsonCrudController of opentides3.
-	 * @param - formPanel - panel containing the form
+	 * Use this method in conjunction with BaseCrudController of opentides3.
+	 * @param message-panel   - location where messages are displayed. Default is #message-panel.
+	 * @param results-panel   - location where results are displayed. Default is #results-panel.
+	 * @param form-panel      - panel containing the form. Default is #form-panel.
 	 * 
 	 */  
 	$.fn.jsonForm = function(options) {  
@@ -161,7 +163,7 @@ var opentides3 = (function() {
 	      'message-panel' : '#message-panel',
 	      'results-panel' : '#results-panel',
 	      'form-panel'	  : '#form-panel'
-	    }, options);		
+	    }, options);
 	    return this.each(function() {
 	    	var addEditForm = $(settings['form-panel']).find('form:first');
 	    	var tableElement = $(settings['results-panel'] + ' table');
@@ -224,7 +226,8 @@ var opentides3 = (function() {
 	  		    		"",										// data
 	  	  		    	function(json) {						// callback
 	  		    			opentides3.populateForm(addEditForm, json);
-	  		    			$(settings['form-panel']).find('[data-submit="save-and-new"]').show();	  		    			
+	  		    			$(settings['form-panel']).find('[data-form-display="add"]').show();	    			
+	  		    			$(settings['form-panel']).find('[data-form-display="update"]').hide();	    			
 	  			  			$(settings['form-panel']).modal();
 	  		    		});
 	  			return false;
@@ -232,15 +235,29 @@ var opentides3 = (function() {
 	    });		
 	};
 	
+	/**
+	 * Converts the search panel into json search.
+	 * Parameters include:
+	 *   message-panel   - location where messages are displayed. Default is #message-panel.
+	 *   results-panel   - location where results are displayed. Default is #results-panel.
+	 *   edit-form-panel - panel to display when updating record. Default is #form-panel.
+	 */
 	$.fn.jsonSearch = function(options) {
 		// extend the options with defaults
 	    var settings = $.extend( {
-	      'message-panel' : '#message-panel',
-	      'results-panel' : '#results-panel',
-	      'form-panel'	  : '#form-panel'
+	      'message-panel'  : '#message-panel',
+	      'results-panel'  : '#results-panel',
+	      'edit-form-panel': '#form-panel'
 	    }, options);
 	    
-		$(settings['results-panel']).hide();
+	    if ($(settings['results-panel'] + ' table tr').length <= 1) {
+	    	$(settings['results-panel']).hide();
+	    	$(settings['message-panel']).hide();
+	    } else {
+	    	$(settings['message-panel']).show();	    	
+	    	$(settings['results-panel']).show();	    	
+	    	
+	    }
 		
 	    return this.each(function() { 
 	    	var searchForm = $(this);
@@ -321,12 +338,17 @@ var opentides3 = (function() {
 	    			}  	  		    				 	  		    			
 	    		});			
 			}
-			
+						
 			var doSearch = function(formElement, page) {
+				var data = formElement.serialize() + "&p=" + page;
 	  		    $.getJSON(
 	  		    		formElement.attr('action'), 			// url
-	  		    		formElement.serialize() + '&p='+page,	// data
+	  		    		data,									// data
 	  	  		    	function(json) {						// callback
+	  		    			//change the url
+	  		    			history.pushState(null, null, '?' +
+	  		    					data.replace(/[^&]+=\.?(?:&|$)/g, '') );
+	  		    			// show the results
 	  		    			displayResults(json);
 	  		    		}
 	  		    );			
@@ -344,10 +366,11 @@ var opentides3 = (function() {
 	  		    		id,	 									// url
 	  		    		"",										// data
 	  	  		    	function(json) {						// callback
-	  		    			var addEditForm = $(settings['form-panel']).find('form:first');
+	  		    			var addEditForm = $(settings['edit-form-panel']).find('form:first');
 	  		    			opentides3.populateForm(addEditForm, json);
-	  		    			$(settings['form-panel']).find('[data-submit="save-and-new"]').hide();
-	  			  			$(settings['form-panel']).modal();
+	  		    			$(settings['edit-form-panel']).find('[data-form-display="add"]').hide();	    			
+	  		    			$(settings['edit-form-panel']).find('[data-form-display="update"]').show();	    			
+	  			  			$(settings['edit-form-panel']).modal();
 	  		    		});	    					
 			});
 			

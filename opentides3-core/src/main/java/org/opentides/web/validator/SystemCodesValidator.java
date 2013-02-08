@@ -18,8 +18,6 @@
  */
 package org.opentides.web.validator;
 
-import javax.persistence.EntityNotFoundException;
-
 import org.opentides.bean.SystemCodes;
 import org.opentides.service.SystemCodesService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,31 +44,6 @@ public class SystemCodesValidator implements Validator {
 	 */
 	public boolean supports(Class<?> clazz) {
 		return SystemCodes.class.isAssignableFrom(clazz);
-	}
-
-	/**
-	 * 
-	 * @param fieldName name of field
-	 * @param templateId template id 
-	 * @return boolean returns true if duplicate name was found, false otherwise
-	 */
-	private boolean isDuplicateKey(SystemCodes systemCodes){
-		SystemCodes key;
-		try {
-			key = this.systemCodesService.findByKey(systemCodes);
-			if (key != null){
-				if(!key.getId().equals(systemCodes.getId()))
-					return true;
-			}
-			
-		} catch (EntityNotFoundException e) {
-			return false;
-		}
-		return false;
-	}
-
-	public void setSystemCodesService(SystemCodesService systemCodesService) {
-		this.systemCodesService = systemCodesService;
 	}
 
 	@Override

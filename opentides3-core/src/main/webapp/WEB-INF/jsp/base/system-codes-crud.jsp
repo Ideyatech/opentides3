@@ -62,12 +62,24 @@
 				<thead>
                	<tr class="table-header">
                    	<th class="col-1" data-class="expand" data-field-name="value"><spring:message code="label.system-codes.value"/></th>
-                   	<th class="col-1" data-hide="phone" data-field-name="key"><spring:message code="label.system-codes.key"/></th>
+                   	<th class="col-2" data-hide="phone" data-field-name="key"><spring:message code="label.system-codes.key"/></th>
                 	<th class="col-3" data-hide="phone,tablet" data-field-name="category"><spring:message code="label.system-codes.category"/></th>
                		<th class="col-4" data-hide="phone,tablet" data-field-name="numberValue"><spring:message code="label.system-codes.number-value"/></th>
                 	<th class="col-5" data-field-name="ot3-controls"></th>
                 </tr>
            		</thead>
+				<tbody id="system-codes-table-results">
+            	<c:forEach items="${results.results}" var="record" varStatus="status">
+            	<tr id="usergroup-row-${record.id}">            
+                	<td class="col-1"><c:out value="${record.value}" /></td>
+                	<td class="col-2"><c:out value="${record.key}" /></td>
+                	<td class="col-3"><c:out value="${record.category}" /></td>
+                	<td class="col-4"><c:out value="${record.numberValue}" /></td>
+	                <td class="col-5"></td>              
+            	</tr>
+            	</c:forEach>
+            	</tbody>           		
+           		
             </table>
             <div class="ot3-paging" data-display-pagelinks="true" data-display-summary="false">
             </div>
@@ -77,7 +89,8 @@
    		<div id="form-panel" class="modal fade hide">
 		  	<div class="modal-header">
 		   		<button type="button" class="close" data-dismiss="modal">&times;</button>
-		   	 	<h3><spring:message code="label.system-codes.add" /></h3>		    
+		   	 	<h3 data-form-display="add"><spring:message code="label.system-codes.add" /></h3>		    
+		   	 	<h3 data-form-display="update"><spring:message code="label.system-codes.update" /></h3>		    
 		  	</div>
 			<form:form modelAttribute="formCommand" id="system-codes-form">	
 		  	<div class="modal-body">
@@ -114,7 +127,7 @@
 		  	</div>
 		 	<div class="modal-footer">
 		    	<button type="button" class="btn btn-primary" data-submit="save"><spring:message code="label.save" /></button>
-		    	<button type="button" class="btn btn-primary" data-submit="save-and-new"><spring:message code="label.save-and-new" /></button>
+		    	<button type="button" class="btn btn-primary" data-form-display="add" data-submit="save-and-new"><spring:message code="label.save-and-new" /></button>
 		    	<button type="button" class="btn" data-dismiss="modal"><spring:message code="label.close" /></button>
 		    	<input type="hidden" name="id" />
 		  	</div>
