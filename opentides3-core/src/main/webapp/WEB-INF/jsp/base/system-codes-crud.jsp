@@ -5,7 +5,7 @@
 <%@ taglib prefix="app" tagdir="/WEB-INF/tags"%>
 <app:header title_webpage="label.system-codes" />
     <!--Content-->
-	<div class="container-fluid">
+	<div id="system-codes-body" class="container-fluid">
         <div id="search-panel" class="row-fluid">
         	<form:form modelAttribute="searchCommand" id="system-codes-search" cssClass="form-horizontal">
 	        	<h3> <i class="icon-search"></i> <spring:message code="label.system-codes.search" /> </h3>  
@@ -42,14 +42,14 @@
         
         <hr/>
 
-        <div id="message-panel" class="row-fluid hide">
-            <div class="pull-left ot3-paging" data-display-pagelinks="false" data-display-summary="true" 
+        <div id="message-panel" class="row-fluid">
+            <div class="pull-left status" data-display-pagelinks="false" data-display-summary="true" 
             		data-summary-message='<spring:message code="message.displaying-x-of-y" 
             		arguments="#start,#end,#total,records"/>'>
             	<app:paging results="${results}" displayPageLinks="false" displaySummary="true"/>
             </div>
             <div class="pull-right">
-                <button id="add-system-codes" class="btn btn-success">
+                <button id="add-system-codes" class="btn btn-success add-action">
                 	<i class="icon-plus-sign icon-white"></i> <spring:message code="label.system-codes.add" />
                 </button>
             </div>
@@ -75,15 +75,18 @@
                 	<td class="col-2"><c:out value="${record.key}" /></td>
                 	<td class="col-3"><c:out value="${record.category}" /></td>
                 	<td class="col-4"><c:out value="${record.numberValue}" /></td>
-	                <td class="col-5"></td>              
+	                <td class="col-5">
+	                	<i class='icon-edit edit-action' data-id='${record.id}'></i>	                	 
+						<i class='icon-remove remove-action' data-id='${record.id}'></i>
+	                </td>
             	</tr>
             	</c:forEach>
             	</tbody>           		
            		
             </table>
-            <div class="ot3-paging" data-display-pagelinks="true" data-display-summary="false">
-            </div>
+            <div class="status" data-display-pagelinks="true" data-display-summary="false">
             <app:paging results="${results}" displayPageLinks="true" displaySummary="false"/>
+            </div>
    		</div>
    		
    		<div id="form-panel" class="modal fade hide">
@@ -92,7 +95,8 @@
 		   	 	<h3 data-form-display="add"><spring:message code="label.system-codes.add" /></h3>		    
 		   	 	<h3 data-form-display="update"><spring:message code="label.system-codes.update" /></h3>		    
 		  	</div>
-			<form:form modelAttribute="formCommand" id="system-codes-form">	
+		  	
+			<form:form modelAttribute="formCommand" id="system-codes-form" >	
 		  	<div class="modal-body">
 				<div class="pull-right">
 			        <span class="required">*</span>
@@ -139,10 +143,25 @@
   	$(document).ready(function() {
   		// call footable first before hiding the table
   		// there is an bug in footable that hides other table elements  		
-  		$('.table').footable();
+//  		$('.table').footable();
+  		
+  		// for single page crud (modal)
+  		// for single page crud (inline)
+  		// for single page crud (new page)
+  		$("#system-codes-body").RESTful();
+  		// (1) look for class='add-icon', on click, display class='add-form'. 
+  		// (1.1) when displaying check if add form is modal, inline, on newpage.
+   		// (2) look for class='search-form', convert inner forms to jsonSearch.   		
+   		// (2.1) display search results to class='results-panel' (must contain table)
+   		// 
 
-  		$('#system-codes-search').jsonSearch();  		
-  		$('#add-system-codes').jsonForm();
+//  		$("system-codes-form").RESTful();
+  		
+  		  		  		
+  		// for multiple page crud
+//  		$('#system-codes-search').jsonSearch();
+  		
+  	// convert the search form to ajax search
   	});
   	
   	function checkNewCategory(fromDropdown) {

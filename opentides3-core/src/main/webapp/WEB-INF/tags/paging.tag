@@ -55,7 +55,7 @@
 	        <c:url var="linkFirst" value="${baseURL}">
 	            <c:param name="${tPageParamName}" value="1"/>
 	        </c:url>
-            <li class="${clazz}"><a href="${linkFirst}">&lt;&lt;</a></li>			
+            <li class="ot3-firstPage ${clazz}"><a href='${linkFirst}' data-page='1'>&lt;&lt;</a></li>			
             
 <!-- Prev Page -->
             <c:set var="clazz" value=""/>
@@ -65,7 +65,7 @@
 	        <c:url var="linkPrev" value="${baseURL}">
 	            <c:param name="${tPageParamName}" value="${results.currPage-1}"/>
 	        </c:url>
-            <li class="${clazz}"><a href="${linkPrev}">&lt;</a></li>			
+            <li class="ot3-prevPage ${clazz}"><a href="${linkPrev}" data-page='${results.currPage-1}'>&lt;</a></li>			
 		        
 <!-- Paging -->
 	    <c:forEach begin="${results.startPage}" end="${results.endPage}" step="1" var="page">
@@ -76,7 +76,7 @@
 	        <c:if test="${page == results.currPage}">
 	     		<c:set var="clazz" value="active"/>
 	        </c:if>
-            <li class="${clazz}"><a href="${link}">${page}</a></li>	        
+            <li class="ot3-page-${page} ${clazz}"><a href="${link}" data-page='${page}'>${page}</a></li>	        
 	    </c:forEach>
 	    
 <!-- Next Page -->
@@ -87,7 +87,7 @@
 		    <c:if test="${results.currPage == results.endPage}">
 		     	<c:set var="clazz" value="disabled"/>
 		    </c:if>
-	        <li class="${clazz}"><a href="${linkNext}">&gt;</a></li>	        
+	        <li class="ot3-nextPage ${clazz}"><a href="${linkNext}" data-page='${results.currPage+1}'>&gt;</a></li>	        
         
 <!-- Last Page -->
 	        <c:url var="linkLast" value="${baseURL}">
@@ -97,7 +97,7 @@
 		    <c:if test="${results.endPage == results.totalPages}">
 		     	<c:set var="clazz" value="disabled"/>
 		    </c:if>
-	        <li class="${clazz}"><a href="${linkLast}">&gt;&gt;</a></li>	        
+	        <li class="ot3-lastPage ${clazz}"><a href="${linkLast}" data-page='${results.totalPages}'>&gt;&gt;</a></li>	        
         </ul>
 	</div>
 	</c:if>

@@ -23,8 +23,8 @@ import org.opentides.bean.SystemCodes;
 import org.opentides.bean.user.UserCredential;
 import org.opentides.exception.CodeGenerationException;
 
-import com.ideyatech.bean.Ninjago;
 import com.ideyatech.bean.UserCriteria;
+import com.ideyatech.example.Ninjago;
 
 /**
  * @author allanctan

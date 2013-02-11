@@ -1,4 +1,4 @@
-package com.ideyatech.bean;
+package com.ideyatech.example;
 
 import java.util.Date;
 import java.util.Set;
@@ -88,7 +88,7 @@ public class Ninjago extends BaseEntity{
 	// 
 	private Clan mainClan;
 	
-	private Set<Clan> subClans
+	private Set<Clan> subClans;
 	
 	// Dropdown
 	// Validation: required
@@ -127,7 +127,5 @@ public class Ninjago extends BaseEntity{
 	
 	// file upload
 	private String attachment;
-	
-	
 
 }

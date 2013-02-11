@@ -19,6 +19,7 @@
     </div>
 
 <script type="text/javascript" src="<c:url value='/js/jquery-1.9.0.min.js'/>"></script>	
+<script type="text/javascript" src="<c:url value='/js/jquery.deserialize.js'/>"></script>	
 <script type="text/javascript" src="<c:url value='/js/bootstrap.min.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/js/footable-0.1.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/js/bootstrap-notify.js'/>"></script>
