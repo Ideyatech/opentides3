@@ -48,13 +48,16 @@
 
 	<div id="wrap">
 	
-		<div class="navbar navbar-inverse navbar-fixed-top">
+		<div id="nav" class="navbar navbar-inverse navbar-fixed-top">
 			<div class="navbar-inner">
 				<div class="container">
 					<a class="btn btn-navbar" data-toggle="collapse"
 						data-target=".nav-collapse"> <span class="icon-bar"></span> <span
 						class="icon-bar"></span> <span class="icon-bar"></span>
-					</a> <a class="brand" href="${home}">${client_name}</a>
+					</a>
+					<a class="brand" href="${home}">
+						<img id="logo" src="<c:url value='${logo}'/>"/>
+					</a>
 					<div class="nav-collapse collapse">
 						<ul class="nav">
 							<li class="${active eq 'home' ? 'active' : ''}">
@@ -74,7 +77,14 @@
 				</div>
 			</div>
 		</div>
-		<div class='notifications top-left'></div>	    
-	    <div class='notifications top-right'></div>	
+
+		<div class='notifications top-left'></div>	
+	    	<div class='notifications top-right'></div>
 	    <div class='notifications system-error'></div>
+		<header class="jumbotron">
+			<div class="container">
+				<h2><spring:message code="${title_webpage}" /></h2>
+			</div>
+		</header>
+
 		<div id="main" class="container">

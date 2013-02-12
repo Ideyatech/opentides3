@@ -9,6 +9,7 @@
   -moz-border-radius: 6px;
   -webkit-border-radius: 6px;
   border-radius: 6px;
+  margin-bottom: 20px;
 }
 
 .footable.breakpoint > tbody > tr > td.expand {
