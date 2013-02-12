@@ -124,12 +124,33 @@ public abstract class BaseCrudController<T extends BaseEntity> {
     }
     
     /**
+     * This is the method handler when user requests to search via json.
+     * @param command
+     * @param bindingResult
+     * @param uiModel
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping(method = RequestMethod.GET, produces = "application/json")
+    @ResponseView(Views.SearchView.class)
+    public final @ResponseBody SearchResults<T> searchJson(
+    		@ModelAttribute("searchCommand") T command, 
+    		BindingResult bindingResult, Model uiModel,
+			HttpServletRequest request, HttpServletResponse response) {
+    	preSearchAction(command, bindingResult, uiModel, request, response);
+    	SearchResults<T> results = search(command, request);
+    	postSearchAction(command, results, bindingResult, uiModel, request, response);
+    	return results;
+    }
+    
+    /**
      * This is the entry point of a CRUD page which loads the search page.
      * 
      * @param uiModel
      * @return
      */
-    @RequestMapping(method = RequestMethod.GET, produces = "text/html")
+    @RequestMapping(method = RequestMethod.GET)
     public final String loadHtml( @ModelAttribute("searchCommand") T command, 
     		BindingResult bindingResult, Model uiModel,
     		HttpServletRequest request, HttpServletResponse response) {
@@ -146,7 +167,7 @@ public abstract class BaseCrudController<T extends BaseEntity> {
     	}
         return singlePage;
     }
-    
+       
     /**
      * Saves the form.
      * 
@@ -154,7 +175,7 @@ public abstract class BaseCrudController<T extends BaseEntity> {
      * @param request
      * @return
      */
-    @RequestMapping(method = RequestMethod.POST, headers = "Accept=application/json")
+    @RequestMapping(method = RequestMethod.POST, produces = "application/json")
     public final @ResponseBody Map<String, Object> create(
     			@FormBind(name="formCommand") T command, 
     			BindingResult bindingResult, Model uiModel,
@@ -170,7 +191,7 @@ public abstract class BaseCrudController<T extends BaseEntity> {
         return model;
     }
     
-    @RequestMapping(value="{id}", method = RequestMethod.PUT, headers = "Accept=application/json")
+    @RequestMapping(value="{id}", method = RequestMethod.PUT, produces = "application/json")
     public final @ResponseBody Map<String, Object> update(
     			@FormBind(name="formCommand") T command, 
     			@PathVariable("id") Long id,
@@ -187,7 +208,7 @@ public abstract class BaseCrudController<T extends BaseEntity> {
         return model;
     }
         
-    @RequestMapping(value="{id}", method = RequestMethod.GET, headers = "Accept=application/json")
+    @RequestMapping(value="{id}", method = RequestMethod.GET, produces = "application/json")
     @ResponseView(Views.FormView.class)
     public final @ResponseBody T get(@PathVariable("id") Long id, Model uiModel,
 			HttpServletRequest request, HttpServletResponse response) {    	
@@ -199,20 +220,8 @@ public abstract class BaseCrudController<T extends BaseEntity> {
     	}
     	return command;
     }
-
-    @RequestMapping(method = RequestMethod.GET, headers = "Accept=application/json")
-    @ResponseView(Views.SearchView.class)
-    public final @ResponseBody SearchResults<T> searchJson(
-    		@ModelAttribute("searchCommand") T command, 
-    		BindingResult bindingResult, Model uiModel,
-			HttpServletRequest request, HttpServletResponse response) {
-    	preSearchAction(command, bindingResult, uiModel, request, response);
-    	SearchResults<T> results = search(command, request);
-    	postSearchAction(command, results, bindingResult, uiModel, request, response);
-    	return results;
-    }   
-        
-    @RequestMapping(value="{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
+ 
+    @RequestMapping(value="{id}", method = RequestMethod.DELETE, produces = "application/json")
     public final @ResponseBody Map<String, Object> delete(@PathVariable("id") Long id, 
     		T command, BindingResult bindingResult, Model uiModel,
 			HttpServletRequest request, HttpServletResponse response) {

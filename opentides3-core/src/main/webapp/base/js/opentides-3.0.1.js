@@ -128,10 +128,10 @@ var opentides3 = (function() {
         	from.addClass('pull-left');
         	to.addClass('pull-left');
         	from.parent().css("margin-left","0");
-        	from.animate({
+        	from.stop(false, true).animate({
         	      marginLeft: "-100%"
-        	    }, 1000, 'swing', function() {
-        	    	$(from).remove();
+        	    }, 600, 'swing', function() {
+        	    	$(this).remove();
         	    });
         },        
         /**
@@ -147,10 +147,10 @@ var opentides3 = (function() {
         	from.addClass('pull-right');
         	to.addClass('pull-right');
         	from.parent().css("margin-left","-100%");
-        	from.animate({
+        	from.stop(false, true).animate({
         	      marginRight: "-50%"
-        	    }, 500, 'swing', function() {
-        	    	$(from).remove();
+        	    }, 300, 'swing', function() {
+        	    	$(this).remove();
         	    }
         	);
         }
@@ -463,24 +463,30 @@ var opentides3 = (function() {
 	 * (2.1) display search results to <results> (must contain table)
 	 *****************************/
 	var displayResults = function(searchForm, results, status, json) {
-
+		// ensure past animations are stopped
+		if (results.find('table:animated').length > 0) {
+			results.find('table:animated').stop().remove();
+		}
+		
 		// show the search result status bar
 		status.show();
 		
 		// show the results
-		if (json['results'].length > 0) {  				
+		if (json['results'].length > 0) {
 			results.show();
+			
 			// old table
-			var oldTable = results.find('table');
+			var oldTable = results.find('table:first');
 			var oldPage = oldTable.data('page');
+			
 			// new table
 			var newTable = oldTable.clone();
 			newTable.find('tr').not('.table-header').remove();
-			newTable.data('page',json.currPage);
+			newTable.attr('data-page',json.currPage);
 			
 			// listed results column
 			var listedNames = {};
-			oldTable.find('th').each(function(i, item) {
+			newTable.find('th').each(function(i, item) {
 				listedNames[i] = $(item).data('fieldName');
 			});
 			
@@ -493,7 +499,7 @@ var opentides3 = (function() {
 			// now let's animate
 			if (oldPage < json.currPage)
 				opentides3.slideLeft(oldTable, newTable);
-			else  if (oldPage > json.currPage)
+			else if (oldPage > json.currPage)
 				opentides3.slideRight(oldTable, newTable);
 			else {
 				oldTable.after(newTable);
