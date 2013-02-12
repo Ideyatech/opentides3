@@ -57,8 +57,9 @@
                                 
         <div class="clear"></div>                  
 
-		<div id="results-panel" class="row-fluid">
-        	<table id="system-codes-results" class="table table-bordered table-striped table-hover table-condensed">
+		<div id="results-panel" class="row-fluid" style="overflow:hidden">
+			<div class="span12" style="width:200%;">		
+        	<table id="system-codes-results" class="table table-bordered table-striped table-hover table-condensed" data-page="${results.currPage}" style="width:50%;">
 				<thead>
                	<tr class="table-header">
                    	<th class="col-1" data-class="expand" data-field-name="value"><spring:message code="label.system-codes.value"/></th>
@@ -84,7 +85,8 @@
             	</tbody>           		
            		
             </table>
-            <div class="status" data-display-pagelinks="true" data-display-summary="false">
+            </div>
+            <div class="status clearfix" data-display-pagelinks="true" data-display-summary="false">
             <app:paging results="${results}" displayPageLinks="true" displaySummary="false"/>
             </div>
    		</div>

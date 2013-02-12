@@ -114,7 +114,47 @@ var opentides3 = (function() {
     				}).show();
     			}
     		}); //.each			
+        },
+        /**
+         * Animate slide element to the left. 
+         * @param from - old element to be removed
+         * @param to - new element to be displayed
+         * 
+         */
+        slideLeft: function(from, to) {
+        	from.after(to);
+        	from.removeClass('pull-right');
+        	to.removeClass('pull-right');
+        	from.addClass('pull-left');
+        	to.addClass('pull-left');
+        	from.parent().css("margin-left","0");
+        	from.animate({
+        	      marginLeft: "-100%"
+        	    }, 1000, 'swing', function() {
+        	    	$(from).remove();
+        	    });
+        },        
+        /**
+         * Animate slide element to the right. 
+         * @param from - old element to be removed
+         * @param to - new element to be displayed
+         * 
+         */
+        slideRight: function(from, to) {        	
+        	from.after(to);
+        	from.removeClass('pull-left');
+        	to.removeClass('pull-left');
+        	from.addClass('pull-right');
+        	to.addClass('pull-right');
+        	from.parent().css("margin-left","-100%");
+        	from.animate({
+        	      marginRight: "-50%"
+        	    }, 500, 'swing', function() {
+        	    	$(from).remove();
+        	    }
+        	);
         }
+
     };
 })();
 
@@ -365,7 +405,7 @@ var opentides3 = (function() {
 				}
 				if (confirm(message)) {
 					$.ajax({
-					    url: id,
+					    url: opentides3.getPath() + id,
 					    type: 'DELETE',
 					    success: function(json) {
 	  		    			opentides3.displayMessage(json);		    		  		    			
@@ -428,25 +468,42 @@ var opentides3 = (function() {
 		status.show();
 		
 		// show the results
-		if (json.results.length > 1) {  				
+		if (json['results'].length > 0) {  				
 			results.show();
+			// old table
+			var oldTable = results.find('table');
+			var oldPage = oldTable.data('page');
+			// new table
+			var newTable = oldTable.clone();
+			newTable.find('tr').not('.table-header').remove();
+			newTable.data('page',json.currPage);
+			
+			// listed results column
+			var listedNames = {};
+			oldTable.find('th').each(function(i, item) {
+				listedNames[i] = $(item).data('fieldName');
+			});
+			
+			// clear the table
+			// add results as table row
+			$.each(json['results'], function(i, result) {
+				displayTableRow(newTable, result, listedNames);
+			}); // each
+			
+			// now let's animate
+			if (oldPage < json.currPage)
+				opentides3.slideLeft(oldTable, newTable);
+			else  if (oldPage > json.currPage)
+				opentides3.slideRight(oldTable, newTable);
+			else {
+				oldTable.after(newTable);
+				oldTable.remove();
+			}
+				
 		} else {
 			results.hide();  				
 		}
 		
-		var resultsTable = results.find('table');
-		
-		var listedNames = {};
-		// get the listed results column
-		resultsTable.find('th').each(function(i, item) {
-			listedNames[i] = $(item).data('fieldName');
-		});
-		// clear the table
-		resultsTable.find('tr').not('.table-header').remove();
-		// add results as table row
-		$.each(json['results'], function(i, result) {
-			displayTableRow(resultsTable, result, listedNames);
-		}); // each	    		
 		
 		
 		// look for paging 

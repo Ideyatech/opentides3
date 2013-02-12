@@ -73,5 +73,6 @@
 				</div>
 			</div>
 		</div>
-	
+		<div class='notifications top-left'></div>	    
+	    <div class='notifications top-right'></div>	
 		<div id="main" class="container">
