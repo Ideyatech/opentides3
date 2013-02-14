@@ -3,9 +3,9 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:util="http://www.springframework.org/schema/util"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
-           http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+           http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
            http://www.springframework.org/schema/util 
-           http://www.springframework.org/schema/util/spring-util-3.1.xsd">
+           http://www.springframework.org/schema/util/spring-util-3.2.xsd">
 
 	<!-- System Properties for Amazon AWS -->
 	<bean id="sysProps"
@@ -82,7 +82,7 @@
 		<property name="username" value="${database.username}" />
 		<property name="password" value="${database.password}" />
 	</bean>
-	
+	 
 	<bean id="directReportDataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="${database.driver}" />

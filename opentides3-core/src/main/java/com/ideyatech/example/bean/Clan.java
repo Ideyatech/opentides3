@@ -16,7 +16,7 @@
    specific language governing permissions and limitations
    under the License.    
  */
-package com.ideyatech.example;
+package com.ideyatech.example.bean;
 
 import java.util.Set;
 
@@ -34,9 +34,9 @@ public class Clan extends BaseEntity {
 	
 	private String description;
 
-	private Ninjago leader;
+	private Ninja leader;
 	
-	private Set<Ninjago> members;
+	private Set<Ninja> members;
 
 	/**
 	 * @return the name
@@ -69,28 +69,28 @@ public class Clan extends BaseEntity {
 	/**
 	 * @return the leader
 	 */
-	public final Ninjago getLeader() {
+	public final Ninja getLeader() {
 		return leader;
 	}
 
 	/**
 	 * @param leader the leader to set
 	 */
-	public final void setLeader(Ninjago leader) {
+	public final void setLeader(Ninja leader) {
 		this.leader = leader;
 	}
 
 	/**
 	 * @return the members
 	 */
-	public final Set<Ninjago> getMembers() {
+	public final Set<Ninja> getMembers() {
 		return members;
 	}
 
 	/**
 	 * @param members the members to set
 	 */
-	public final void setMembers(Set<Ninjago> members) {
+	public final void setMembers(Set<Ninja> members) {
 		this.members = members;
 	}
 	

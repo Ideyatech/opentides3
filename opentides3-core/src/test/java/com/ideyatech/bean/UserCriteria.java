@@ -23,7 +23,6 @@ public class UserCriteria extends BaseUser {
 	/* (non-Javadoc)
 	 * @see com.ideyatech.core.bean.user.BaseUser#getSearchProperties()
 	 */
-	@Override
 	public List<String> getSearchableFields() {
 		List<String> props = new ArrayList<String>();
 		props.add("firstName");

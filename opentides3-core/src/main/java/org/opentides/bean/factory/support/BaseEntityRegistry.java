@@ -52,10 +52,13 @@ public class BaseEntityRegistry implements InitializingBean {
 		BeanDefinitionRegistry registry = new SimpleBeanDefinitionRegistry();
 		ClassPathBeanDefinitionScanner s = new ClassPathBeanDefinitionScanner(registry);
 		TypeFilter tf = new AssignableTypeFilter(BaseEntity.class);
+		s.resetFilters(false);
 		s.addIncludeFilter(tf);		
-		s.scan(packages.toArray(new String[packages.size()]));
+		s.scan(packages.toArray(new String[packages.size()]));		
 		for (String name:registry.getBeanDefinitionNames()) {
-			baseEntities.add(registry.getBeanDefinition(name).getBeanClassName());			
+			Class<?> clazz = Class.forName(registry.getBeanDefinition(name).getBeanClassName());
+			if (BaseEntity.class.isAssignableFrom(clazz))
+				baseEntities.add(registry.getBeanDefinition(name).getBeanClassName());			
 		}
 	}
 

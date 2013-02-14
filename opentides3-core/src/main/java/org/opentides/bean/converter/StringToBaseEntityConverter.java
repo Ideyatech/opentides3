@@ -59,7 +59,11 @@ public class StringToBaseEntityConverter implements
 		Set<ConvertiblePair> convertibleTypes = new HashSet<ConvertiblePair>();
 		for (String entity:baseEntityRegistry.getBaseEntities()) {
 			try {
+				//do not include system codes in this converter
+				if (entity.contains("SystemCodes"))
+					continue;
 				convertibleTypes.add(new ConvertiblePair(String.class, Class.forName(entity)));
+				_log.info("Adding generic string converter for " + entity);
 			} catch (ClassNotFoundException e) {
 				_log.error("Class not found ["+entity+"]",e);
 			}

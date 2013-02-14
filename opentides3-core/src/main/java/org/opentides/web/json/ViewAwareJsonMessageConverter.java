@@ -3,6 +3,7 @@ package org.opentides.web.json;
 import java.io.IOException;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.http.HttpOutputMessage;
 import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -12,6 +13,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.SerializationFeature;
 
 /**
  * Adds support for Jackson's JsonView on methods annotated with a
@@ -23,18 +25,12 @@ import com.fasterxml.jackson.databind.ObjectWriter;
  * 
  */
 public class ViewAwareJsonMessageConverter extends
-		MappingJackson2HttpMessageConverter {
+		MappingJackson2HttpMessageConverter implements InitializingBean {
 	
 	private static final Logger _log = Logger.getLogger(ViewAwareJsonMessageConverter.class);
-
-	public ViewAwareJsonMessageConverter() {
-		super();
-		ObjectMapper defaultMapper = new ObjectMapper();
-		defaultMapper.configure(
-				MapperFeature.DEFAULT_VIEW_INCLUSION, false);
-		setObjectMapper(defaultMapper);
-	}
-
+	
+	private boolean prefixJson = false;
+	
 	@Override
 	protected void writeInternal(Object object, HttpOutputMessage outputMessage)
 			throws IOException, HttpMessageNotWritableException {
@@ -56,12 +52,32 @@ public class ViewAwareJsonMessageConverter extends
 				.getContentType());
 		JsonGenerator jsonGenerator = getObjectMapper().getFactory()
 				.createJsonGenerator(outputMessage.getBody(), encoding);
-		try {			
+		try {
 			ObjectWriter w = getObjectMapper().writerWithView(view.getView());
+			if (this.prefixJson) {
+	            jsonGenerator.writeRaw("{} && ");
+	        }
 			w.writeValue(jsonGenerator, view.getData());
 		} catch (IOException ex) {
 			throw new HttpMessageNotWritableException("Could not write JSON: "
 					+ ex.getMessage(), ex);
 		}
+	}
+
+	/**
+	 * @param prefixJson the prefixJson to set
+	 */
+	public final void setPrefixJson(boolean prefixJson) {
+		this.prefixJson = prefixJson;
+		super.setPrefixJson(prefixJson);
+	}
+	
+	@Override
+	public void afterPropertiesSet() {
+		if (getObjectMapper()==null)
+			setObjectMapper(new ObjectMapper());
+		getObjectMapper().configure(
+				MapperFeature.DEFAULT_VIEW_INCLUSION, false);
+		getObjectMapper().configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
 	}
 }

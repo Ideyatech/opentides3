@@ -69,9 +69,9 @@
                 	<th class="col-5" data-field-name="ot3-controls"></th>
                 </tr>
            		</thead>
-				<tbody id="system-codes-table-results">
+				<tbody>
             	<c:forEach items="${results.results}" var="record" varStatus="status">
-            	<tr id="usergroup-row-${record.id}">            
+            	<tr data-id='${record.id}'>            
                 	<td class="col-1"><c:out value="${record.value}" /></td>
                 	<td class="col-2"><c:out value="${record.key}" /></td>
                 	<td class="col-3"><c:out value="${record.category}" /></td>

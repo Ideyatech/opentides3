@@ -34,7 +34,9 @@ import org.opentides.annotation.FormBind;
 import org.opentides.bean.BaseEntity;
 import org.opentides.bean.MessageResponse;
 import org.opentides.bean.SearchResults;
+import org.opentides.exception.DataAccessException;
 import org.opentides.service.BaseCrudService;
+import org.opentides.service.SystemCodesService;
 import org.opentides.util.NamingUtil;
 import org.opentides.util.StringUtil;
 import org.opentides.web.json.ResponseView;
@@ -44,7 +46,6 @@ import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
-import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.ui.Model;
 import org.springframework.util.Assert;
 import org.springframework.validation.BindException;
@@ -81,6 +82,9 @@ public abstract class BaseCrudController<T extends BaseEntity> {
 
 	@Autowired
 	private BeanFactory beanFactory;
+	
+	@Autowired
+	private SystemCodesService systemCodesService;
 	
 	// contains the class type of the bean    
     private Class<T> entityBeanType;
@@ -154,7 +158,7 @@ public abstract class BaseCrudController<T extends BaseEntity> {
     public final String loadHtml( @ModelAttribute("searchCommand") T command, 
     		BindingResult bindingResult, Model uiModel,
     		HttpServletRequest request, HttpServletResponse response) {
-    	uiModel.asMap().clear();
+//    	uiModel.asMap().clear();
     	uiModel.addAttribute("formCommand", BeanUtils.instantiate(this.entityBeanType));    	
     	uiModel.addAttribute("searchCommand", command);    	
     	if (request.getParameterMap().size() > 0) {
@@ -238,12 +242,12 @@ public abstract class BaseCrudController<T extends BaseEntity> {
     		} catch (Exception e) {
     			String message = "Failed to delete "+this.entityBeanType+" with id = ["+id+"]";
     			_log.error(message,e);
-    			throw new DataRetrievalFailureException(message, e);
+    			throw new DataAccessException(message, e);
     		}
     	} else {
 			String message = "Invalid id = ["+id+"] for delete operation of "+this.entityBeanType;
 			_log.error(message);
-			throw new DataRetrievalFailureException(message);    		
+			throw new DataAccessException(message);    		
     	}
     }
     
@@ -520,6 +524,13 @@ public abstract class BaseCrudController<T extends BaseEntity> {
 	 */
 	public final BaseCrudService<T> getService() {
 		return service;
+	}
+
+	/**
+	 * @return the systemCodesService
+	 */
+	public final SystemCodesService getSystemCodesService() {
+		return systemCodesService;
 	}    
     
 }

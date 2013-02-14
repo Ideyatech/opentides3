@@ -58,7 +58,10 @@ var opentides3 = (function() {
 		    for (; i < path.length; i++) {
 		    	json = json[path[i]];
 		    }
-		    return $('<div/>').text(json).html();
+		    if (json == null || json.length==0)
+		    	return '';
+		    else
+		    	return $('<div/>').text(json).html();
     	},
     	/**
     	 * Retrieves the message based on the given code. 
@@ -96,6 +99,7 @@ var opentides3 = (function() {
 			};
     		// display the message
     		$.each(json['messages'], function(i, message) {
+    			$('.'+message.elementClass).find('.ot3-alert').remove();
     			if (message.type == 'error') {
 	    			// displays error message (red, fixed)
     				addMessage(message.elementClass, 'alert-error', message.message);
@@ -113,6 +117,8 @@ var opentides3 = (function() {
     					message: { text: message.message }
     				}).show();
     			}
+    			//TODO: Insert scrolling to message.elementClass code 
+    			//      here in case error message is not visible.
     		}); //.each			
         },
         /**
@@ -170,28 +176,98 @@ var opentides3 = (function() {
      * 
      * @param json - json object containing the values
      */
-	$.fn.bind = function(json) {  
+	$.fn.bind = function(json) {  		
 		return this.each(function() {
 			var form = $(this);
+	    	$(this).find('input:checkbox').prop('checked',false);			
 	        $.each(json,function(key,value) {
-	            var elem = form.find("[name='"+key+"']");
-	            // do not bind password or file upload
-	            if (elem.attr('type') == 'text' || elem.attr('type') == 'hidden' || 
-	            		elem.is('textarea') || elem.is("select")) {
-					// set the default value for the form
-	            	elem.val(value);
-				} else if (elem.attr('type') == 'checkbox') {
-					// check the field if the data value is true/1
-					if ( value == 1 ) 
-						elem.attr("checked", "checked");
-					else
-						elem.attr("checked","");
-				} else  if (elem.attr('type') == 'radio') {
-					// TODO: Add bind code here
-				}
-	       });			
+	            form.find("[name='"+key+"']").each(function() {
+	            	var elem = $(this);
+	            	var type = elem.attr('type');
+		            if (value == null) value = '';
+		            // do not bind password or file upload
+		            if (type == 'text' || 
+		            	type == 'hidden' || 
+		            	elem.is('textarea') ) {
+						// set the default value for the form
+		            	var prime = toPrimitive(value);
+		            	elem.val(prime);
+					} else if (elem.is("select")) {
+						var normValue = normalizeValue(value);
+						elem.val(normValue);
+					} else if (elem.attr('type') === 'checkbox') {
+						// check the field if the data value is true/1
+						if (jQuery.type(value) === 'boolean') {
+							if (value==true)
+								elem.prop('checked',true);
+							else
+								elem.prop('checked',false);
+						} else {							
+							var normValue = normalizeValue(value,true);
+							if (jQuery.inArray(elem.attr('value'), normValue) >= 0)
+								elem.prop('checked',true);
+							else
+								elem.prop('checked',false);								
+						} 
+					} else  if (elem.attr('type') === 'radio') {
+		            	var prime = toPrimitive(value);
+						if (elem.attr('value')==prime)
+							elem.prop('checked',true);
+						else
+							elem.prop('checked', false);
+					}
+	            })
+	        });			
 		});
 	};
+	
+	/**
+	 * Private helper method to convert an object to primitive value.
+	 * Used when converting json objects to single value string.
+	 */
+	var toPrimitive = function(value) {
+		var type = jQuery.type(value);
+		if (type === 'object') {
+			if (value.key != null)
+				return value.key;
+			else if (value.id != null)
+				return value.id;
+			else {
+				alert('Unable to convert object ['+value+'] to its primitive form.');				
+				return '';				
+			}
+		} else
+			return value;
+	}
+	
+	/**
+	 * Private helper that ensures value is always a single dimension array.
+	 * If value is an object, key is used, otherwise id is used.
+	 * Otherwise, error occurs.
+	 */ 
+	var normalizeValue = function(value, toArray) {
+		if (jQuery.isEmptyObject(value))
+			return '';
+		var prime = toPrimitive(value);
+		var type = jQuery.type(prime);
+		if ( (type === 'string') || 
+			 (type === 'boolean')||
+			 (type === 'number') ) {
+			// value is primitive, return as is.
+			if (jQuery.type(toArray) != 'undefined' && toArray==true)
+				return [prime];
+			else
+				return prime;
+		}
+		if (type === 'array') {
+			var arr = [];
+			$(prime).each(function() {				
+				arr.push(toPrimitive(this));
+			});					
+			return arr;
+		}
+		return value;
+	}
 	
     /**
      * Clears all the input of the form.
@@ -199,7 +275,7 @@ var opentides3 = (function() {
 	$.fn.clearForm = function() {  
 		return this.each(function() {
 	    	$(this).find('input:text, input:password, input:file, select, textarea').val('');
-	    	$(this).find('input:radio, input:checkbox').removeAttr('checked').removeAttr('selected');			
+	    	$(this).find('input:radio, input:checkbox').prop('checked',false).prop('selected',false);			
 		});
     };
 
@@ -281,7 +357,7 @@ var opentides3 = (function() {
   			if (opentides3.supportsHistory()) {
   				window.addEventListener("popstate", function(e) {
   					var state = e.state;
-		    	    if (state.mode=='search') {
+		    	    if (state != null && state.mode=='search') {
 		    	    	var formElement = $('#'+state.formPath);
 		    	    	formElement.deserialize(state.formData);
 		    	    	displayResults(formElement, results, status, state.data);
@@ -314,7 +390,7 @@ var opentides3 = (function() {
 	  	  		    	function(json) {						// callback
 	  			    		firstForm.attr('action',opentides3.getPath());
 	  			    		firstForm.attr('method','post');
-	  		    			firstForm.bind(json);	  		    			
+	  		    			firstForm.bind(json);
 	  		    			form.find('[data-form-display="add"]').show();	    			
 	  		    			form.find('[data-form-display="update"]').hide();	
 	  		    			if (form.hasClass('modal')) 
@@ -328,10 +404,10 @@ var opentides3 = (function() {
 	    		var firstForm = $(this).closest('form');
 	    		var button = $(this);
   				$.ajax( {
-  					type:firstForm.attr('method'),
+  					type:firstForm.attr('method'),		// method
   					url:firstForm.attr('action'), 		// url
   					data:firstForm.serialize(),			// data
-  					success: function(json) {		// callback
+  					success: function(json) {			// callback
   		    			opentides3.displayMessage(json);
   		    			if (typeof(json.command) === 'object' &&
   		    					json.command.id > 0) {
@@ -378,17 +454,17 @@ var opentides3 = (function() {
 	    	$(this).on("click", settings['edit'], function() {
 				var id = $(this).data('id');
 				$.getJSON(
-	  		    		id,	 									// url
+						opentides3.getPath()+id,	 			// url
 	  		    		"",										// data
 	  	  		    	function(json) {						// callback
-	  			    		firstForm.attr('action',opentides3.getPath()+json.id);
-	  			    		firstForm.attr('method','put');
-	  		    			firstForm.bind(json);	  		    			
-	  		    			form.find('[data-form-display="add"]').hide();	    			
-	  		    			form.find('[data-form-display="update"]').show();	
 	  		    			if (form.hasClass('modal')) 
 	  		    				form.modal();
-	  		    		});	    					
+	  			    		firstForm.attr('action',opentides3.getPath()+json.id);
+	  			    		firstForm.attr('method','put');
+	  		    			firstForm.bind(json);   			
+	  		    			form.find('[data-form-display="add"]').hide();	    			
+	  		    			form.find('[data-form-display="update"]').show();	
+	  		    		});
 			});
 			
 			
@@ -497,11 +573,16 @@ var opentides3 = (function() {
 			}); // each
 			
 			// now let's animate
-			if (oldPage < json.currPage)
+			if (oldPage.length == 0) {
+				// first page, no need to animate
+				oldTable.after(newTable);
+				oldTable.remove();				
+			} else if (oldPage < json.currPage)
 				opentides3.slideLeft(oldTable, newTable);
 			else if (oldPage > json.currPage)
 				opentides3.slideRight(oldTable, newTable);
 			else {
+				//can't classify (or equal), no need to animate
 				oldTable.after(newTable);
 				oldTable.remove();
 			}
@@ -509,8 +590,6 @@ var opentides3 = (function() {
 		} else {
 			results.hide();  				
 		}
-		
-		
 		
 		// look for paging 
 		status.each(function(i,elem) {

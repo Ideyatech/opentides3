@@ -24,7 +24,7 @@ import org.opentides.bean.user.UserCredential;
 import org.opentides.exception.CodeGenerationException;
 
 import com.ideyatech.bean.UserCriteria;
-import com.ideyatech.example.Ninjago;
+import com.ideyatech.example.bean.Ninja;
 
 /**
  * @author allanctan
@@ -79,12 +79,12 @@ public class CrudUtilTest {
 	public void testBuildUpdateSystemCodesMessage() {
 		SystemCodes oldsc = new SystemCodes("categoryold","keyold","old");
 		SystemCodes newsc = new SystemCodes("categorynew","keynew","new");
-		Ninjago oldtc = new Ninjago();
-		oldtc.setStatus(oldsc);
-		Ninjago newtc = new Ninjago();
-		newtc.setStatus(newsc);
-		Ninjago sametc = new Ninjago();
-		sametc.setStatus(oldsc);
+		Ninja oldtc = new Ninja();
+//		oldtc.setStatus(oldsc);
+		Ninja newtc = new Ninja();
+//		newtc.setStatus(newsc);
+		Ninja sametc = new Ninja();
+//		sametc.setStatus(oldsc);
 		
 		String expected = "Changed Test Codes Key:Status from 'keyold:old' to 'keynew:new'";
 		Assert.assertEquals(expected,
@@ -361,10 +361,10 @@ public class CrudUtilTest {
      
 	@Test
 	public void testGetAllFields() throws SecurityException, NoSuchFieldException {
-		List<Field> fields = CrudUtil.getAllFields(Ninjago.class);
+		List<Field> fields = CrudUtil.getAllFields(Ninja.class);
 		Assert.assertEquals(25, fields.size());
-		Field keyField = Ninjago.class.getDeclaredField("key");
-		Field statusField = Ninjago.class.getDeclaredField("status");
+		Field keyField = Ninja.class.getDeclaredField("key");
+		Field statusField = Ninja.class.getDeclaredField("status");
 		Field createDateField = BaseEntity.class.getDeclaredField("createDate");
 		Assert.assertTrue(fields.contains(keyField));
 		Assert.assertTrue(fields.contains(statusField));

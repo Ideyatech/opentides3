@@ -5,24 +5,19 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
-
 <%
 	response.setHeader("Cache-Control", "no-cache"); //HTTP 1.1 
 	response.setHeader("Pragma", "no-cache"); //HTTP 1.0 
 	response.setDateHeader("Expires", 0); //prevents caching 
 	response.setHeader("Cache-Control", "no-store"); //HTTP 1.1   
 %>
-
 <c:set var="home" value="${pageContext.request.contextPath}" scope="application" />
 <c:set var="ot_version" value="3.0" scope="application" />
-
 <jsp:useBean id="currentUser" class="org.opentides.util.SecurityUtil" scope="request"/>
-
 <spring:theme code="client_name" var="client_name" scope="application" />
 <spring:theme code="stylesheet" var="stylesheet" />
 <spring:theme code="logo" var="logo" />
 <spring:theme code="favicon" var="favicon" />
-
 
 <html lang="${pageContext.response.locale}">
 

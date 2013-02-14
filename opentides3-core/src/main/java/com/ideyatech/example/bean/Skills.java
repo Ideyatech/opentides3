@@ -16,7 +16,7 @@
    specific language governing permissions and limitations
    under the License.    
  */
-package com.ideyatech.example;
+package com.ideyatech.example.bean;
 
 import org.opentides.bean.BaseEntity;
 

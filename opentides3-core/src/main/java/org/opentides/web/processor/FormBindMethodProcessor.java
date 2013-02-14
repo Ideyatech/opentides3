@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.opentides.annotation.FormBind;
 import org.opentides.bean.BaseEntity;
+import org.opentides.exception.DataAccessException;
 import org.opentides.exception.InvalidImplementationException;
 import org.opentides.service.BaseCrudService;
 import org.opentides.util.CacheUtil;
@@ -32,7 +33,6 @@ import org.springframework.beans.MutablePropertyValues;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
-import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -132,7 +132,7 @@ public class FormBindMethodProcessor implements HandlerMethodArgumentResolver {
 					return updateBinder.getTarget();
 				} else {
 					String message = "Unable to find "+parameter.getParameterType().getSimpleName()+" with id="+sid+" for update."; 
-					throw new DataRetrievalFailureException(message);
+					throw new DataAccessException(message);
 				}
 			} else if ( "post".equals(method) ) {
 				mavContainer.addAllAttributes(binder.getBindingResult().getModel());
