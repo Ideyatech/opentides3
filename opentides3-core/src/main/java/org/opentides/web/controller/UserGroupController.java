@@ -34,12 +34,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @author opentides
  */
 @Controller 
-@RequestMapping("/organization/usergroup/")
+@RequestMapping("/organization/usergroups")
 public class UserGroupController extends BaseCrudController<UserGroup> {
 
 	@PostConstruct
 	public void init() {
 		singlePage = "/base/usergroup-crud";
+		// no pagination support
+		pageSize = 0;
 	}
 
 	@Override

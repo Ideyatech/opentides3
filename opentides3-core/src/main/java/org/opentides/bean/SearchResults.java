@@ -113,6 +113,8 @@ public class SearchResults<T> {
      */
 	@JsonView(Views.SearchView.class)	
     public final int getTotalPages() {
+		if (this.pageSize == 0) 
+			return 1;
         int totalPages = (int) (this.totalResults / this.pageSize);
         if ((this.totalResults % this.pageSize) != 0) {
             totalPages += 1;

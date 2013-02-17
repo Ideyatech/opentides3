@@ -48,6 +48,9 @@ public class MessageResponse extends DefaultMessageSourceResolvable {
 	private final String objectName;
 	
 	@JsonView(Views.BaseView.class)
+	private final String fieldName;
+	
+	@JsonView(Views.BaseView.class)
 	private final String elementClass;
 	
 	@JsonView(Views.BaseView.class)
@@ -63,8 +66,21 @@ public class MessageResponse extends DefaultMessageSourceResolvable {
 	 * @param arguments
 	 */
 	public MessageResponse(String elementClass, Type type, String[] codes, Object[] arguments) {
-		this(elementClass, type, null, codes, arguments);
+		this(elementClass, type, null, null, codes, arguments);
 	}
+	/**
+	 * Creates a message response to be rendered on the client.
+	 * This overloaded constructor is used when error is not specific to a field.
+	 * @param elementClass
+	 * @param type
+	 * @param objectName
+	 * @param codes
+	 * @param arguments
+	 */
+	public MessageResponse(String elementClass, Type type, String objectName, String[] codes, Object[] arguments) {
+		this(elementClass, type, objectName, null, codes, arguments);
+	}
+	
 
 	/**
 	 * Creates a message response to be rendered on the client.
@@ -76,7 +92,7 @@ public class MessageResponse extends DefaultMessageSourceResolvable {
 	 * @param codes - message codes to be displayed
 	 * @param arguments - parameters available for the messages
 	 */
-	public MessageResponse(String elementClass, Type type, String objectName, String[] codes, Object[] arguments) {
+	public MessageResponse(String elementClass, Type type, String objectName, String fieldName, String[] codes, Object[] arguments) {
 		super(codes, arguments);
 		Assert.notNull(type, "Type name must not be null");		
 		if (type==Type.error) {
@@ -84,8 +100,10 @@ public class MessageResponse extends DefaultMessageSourceResolvable {
 		}		
 		this.type=type;
 		this.objectName=objectName;
+		this.fieldName=fieldName;
 		this.elementClass=elementClass;
 	}
+
 
 	/**
 	 * @return the type
@@ -94,6 +112,13 @@ public class MessageResponse extends DefaultMessageSourceResolvable {
 		return type;
 	}
 
+
+	/**
+	 * @return the fieldName
+	 */
+	public final String getFieldName() {
+		return fieldName;
+	}
 
 	/**
 	 * @return the objectName

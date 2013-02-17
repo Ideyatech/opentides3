@@ -36,8 +36,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @author opentides
  */
 @Controller 
-@Secured("MANAGE_USER_PAGE")
-@RequestMapping("/organization/user/")
+// @Secured("MANAGE_USER_PAGE")
+@RequestMapping("/organization/users")
 public class UserController extends BaseCrudController<BaseUser> {
 
 	@PostConstruct

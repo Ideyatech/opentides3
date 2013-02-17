@@ -50,6 +50,7 @@ import org.springframework.ui.Model;
 import org.springframework.util.Assert;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.WebDataBinder;
@@ -72,22 +73,22 @@ public abstract class BaseCrudController<T extends BaseEntity> {
     private static Logger _log = Logger.getLogger(BaseCrudController.class);
 		
 	@Value("#{applicationSettings.pageSize}")
-	private Integer pageSize = 20;
+	protected Integer pageSize = 20;
 	
 	@Value("#{applicationSettings.linksCount}")
-	private Integer numLinks = 10;
+	protected Integer numLinks = 10;
 	
 	@Autowired
-	private MessageSource messageSource;
+	protected MessageSource messageSource;
 
 	@Autowired
-	private BeanFactory beanFactory;
+	protected BeanFactory beanFactory;
 	
 	@Autowired
-	private SystemCodesService systemCodesService;
+	protected SystemCodesService systemCodesService;
 	
 	// contains the class type of the bean    
-    private Class<T> entityBeanType;
+	protected Class<T> entityBeanType;
 
     protected BaseCrudService<T> service;
 
@@ -122,6 +123,7 @@ public abstract class BaseCrudController<T extends BaseEntity> {
     public @ResponseBody Map<String, Object> handleException(BindException e, HttpServletRequest request) {
     	Map<String, Object> response = new HashMap<String,Object>();
     	List<MessageResponse> messages = new ArrayList<MessageResponse>();
+    	
     	messages.addAll(convertErrorMessage("modal-body", e.getBindingResult(), request.getLocale()));
     	response.put("messages", messages);
     	return response;    		
@@ -467,8 +469,14 @@ public abstract class BaseCrudController<T extends BaseEntity> {
 		List<MessageResponse> errorMessages = new ArrayList<MessageResponse>();
 		if (bindingResult.hasErrors()) {
 			for (ObjectError error:bindingResult.getAllErrors()) {
-				MessageResponse message = new MessageResponse(elementClass, MessageResponse.Type.error,
-						error.getObjectName(), error.getCodes(), error.getArguments());
+				MessageResponse message = null;
+				if (error instanceof FieldError) {
+					FieldError ferror = (FieldError) error;
+					message = new MessageResponse(elementClass, MessageResponse.Type.error,
+							error.getObjectName(), ferror.getField(), error.getCodes(), error.getArguments());
+				} else
+					message = new MessageResponse(elementClass, MessageResponse.Type.error,
+							error.getObjectName(), null, error.getCodes(), error.getArguments());
 				message.setMessage(messageSource.getMessage(message, locale));
 				errorMessages.add(message);
 			}
@@ -524,13 +532,6 @@ public abstract class BaseCrudController<T extends BaseEntity> {
 	 */
 	public final BaseCrudService<T> getService() {
 		return service;
-	}
-
-	/**
-	 * @return the systemCodesService
-	 */
-	public final SystemCodesService getSystemCodesService() {
-		return systemCodesService;
 	}    
     
 }

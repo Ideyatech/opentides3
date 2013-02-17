@@ -63,6 +63,12 @@
 							<li class="${active eq 'system-codes' ? 'active' : ''}">
 								<a href="${home}/system/system-codes/">System Codes</a>
 							</li>
+							<li class="${active eq 'system-codes' ? 'active' : ''}">
+								<a href="${home}/organization/users/">Users</a>
+							</li>
+							<li class="${active eq 'system-codes' ? 'active' : ''}">
+								<a href="${home}/organization/usergroups/">User Groups</a>
+							</li>
 						</ul>
 					</div>
 				</div>
@@ -70,4 +76,5 @@
 		</div>
 		<div class='notifications top-left'></div>	    
 	    <div class='notifications top-right'></div>	
+	    <div class='notifications system-error'></div>
 		<div id="main" class="container">

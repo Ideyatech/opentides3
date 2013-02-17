@@ -40,8 +40,9 @@ var opentides3 = (function() {
     	 * This is needed on all REST request to avoid conflict with initial url 
     	 * request with parameters.
     	 */
-    	getPath: function() {
-    		return window.location.protocol + '//' + window.location.host + window.location.pathname    		
+    	getPath: function(param) {
+    		var path = window.location.pathname.replace(/\/$/,'');
+    		return window.location.protocol + '//' + window.location.host + path;    		
     	},
     	/**
     	 * Gets value from the json object based on given path 
@@ -75,7 +76,7 @@ var opentides3 = (function() {
         getMessage: function(code, elem) { 
         	if ($(elem).length) {
         		msg = $(elem).data(code);
-        		if (msg != undefined)
+        		if (typeof(msg) !== 'undefined')
         			return msg;
         	}
         	return defaultMessages[code]; 
@@ -91,7 +92,7 @@ var opentides3 = (function() {
 				if (panel.length === 0) {
 					container.prepend("<div class='ot3-alert alert "+alertClass+"'><ul></ul></div>");
 					panel = container.children('.'+alertClass);
-					if (alertClass=='alert-success') {
+					if (alertClass === 'alert-success') {
 						panel.prepend('<button type="button" class="close" data-dismiss="modal">&times;</button>');
 					}
 				}
@@ -99,11 +100,13 @@ var opentides3 = (function() {
 			};
     		// display the message
     		$.each(json['messages'], function(i, message) {
-    			$('.'+message.elementClass).find('.ot3-alert').remove();
     			if (message.type == 'error') {
 	    			// displays error message (red, fixed)
     				addMessage(message.elementClass, 'alert-error', message.message);
-    				message.objectName
+    				if (typeof(message.fieldName) !== 'undefined' &&
+    					message.fieldName.length > 0)
+    					$("."+message.elementClass+" [name='"+message.fieldName+"']")
+    						.closest('.control-group').addClass('error');
     			} else if (message.type == 'warning') {
     				// displays warning message (yellow, fixed)
     				addMessage(message.elementClass, 'alert-warning', message.message);
@@ -123,6 +126,11 @@ var opentides3 = (function() {
         },
         /**
          * Animate slide element to the left. 
+         * Note: This animation works only with the following styles on container:
+         *   - from,to element has "width:50%"
+         *   - parent element has "width:200%"
+         *   - super parent element has "overflow:hidden"
+         * 
          * @param from - old element to be removed
          * @param to - new element to be displayed
          * 
@@ -142,6 +150,11 @@ var opentides3 = (function() {
         },        
         /**
          * Animate slide element to the right. 
+         * Note: This animation works only with the following styles on container:
+         *   - from,to element has "width:50%"
+         *   - parent element has "width:200%"
+         *   - super parent element has "overflow:hidden"
+         * 
          * @param from - old element to be removed
          * @param to - new element to be displayed
          * 
@@ -170,6 +183,29 @@ var opentides3 = (function() {
 	// Opentides3 JQuery extensions
 	//*************************************
 
+	/**
+	 * Shows the element on the given container.
+	 */
+	$.fn.page = function(options) {
+		if ($.type(options) === 'string') {
+			options = {'action':options};
+		}
+	    var settings = $.extend( {
+		  'container'   : '',
+	      'action'		: 'show'
+	    }, options);
+
+		return this.each(function() {
+			var container = (settings.container === '') ? $(this).parent() : $(settings.container);
+			if (settings.action === 'show') {
+				container.children().hide();
+				$(this).show();				
+			} else if (settings.action === 'hide') {
+				container.children().hide();
+				container.find(':not(.hide)').show();
+			}			
+		});
+	}
     /**
      * Binds the json object to the form.
      * Binding uses attribute 'name' for matching.
@@ -179,7 +215,7 @@ var opentides3 = (function() {
 	$.fn.bind = function(json) {  		
 		return this.each(function() {
 			var form = $(this);
-	    	$(this).find('input:checkbox').prop('checked',false);			
+			form.clearForm();
 	        $.each(json,function(key,value) {
 	            form.find("[name='"+key+"']").each(function() {
 	            	var elem = $(this);
@@ -207,7 +243,7 @@ var opentides3 = (function() {
 							if (jQuery.inArray(elem.attr('value'), normValue) >= 0)
 								elem.prop('checked',true);
 							else
-								elem.prop('checked',false);								
+								elem.prop('checked',false);
 						} 
 					} else  if (elem.attr('type') === 'radio') {
 		            	var prime = toPrimitive(value);
@@ -219,55 +255,7 @@ var opentides3 = (function() {
 	            })
 	        });			
 		});
-	};
-	
-	/**
-	 * Private helper method to convert an object to primitive value.
-	 * Used when converting json objects to single value string.
-	 */
-	var toPrimitive = function(value) {
-		var type = jQuery.type(value);
-		if (type === 'object') {
-			if (value.key != null)
-				return value.key;
-			else if (value.id != null)
-				return value.id;
-			else {
-				alert('Unable to convert object ['+value+'] to its primitive form.');				
-				return '';				
-			}
-		} else
-			return value;
-	}
-	
-	/**
-	 * Private helper that ensures value is always a single dimension array.
-	 * If value is an object, key is used, otherwise id is used.
-	 * Otherwise, error occurs.
-	 */ 
-	var normalizeValue = function(value, toArray) {
-		if (jQuery.isEmptyObject(value))
-			return '';
-		var prime = toPrimitive(value);
-		var type = jQuery.type(prime);
-		if ( (type === 'string') || 
-			 (type === 'boolean')||
-			 (type === 'number') ) {
-			// value is primitive, return as is.
-			if (jQuery.type(toArray) != 'undefined' && toArray==true)
-				return [prime];
-			else
-				return prime;
-		}
-		if (type === 'array') {
-			var arr = [];
-			$(prime).each(function() {				
-				arr.push(toPrimitive(this));
-			});					
-			return arr;
-		}
-		return value;
-	}
+	};	
 	
     /**
      * Clears all the input of the form.
@@ -278,7 +266,6 @@ var opentides3 = (function() {
 	    	$(this).find('input:radio, input:checkbox').prop('checked',false).prop('selected',false);			
 		});
     };
-
 	
 	/**
 	 * 
@@ -331,9 +318,6 @@ var opentides3 = (function() {
   	    	// resultsPanel
   			var results = $(this).find(settings['results']);
   			
-  	    	// results table
-  			var resultsTable = $(this).find(settings['results'] + ' table');
-
   			// panel containing the form
   			var form = $(this).find(settings['form']);
 
@@ -342,6 +326,9 @@ var opentides3 = (function() {
   			
   			// status bar
   			var status = $(this).find(settings['status']);
+  			
+  			// body
+  			var body = $(this);
 
   			if ($(this).find(settings['results'] + ' table tr').length <= 1) {
   		    	// no search results, hide the table and message
@@ -357,10 +344,17 @@ var opentides3 = (function() {
   			if (opentides3.supportsHistory()) {
   				window.addEventListener("popstate", function(e) {
   					var state = e.state;
-		    	    if (state != null && state.mode=='search') {
-		    	    	var formElement = $('#'+state.formPath);
-		    	    	formElement.deserialize(state.formData);
-		    	    	displayResults(formElement, results, status, state.data);
+		    	    if (state != null ) {
+		    	    	if (state.mode=='search') {
+			    	    	var formElement = $('#'+state.formPath);
+			    	    	formElement.deserialize(state.formData);
+			    	    	displayResults(formElement, results, status, state.data);
+			    	    } else if (state.mode == 'add' || state.mode == 'update') {
+			    	    	displayForm(state.mode, body.find(state.form), state.action, state.data);
+			    	    	form.page();
+			    	    } else if (state.mode=='hide') {
+			    	    	body.find(state.form).page('hide');
+			    	    }
 		    	    }
   				});
   			}  			
@@ -377,6 +371,30 @@ var opentides3 = (function() {
 				});  				
   			});
   			
+  			// handle all ajax errors
+		    $(document).ajaxError(function(event, jqXHR, settings, exception) {
+	        	$('.top-right .ot3-alert').remove();
+	        	var message = 'Oopps... An unexpected error occurred. ';
+	            if (jqXHR.status === 0) {
+	            	message = "Cannot connect to server. Please verify your network connection.";
+	            } else if (jqXHR.status == 404) {
+	                message = 'Requested page not found. [Error: 404]';
+	            } else if (jqXHR.status == 500) {
+	                message = 'Internal Server Error. [Error: 500]';
+	            } else if (exception === 'parsererror') {
+	                message = 'Oopps... Unable to parse your JSON request.';
+	            } else if (exception === 'timeout') {
+	                message = 'Oopps... Server time-out error.';
+	            } else if (exception === 'abort') {
+	                message = 'Your request has been cancelled.';
+	            }
+            	opentides3.displayMessage({messages:[{
+            		type: "error",
+            		elementClass: "system-error",
+            		message: message,
+            	}]});
+		    });
+
 			/***********************************
 			 * (1) look for <add>, on click, display retrieve default values and display <form>. 
 			 ***********************************/  		   	 
@@ -384,17 +402,21 @@ var opentides3 = (function() {
 			// convert the search form to ajax search
   			$(this).find(settings['add']).on('click', function() {
 	  			// add new record
+  				var path = opentides3.getPath();
 	  			$.getJSON(
-	  					opentides3.getPath()+'0', 				// url - new record
-	  		    		'',										// empty data
-	  	  		    	function(json) {						// callback
-	  			    		firstForm.attr('action',opentides3.getPath());
-	  			    		firstForm.attr('method','post');
-	  		    			firstForm.bind(json);
-	  		    			form.find('[data-form-display="add"]').show();	    			
-	  		    			form.find('[data-form-display="update"]').hide();	
+	  					path+'/0', 				// url - new record
+	  		    		'',						// empty data
+	  	  		    	function(json) {		// callback
+  		    				displayForm('add', form, path, json);
 	  		    			if (form.hasClass('modal')) 
 	  		    				form.modal();
+	  		    			else if (form.hasClass('page')) {
+	  		    				if (opentides3.supportsHistory()) {
+		  		    	  			history.pushState({mode:'add', data:json, form:settings['form'], action:path}, 
+		  		    	  				null, opentides3.getPath()+'/0');
+	  		    				}
+	  		    				form.page();		    				
+	  		    			}
 	  		    		});
 	  			return false;
 			});
@@ -408,6 +430,8 @@ var opentides3 = (function() {
   					url:firstForm.attr('action'), 		// url
   					data:firstForm.serialize(),			// data
   					success: function(json) {			// callback
+  						firstForm.find('.ot3-alert').remove();
+  						firstForm.find('.control-group').removeClass('error');
   		    			opentides3.displayMessage(json);
   		    			if (typeof(json.command) === 'object' &&
   		    					json.command.id > 0) {
@@ -415,14 +439,33 @@ var opentides3 = (function() {
   		    				firstForm.clearForm();
   		    				if (button.data('submit')=='save') {
   		    					// hide modal
-  		    					firstForm.closest('.modal').modal('hide');
-  		    					
+  		    					if (form.hasClass('modal')) 
+  		  		    				form.modal('hide');
+  		  		    			else if (form.hasClass('page')) {
+	  		  		    			if (opentides3.supportsHistory()) {
+	  		  		    				var url = opentides3.getPath().replace(/\/[0-9]+$/,'');
+			  		    	  			history.pushState({mode:'hide', form:settings['form']}, 
+			  		    	  				null, url);
+		  		    				}
+  		  		    				form.page('hide');
+  		  		    			}
   		    				}
-	  		  				displayTableRow(resultsTable, json.command);
+	  		  				displayTableRow(results.find('table'), json.command);
   		    			}
   	  		    	},
   	  		    	dataType:'json'
   				});	  		    		
+	    	});
+	    	
+	    	firstForm.find("[data-dismiss='page']").on("click", function() {
+	    		if (form.hasClass('page')) {
+	    			if (opentides3.supportsHistory()) {
+	    				var url = opentides3.getPath().replace(/\/[0-9]+$/,'');
+	    	  			history.pushState({mode:'hide', form:settings['form']}, 
+    	  				null, url);
+	    			}
+	    			form.page('hide');	    		
+	    		}
 	    	});
 	    	
 	    	// hide all alerts when form is displayed.
@@ -453,17 +496,21 @@ var opentides3 = (function() {
 			// attach edit to all action-edit
 	    	$(this).on("click", settings['edit'], function() {
 				var id = $(this).data('id');
+				var path = opentides3.getPath()+'/'+id;
 				$.getJSON(
-						opentides3.getPath()+id,	 			// url
+						path,	 		// url
 	  		    		"",										// data
 	  	  		    	function(json) {						// callback
+							displayForm('update', form, path, json)
 	  		    			if (form.hasClass('modal')) 
 	  		    				form.modal();
-	  			    		firstForm.attr('action',opentides3.getPath()+json.id);
-	  			    		firstForm.attr('method','put');
-	  		    			firstForm.bind(json);   			
-	  		    			form.find('[data-form-display="add"]').hide();	    			
-	  		    			form.find('[data-form-display="update"]').show();	
+	  		    			else if (form.hasClass('page')) {
+	  		    				if (opentides3.supportsHistory()) {
+		  		    	  			history.pushState({mode:'update', data:json, form:settings['form'], action:path}, 
+		  		    	  				null, opentides3.getPath()+'/'+id);
+	  		    				}
+	  		    				form.page();
+	  		    			}
 	  		    		});
 			});
 			
@@ -474,14 +521,14 @@ var opentides3 = (function() {
 				var id = $(this).data('id');
 				var tableRow = $(this).closest('tr');
 				var message = opentides3.getMessage('are-you-sure-to-delete', this);
-				if (ref != undefined && ref.length > 0) {
+				if (typeof(ref) != 'undefined' && ref.length > 0) {
 					message = message.replace('#primary-value', ref);
 				} else {
 					message = message.replace('#primary-value', 'record');
 				}
 				if (confirm(message)) {
 					$.ajax({
-					    url: opentides3.getPath() + id,
+					    url: opentides3.getPath()+'/'+id,
 					    type: 'DELETE',
 					    success: function(json) {
 	  		    			opentides3.displayMessage(json);		    		  		    			
@@ -573,7 +620,8 @@ var opentides3 = (function() {
 			}); // each
 			
 			// now let's animate
-			if (oldPage.length == 0) {
+			if (typeof(oldPage) === 'undefined' || 
+					oldPage.length == 0) {
 				// first page, no need to animate
 				oldTable.after(newTable);
 				oldTable.remove();				
@@ -690,5 +738,73 @@ var opentides3 = (function() {
 			row = row + "</tr>";
 			resultsTable.append(row);
     	}
-    }
+    };
+    
+    /**
+     * Private helper that displays the add/edit form in the page
+     */
+	var displayForm = function(mode, form, action, json) {
+		var firstForm = form.find('form:first');
+		if (mode==='update') {
+			firstForm.attr('action',action);
+	  		firstForm.attr('method','put');
+			firstForm.bind(json);   			
+			form.find('[data-form-display="add"]').hide();	    			
+			form.find('[data-form-display="update"]').show();			
+		} else if (mode === 'add') {
+			firstForm.attr('action',action);
+	  		firstForm.attr('method','post');
+			firstForm.bind(json);   			
+			form.find('[data-form-display="update"]').hide();	    			
+			form.find('[data-form-display="add"]').show();			
+		}
+	};
+	
+	/**
+	 * Private helper method to convert an object to primitive value.
+	 * Used when converting json objects to single value string.
+	 */
+	var toPrimitive = function(value) {
+		var type = jQuery.type(value);
+		if (type === 'object') {
+			if (value.key != null)
+				return value.key;
+			else if (value.id != null)
+				return value.id;
+			else {
+				alert('Unable to convert object ['+value+'] to its primitive form.');				
+				return '';				
+			}
+		} else
+			return value;
+	}
+	
+	/**
+	 * Private helper that ensures value is always a single dimension array.
+	 * If value is an object, key is used, otherwise id is used.
+	 * Otherwise, error occurs.
+	 */ 
+	var normalizeValue = function(value, toArray) {
+		if (jQuery.isEmptyObject(value))
+			return '';
+		var prime = toPrimitive(value);
+		var type = jQuery.type(prime);
+		if ( (type === 'string') || 
+			 (type === 'boolean')||
+			 (type === 'number') ) {
+			// value is primitive, return as is.
+			if (typeof(toArray) != 'undefined' && toArray==true)
+				return [prime];
+			else
+				return prime;
+		}
+		if (type === 'array') {
+			var arr = [];
+			$(prime).each(function() {				
+				arr.push(toPrimitive(this));
+			});					
+			return arr;
+		}
+		return value;
+	}
 })( jQuery );

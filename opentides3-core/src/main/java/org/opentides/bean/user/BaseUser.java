@@ -58,12 +58,15 @@ public class BaseUser extends BaseEntity {
 	
 	@PrimaryField
 	@Column(name = "FIRSTNAME")
+	@JsonView(Views.FormView.class)
 	private String firstName;
 
 	@Column(name = "LASTNAME")
+	@JsonView(Views.FormView.class)
 	private String lastName;
 	
 	@Column(name = "MIDDLENAME", nullable=true)
+	@JsonView(Views.FormView.class)
 	private String middleName;
 
 	@Column(name = "EMAIL", unique=true)

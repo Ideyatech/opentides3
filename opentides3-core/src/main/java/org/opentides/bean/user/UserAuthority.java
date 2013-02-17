@@ -30,6 +30,8 @@ import org.opentides.annotation.Auditable;
 import org.opentides.annotation.PrimaryField;
 import org.opentides.bean.BaseEntity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @AttributeOverride(name = "ID", column = @Column(insertable = false, updatable = false))
 @Table(name = "USER_AUTHORITY")
@@ -47,6 +49,7 @@ public class UserAuthority extends BaseEntity {
 	// userGroup is nullable, to support username linkage
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "USERGROUP_ID", nullable = true)
+	@JsonIgnore
 	private UserGroup userGroup;
 
 	public UserAuthority() {
