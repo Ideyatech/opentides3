@@ -18,14 +18,18 @@
  */
 package org.opentides.web.controller;
 
+import java.util.Map;
+
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.opentides.bean.user.UserGroup;
+import org.opentides.service.UserGroupService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
@@ -45,10 +49,16 @@ public class UserGroupController extends BaseCrudController<UserGroup> {
 	}
 
 	@Override
-	protected void onLoadAction(UserGroup command, BindingResult bindingResult, 
+	protected void onLoad(UserGroup command, BindingResult bindingResult, 
 			Model uiModel, HttpServletRequest request,
 			HttpServletResponse response) {
 		uiModel.addAttribute("results", search(command, request));
 	}
+	
+	@ModelAttribute("authoritiesList")
+	public Map<String, String> getAuthoritiesList() {
+		return ((UserGroupService)service).getAuthorities();
+	}
+	
 
 }

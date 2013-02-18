@@ -373,7 +373,7 @@ var opentides3 = (function() {
   			
   			// handle all ajax errors
 		    $(document).ajaxError(function(event, jqXHR, settings, exception) {
-	        	$('.top-right .ot3-alert').remove();
+	        	$('.system-error .ot3-alert').remove();
 	        	var message = 'Oopps... An unexpected error occurred. ';
 	            if (jqXHR.status === 0) {
 	            	message = "Cannot connect to server. Please verify your network connection.";

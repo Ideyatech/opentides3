@@ -144,9 +144,9 @@ public abstract class BaseCrudController<T extends BaseEntity> {
     		@ModelAttribute("searchCommand") T command, 
     		BindingResult bindingResult, Model uiModel,
 			HttpServletRequest request, HttpServletResponse response) {
-    	preSearchAction(command, bindingResult, uiModel, request, response);
+    	preSearch(command, bindingResult, uiModel, request, response);
     	SearchResults<T> results = search(command, request);
-    	postSearchAction(command, results, bindingResult, uiModel, request, response);
+    	postSearch(command, results, bindingResult, uiModel, request, response);
     	return results;
     }
     
@@ -160,16 +160,15 @@ public abstract class BaseCrudController<T extends BaseEntity> {
     public final String loadHtml( @ModelAttribute("searchCommand") T command, 
     		BindingResult bindingResult, Model uiModel,
     		HttpServletRequest request, HttpServletResponse response) {
-//    	uiModel.asMap().clear();
     	uiModel.addAttribute("formCommand", BeanUtils.instantiate(this.entityBeanType));    	
     	uiModel.addAttribute("searchCommand", command);    	
     	if (request.getParameterMap().size() > 0) {
-        	preSearchAction(command, bindingResult, uiModel, request, response);
+        	preSearch(command, bindingResult, uiModel, request, response);
         	SearchResults<T> results = search(command, request);
-        	postSearchAction(command, results, bindingResult, uiModel, request, response);
+        	postSearch(command, results, bindingResult, uiModel, request, response);
     		uiModel.addAttribute("results",results);
     	} else {
-    		onLoadAction(command, bindingResult, uiModel, request, response);    		
+    		onLoad(command, bindingResult, uiModel, request, response);    		
     	}
         return singlePage;
     }
@@ -188,9 +187,9 @@ public abstract class BaseCrudController<T extends BaseEntity> {
     			HttpServletRequest request, HttpServletResponse response) {
     	Map<String, Object> model = new HashMap<String,Object>();
     	List<MessageResponse> messages = new ArrayList<MessageResponse>();
-   		preCreateAction(command, bindingResult, uiModel, request, response);
+   		preCreate(command, bindingResult, uiModel, request, response);
         service.save(command);
-   		postCreateAction(command, bindingResult, uiModel, request, response);    		
+   		postCreate(command, bindingResult, uiModel, request, response);    		
        	messages.addAll(buildSuccessMessage(command, "add", request.getLocale()));
         model.put("command", command);
         model.put("messages", messages);
@@ -205,9 +204,9 @@ public abstract class BaseCrudController<T extends BaseEntity> {
     			HttpServletRequest request, HttpServletResponse response) {
     	Map<String, Object> model = new HashMap<String,Object>();
     	List<MessageResponse> messages = new ArrayList<MessageResponse>();
-   		preUpdateAction(command, bindingResult, uiModel, request, response);
+   		preUpdate(command, bindingResult, uiModel, request, response);
         service.save(command);
-   		postUpdateAction(command, bindingResult, uiModel, request, response);    		
+   		postUpdate(command, bindingResult, uiModel, request, response);    		
        	messages.addAll(buildSuccessMessage(command, "update", request.getLocale()));
         model.put("command", command);
         model.put("messages", messages);
@@ -235,9 +234,9 @@ public abstract class BaseCrudController<T extends BaseEntity> {
     	List<MessageResponse> messages = new ArrayList<MessageResponse>();    	
     	if (id >= 0) {
     		try {
-    			preDeleteAction(id, bindingResult, uiModel, request, response);
+    			preDelete(id, bindingResult, uiModel, request, response);
     			service.delete(id);
-    			postDeleteAction(id, bindingResult, uiModel, request, response);
+    			postDelete(id, bindingResult, uiModel, request, response);
     	    	messages.addAll(buildSuccessMessage(command, "delete", request.getLocale()));
     	    	model.put("messages", messages);    	    	
     	    	return model;    			
@@ -259,7 +258,7 @@ public abstract class BaseCrudController<T extends BaseEntity> {
      * @param command
      */
 
-    protected void onLoadAction(
+    protected void onLoad(
     		T command, 
     		BindingResult bindingResult, Model uiModel,
 			HttpServletRequest request, HttpServletResponse response) {
@@ -272,13 +271,13 @@ public abstract class BaseCrudController<T extends BaseEntity> {
      * @param command
      */
 
-    protected void preCreateAction(T command, 
+    protected void preCreate(T command, 
     		BindingResult bindingResult, Model uiModel,
 			HttpServletRequest request, HttpServletResponse response) {
-        preCreateAction(command);
+        preCreate(command);
     }
 
-    protected void preCreateAction(T command) {
+    protected void preCreate(T command) {
     }
 
     /**
@@ -287,13 +286,13 @@ public abstract class BaseCrudController<T extends BaseEntity> {
      * @param command
      */
 
-    protected void postCreateAction(T command, 
+    protected void postCreate(T command, 
     		BindingResult bindingResult, Model uiModel,
 			HttpServletRequest request, HttpServletResponse response) {
-        postCreateAction(command);
+        postCreate(command);
     }
 
-    protected void postCreateAction(T command) {
+    protected void postCreate(T command) {
     }
 
     /**
@@ -302,13 +301,13 @@ public abstract class BaseCrudController<T extends BaseEntity> {
      * @param command
      */
 
-    protected void preUpdateAction(T command, 
+    protected void preUpdate(T command, 
     		BindingResult bindingResult, Model uiModel,
 			HttpServletRequest request, HttpServletResponse response) {
-        preUpdateAction(command);
+        preUpdate(command);
     }
 
-    protected void preUpdateAction(T command) {
+    protected void preUpdate(T command) {
     }
 
     /**
@@ -317,13 +316,13 @@ public abstract class BaseCrudController<T extends BaseEntity> {
      * @param command
      */
 
-    protected void postUpdateAction(T command, 
+    protected void postUpdate(T command, 
     		BindingResult bindingResult, Model uiModel,
 			HttpServletRequest request, HttpServletResponse response) {
-        postUpdateAction(command);
+        postUpdate(command);
     }
 
-    protected void postUpdateAction(T command) {
+    protected void postUpdate(T command) {
     }
 
     /**
@@ -332,13 +331,13 @@ public abstract class BaseCrudController<T extends BaseEntity> {
      * @param command
      */
 
-    protected void preDeleteAction(Long id,
+    protected void preDelete(Long id,
     		BindingResult bindingResult, Model uiModel,
 			HttpServletRequest request, HttpServletResponse response) {
-        preDeleteAction(id);
+        preDelete(id);
     }
 
-    protected void preDeleteAction(Long id) {
+    protected void preDelete(Long id) {
     }
 
     /**
@@ -347,13 +346,13 @@ public abstract class BaseCrudController<T extends BaseEntity> {
      * @param command
      */
 
-    protected void postDeleteAction(Long id,
+    protected void postDelete(Long id,
     		BindingResult bindingResult, Model uiModel,
 			HttpServletRequest request, HttpServletResponse response) {
-        postDeleteAction(id);
+        postDelete(id);
     }
 
-    protected void postDeleteAction(Long id) {
+    protected void postDelete(Long id) {
     }
 
     /**
@@ -363,13 +362,13 @@ public abstract class BaseCrudController<T extends BaseEntity> {
      *            criteria used for search
      */
 
-    protected void preSearchAction(T command, 
+    protected void preSearch(T command, 
     		BindingResult bindingResult, Model uiModel,
 			HttpServletRequest request, HttpServletResponse response) {
-        preSearchAction(command);
+        preSearch(command);
     }
 
-    protected void preSearchAction(T command) {
+    protected void preSearch(T command) {
     }
 
     /**
@@ -378,13 +377,13 @@ public abstract class BaseCrudController<T extends BaseEntity> {
      * @param command
      */
 
-    protected SearchResults<T> postSearchAction(T command, SearchResults<T> result,
+    protected SearchResults<T> postSearch(T command, SearchResults<T> result,
     		BindingResult bindingResult, Model uiModel,
 			HttpServletRequest request, HttpServletResponse response) {
-        return postSearchAction(result);
+        return postSearch(result);
     }
 
-    protected SearchResults<T> postSearchAction(SearchResults<T> result) {
+    protected SearchResults<T> postSearch(SearchResults<T> result) {
         return result;
     }
     

@@ -2,8 +2,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="app" tagdir="/WEB-INF/tags"%>
-<app:header title_webpage="label.usergroup" />
+<app:header title_webpage="label.usergroup">
+    <link rel="stylesheet" type="text/css" href="<c:url value='/css/jquery.treeview.css'/>" />
+</app:header>
     <!--Content-->
 	<div id="usergroup-body" class="container-fluid">
 	
@@ -54,6 +57,37 @@
 		  	<div class="modal-body">
 				<app:input path="name" label="label.usergroup.name" required="true"/>
 				<app:input path="description" label="label.usergroup.description" required="true"/>
+				<div class="control-group">
+					<form:label path="authorityNames" cssClass="control-label"><spring:message code="label.usergroup.actions"/></form:label>
+					<div class="controls">
+	            		<c:set var="prevRole" value=""/>	
+	            		<ul id="roles-${usergroup.id}">
+			       		<c:forEach items="${authoritiesList}" var="role">
+				       		<c:set var="pStage" value="${fn:substring(prevRole,0,11)}"/>
+							<c:set var="pList"  value="${fn:split(pStage, '.')}"/>
+							<c:set var="cStage" value="${fn:substring(role.value,0,11)}"/>
+							<c:set var="cList"  value="${fn:split(cStage, '.')}"/>
+							<c:forEach begin="0" end="3" step="1" var="i">
+							    <c:if test="${'00' eq cList[i] && not ('00' eq pList[i]) && not empty pList[i]}">
+							        </ul></li>
+							    </c:if>
+							</c:forEach>
+							<c:if test="${('00' eq cList[i]) || not ('00' eq pList[i] || empty pList[i]) }">
+							    </li>
+							</c:if>
+							<c:forEach begin="0" end="3" step="1" var="i">
+							    <c:if test="${not ('00' eq cList[i]) && ('00' eq pList[i] || empty pList[i]) }">
+							        <ul>
+							    </c:if>
+							</c:forEach>
+			                <li class="closed">
+			                	<form:checkbox path="authorityNames" value="${role.key}" class="check ${role.key}"/> 
+			                		<c:out value="${fn:substring(role.value,11,-1)}" />
+			                <c:set var="prevRole" value="${role.value}"/>
+			    		</c:forEach>
+	            		</ul>					
+					</div>
+				</div>
 		  	</div>
 		 	<div class="modal-footer">
 		    	<button type="button" class="btn btn-primary" data-submit="save"><spring:message code="label.save" /></button>
@@ -61,16 +95,55 @@
 		    	<button type="button" class="btn" data-dismiss="page"><spring:message code="label.back" /></button>
 		    	<input type="hidden" name="id" />
 		  	</div>
-			</form:form>		  	
+			</form:form>
 		</div>
 	</div>
 <app:footer>
+  <script type="text/javascript" src="<c:url value='/js/jquery.treeview.js'/>"></script>
   <script type="text/javascript">
   	$(document).ready(function() {
   		// call footable first before hiding the table
   		// there is an bug in footable that hides other table elements  		
 //  		$('.table').footable();
   		$('#usergroup-body').RESTful();
+  		$('#copy-roles-${usergroup.id}').hide();
+    	$("#roles-${usergroup.id}").treeview();
+    	$("input.check").click(function() {
+    	    if ($(this).is(":checked")) {
+    	        // if checked, check all parents
+    	        $(this).parents("li").children(".check").attr("checked","true");
+    	    } else {
+    	        // if unchecked
+    	        var children = $(this).parent("li").find(".check");
+    	        if (children.size() > 1) {
+    				if (confirm('<spring:message code="msg.usergroup.this-will-deselect-all-child-permissions-are-you-sure" />')) {
+    					children.removeAttr("checked");    
+    				}    	            
+    	        }
+    	    }
+    	});
+    	$('#enable-copy-${usergroup.id}').click(function() {
+    		if($(this).attr('checked')) {
+    			$('#copy-roles-${usergroup.id}').show();
+    		} else {
+    			$('#copy-roles-${usergroup.id}').hide();
+    		}
+    	});    	
+    	$('#copy-roles-${usergroup.id}').change(function(){
+    		// uncheck all checkboxes in this role
+    		$('#roles-${usergroup.id} .check').removeAttr("checked");    
+     		$.ajax({
+				url : "roles-list.jspx?userGroupId="+$('#copy-roles-${usergroup.id}').val(),
+				type : 'GET',
+				dataType : "json",
+				success : function(data) {
+					$.each(data.roles, function(index, role) {
+						$('#roles-${usergroup.id} .'+role).attr("checked","true");						
+					});
+				}
+			});
+     	});
   	});
   </script>
+  
 </app:footer>

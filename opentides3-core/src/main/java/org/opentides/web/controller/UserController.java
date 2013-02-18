@@ -51,14 +51,14 @@ public class UserController extends BaseCrudController<BaseUser> {
 	}
 	
 	@Override
-	protected void preCreateAction(BaseUser command) {
+	protected void preCreate(BaseUser command) {
 		UserCredential credential = command.getCredential();
 		if (!StringUtil.isEmpty(credential.getNewPassword()))
 			credential.setPassword(SecurityUtil.encryptPassword(credential.getNewPassword()));
 	}
 
 	@Override
-	protected void preUpdateAction(BaseUser command) {
+	protected void preUpdate(BaseUser command) {
 		UserCredential credential = command.getCredential();
         if (!StringUtil.isEmpty(credential.getNewPassword()))
             credential.setPassword(SecurityUtil.encryptPassword(credential.getNewPassword()));
