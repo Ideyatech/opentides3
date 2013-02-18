@@ -72,10 +72,10 @@
 								System Codes
 								</a>
 							</li>
-							<li class="${active eq 'system-codes' ? 'active' : ''}">
+							<li class="${active eq 'users' ? 'active' : ''}">
 								<a href="${home}/organization/users/">Users</a>
 							</li>
-							<li class="${active eq 'system-codes' ? 'active' : ''}">
+							<li class="${active eq 'usergroups' ? 'active' : ''}">
 								<a href="${home}/organization/usergroups/">User Groups</a>
 							</li>
 						</ul>
