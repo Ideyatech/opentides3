@@ -9,7 +9,7 @@
 
 <!-- SEARCH PANEL -->
 <div id="left-column" class="span3">
-	<div id="search-panel">
+	<div id="search-panel" data-spy="affix" data-offset-top="80" style="top: 60px;">
 		<div class="navbar">
 			<div class="navbar-inner">
 				<span class="brand"><i class="icon-search"></i><spring:message code="label.system-codes.search" /></span>
@@ -43,10 +43,10 @@
 			<form:input path="value" maxlength="50" />
 	
 			<hr/>
-			<button type="button" class="btn btn-success" data-submit="search">
+			<button type="button" class="btn btn-info" data-submit="search">
 				<spring:message code="label.search" />
 			</button>
-			<button type="button" class="btn" data-submit="clear">
+			<button type="button" class="btn btn-link" data-submit="clear">
 				<spring:message code="label.clear" />
 			</button>
 	
@@ -65,7 +65,7 @@
 				displaySummary="true" />
 		</div>
 		<div class="pull-right">
-			<button id="add-system-codes" class="add-entry btn btn-success add-action">
+			<button id="add-system-codes" class="add-entry btn btn-info add-action">
 				<i class="icon-plus-sign icon-white"></i>
 				<spring:message code="label.system-codes.add" />
 			</button>
@@ -100,8 +100,8 @@
 						<td class="col-2"><c:out value="${record.key}" /></td>
 						<td class="col-3"><c:out value="${record.category}" /></td>
 						<td class="col-4"><c:out value="${record.numberValue}" /></td>
-						<td class="col-5"><i class='icon-edit edit-action'
-							data-id='${record.id}'></i> <i class='icon-remove remove-action'
+						<td class="col-5"><i class='icon-pencil edit-action'
+							data-id='${record.id}'></i> <i class='icon-trash remove-action'
 							data-id='${record.id}'></i></td>
 					</tr>
 				</c:forEach>
@@ -131,12 +131,12 @@
 	<div id="form-panel" class="modal fade hide">
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal">&times;</button>
-			<h3 data-form-display="add">
+			<h4 data-form-display="add">
 				<spring:message code="label.system-codes.add" />
-			</h3>
-			<h3 data-form-display="update">
+			</h4>
+			<h4 data-form-display="update">
 				<spring:message code="label.system-codes.update" />
-			</h3>
+			</h4>
 		</div>
 
 		<form:form modelAttribute="formCommand" id="system-codes-form">
@@ -182,14 +182,14 @@
 				</div>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-primary" data-submit="save">
+				<button type="button" class="btn btn-success" data-submit="save">
 					<spring:message code="label.save" />
 				</button>
-				<button type="button" class="btn btn-primary"
+				<button type="button" class="btn"
 					data-form-display="add" data-submit="save-and-new">
 					<spring:message code="label.save-and-new" />
 				</button>
-				<button type="button" class="btn" data-dismiss="modal">
+				<button type="button" class="btn btn-link" data-dismiss="modal">
 					<spring:message code="label.close" />
 				</button>
 				<input type="hidden" name="id" />

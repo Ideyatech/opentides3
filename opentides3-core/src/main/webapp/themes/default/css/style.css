@@ -98,6 +98,13 @@ body {
 	}
 }
 
+
+@media (min-width: 1200px) {
+	#search-panel.affix {
+		width: 270px;
+	}
+}
+
 @media (max-width: 979px) and (min-width: 768px) {
 	#search-panel select {
 		width: 120px;
@@ -105,6 +112,11 @@ body {
 	
 	#search-panel input, textarea, .uneditable-input {
 		width: 108px;
+	}
+	
+	#search-panel button {
+		width: 100%;
+		margin-bottom: 10px;
 	}
 }
 
@@ -114,19 +126,20 @@ body {
 }
 
 #search-panel {
-	border: 1px solid #ccc;
 	-webkit-border-radius: 6px;
 	-moz-border-radius: 6px;
 	border-radius: 6px;
+	-webkit-box-shadow: 0 1px 4px rgba(0,0,0,.065);
+	-moz-box-shadow: 0 1px 4px rgba(0,0,0,.065);
+	box-shadow: 0 1px 4px rgba(0,0,0,.065);
+	border: 1px solid #ccc;
+	margin: -1px;
 }
 
 #search-panel form {
 	padding: 20px;
 	border-top: 0;
 	background-color: #fff;
-	-webkit-box-shadow: 0 1px 4px rgba(0,0,0,.065);
-	-moz-box-shadow: 0 1px 4px rgba(0,0,0,.065);
-	box-shadow: 0 1px 4px rgba(0,0,0,.065);
 }
 
 #search-panel .navbar {
@@ -153,9 +166,21 @@ body {
 	font-size: 15px;
 }
 
+@media (max-width: 979px) {
+	.affix {
+		position: relative;
+	}
+}
+
 /* MESSAGE PANEL */
 
 #message-panel .add-entry {
 	margin-top: -5px;
 	margin-bottom: 15px;
+}
+
+/* FORM PANEL */
+
+.modal form {
+	margin-bottom: 0;
 }

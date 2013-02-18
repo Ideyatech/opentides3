@@ -61,10 +61,16 @@
 					<div class="nav-collapse collapse">
 						<ul class="nav">
 							<li class="${active eq 'home' ? 'active' : ''}">
-								<a href="${home}">Home</a>
+								<a href="${home}">
+									<i class="icon-home icon-white"></i>
+									Home
+								</a>
 							</li>
 							<li class="${active eq 'system-codes' ? 'active' : ''}">
-								<a href="${home}/system/system-codes/">System Codes</a>
+								<a href="${home}/system/system-codes/">
+								<i class="icon-qrcode icon-white"></i>
+								System Codes
+								</a>
 							</li>
 							<li class="${active eq 'system-codes' ? 'active' : ''}">
 								<a href="${home}/organization/users/">Users</a>
