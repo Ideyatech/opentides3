@@ -19,9 +19,14 @@
 package org.opentides.web.controller;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.opentides.bean.SystemCodes;
+import org.opentides.bean.user.UserGroup;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
@@ -36,5 +41,12 @@ public class SystemCodesController extends BaseCrudController<SystemCodes> {
 	@PostConstruct
 	public void init() {
 		singlePage = "/base/system-codes-crud";
+	}
+	
+	@Override
+	protected void onLoad(SystemCodes command, BindingResult bindingResult, 
+			Model uiModel, HttpServletRequest request,
+			HttpServletResponse response) {
+		uiModel.addAttribute("results", search(command, request));
 	}
 }

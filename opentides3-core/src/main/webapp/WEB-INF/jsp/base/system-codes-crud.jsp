@@ -108,19 +108,6 @@
 			</tbody>
 
 		</table>
-                	<td class="col-1"><c:out value="${record.value}" /></td>
-                	<td class="col-2"><c:out value="${record.key}" /></td>
-                	<td class="col-3"><c:out value="${record.category}" /></td>
-                	<td class="col-4"><c:out value="${record.numberValue}" /></td>
-	                <td class="col-5">
-	                	<i class='icon-edit edit-action' data-id='${record.id}'></i>	                	 
-						<i class='icon-remove remove-action' data-id='${record.id}'></i>
-	                </td>
-            	</tr>
-            	</c:forEach>
-            	</tbody>           		
-           		
-            </table>
             </div>
             <div class="status clearfix" data-display-pagelinks="true" data-display-summary="false">
 			<app:paging results="${results}" displayPageLinks="true"
