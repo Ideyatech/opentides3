@@ -31,7 +31,7 @@ import java.lang.annotation.Target;
  * &emsp;&emsp;&emsp;<code>@TextArea (label = "textAreaLabel", requiredField = "true")</code><br />
  * @author allanctan
  */
-@Target(ElementType.TYPE)
+@Target(ElementType.FIELD)
 @Retention(RetentionPolicy.SOURCE)
 @Documented
 public @interface TextArea {

@@ -83,6 +83,7 @@ public class UserGroup extends BaseEntity{
 	/**
 	 * @return the roleNames
 	 */
+	@JsonView(Views.FormView.class)
 	public List<String> getAuthorityNames() {
 		if (authorityNames == null || authorityNames.isEmpty())
 			syncAuthorityNames();
