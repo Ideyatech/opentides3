@@ -140,7 +140,7 @@ public abstract class BaseCrudController<T extends BaseEntity> {
      */
     @RequestMapping(method = RequestMethod.GET, produces = "application/json")
     @ResponseView(Views.SearchView.class)
-    public final @ResponseBody SearchResults<T> searchJson(
+    public final @ResponseBody SearchResults<T> search(
     		@ModelAttribute("searchCommand") T command, 
     		BindingResult bindingResult, Model uiModel,
 			HttpServletRequest request, HttpServletResponse response) {
@@ -157,7 +157,7 @@ public abstract class BaseCrudController<T extends BaseEntity> {
      * @return
      */
     @RequestMapping(method = RequestMethod.GET)
-    public final String loadHtml( @ModelAttribute("searchCommand") T command, 
+    public final String searchHtml( @ModelAttribute("searchCommand") T command, 
     		BindingResult bindingResult, Model uiModel,
     		HttpServletRequest request, HttpServletResponse response) {
     	uiModel.addAttribute("formCommand", BeanUtils.instantiate(this.entityBeanType));    	
@@ -168,8 +168,15 @@ public abstract class BaseCrudController<T extends BaseEntity> {
         	postSearch(command, results, bindingResult, uiModel, request, response);
     		uiModel.addAttribute("results",results);
     	} else {
-    		onLoad(command, bindingResult, uiModel, request, response);    		
+    		onLoadSearch(command, bindingResult, uiModel, request, response);    		
     	}
+    	uiModel.addAttribute("mode","search");
+    	uiModel.addAttribute("search","ot3-search");
+    	uiModel.addAttribute("form","ot3-form hide");
+    	uiModel.addAttribute("add","ot3-add");
+    	uiModel.addAttribute("update","ot3-update");    	
+    	uiModel.addAttribute("method","post");
+
         return singlePage;
     }
        
@@ -196,7 +203,7 @@ public abstract class BaseCrudController<T extends BaseEntity> {
         return model;
     }
     
-    @RequestMapping(value="{id}", method = RequestMethod.PUT, produces = "application/json")
+    @RequestMapping(value="{id}", method = {RequestMethod.PUT,RequestMethod.POST}, produces = "application/json")
     public final @ResponseBody Map<String, Object> update(
     			@FormBind(name="formCommand") T command, 
     			@PathVariable("id") Long id,
@@ -221,11 +228,36 @@ public abstract class BaseCrudController<T extends BaseEntity> {
     	if (id>0) {
     		command = service.load(id);    		
     	} else {
-    		command = BeanUtils.instantiate(this.entityBeanType);
+    		command = formBackingObject(request, response);
     	}
     	return command;
     }
  
+    @RequestMapping(value="{id}", method = RequestMethod.GET)
+    public String getHtml(@PathVariable("id") Long id, Model uiModel, 
+			HttpServletRequest request, HttpServletResponse response) {    	
+		T command = null;
+    	if (id>0) {
+    		command = service.load(id);	
+        	uiModel.addAttribute("add","ot3-add hide");
+        	uiModel.addAttribute("update","ot3-update");
+        	uiModel.addAttribute("method","put");
+    	} else {
+    		command = formBackingObject(request, response);
+        	uiModel.addAttribute("update","ot3-update hide");
+        	uiModel.addAttribute("update","ot3-add");
+        	uiModel.addAttribute("method","post");
+    	}
+    	uiModel.addAttribute("formCommand", command);
+    	uiModel.addAttribute("mode","form");
+    	uiModel.addAttribute("search","ot3-search hide");
+    	uiModel.addAttribute("form","ot3-form");
+    	
+    	// load default search page settings
+    	onLoadSearch(null, null, uiModel, request, response);
+    	return singlePage;
+    }
+
     @RequestMapping(value="{id}", method = RequestMethod.DELETE, produces = "application/json")
     public final @ResponseBody Map<String, Object> delete(@PathVariable("id") Long id, 
     		T command, BindingResult bindingResult, Model uiModel,
@@ -252,13 +284,27 @@ public abstract class BaseCrudController<T extends BaseEntity> {
     	}
     }
     
+
+    /**
+     * Override this method to initialize values of new objects.
+     * @param request
+     * @param response
+     * @return
+     */
+    protected T formBackingObject(HttpServletRequest request, HttpServletResponse response) {
+    	return BeanUtils.instantiate(this.entityBeanType);
+    }
+    
     /**
      * Override this method to perform action when page is initially loaded.
      * 
      * @param command
+     * @param bindingResult
+     * @param uiModel
+     * @param request
+     * @param response
      */
-
-    protected void onLoad(
+    protected void onLoadSearch(
     		T command, 
     		BindingResult bindingResult, Model uiModel,
 			HttpServletRequest request, HttpServletResponse response) {

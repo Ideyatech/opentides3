@@ -36,7 +36,6 @@ import org.opentides.bean.user.SessionUser;
 import org.opentides.persistence.listener.EntityDateListener;
 import org.opentides.util.SecurityUtil;
 import org.opentides.web.json.Views;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
@@ -168,7 +167,7 @@ public abstract class BaseEntity implements Serializable {
      * @return true if new, else false.
      */
     public final boolean isNew() {
-        return this.getId() == null;
+        return this.getId() == null || this.getId() <= 0;
     }
 
     /**

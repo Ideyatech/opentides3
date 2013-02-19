@@ -196,13 +196,13 @@ var opentides3 = (function() {
 	    }, options);
 
 		return this.each(function() {
-			var container = (settings.container === '') ? $(this).parent() : $(settings.container);
+			var container = (settings.container === '') ? $(this).closest('.container') : $(settings.container);
 			if (settings.action === 'show') {
 				container.children().hide();
-				$(this).show();				
+				$(this).show();
 			} else if (settings.action === 'hide') {
 				container.children().hide();
-				container.find(':not(.hide)').show();
+				container.children().not(this).show();
 			}			
 		});
 	}
@@ -283,9 +283,10 @@ var opentides3 = (function() {
      *
 	 * Parameters include:
 	 *   search  	- element containing search criteria form. Default is '#search-panel'.
-	 *   status     - element where messages are displayed. Default is '.status'.
 	 *   results    - element containing the results table. Default is '#results-panel'.
 	 *   form	 	- element containing the form to display when adding/updating record. Default is '#form-panel'.
+	 *   status     - element where messages are displayed. Default is '.status'.
+	 *   paging     - element where paging is displayed. Default is '.paging'.
 	 *   add		- elements where add new record action is triggered on click. Default is '.add-action'
 	 *   edit		- elements where edit record action is triggered on click. Default is '.edit-action'
 	 *   remove		- elements where delete record action is triggered on click. Default is '.remove-action'
@@ -301,10 +302,11 @@ var opentides3 = (function() {
 	$.fn.RESTful = function(options) {
 		// extend the options with defaults
 	    var settings = $.extend( {
-		  'search'   	: '#search-panel',
-	      'status'		: '.status',
+		  'search'   	: '#search-body',
+	      'form' 		: '#form-body',
 	      'results'		: '#results-panel',
-	      'form' 		: '#form-panel',
+	      'status'		: '.status',
+	      'pagination'	: '.pagination',
 		  'add' 		: '.add-action',	      
 		  'edit' 		: '.edit-action',	      
 		  'remove'		: '.remove-action'	      
@@ -327,6 +329,9 @@ var opentides3 = (function() {
   			// status bar
   			var status = $(this).find(settings['status']);
   			
+  			// pagination bar
+  			var pagination = $(this).find(settings['pagination']);
+  			
   			// body
   			var body = $(this);
 
@@ -334,10 +339,12 @@ var opentides3 = (function() {
   		    	// no search results, hide the table and message
   		    	$(this).find(settings['results']).hide();
   		    	$(this).find(settings['status']).hide();
+  		    	$(this).find(settings['pagination']).hide();
   		    } else {
   		    	// with search results, display the table and message
-  		    	$(this).find(settings['results']).show();	    	
+  		    	$(this).find(settings['results']).show();
   		    	$(this).find(settings['status']).show();
+  		    	$(this).find(settings['pagination']).show();
   		    }	    
 
   		    // bind to popstate event for history tracking
@@ -348,7 +355,7 @@ var opentides3 = (function() {
 		    	    	if (state.mode=='search') {
 			    	    	var formElement = $('#'+state.formPath);
 			    	    	formElement.deserialize(state.formData);
-			    	    	displayResults(formElement, results, status, state.data);
+			    	    	displayResults(formElement, results, status, pagination, state.data);
 			    	    } else if (state.mode == 'add' || state.mode == 'update') {
 			    	    	displayForm(state.mode, body.find(state.form), state.action, state.data);
 			    	    	form.page();
@@ -366,7 +373,7 @@ var opentides3 = (function() {
   				var searchForm = $(settings['search']).find('form').filter(':visible:first');
   				$(this).find('li a').on("click", function() {
 					var i = $(this).data('page');
-					doSearch(searchForm, results, status, i);
+					doSearch(searchForm, results, status, pagination, i);
 					return false;
 				});  				
   			});
@@ -415,7 +422,7 @@ var opentides3 = (function() {
 		  		    	  			history.pushState({mode:'add', data:json, form:settings['form'], action:path}, 
 		  		    	  				null, opentides3.getPath()+'/0');
 	  		    				}
-	  		    				form.page();		    				
+	  		    				form.page();
 	  		    			}
 	  		    		});
 	  			return false;
@@ -447,14 +454,15 @@ var opentides3 = (function() {
 			  		    	  			history.pushState({mode:'hide', form:settings['form']}, 
 			  		    	  				null, url);
 		  		    				}
-  		  		    				form.page('hide');
+	  		  		    			// display the search page
+	  		  		    			$(settings['search']).page();
   		  		    			}
   		    				}
 	  		  				displayTableRow(results.find('table'), json.command);
   		    			}
   	  		    	},
   	  		    	dataType:'json'
-  				});	  		    		
+  				});
 	    	});
 	    	
 	    	firstForm.find("[data-dismiss='page']").on("click", function() {
@@ -464,7 +472,7 @@ var opentides3 = (function() {
 	    	  			history.pushState({mode:'hide', form:settings['form']}, 
     	  				null, url);
 	    			}
-	    			form.page('hide');	    		
+	    			$(settings['search']).page();
 	    		}
 	    	});
 	    	
@@ -485,7 +493,8 @@ var opentides3 = (function() {
 	    	searchForms.on('submit', function() {
 	    		// search starts on page 1
 	    		status.show();
-				doSearch($(this), results, status, 1); 
+				doSearch($(this), results, status, pagination, 1); 
+	    		pagination.show();
 	  			return false;
 			});
 	    	
@@ -498,7 +507,7 @@ var opentides3 = (function() {
 				var id = $(this).data('id');
 				var path = opentides3.getPath()+'/'+id;
 				$.getJSON(
-						path,	 		// url
+						path,	 								// url
 	  		    		"",										// data
 	  	  		    	function(json) {						// callback
 							displayForm('update', form, path, json)
@@ -562,7 +571,7 @@ var opentides3 = (function() {
 	}
 	
 	// private method to perform search 
-	var doSearch = function(searchForm, results, status, page) {
+	var doSearch = function(searchForm, results, status, pagination, page) {
 		var data = searchForm.serialize() + "&p=" + page;
 		    $.getJSON(
 		    		opentides3.getPath(), 		// url
@@ -577,7 +586,7 @@ var opentides3 = (function() {
 	  		    			history.pushState({mode:'search',data:json, formPath:searchForm.attr('id'),
 	  		    				formData:searchForm.serialize()}, null, cleanUrl);	  		    				
 		    			}
-		    			displayResults(searchForm, results, status, json);  		    			
+		    			displayResults(searchForm, results, status, pagination, json);  		    			
 		    		}
 		    );
 	};
@@ -585,7 +594,7 @@ var opentides3 = (function() {
 	/*****************************
 	 * (2.1) display search results to <results> (must contain table)
 	 *****************************/
-	var displayResults = function(searchForm, results, status, json) {
+	var displayResults = function(searchForm, results, status, pagination, json) {
 		// ensure past animations are stopped
 		if (results.find('table:animated').length > 0) {
 			results.find('table:animated').stop().remove();
@@ -593,6 +602,7 @@ var opentides3 = (function() {
 		
 		// show the search result status bar
 		status.show();
+		pagination.show();
 		
 		// show the results
 		if (json['results'].length > 0) {
@@ -639,69 +649,68 @@ var opentides3 = (function() {
 			results.hide();  				
 		}
 		
-		// look for paging 
+		// look for status bar 
 		status.each(function(i,elem) {
-			if ($(elem).data('display-summary')) {
-    			if (json['results'].length == 0) {
-    				html = "<div class='alert alert-warning'>" +
-    					   opentides3.getMessage('no-results-found', elem) +
-    					   "</div>";
-    				$(elem).html(html);
-    				results.hide();
-    			} else {
-    				results.show();    				
-    				html = "<span class='records'>" +
-    						opentides3.getMessage('summary-message', elem)
-						 	.replace('#start', json['startIndex']+1)
-						 	.replace('#end',   json['endIndex']+1)
-						 	.replace('#total', json['totalResults']) +
-						 	"</span>";    					
-    				html = html + "<span class='searchTime'> (" + opentides3.getMessage('result-seconds', elem)
-    						.replace('#time',json['searchTime']/1000) + ")</span>";
-    				$(elem).html(html);  	  	  		    				
-    			}
-    		}
-			if ($(elem).data('display-pagelinks')) {
-    			if (json['results'].length > 0 && (json['totalResults']/json['pageSize'] > 1)) {
-    				html = 	"<div class='pagination pagination-centered'>" +
-    						"<ul><li class='ot3-firstPage'><a href='javascript:void(0)' data-page='1'>&lt;&lt;</a></li>" + 						// first page
-    						"<li class='ot3-prevPage'><a href='javascript:void(0)' data-page='"+(json['currPage']-1)+"'>&lt;</a></li>";		 	// prev page
-    				for (var i=json['startPage'];i<=json['endPage'];i++) {
-    					html = html +"<li class='ot3-page-"+i+"'><a href='javascript:void(0)' data-page='"+i+"'>"+i+"</a></li>";				// pages				
-    				}
-    				html = html +
-							"<li class='ot3-nextPage'><a href='javascript:void(0)' data-page='"+(json['currPage']+1)+"'>&gt;</a></li>" +		// next page
-    						"<li class='ot3-lastPage'><a href='javascript:void(0)' data-page='"+json['endPage']+"'>&gt;&gt;</a></li>" +			// last page
-    						"</ul></div>";	
-    				$(elem).html(html);
-    				// set active page
-    				$('.ot3-page-'+json['currPage']).addClass('active');
-    				$('.ot3-page-'+json['currPage']).html('<span>'+$('.ot3-page-'+json['currPage']+' a').html()+'</span>');
-    				
-    				// if first page, disable first and prev page
-    				if (json['currPage']==1) {
-    					$('.ot3-firstPage').addClass('disabled');
-    					$('.ot3-prevPage').addClass('disabled');
-    					$('.ot3-firstPage').html('<span>&lt;&lt;</span>');
-    					$('.ot3-prevPage').html('<span>&lt;</span>');
-    				}
-    				// if last page, disable last and next page
-    				if (json['currPage']==json['endPage']) {
-    					$('.ot3-lastPage').addClass('disabled');
-    					$('.ot3-nextPage').addClass('disabled'); 
-    					$('.ot3-lastPage').html('<span>&gt;&gt;</span>');
-    					$('.ot3-nextPage').html('<span>&gt;</span>');
-    				} 
-    				$(elem).find('li a').on("click", function() {
-    					var i = $(this).data('page');
-    					doSearch(searchForm, results, status, i);	    					
-    				})		    				
-    			} else {
-    				$(elem).html('');	    				
-    			} 	  		    				
-			}  	  		    				 	  		    			
-		});			
-	};		
+			if (json['results'].length == 0) {
+				html = "<div class='alert alert-warning'>" +
+					   opentides3.getMessage('no-results-found', elem) +
+					   "</div>";
+				$(elem).html(html);
+				results.hide();
+			} else {
+				results.show();    				
+				html = "<span class='records'>" +
+						opentides3.getMessage('summary-message', elem)
+					 	.replace('#start', json['startIndex']+1)
+					 	.replace('#end',   json['endIndex']+1)
+					 	.replace('#total', json['totalResults']) +
+					 	"</span>";    					
+				html = html + "<span class='searchTime'> (" + opentides3.getMessage('result-seconds', elem)
+						.replace('#time',json['searchTime']/1000) + ")</span>";
+				$(elem).html(html);  	  	  		    				
+			}
+		});
+		// look for paging
+		pagination.each(function(i,elem) {
+			if (json['results'].length > 0 && (json['totalResults']/json['pageSize'] > 1)) {
+				html = 	"<div class='pagination pagination-centered'>" +
+						"<ul><li class='ot3-firstPage'><a href='javascript:void(0)' data-page='1'>&lt;&lt;</a></li>" + 						// first page
+						"<li class='ot3-prevPage'><a href='javascript:void(0)' data-page='"+(json['currPage']-1)+"'>&lt;</a></li>";		 	// prev page
+				for (var i=json['startPage'];i<=json['endPage'];i++) {
+					html = html +"<li class='ot3-page-"+i+"'><a href='javascript:void(0)' data-page='"+i+"'>"+i+"</a></li>";				// pages				
+				}
+				html = html +
+						"<li class='ot3-nextPage'><a href='javascript:void(0)' data-page='"+(json['currPage']+1)+"'>&gt;</a></li>" +		// next page
+						"<li class='ot3-lastPage'><a href='javascript:void(0)' data-page='"+json['endPage']+"'>&gt;&gt;</a></li>" +			// last page
+						"</ul></div>";	
+				$(elem).html(html);
+				// set active page
+				$('.ot3-page-'+json['currPage']).addClass('active');
+				$('.ot3-page-'+json['currPage']).html('<span>'+$('.ot3-page-'+json['currPage']+' a').html()+'</span>');
+				
+				// if first page, disable first and prev page
+				if (json['currPage']==1) {
+					$('.ot3-firstPage').addClass('disabled');
+					$('.ot3-prevPage').addClass('disabled');
+					$('.ot3-firstPage').html('<span>&lt;&lt;</span>');
+					$('.ot3-prevPage').html('<span>&lt;</span>');
+				}
+				// if last page, disable last and next page
+				if (json['currPage']==json['endPage']) {
+					$('.ot3-lastPage').addClass('disabled');
+					$('.ot3-nextPage').addClass('disabled'); 
+					$('.ot3-lastPage').html('<span>&gt;&gt;</span>');
+					$('.ot3-nextPage').html('<span>&gt;</span>');
+				} 
+				$(elem).find('li a').on("click", function() {
+					var i = $(this).data('page');
+					doSearch(searchForm, results, status, pagination, i);
+				})
+			} else {
+				$(elem).html('');
+			}
+		});
+	};
 	
 	var displayTableRow = function(resultsTable, result, listedNames) {
     	if (typeof(listedNames) === 'undefined') {
@@ -749,14 +758,14 @@ var opentides3 = (function() {
 			firstForm.attr('action',action);
 	  		firstForm.attr('method','put');
 			firstForm.bind(json);   			
-			form.find('[data-form-display="add"]').hide();	    			
-			form.find('[data-form-display="update"]').show();			
+			form.find('.ot3-add').hide();	    			
+			form.find('.ot3-update').show();			
 		} else if (mode === 'add') {
 			firstForm.attr('action',action);
 	  		firstForm.attr('method','post');
-			firstForm.bind(json);   			
-			form.find('[data-form-display="update"]').hide();	    			
-			form.find('[data-form-display="add"]').show();			
+			firstForm.bind(json);
+			form.find('.ot3-update').hide();
+			form.find('.ot3-add').show();
 		}
 	};
 	
@@ -800,8 +809,8 @@ var opentides3 = (function() {
 		}
 		if (type === 'array') {
 			var arr = [];
-			$(prime).each(function() {				
-				arr.push(toPrimitive(this));
+			$(prime).each(function(i, val) {				
+				arr.push(toPrimitive(val));
 			});					
 			return arr;
 		}

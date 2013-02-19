@@ -18,16 +18,20 @@
  */
 package org.opentides.web.controller;
 
+import java.util.List;
+
 import javax.annotation.PostConstruct;
 
 import org.opentides.bean.user.BaseUser;
 import org.opentides.bean.user.UserCredential;
+import org.opentides.bean.user.UserGroup;
+import org.opentides.service.UserGroupService;
 import org.opentides.service.UserService;
 import org.opentides.util.SecurityUtil;
 import org.opentides.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
@@ -40,9 +44,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/organization/users")
 public class UserController extends BaseCrudController<BaseUser> {
 
+	@Autowired
+	private UserGroupService userGroupService;
+	
 	@PostConstruct
 	public void init() {
 		singlePage = "/base/user-crud";
+	}
+	
+	@ModelAttribute("userGroupsList")
+	public List<UserGroup> getUserGroupsList() {
+		return userGroupService.findAll();
 	}
 	
 	@Autowired

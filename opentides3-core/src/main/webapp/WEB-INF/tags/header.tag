@@ -85,7 +85,7 @@
 		</div>
 
 		<div class='notifications top-left'></div>	
-	    	<div class='notifications top-right'></div>
+	    <div class='notifications top-right'></div>
 	    <div class='notifications system-error'></div>
 		<header class="jumbotron">
 			<div class="container">
