@@ -56,23 +56,39 @@ public class UserAuthority extends BaseEntity {
 		super();
 	}
 
+	/**
+	 * @param userGroup
+	 * @param authority
+	 */
 	public UserAuthority(UserGroup userGroup, String authority) {
 		this.setUserGroup(userGroup);
 		this.setAuthority(authority);
 	}
 
+	/**
+	 * @return
+	 */
 	public String getAuthority() {
 		return authority;
 	}
 
+	/**
+	 * @param authority
+	 */
 	public void setAuthority(String authority) {
 		this.authority = authority;
 	}
 
+	/**
+	 * @return
+	 */
 	public String getUsername() {
 		return username;
 	}
 
+	/**
+	 * @param username
+	 */
 	public void setUsername(String username) {
 		this.username = username;
 	}
@@ -126,5 +142,4 @@ public class UserAuthority extends BaseEntity {
 			return false;
 		return true;
 	}
-
 }

@@ -34,7 +34,20 @@
 		</div>
 	</div>
 	
-	<div id="results-panel" class="span9">
+	        <div id="message-panel" class="row-fluid">
+	            <div class="pull-left status"
+	            		data-summary-message='<spring:message code="message.displaying-x-of-y" 
+	            		arguments="#start,#end,#total,records"/>'>
+	            	<app:paging results="${results}" />
+	            </div>
+	            <div class="pull-right">
+	                <button id="user-add" class="btn btn-success add-action">
+	                	<i class="icon-plus-sign icon-white"></i> <spring:message code="label.user.add" />
+	                </button>
+	            </div>
+		    </div>
+		    
+	        <div class="clear"></div>                  
 	
 		<div id="message-panel" class="row-fluid">
 			<button id="user-add" class="btn btn-info add-action">
@@ -84,7 +97,7 @@
 			<app:paging results="${results}"/>
 		</div>
 	</div>
-</div>
+
    		
 <div id="form-body" class="modal fade hide">
 

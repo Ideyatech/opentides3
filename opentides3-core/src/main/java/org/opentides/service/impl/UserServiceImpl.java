@@ -37,7 +37,9 @@ import org.opentides.exception.InvalidImplementationException;
 import org.opentides.service.UserService;
 import org.opentides.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.mail.MailMessage;
+import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.session.SessionInformation;
@@ -62,6 +64,10 @@ public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 
 	@Autowired
 	private SessionRegistry sessionRegistry;
+	
+	@Autowired
+	@Qualifier("passwordEncoder")
+	private PasswordEncoder passwordEncoder;
 
 	private int tokenLength = 10;
 
@@ -219,6 +225,19 @@ public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 
 		return true;
 	}
+	
+	
+	/** Static helper that encrypts the given password
+	 *  into its appropriate encryption settings.
+	 * @param cleartext
+	 * @return
+	 */
+	public String encryptPassword(String cleartext) {
+	    if (passwordEncoder!=null) {
+	        return passwordEncoder.encodePassword(cleartext, null);
+	    } else
+	        return cleartext;
+	}
 
 	/**
 	 * Ensures that admin user is created into the database. This method is
@@ -257,6 +276,7 @@ public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 	 * Updates last login of the user from a login event. Also logs the event in
 	 * history log.
 	 */
+	@Transactional
 	public void updateLogin(
 			AuthenticationSuccessEvent authenticationSuccessEvent) {
 		UserDao userDao = (UserDao) getDao();
@@ -273,7 +293,6 @@ public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 		user.setLastLogin(new Date());
 		user.setSkipAudit(true);		
 		userDao.saveEntityModel(user);
-		// userDao.updateLastLogin(username);
 		
 		// force the audit user details
 		String completeName = user.getCompleteName() + " [" + username + "] ";

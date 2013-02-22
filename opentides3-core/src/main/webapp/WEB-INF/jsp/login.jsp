@@ -49,51 +49,68 @@
 <body>
 
 	<!--Header-->
-	<h2>Welcome to Opentides 3.0!</h2>
+	<h1 class="pagination-centered">Welcome to Opentides 3.0!</h1>
 
 	<!--Content/Login-->
-
-	<div id="login-body" class="container span12 pagination-centered">
-		<div class="span6 offset3">
-		<form class="form-horizontal">
-			<div class="control-group">
-				<label class="control-label" for="inputEmail">Email</label>
-				<div class="controls input-prepend">
-					<span class="add-on"><i class="icon-user"></i></span> 
-					<input type="text" id="inputEmail" placeholder="Username">
+	<div class="container">
+		<div class="row">
+			<div class="span4 offset4 well">
+				<div class="header">
+					<h2><spring:message code='label.login' /></h2>
+				</div>				
+				<form method="POST" action="<c:url value='j_spring_security_check'/>">
+					<c:if test="${not empty param.login_error}">
+					<div class="alert alert-error">
+						<a class="close" data-dismiss="alert" href="#">x</a>
+						<spring:message code='error.${param.login_error}' />
+						<br />
+						<c:out value="${SPRING_SECURITY_LAST_EXCEPTION.message}" />
+					</div>
+					</c:if>
+					<div class="control-group">
+						<label class="control-label" for="j_username"><spring:message
+								code="label.username" /></label>
+						<div class="controls input-prepend">
+							<span class="add-on"><i class="icon-user"></i></span> <input
+								type="text" name="j_username" placeholder="Username">
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label" for="j_password"><spring:message
+								code="label.password" /></label>
+						<div class="controls input-prepend">
+							<span class="add-on"><i class="icon-lock"></i></span> <input
+								type="password" name="j_password" placeholder="Password">
+						</div>
+					</div>
+					<div class="control-group">
+						<div class="controls input-prepend">
+							<label class="checkbox"> <input type="checkbox">
+								<spring:message code="label.remember-me" />
+							</label> <span class="add-on"><i class="icon-ok"></i></span>
+							<button type="submit" class="btn">
+								<spring:message code="label.login" />
+							</button>
+						</div>
+					</div>
+				</form>
+				<div class="forgot-password">
+					<a href="#"><spring:message code="message.forgot-your-password" />
+					</a>
 				</div>
 			</div>
-			<div class="control-group">
-				<label class="control-label" for="inputPassword">Password</label>
-				<div class="controls input-prepend">
-					<span class="add-on"><i class="icon-lock"></i></span>
-					<input type="password" id="inputPassword" placeholder="Password">
-				</div>
-			</div>
-			<div class="control-group">
-				<div class="controls input-prepend">
-					<label class="checkbox"> <input type="checkbox">
-						Remember me
-					</label>
-					<span class="add-on"><i class="icon-ok"></i></span>
-					<button type="submit" class="btn"> Sign in</button>
-				</div>
-			</div>		
-		</form>
-		</div>
-		<div class="forgot-password">
-			<a href="#">Forgot your password?</a>
 		</div>
 	</div>
 
+
 	<!--Footer-->
-	<div id="footer">
-		<div class="container">
-			<p class="muted credit">
-				<small> &copy; <spring:theme code="system_name" />
-					&nbsp;|&nbsp; <spring:message code="label.all-rights-reserved" />
-				</small>
-			</p>
+	<div id="footer" class="container row-fluid">
+		<div class="span8 offset2">
+		<p class="muted credit pagination-centered">
+			<small> &copy; <spring:theme code="system_name" />
+				&nbsp;|&nbsp; <spring:message code="label.all-rights-reserved" />
+			</small>
+		</p>
 		</div>
 	</div>
 

@@ -29,7 +29,6 @@ import org.eclipse.persistence.annotations.Cache;
 import org.opentides.annotation.Auditable;
 import org.opentides.annotation.PrimaryField;
 import org.opentides.bean.BaseEntity;
-import org.opentides.util.SecurityUtil;
 import org.opentides.web.json.Views;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -145,26 +144,13 @@ public class UserCredential extends BaseEntity {
     public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
     }
-
-    /**
-     * Matches if the given password matches with this password.
-     * @param password
-     * @return
-     */
-    public boolean matchPassword(String password) {
-    	String encryptedOldPassword = SecurityUtil.encryptPassword(password);
-		if (encryptedOldPassword.equals(this.password))
-			return true;
-		else
-			return false;
-    }
 		
     /**
      * Ensures that password is enrypted according to configured passwordEncoder.
      * @param password
      */
     public void setPassword(String password) {
-        this.password = SecurityUtil.encryptPassword(password);
+        this.password = password;
     }
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()

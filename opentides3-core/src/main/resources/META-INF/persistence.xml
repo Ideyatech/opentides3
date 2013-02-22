@@ -5,6 +5,7 @@
 	<persistence-unit name="opentidesPU"
 		transaction-type="RESOURCE_LOCAL">
 		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+		<class>org.opentides.bean.AuditLog</class>
 		<properties>
 			<property name="eclipselink.target-database"
 				value="org.eclipse.persistence.platform.database.MySQLPlatform" />
