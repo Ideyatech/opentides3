@@ -49,7 +49,7 @@ public class UserGroupController extends BaseCrudController<UserGroup> {
 	}
 
 	@Override
-	protected void onLoad(UserGroup command, BindingResult bindingResult, 
+	protected void onLoadSearch(UserGroup command, BindingResult bindingResult, 
 			Model uiModel, HttpServletRequest request,
 			HttpServletResponse response) {
 		uiModel.addAttribute("results", search(command, request));

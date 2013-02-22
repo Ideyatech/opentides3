@@ -87,6 +87,7 @@ public class BaseUser extends BaseEntity {
 
 	@ManyToMany
 	@JoinTable(name = "USER_GROUP", joinColumns = { @JoinColumn(name = "USER_ID") }, inverseJoinColumns = { @JoinColumn(name = "GROUP_ID") })
+	@JsonView(Views.SearchView.class)
 	private Set<UserGroup> groups;
 	
 	@Column(name = "LASTLOGIN")
@@ -378,6 +379,23 @@ public class BaseUser extends BaseEntity {
 	 */
 	public final void setGroups(Set<UserGroup> groups) {
 		this.groups = groups;
+	}
+	
+	/**
+	 * Returns the list of groups for display purposes
+	 * @return
+	 */
+	@JsonView(value=Views.SearchView.class) 
+	public final String getDisplayGroups() {
+		StringBuffer display = new StringBuffer();
+		int count = 0;
+		for (UserGroup group:groups) {
+			if (count++ > 0)
+				display.append(", ");
+			display.append(group.getName());
+		}
+		return display.toString();
+		
 	}
 
 	/**

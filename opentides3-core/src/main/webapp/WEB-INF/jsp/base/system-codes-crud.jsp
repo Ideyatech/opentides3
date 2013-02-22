@@ -4,7 +4,9 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="app" tagdir="/WEB-INF/tags"%>
 
-<app:header pageTitle="label.system-codes" bodyId="system-codes-body" active="system-codes"/>
+<app:header pageTitle="label.system-codes" active="system-codes"/>
+
+<div id="system-codes-body">
 
 <div id="search-body">
 
@@ -129,6 +131,8 @@
 		</form:form>
 	</div>
 	
+</div>
+
 </div>
 
 <app:footer>

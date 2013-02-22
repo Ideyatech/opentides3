@@ -85,7 +85,7 @@ public class StringToBaseEntityConverter implements
 				NamingUtil.getSimpleName(targetType.getName())) + "Service";
 		Object service = beanFactory.getBean(serviceName);
 		if (service != null && 
-				service.getClass().isAssignableFrom(BaseCrudService.class) )
+				BaseCrudService.class.isAssignableFrom(service.getClass()) )
 			return true;			
 		return false;
 	}

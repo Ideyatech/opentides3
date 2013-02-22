@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <%@ attribute name="pageTitle" required="true" type="java.lang.String"%>
-<%@ attribute name="bodyId" required="false" type="java.lang.String"%>
 <%@ attribute name="active" required="false" type="java.lang.String"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
@@ -110,4 +109,4 @@
 			</div>
 		</header>
 
-		<div id="${bodyId}" class="main container">
+		<div class="main container">

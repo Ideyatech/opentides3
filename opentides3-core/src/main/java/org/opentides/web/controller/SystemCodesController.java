@@ -44,7 +44,7 @@ public class SystemCodesController extends BaseCrudController<SystemCodes> {
 	}
 	
 	@Override
-	protected void onLoad(SystemCodes command, BindingResult bindingResult, 
+	protected void onLoadSearch(SystemCodes command, BindingResult bindingResult, 
 			Model uiModel, HttpServletRequest request,
 			HttpServletResponse response) {
 		uiModel.addAttribute("results", search(command, request));
