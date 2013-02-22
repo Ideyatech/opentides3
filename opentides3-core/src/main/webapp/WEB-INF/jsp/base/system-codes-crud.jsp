@@ -54,7 +54,7 @@
 			<div class="status" data-display-pagelinks="false" data-display-summary="true" data-summary-message='
 				<spring:message code="message.displaying-x-of-y" arguments="#start,#end,#total,records"/>
 			'>
-				<app:paging results="${results}" />
+				<app:status results="${results}" />
 			</div>
 		</div>
 		
@@ -62,7 +62,7 @@
 		
 		<div style="overflow:hidden">
 			<div style="width:200%;">
-				<table id="system-codes-results" class="footable table-bordered table-striped table-hover table-condensed" style="width:50%;">
+				<table id="system-codes-results" class="footable table-bordered table-striped table-hover table-condensed" style="width:50%;" data-page="${results.currPage}" >
 					<thead>
 						<tr class="table-header">
 							<th data-class="expand" data-field-name="value"><spring:message code="label.system-codes.value" /></th>

@@ -15,7 +15,6 @@
 <c:set var="ot_version" value="3.0" scope="application" />
 <jsp:useBean id="currentUser" class="org.opentides.util.SecurityUtil" scope="request"/>
 <spring:theme code="client_name" var="client_name" scope="application" />
-<spring:theme code="stylesheet" var="stylesheet" />
 <spring:theme code="logo" var="logo" />
 <spring:theme code="favicon" var="favicon" />
 
@@ -33,8 +32,6 @@
 	<link rel="stylesheet" type="text/css" href="<c:url value='/css/footable-0.1.css'/>" />
     <link rel="stylesheet" type="text/css" href="<c:url value='/css/bootstrap-notify.css'/>" />
     <link rel="stylesheet" type="text/css" href="<c:url value='/css/opentides-3.0.1.css'/>" />
-    <link rel="stylesheet" type="text/css" href="<c:url value='${stylesheet}'/>" /> 
-    
     
 	<script type="text/javascript" src="<c:url value='/js/jquery-1.9.0.min.js'/>"></script>	
 	<script type="text/javascript" src="<c:url value='/js/jquery.deserialize.js'/>"></script>	

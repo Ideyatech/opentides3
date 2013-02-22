@@ -44,7 +44,7 @@
             <div class="status" data-summary-message='
             	<spring:message code="message.displaying-x-of-y" arguments="#start,#end,#total,records"/>
             '>
-            	<app:paging results="${results}" />
+            	<app:status results="${results}" />
             </div>
 	    </div>
 	    
@@ -52,7 +52,7 @@
 	    
 	    <div style="overflow:hidden">
 	    	<div style="width:200%;">
-	        	<table id="user-results" class="footable table-bordered table-striped table-hover table-condensed" style="width:50%;">
+	        	<table id="user-results" class="footable table-bordered table-striped table-hover table-condensed" style="width:50%;" data-page="${results.currPage}" >
 					<thead>
 		               	<tr class="table-header">
 		                   	<th data-class="expand" data-field-name="completeName"><spring:message code="label.user.name"/></th>

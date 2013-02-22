@@ -335,6 +335,9 @@ var opentides3 = (function() {
   			
   			// body
   			var body = $(this);
+  			
+  			//submit button
+  			var formSubmitButton = $(this).find("input[data-submit='save']");
 
   			if ($(this).find(settings['results'] + ' table tr').length <= 1) {
   		    	// no search results, hide the table and message
@@ -428,11 +431,18 @@ var opentides3 = (function() {
 	  		    		});
 	  			return false;
 			});
+  			
+  			firstForm.find("[data-submit='save'], [data-submit='save-and-new']").on("click", function() {
+  				formSubmitButton = $(this);
+  			});
 	    	
-	    	
-	    	firstForm.find("[data-submit='save'], [data-submit='save-and-new']").on("click", function() {
-	    		var firstForm = $(this).closest('form');
-	    		var button = $(this);
+  			firstForm.on("submit", function(e) {
+	    		
+  				e.preventDefault();
+  				
+	    		var firstForm = $(this);
+	    		var button = formSubmitButton;
+	    		
   				$.ajax( {
   					type:firstForm.attr('method'),		// method
   					url:firstForm.attr('action'), 		// url
@@ -567,13 +577,7 @@ var opentides3 = (function() {
 			searchForms.find('[data-submit="clear"]').on("click", function() {
 				$(this).closest('form').clearForm();
 				return false;
-			});
-			
-			// attach submit button functions
-			searchForms.find('[data-submit="search"]').on("click", function() {
-				$(this).closest('form').submit();
-				return false;
-			});		
+			});	
 			
 	    });
 	}
@@ -734,8 +738,8 @@ var opentides3 = (function() {
     		var row = "";
 			$.each(listedNames, function(j, fieldName) {
 				if (fieldName=='ot3-controls') {
-					row = row + "<td> <i class='icon-edit edit-action' data-id='"+result['id']+"'/> " +
-								"<i class='icon-remove remove-action' data-id='"+result['id']+"'/></td>";
+					row = row + "<td> <i class='icon-pencil edit-action' data-id='"+result['id']+"'/> " +
+								"<i class='icon-trash remove-action' data-id='"+result['id']+"'/></td>";
 				} else {
     				row = row + '<td>'+opentides3.getSafeValue(result,fieldName)+'</td>';  	  		    					
 				}
@@ -746,8 +750,8 @@ var opentides3 = (function() {
     		var row = "<tr data-id='"+result['id']+"'>";
 			$.each(listedNames, function(j, fieldName) {
 				if (fieldName=='ot3-controls') {
-					row = row + "<td> <i class='icon-edit edit-action' data-id='"+result['id']+"'/> " +
-								"<i class='icon-remove remove-action' data-id='"+result['id']+"'/></td>";
+					row = row + "<td> <i class='icon-pencil edit-action' data-id='"+result['id']+"'/> " +
+								"<i class='icon-trash remove-action' data-id='"+result['id']+"'/></td>";
 				} else {
     				row = row + '<td>'+opentides3.getSafeValue(result,fieldName)+'</td>';  	  		    					
 				}
