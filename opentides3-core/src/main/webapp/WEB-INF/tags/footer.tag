@@ -2,6 +2,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
 
+			</div>
 		</div>
 		
 		<div id="push"></div>
@@ -17,13 +18,6 @@
         </p>
       </div>
     </div>
-
-<script type="text/javascript" src="<c:url value='/js/jquery-1.9.0.min.js'/>"></script>	
-<script type="text/javascript" src="<c:url value='/js/jquery.deserialize.js'/>"></script>	
-<script type="text/javascript" src="<c:url value='/js/bootstrap.min.js'/>"></script>
-<script type="text/javascript" src="<c:url value='/js/footable-0.1.js'/>"></script>
-<script type="text/javascript" src="<c:url value='/js/bootstrap-notify.js'/>"></script>
-<script type="text/javascript" src="<c:url value='/js/opentides-3.0.1.js'/>"></script>
 
 <jsp:doBody /> 
 

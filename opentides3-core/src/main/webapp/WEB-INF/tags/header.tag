@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<%@ attribute name="title_webpage" required="true" type="java.lang.String"%>
+<%@ attribute name="pageTitle" required="true" type="java.lang.String"%>
+<%@ attribute name="bodyId" required="false" type="java.lang.String"%>
 <%@ attribute name="active" required="false" type="java.lang.String"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
@@ -25,7 +26,7 @@
 
 	<meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${client_name} - <spring:message code="${title_webpage}" /></title>
+    <title>${client_name} - <spring:message code="${pageTitle}" /></title>
     
     <link rel="shortcut icon" type="image/x-icon" href="<c:url value='${favicon}'/>" />
     <link rel="stylesheet" type="text/css" href="<c:url value='/css/bootstrap.min.css'/>" />
@@ -34,6 +35,15 @@
     <link rel="stylesheet" type="text/css" href="<c:url value='/css/bootstrap-notify.css'/>" />
     <link rel="stylesheet" type="text/css" href="<c:url value='/css/opentides-3.0.1.css'/>" />
     <link rel="stylesheet" type="text/css" href="<c:url value='${stylesheet}'/>" /> 
+    
+    
+	<script type="text/javascript" src="<c:url value='/js/jquery-1.9.0.min.js'/>"></script>	
+	<script type="text/javascript" src="<c:url value='/js/jquery.deserialize.js'/>"></script>	
+	<script type="text/javascript" src="<c:url value='/js/bootstrap.min.js'/>"></script>
+	<script type="text/javascript" src="<c:url value='/js/footable-0.1.js'/>"></script>
+	<script type="text/javascript" src="<c:url value='/js/bootstrap-notify.js'/>"></script>
+	<script type="text/javascript" src="<c:url value='/js/bootbox.min.js'/>"></script>
+	<script type="text/javascript" src="<c:url value='/js/opentides-3.0.1.js'/>"></script>
     
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
@@ -46,6 +56,10 @@
 
 <body>
 
+	<div class='notifications top-left'></div>	
+    <div class='notifications top-right'></div>
+    <div class='notifications system-error'></div>
+
 	<div id="wrap">
 	
 		<div id="nav" class="navbar navbar-inverse navbar-fixed-top">
@@ -56,7 +70,7 @@
 						class="icon-bar"></span> <span class="icon-bar"></span>
 					</a>
 					<a class="brand" href="${home}">
-						<img id="logo" src="<c:url value='${logo}'/>"/>
+						<img class="logo" src="<c:url value='${logo}'/>"/>
 					</a>
 					<div class="nav-collapse collapse">
 						<ul class="nav">
@@ -66,17 +80,23 @@
 									Home
 								</a>
 							</li>
-							<li class="${active eq 'system-codes' ? 'active' : ''}">
-								<a href="${home}/system/system-codes/">
-								<i class="icon-qrcode icon-white"></i>
-								System Codes
+							<li class="${active eq 'users' ? 'active' : ''}">
+								<a href="${home}/organization/users/">
+									<i class="icon-user icon-white"></i>
+									Users
 								</a>
 							</li>
-							<li class="${active eq 'users' ? 'active' : ''}">
-								<a href="${home}/organization/users/">Users</a>
+							<li class="${active eq 'system-codes' ? 'active' : ''}">
+								<a href="${home}/system/system-codes/">
+									<i class="icon-qrcode icon-white"></i>
+									System Codes
+								</a>
 							</li>
 							<li class="${active eq 'usergroups' ? 'active' : ''}">
-								<a href="${home}/organization/usergroups/">User Groups</a>
+								<a href="${home}/organization/usergroups/">
+									<i class="icon-globe icon-white"></i>
+									User Groups
+								</a>
 							</li>
 						</ul>
 					</div>
@@ -84,13 +104,10 @@
 			</div>
 		</div>
 
-		<div class='notifications top-left'></div>	
-	    	<div class='notifications top-right'></div>
-	    <div class='notifications system-error'></div>
 		<header class="jumbotron">
 			<div class="container">
-				<h2><spring:message code="${title_webpage}" /></h2>
+				<h2><spring:message code="${pageTitle}" /></h2>
 			</div>
 		</header>
 
-		<div id="main" class="container">
+		<div id="${bodyId}" class="main container">

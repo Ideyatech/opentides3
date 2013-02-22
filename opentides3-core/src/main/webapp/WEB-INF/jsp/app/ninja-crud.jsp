@@ -3,7 +3,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="app" tagdir="/WEB-INF/tags"%>
-<app:header title_webpage="label.ninja" />
+<app:header pageTitle="label.ninja" />
     <!--Content-->
 	<div id="ninja-body" class="container-fluid">
         <div id="search-panel" class="row-fluid">

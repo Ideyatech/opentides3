@@ -1,5 +1,5 @@
 <%@ taglib prefix="app" tagdir="/WEB-INF/tags"%>
-<app:header title_webpage="label.empty" active="home"/>
+<app:header pageTitle="label.empty" active="home"/>
 
 <h1>Welcome to Opentides 3.0</h1>
 <h2>This is the sub-heading</h2>

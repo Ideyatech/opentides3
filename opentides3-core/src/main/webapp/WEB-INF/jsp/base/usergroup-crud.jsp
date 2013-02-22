@@ -4,7 +4,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="app" tagdir="/WEB-INF/tags"%>
-<app:header title_webpage="label.usergroup">
+<app:header pageTitle="label.usergroup">
     <link rel="stylesheet" type="text/css" href="<c:url value='/css/jquery.treeview.css'/>" />
 </app:header>
     <!--Content-->

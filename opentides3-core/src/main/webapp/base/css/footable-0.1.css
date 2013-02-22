@@ -9,16 +9,16 @@
   -moz-border-radius: 6px;
   -webkit-border-radius: 6px;
   border-radius: 6px;
-  margin-bottom: 20px;
+  background: #fff;
 }
 
 .footable.breakpoint > tbody > tr > td.expand {
-  background: url('img/plus.png') no-repeat 5px center;
+  background: url('../img/plus.png') no-repeat 5px center;
   padding-left: 40px;
 }
 
 .footable.breakpoint > tbody > tr.footable-detail-show > td.expand {
-  background: url('img/minus.png') no-repeat 5px center;
+  background: url('../img/minus.png') no-repeat 5px center;
 }
 
 .footable.breakpoint > tbody > tr.footable-row-detail {

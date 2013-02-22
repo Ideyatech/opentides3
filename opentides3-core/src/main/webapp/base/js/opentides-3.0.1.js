@@ -212,7 +212,8 @@ var opentides3 = (function() {
      * 
      * @param json - json object containing the values
      */
-	$.fn.bind = function(json) {  		
+	
+	$.fn.otbind = function(json) {  		
 		return this.each(function() {
 			var form = $(this);
 			form.clearForm();
@@ -255,7 +256,7 @@ var opentides3 = (function() {
 	            })
 	        });			
 		});
-	};	
+	};
 	
     /**
      * Clears all the input of the form.
@@ -526,17 +527,24 @@ var opentides3 = (function() {
 				} else {
 					message = message.replace('#primary-value', 'record');
 				}
-				if (confirm(message)) {
-					$.ajax({
-					    url: opentides3.getPath()+'/'+id,
-					    type: 'DELETE',
-					    success: function(json) {
-	  		    			opentides3.displayMessage(json);		    		  		    			
-	  		    			tableRow.fadeOut(300, function(){ $(this).remove(); });	    		  		    			
-					    },
-					    dataType:'json'
-					});
-				}
+				bootbox.dialog(message, [{
+				    "label" : "Remove",
+				    "class" : "btn-danger",
+				    "callback": function() {
+				    	$.ajax({
+						    url: opentides3.getPath()+'/'+id,
+						    type: 'DELETE',
+						    success: function(json) {
+		  		    			opentides3.displayMessage(json);		    		  		    			
+		  		    			tableRow.fadeOut(300, function(){ $(this).remove(); });	    		  		    			
+						    },
+						    dataType:'json'
+						});
+				    }
+				}, {
+				    "label" : "Cancel",
+					 "class" : "btn"
+				}]);
 			})
 			
 			// add sort fields as hidden on the form
@@ -748,13 +756,13 @@ var opentides3 = (function() {
 		if (mode==='update') {
 			firstForm.attr('action',action);
 	  		firstForm.attr('method','put');
-			firstForm.bind(json);   			
+			firstForm.otbind(json);   			
 			form.find('[data-form-display="add"]').hide();	    			
 			form.find('[data-form-display="update"]').show();			
 		} else if (mode === 'add') {
 			firstForm.attr('action',action);
 	  		firstForm.attr('method','post');
-			firstForm.bind(json);   			
+			firstForm.otbind(json);   			
 			form.find('[data-form-display="update"]').hide();	    			
 			form.find('[data-form-display="add"]').show();			
 		}
