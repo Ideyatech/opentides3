@@ -47,16 +47,14 @@
 	<div id="results-panel" class="span9">
 		
 		<div id="message-panel" class="row-fluid">
-		
-			<button id="add-system-codes" class="add-entry btn btn-info add-action">
+			<button id="system-codes-add" class="btn btn-info add-action">
 				<i class="icon-plus-sign icon-white"></i>
 				<spring:message code="label.system-codes.add" />
 			</button>
-		
 			<div class="status" data-display-pagelinks="false" data-display-summary="true" data-summary-message='
 				<spring:message code="message.displaying-x-of-y" arguments="#start,#end,#total,records"/>
 			'>
-				<app:paging results="${results}" displayPageLinks="false" displaySummary="true" />
+				<app:paging results="${results}" />
 			</div>
 		</div>
 		
@@ -64,7 +62,7 @@
 		
 		<div style="overflow:hidden">
 			<div style="width:200%;">
-				<table id="system-codes-results" class="footable table-bordered table-striped table-hover table-condensed" data-page="${results.currPage}" style="width:50%;">
+				<table id="system-codes-results" class="footable table-bordered table-striped table-hover table-condensed" style="width:50%;">
 					<thead>
 						<tr class="table-header">
 							<th data-class="expand" data-field-name="value"><spring:message code="label.system-codes.value" /></th>
@@ -77,11 +75,11 @@
 					<tbody>
 						<c:forEach items="${results.results}" var="record" varStatus="status">
 							<tr id="system-codes-row-${record.id}">
-								<td class="col-1"><c:out value="${record.value}" /></td>
-								<td class="col-2"><c:out value="${record.key}" /></td>
-								<td class="col-3"><c:out value="${record.category}" /></td>
-								<td class="col-4"><c:out value="${record.numberValue}" /></td>
-								<td class="col-5">
+								<td><c:out value="${record.value}" /></td>
+								<td><c:out value="${record.key}" /></td>
+								<td><c:out value="${record.category}" /></td>
+								<td><c:out value="${record.numberValue}" /></td>
+								<td>
 									<i class='icon-pencil edit-action' data-id='${record.id}'></i>
 									<i class='icon-trash remove-action' data-id='${record.id}'></i>
 								</td>
@@ -92,20 +90,20 @@
 			</div>
 		</div>
 
-		<div class="status clearfix" data-display-pagelinks="true" data-display-summary="false">
-			<app:paging results="${results}" displayPageLinks="true" displaySummary="false" />
+		<div class="paging clearfix">
+			<app:paging results="${results}"/>
 		</div>
 	</div>
 	
 </div>
 
-<div id="form-body">
+<div id="form-body" class="modal fade hide">
 
-	<div id="form-panel" class="modal fade hide">
+	<div id="form-panel" >
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal">&times;</button>
-			<h4 data-form-display="add"><spring:message code="label.system-codes.add" /></h4>
-			<h4 data-form-display="update"><spring:message code="label.system-codes.update" /></h4>
+			<h4 class="${add}"><spring:message code="label.system-codes.add" /></h4>
+			<h4 class="${update}"><spring:message code="label.system-codes.update" /></h4>
 		</div>
 
 		<form:form modelAttribute="formCommand" id="system-codes-form">
@@ -124,7 +122,7 @@
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-link" data-dismiss="modal"><spring:message code="label.close" /></button>
-				<input type="submit" class="btn btn-info" data-form-display="add" data-submit="save-and-new" value="<spring:message code="label.save-and-new" />" />
+				<input type="submit" class="btn btn-info  ${add}" data-form-display="add" data-submit="save-and-new" value="<spring:message code="label.save-and-new" />" />
 				<input type="submit" class="btn btn-success" data-submit="save" value="<spring:message code="label.save" />" />
 				<input type="hidden" name="id" />
 			</div>

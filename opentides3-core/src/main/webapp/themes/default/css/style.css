@@ -3,7 +3,6 @@
 html,
 body {
 	height: 100%;
-	background: #fefefe url(../img/cream_dust.png);
 }
 
 @media (max-width: 979px) {
@@ -52,6 +51,18 @@ body {
 }
 
 /* HEADER */
+
+.navbar-inverse .navbar-inner {
+	background-color: #333333;
+	background-image: -moz-linear-gradient(top,#333,#222);
+	background-image: -webkit-gradient(linear,0 0,0 100%,from(#333),to(#222));
+	background-image: -webkit-linear-gradient(top,#333,#222);
+	background-image: -o-linear-gradient(top,#333,#222);
+	background-image: linear-gradient(to bottom,#333,#222);
+	background-repeat: repeat-x;
+	border-color: #444;
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff333333',endColorstr='#ff222222',GradientType=0);
+}
 
 @media (max-width: 979px) {
 	.logo {
@@ -127,6 +138,7 @@ body {
 	box-shadow: 0 1px 4px rgba(0,0,0,.065);
 	border: 1px solid #ccc;
 	margin: 0 -1px 10px -1px;
+	background: #fff;
 }
 
 #search-panel form {
@@ -244,7 +256,7 @@ body {
 
 /* MESSAGE PANEL */
 
-#message-panel .add-entry {
+#message-panel .add-action {
 	margin-bottom: 10px;
 	float: right;
 }
@@ -255,7 +267,7 @@ body {
 }
 
 @media (max-width: 767px) {
-	#message-panel .add-entry, #message-panel .status {
+	#message-panel .add-action, #message-panel .status {
 		float: none;
 		width: 100%;
 	}

@@ -21,6 +21,8 @@ package org.opentides.web.controller;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.opentides.bean.user.BaseUser;
 import org.opentides.bean.user.UserCredential;
@@ -31,6 +33,8 @@ import org.opentides.util.SecurityUtil;
 import org.opentides.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -74,5 +78,12 @@ public class UserController extends BaseCrudController<BaseUser> {
 		UserCredential credential = command.getCredential();
         if (!StringUtil.isEmpty(credential.getNewPassword()))
             credential.setPassword(SecurityUtil.encryptPassword(credential.getNewPassword()));
+	}
+	
+	@Override
+	protected void onLoadSearch(BaseUser command, BindingResult bindingResult, 
+			Model uiModel, HttpServletRequest request,
+			HttpServletResponse response) {
+		uiModel.addAttribute("results", search(command, request));
 	}
 }
