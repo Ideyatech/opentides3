@@ -182,7 +182,8 @@ public class AuditLogDaoImpl implements AuditLogDao {
 		
     	EntityManager em = DatabaseUtil.getEntityManager();
 		try { 
-			AuditLog record = 
+		     em.getTransaction().begin();
+		     AuditLog record = 
 	            new AuditLog(shortMessage,
 	            			message, 
 	            			entity.getId(), 
@@ -193,6 +194,7 @@ public class AuditLogDaoImpl implements AuditLogDao {
 	                        officeName); 
 			em.persist(record);
 			em.flush(); 
+			em.getTransaction().commit();
 		} finally { 
 			em.close(); 
 		}

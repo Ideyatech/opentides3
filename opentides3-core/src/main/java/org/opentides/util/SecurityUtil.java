@@ -21,7 +21,6 @@ package org.opentides.util;
 
 import org.apache.log4j.Logger;
 import org.opentides.bean.user.SessionUser;
-import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -34,8 +33,6 @@ public class SecurityUtil {
 	
 	private static Logger _log = Logger.getLogger(SecurityUtil.class);
 		
-	private static PasswordEncoder passwordEncoder;
-			
 	/**
 	 * Static helper to retrieve currently logged user.
 	 * @return
@@ -79,26 +76,5 @@ public class SecurityUtil {
 		}
 		return false;
 	}
-	
-	/** Static helper that encrypts the given password
-	 *  into its appropriate encryption settings.
-	 * @param cleartext
-	 * @return
-	 */
-	public static String encryptPassword(String cleartext) {
-	    if (passwordEncoder!=null) {
-	        return passwordEncoder.encodePassword(cleartext, null);
-	    } else
-	        return cleartext;
-	}
-
-    /**
-     * Setter method for passwordEncoder.
-     *
-     * @param passwordEncoder the passwordEncoder to set
-     */
-    public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
-        SecurityUtil.passwordEncoder = passwordEncoder;
-    }
 
 }

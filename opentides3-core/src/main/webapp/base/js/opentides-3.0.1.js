@@ -53,16 +53,24 @@ var opentides3 = (function() {
     	 * @param path - dot notation path reference to the value.
     	 * 
     	 */
-    	getSafeValue: function(json, path) {
+    	getValue: function(json, path, safe) {
 		    var i = 0,
 	        path = path.split('.');	        
 		    for (; i < path.length; i++) {
+			    if (json == null || json.length==0)
+			    	return '';
 		    	json = json[path[i]];
 		    }
 		    if (json == null || json.length==0)
 		    	return '';
-		    else
-		    	return $('<div/>').text(json).html();
+		    else {
+		    	if (typeof(safe) === 'undefined' || typeof(safe) === 'null')
+		    		safe = true;
+		    	if (safe == true && typeof(json) === 'string')
+		    		return $('<div/>').html(json).text();
+		    	else
+		    		return json;
+		    }
     	},
     	/**
     	 * Retrieves the message based on the given code. 
@@ -217,44 +225,46 @@ var opentides3 = (function() {
 		return this.each(function() {
 			var form = $(this);
 			form.clearForm();
-	        $.each(json,function(key,value) {
-	            form.find("[name='"+key+"']").each(function() {
-	            	var elem = $(this);
-	            	var type = elem.attr('type');
-		            if (value == null) value = '';
-		            // do not bind password or file upload
-		            if (type == 'text' || 
-		            	type == 'hidden' || 
-		            	elem.is('textarea') ) {
-						// set the default value for the form
-		            	var prime = toPrimitive(value);
-		            	elem.val(prime);
-					} else if (elem.is("select")) {
-						var normValue = normalizeValue(value);
-						elem.val(normValue);
-					} else if (elem.attr('type') === 'checkbox') {
-						// check the field if the data value is true/1
-						if (jQuery.type(value) === 'boolean') {
-							if (value==true)
-								elem.prop('checked',true);
-							else
-								elem.prop('checked',false);
-						} else {							
-							var normValue = normalizeValue(value,true);
-							if (jQuery.inArray(elem.attr('value'), normValue) >= 0)
-								elem.prop('checked',true);
-							else
-								elem.prop('checked',false);
-						} 
-					} else  if (elem.attr('type') === 'radio') {
-		            	var prime = toPrimitive(value);
-						if (elem.attr('value')==prime)
-							elem.prop('checked',true);
-						else
-							elem.prop('checked', false);
-					}
-	            })
-	        });			
+			
+			form.find("input[type='text'],input[type='hidden'],textarea").each(function() {
+				var name = $(this).attr('name');
+            	var prime = toPrimitive(opentides3.getValue(json, name));
+            	$(this).val(prime);
+			});
+			
+			form.find("select").each(function() {
+				var name = $(this).attr('name');
+				var normValue = normalizeValue(opentides3.getValue(json, name));
+				$(this).val(normValue);				
+			});
+			
+			form.find("input[type='checkbox']").each(function() {
+				var name = $(this).attr('name');
+				var value = opentides3.getValue(json, name);
+				if (typeof(value) === 'boolean') {
+					if (value==true)
+						$(this).prop('checked',true);
+					else
+						$(this).prop('checked',false);
+				} else {							
+					var normValue = normalizeValue(value,true);
+					if (jQuery.inArray($(this).attr('value'), normValue) >= 0)
+						$(this).prop('checked',true);
+					else
+						$(this).prop('checked',false);
+				} 				
+			});
+			
+			form.find("input[type='radio']").each(function() {
+				var name = $(this).attr('name');
+            	var prime = toPrimitive(opentides3.getValue(json, name));
+				if ($(this).attr('value')==prime)
+					$(this).prop('checked',true);
+				else
+					$(this).prop('checked', false);
+				
+			});
+		
 		});
 	};
 	
@@ -342,13 +352,6 @@ var opentides3 = (function() {
   			if ($(this).find(settings['results'] + ' table tr').length <= 1) {
   		    	// no search results, hide the table and message
   		    	$(this).find(settings['results']).hide();
-  		    	$(this).find(settings['status']).hide();
-  		    	$(this).find(settings['pagination']).hide();
-  		    } else {
-  		    	// with search results, display the table and message
-  		    	$(this).find(settings['results']).show();
-  		    	$(this).find(settings['status']).show();
-  		    	$(this).find(settings['pagination']).show();
   		    }	    
 
   		    // bind to popstate event for history tracking
@@ -373,9 +376,9 @@ var opentides3 = (function() {
   			// attach events to pagination (if displayed)
   			$(this).find('.pagination').each(function(){
   				// paging is already displayed, let's attach events to it.
-  				// assume form used is the first visible form in the search panel.
-  				var searchForm = $(settings['search']).find('form').filter(':visible:first');
   				$(this).find('li a').on("click", function() {
+  	  				// assume form used is the first visible form in the search panel.
+  	  				var searchForm = $(settings['search']).find('form').filter(':visible:first');
 					var i = $(this).data('page');
 					doSearch(searchForm, results, status, pagination, i);
 					return false;
@@ -741,7 +744,7 @@ var opentides3 = (function() {
 					row = row + "<td> <i class='icon-pencil edit-action' data-id='"+result['id']+"'/> " +
 								"<i class='icon-trash remove-action' data-id='"+result['id']+"'/></td>";
 				} else {
-    				row = row + '<td>'+opentides3.getSafeValue(result,fieldName)+'</td>';  	  		    					
+    				row = row + '<td>'+opentides3.getValue(result,fieldName)+'</td>';  	  		    					
 				}
 			});
 			tableRow.html(row);
@@ -753,7 +756,7 @@ var opentides3 = (function() {
 					row = row + "<td> <i class='icon-pencil edit-action' data-id='"+result['id']+"'/> " +
 								"<i class='icon-trash remove-action' data-id='"+result['id']+"'/></td>";
 				} else {
-    				row = row + '<td>'+opentides3.getSafeValue(result,fieldName)+'</td>';  	  		    					
+    				row = row + '<td>'+opentides3.getValue(result,fieldName)+'</td>';  	  		    					
 				}
 			});
 			row = row + "</tr>";

@@ -29,7 +29,6 @@ import org.opentides.bean.user.UserCredential;
 import org.opentides.bean.user.UserGroup;
 import org.opentides.service.UserGroupService;
 import org.opentides.service.UserService;
-import org.opentides.util.SecurityUtil;
 import org.opentides.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -70,14 +69,14 @@ public class UserController extends BaseCrudController<BaseUser> {
 	protected void preCreate(BaseUser command) {
 		UserCredential credential = command.getCredential();
 		if (!StringUtil.isEmpty(credential.getNewPassword()))
-			credential.setPassword(SecurityUtil.encryptPassword(credential.getNewPassword()));
+			credential.setPassword(((UserService)service).encryptPassword(credential.getNewPassword()));
 	}
 
 	@Override
 	protected void preUpdate(BaseUser command) {
 		UserCredential credential = command.getCredential();
         if (!StringUtil.isEmpty(credential.getNewPassword()))
-            credential.setPassword(SecurityUtil.encryptPassword(credential.getNewPassword()));
+            credential.setPassword(((UserService)service).encryptPassword(credential.getNewPassword()));
 	}
 	
 	@Override

@@ -89,8 +89,17 @@
 		<property name="url" value="${database.url}" />
 		<property name="username" value="${database.username}" />
 		<property name="password" value="${database.password}" />
+	</bean>	
+
+	<bean id="databaseUtil"
+		class="org.opentides.util.DatabaseUtil" autowire="byName">
+		<property name="driverClassName" value="${database.driver}" />
+		<property name="url" value="${database.url}" />
+		<property name="username" value="${database.username}" />
+		<property name="password" value="${database.password}" />
+		<property name="jndiName" value="${database.jndi}" />
 	</bean>
-	
+
 	<!-- Define dataSource as JNDI -->
 	<bean id="reportDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
 		<property name="jndiName">

@@ -75,6 +75,13 @@ public interface UserService extends BaseCrudService<BaseUser> {
 	public boolean resetPassword(PasswordReset passwd);
 	
 	/**
+	 * Encrypts the password if passwordEncoder is available.
+	 * @param password
+	 * @return
+	 */
+	public String encryptPassword(String password);
+
+	/**
 	 * Ensures that admin user is created into the database.
 	 * This method is called by ApplicationStartupListener
 	 * to ensure admin user is available

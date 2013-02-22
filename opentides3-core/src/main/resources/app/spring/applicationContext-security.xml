@@ -109,7 +109,7 @@
 		<property name="authoritiesByUsernameQuery">
 			<value>SELECT u.username,authority from USERS as u 
 					inner join USER_GROUP g on u.userid=g.user_id 
-					inner join AUTHORITIES a on g.group_id = a.usergroup_id
+					inner join USER_AUTHORITY a on g.group_id = a.usergroup_id
 					where u.username=?</value>
 		</property>
 	</bean>
