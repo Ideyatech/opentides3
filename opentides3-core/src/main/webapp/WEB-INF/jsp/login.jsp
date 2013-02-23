@@ -25,8 +25,6 @@
 <spring:theme code="logo" var="logo" />
 <spring:theme code="favicon" var="favicon" />
 
-
-
 <link rel="shortcut icon" type="image/x-icon"
 	href="<c:url value='${favicon}'/>" />
 <link rel="stylesheet" type="text/css"
@@ -124,15 +122,5 @@
 		src="<c:url value='/js/bootstrap-notify.js'/>"></script>
 	<script type="text/javascript"
 		src="<c:url value='/js/opentides-3.0.1.js'/>"></script>
-	<script type="text/javascript">
-		function repositionFooter() {
-			var docHeight = $(document).height(), footerHeight = $(".footer")
-					.height();
-			$(".footer").css('position', 'absolute');
-			$(".footer").css("top", (docHeight - footerHeight - 10) + "px"); //this will change the top position of footer
-		}
-		//change "#footer" to corresponding ID
-		$(document).ready(repositionFooter);
-	</script>
 </body>
 </html>

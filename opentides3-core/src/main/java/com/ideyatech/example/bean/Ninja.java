@@ -10,6 +10,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.opentides.annotation.Auditable;
 import org.opentides.annotation.Secure;
 import org.opentides.annotation.field.CheckBox;
 import org.opentides.annotation.field.DatePicker;
@@ -30,8 +31,8 @@ import com.fasterxml.jackson.annotation.JsonView;
  */
 @Entity
 @Table(name="NINJA")
-@Secure
-public class Ninja extends BaseEntity{
+@Auditable
+public class Ninja extends BaseEntity {
 	
 	private static final long serialVersionUID = -4142599915292096152L;
 	

@@ -31,6 +31,7 @@ import org.opentides.util.NamingUtil;
 import org.opentides.util.StringUtil;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 

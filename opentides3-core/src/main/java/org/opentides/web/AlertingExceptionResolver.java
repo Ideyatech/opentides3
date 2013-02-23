@@ -31,7 +31,7 @@ import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
  */
 public class AlertingExceptionResolver extends SimpleMappingExceptionResolver {	
 	
-	private static final Logger _log = Logger.getLogger(SimpleMappingExceptionResolver.class);
+	private static final Logger _log = Logger.getLogger(AlertingExceptionResolver.class);
 	
 	@Override
 	protected void logException(Exception ex, HttpServletRequest request) {

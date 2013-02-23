@@ -95,9 +95,6 @@ public class MessageResponse extends DefaultMessageSourceResolvable {
 	public MessageResponse(String elementClass, Type type, String objectName, String fieldName, String[] codes, Object[] arguments) {
 		super(codes, arguments);
 		Assert.notNull(type, "Type name must not be null");		
-		if (type==Type.error) {
-			Assert.notNull(objectName, "objectName name must not be null for error message.");
-		}		
 		this.type=type;
 		this.objectName=objectName;
 		this.fieldName=fieldName;

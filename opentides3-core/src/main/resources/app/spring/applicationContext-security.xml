@@ -8,6 +8,9 @@
 	<sec:http pattern="/css/**" security="none"/>
 	<sec:http pattern="/js/**" security="none"/>
 	<sec:http pattern="/img/**" security="none"/>
+	<sec:http pattern="/login/**" security="none"/>
+	
+    <sec:global-method-security secured-annotations="enabled"/>
 
 	<sec:http auto-config='false' use-expressions="true"
 		access-decision-manager-ref="httpRequestAccessDecisionManager">
@@ -27,12 +30,10 @@
 		<sec:custom-filter ref="concurrentSessionRedirectFilter" after="BASIC_AUTH_FILTER"/>
  -->		
 		<!-- <sec:intercept-url pattern="/widgetDisplay.jspx*" access="hasIpAddress('127.0.0.1/24') OR hasIpAddress('::1/128')"/> -->
+<!-- 		
 		<sec:intercept-url pattern="/login*" access="hasRole('ROLE_ANONYMOUS')" />
-		<sec:intercept-url pattern="/organization/**" access="hasRole('ROLE_ANONYMOUS')" />
-		<sec:intercept-url pattern="/system/**" access="hasRole('ROLE_ANONYMOUS')" />
-		<sec:intercept-url pattern="/ninja/**" access="hasRole('ROLE_ANONYMOUS')" />
-<!-- 
-		<sec:intercept-url pattern="/organization**" access="hasRole('ACCESS_ORGANIZATION_TAB')" />
+		<sec:intercept-url pattern="/organization/**" access="hasRole('ACCESS_ORGANIZATION_TAB')" />
+		<sec:intercept-url pattern="/system/**" access="hasRole('ACCESS_SYSTEM_TAB')" />
  -->		
 		<sec:intercept-url pattern="/**" access="isAuthenticated()" />
 
@@ -72,9 +73,8 @@
 	<!-- to keep track of last login and last login error -->
 	<bean id="loginListener" class="org.opentides.listener.LoginListener" autowire="byName" />
 	
-	<bean id="logoutHandler" class="org.opentides.listener.LogoutListener"
-		autowire="byName">
-		<property name="defaultTargetUrl" value="/login.jspx?login_error=logout" />
+	<bean id="logoutHandler" class="org.opentides.listener.LogoutListener" autowire="byName">
+		<property name="defaultTargetUrl" value="/login?login_error=logout" />
 	</bean>
 	
 <!-- 	
@@ -127,6 +127,28 @@
 				<!-- DASHBOARD TAB -->
 				<entry key="ACCESS_DASHBOARD_TAB">
 					<value>01.00.00.00 Access Dashboard Tab</value>
+				</entry>
+				
+				<!-- SAMPLES TAB -->
+				<entry key="ACCESS_SAMPLE_TAB">
+					<value>02.00.00.00 Access Samples Tab</value>
+				</entry>
+
+				<!-- NINJA -->
+				<entry key="MANAGE_NINJA_PAGE">
+					<value>02.01.00.00 Manage Ninja Page</value>
+				</entry>
+				<entry key="VIEW_NINJA">
+					<value>02.01.01.00 View Ninja</value>
+				</entry>
+				<entry key="ADD_NINJA">
+					<value>02.01.02.00 Add Ninja</value>
+				</entry>
+				<entry key="EDIT_NINJA">
+					<value>02.01.03.00 Edit Ninja</value>
+				</entry>
+				<entry key="DELETE_NINJA">
+					<value>02.01.04.00 Delete Ninja</value>
 				</entry>
 				
 				<!-- ... Add all tabs in here ... -->	

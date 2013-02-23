@@ -94,6 +94,7 @@
 									User Groups
 								</a>
 							</li>
+							<a href='<c:out value="${home}/j_spring_security_logout" />'><spring:message code="label.logout"/></a>
 						</ul>
 					</div>
 				</div>

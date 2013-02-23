@@ -33,6 +33,7 @@ import org.apache.log4j.Logger;
 import org.opentides.annotation.FormBind;
 import org.opentides.bean.BaseEntity;
 import org.opentides.bean.MessageResponse;
+import org.opentides.bean.MessageResponse.Type;
 import org.opentides.bean.SearchResults;
 import org.opentides.exception.DataAccessException;
 import org.opentides.service.BaseCrudService;
@@ -119,12 +120,21 @@ public abstract class BaseCrudController<T extends BaseEntity> {
 	 * @param request
 	 * @return
 	 */
-    @ExceptionHandler(BindException.class)
-    public @ResponseBody Map<String, Object> handleException(BindException e, HttpServletRequest request) {
+    @ExceptionHandler(Exception.class)
+    public @ResponseBody Map<String, Object> handleBindException(Exception ex, HttpServletRequest request) 
+    		throws Exception{
     	Map<String, Object> response = new HashMap<String,Object>();
     	List<MessageResponse> messages = new ArrayList<MessageResponse>();
-    	
-    	messages.addAll(convertErrorMessage("modal-body", e.getBindingResult(), request.getLocale()));
+    	if (ex instanceof BindException) {
+    		BindException e = (BindException) ex;
+        	messages.addAll(convertErrorMessage("modal-body", e.getBindingResult(), request.getLocale()));    		
+    	} else {
+        	if (!request.getHeader("Accept").contains("application/json")) {
+        		throw ex;
+        	}
+    		messages.add(new MessageResponse("modal-body", Type.error, 
+    				new String[] {"error.uncaught-exception"}, new Object[] {ex.getMessage()}));
+    	}
     	response.put("messages", messages);
     	return response;    		
     }
@@ -316,7 +326,6 @@ public abstract class BaseCrudController<T extends BaseEntity> {
      * 
      * @param command
      */
-
     protected void preCreate(T command, 
     		BindingResult bindingResult, Model uiModel,
 			HttpServletRequest request, HttpServletResponse response) {
@@ -376,7 +385,6 @@ public abstract class BaseCrudController<T extends BaseEntity> {
      * 
      * @param command
      */
-
     protected void preDelete(Long id,
     		BindingResult bindingResult, Model uiModel,
 			HttpServletRequest request, HttpServletResponse response) {
@@ -444,7 +452,8 @@ public abstract class BaseCrudController<T extends BaseEntity> {
 			this.entityBeanType = (Class<T>) ((ParameterizedType) getClass().getSuperclass()
 	                .getGenericSuperclass()).getActualTypeArguments()[0];
 		}
-		
+		Assert.notNull(this.entityBeanType,
+				"Unable to retrieve entityBeanType for "+this.getClass().getSimpleName());
 		// try setting up service and validator by convention
 		String attributeName = NamingUtil.toAttributeName(this.entityBeanType.getSimpleName());
         String serviceBean   = attributeName + "Service";
@@ -492,6 +501,7 @@ public abstract class BaseCrudController<T extends BaseEntity> {
         results.setSearchTime(System.currentTimeMillis() - startTime);
         return results;
     }
+    
     /**
      * Performs record matching count, used for search.
      * @param command
