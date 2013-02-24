@@ -26,7 +26,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 /**
- * Annotation for entity classes that will be audited 
+ * Annotation as marker for the primary field in an entity.
  * based on open-tides framework.
  *
  * @author allanctan
@@ -38,8 +38,8 @@ public @interface PrimaryField {
 	/**
 	 * Label to be used as reference when building message for the entity.
 	 * Label should be human readable.
-	 * If empty, opentides will automatically convert class name to be more human readable.
 	 * 
+	 * If empty, opentides will automatically convert class name to be more human readable.
 	 */
 	String label() default "";
 	

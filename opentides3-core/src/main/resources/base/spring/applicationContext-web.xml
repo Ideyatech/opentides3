@@ -2,8 +2,7 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:p="http://www.springframework.org/schema/p"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd                 
 						http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd                 
 						http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
@@ -21,19 +20,19 @@
 		Also registers default Formatters and Validators for use across all @Controllers -->
 	<mvc:annotation-driven conversion-service="applicationConversionService">
 		<mvc:message-converters>
-			<bean class="org.opentides.web.json.ViewAwareJsonMessageConverter" 
-					p:objectMapper-ref="objectMapper" />
+			<bean class="org.opentides.web.json.ViewAwareJsonMessageConverter"
+				p:objectMapper-ref="objectMapper" />
 		</mvc:message-converters>
 		<mvc:argument-resolvers>
 			<bean class="org.opentides.web.processor.FormBindMethodProcessor" />
 		</mvc:argument-resolvers>
 	</mvc:annotation-driven>
-		
+
 	<!-- Default Converters -->
 
 	<bean id="objectMapper"
 		class="org.springframework.http.converter.json.Jackson2ObjectMapperFactoryBean"
-		p:simpleDateFormat="${date.format}">		
+		p:simpleDateFormat="${date.format}">
 	</bean>
 
 	<bean id="applicationConversionService"
@@ -41,22 +40,20 @@
 		<property name="converters">
 			<set>
 				<bean class="org.opentides.bean.converter.BaseEntityToLongConverter" />
-				<bean class="org.opentides.bean.converter.BaseEntityToStringConverter" />				
-				<bean class="org.opentides.bean.converter.StringToDateConverter" p:dateFormat="${date.format}" />
+				<bean class="org.opentides.bean.converter.BaseEntityToStringConverter" />
+				<bean class="org.opentides.bean.converter.StringToDateConverter"
+					p:dateFormat="${date.format}" />
 				<ref bean="stringToBaseEntityConverter" />
-				<ref bean="stringToSystemCodesConverter" />				
+				<ref bean="stringToSystemCodesConverter" />
 			</set>
 		</property>
 	</bean>
 
 	<!-- Handles HTTP GET requests for /resources/** by efficiently serving 
 		up static resources -->
-	<mvc:resources location="/base/css/,/app/css/"
-		mapping="/css/**" />
-	<mvc:resources location="/base/js/,/app/js/"
-		mapping="/js/**" />
-	<mvc:resources location="/base/img/,/app/img/"
-		mapping="/img/**" />
+	<mvc:resources location="/base/css/,/app/css/" mapping="/css/**" />
+	<mvc:resources location="/base/js/,/app/js/" mapping="/js/**" />
+	<mvc:resources location="/base/img/,/app/img/" mapping="/img/**" />
 	<!-- Allows for mapping the DispatcherServlet to "/" by forwarding static 
 		resource requests to the container's default Servlet -->
 	<!-- <mvc:default-servlet-handler /> -->

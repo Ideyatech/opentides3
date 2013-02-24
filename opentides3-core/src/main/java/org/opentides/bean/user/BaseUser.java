@@ -73,6 +73,10 @@ public class BaseUser extends BaseEntity {
 	@JsonView(Views.SearchView.class)
 	private String emailAddress;
 	
+	@Column(name = "OFFICE", nullable=true)
+	@JsonView(Views.SearchView.class)
+	private String office;
+	
 	/*
 	 * Lob Annotation Specifies that a persistent property or field should be
 	 * persisted as a large object to a database-supported large object type
@@ -139,6 +143,7 @@ public class BaseUser extends BaseEntity {
 		clone.lastName     = this.lastName;
 		clone.middleName   = this.middleName;
 		clone.emailAddress = this.emailAddress;
+		clone.office	   = this.office;
 		clone.image        = this.image;
 		clone.language	   = this.language;
 		clone.lastLogin    = this.lastLogin;
@@ -324,6 +329,20 @@ public class BaseUser extends BaseEntity {
 	 */
 	public final void setEmailAddress(String emailAddress) {
 		this.emailAddress = emailAddress;
+	}
+
+	/**
+	 * @return the office
+	 */
+	public final String getOffice() {
+		return office;
+	}
+
+	/**
+	 * @param office the office to set
+	 */
+	public final void setOffice(String office) {
+		this.office = office;
 	}
 
 	/**

@@ -98,7 +98,7 @@
 	</bean>
 
 	<bean id="authenticationService"
-		class="org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl">
+		class="org.opentides.persistence.user.AuthenticationDaoJdbcImpl">
 		<property name="dataSource">
 			<ref bean="dataSource" />
 		</property>
@@ -138,17 +138,20 @@
 				<entry key="MANAGE_NINJA_PAGE">
 					<value>02.01.00.00 Manage Ninja Page</value>
 				</entry>
+				<entry key="SEARCH_NINJA">
+					<value>02.01.01.00 Search Ninja</value>
+				</entry>
 				<entry key="VIEW_NINJA">
-					<value>02.01.01.00 View Ninja</value>
+					<value>02.01.02.00 View Ninja</value>
 				</entry>
 				<entry key="ADD_NINJA">
-					<value>02.01.02.00 Add Ninja</value>
+					<value>02.01.03.00 Add Ninja</value>
 				</entry>
 				<entry key="EDIT_NINJA">
-					<value>02.01.03.00 Edit Ninja</value>
+					<value>02.01.04.00 Edit Ninja</value>
 				</entry>
 				<entry key="DELETE_NINJA">
-					<value>02.01.04.00 Delete Ninja</value>
+					<value>02.01.05.00 Delete Ninja</value>
 				</entry>
 				
 				<!-- ... Add all tabs in here ... -->	

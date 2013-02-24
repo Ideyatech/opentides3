@@ -31,13 +31,11 @@ import org.apache.commons.lang.time.DateUtils;
 import org.apache.log4j.Logger;
 import org.opentides.bean.AuditLog;
 import org.opentides.bean.BaseEntity;
-import org.opentides.bean.user.SessionUser;
 import org.opentides.dao.AuditLogDao;
 import org.opentides.exception.InvalidImplementationException;
 import org.opentides.listener.ApplicationStartupListener;
 import org.opentides.util.DatabaseUtil;
 import org.opentides.util.DateUtil;
-import org.opentides.util.SecurityUtil;
 import org.opentides.util.StringUtil;
 
 /**
@@ -168,12 +166,8 @@ public class AuditLogDaoImpl implements AuditLogDao {
 		
 		if (ApplicationStartupListener.isApplicationStarted()) {
 			if (userId==null) {
-				_log.warn("No userId specified for audit logging on object ["+entity.getClass().getName()
-							+ "] for message ["+message+"]. Retrieving user from interceptor.");
-				SessionUser user = SecurityUtil.getSessionUser();
-				userId = user.getRealId();
-				officeName = user.getOffice();	
-				username = user.getUsername();
+				throw new InvalidImplementationException("No userId specified for audit logging on object ["+entity.getClass().getName()
+						+ "] for message ["+message+"].");
 			} 
 		} else {
 			userId = new Long(0);

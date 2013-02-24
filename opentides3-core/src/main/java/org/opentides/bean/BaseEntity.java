@@ -297,7 +297,7 @@ public abstract class BaseEntity implements Serializable {
         if (this.auditUserId == null) {
             final SessionUser user = SecurityUtil.getSessionUser();
             if (user!=null) {
-	            this.auditUserId = user.getRealId();
+	            this.auditUserId = user.getId();
 	            this.auditOfficeName = user.getOffice();
 	            this.auditUsername = user.getUsername();
             }        	

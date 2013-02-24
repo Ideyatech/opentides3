@@ -23,15 +23,17 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 
+import org.opentides.annotation.CrudSecure;
 import org.opentides.bean.BaseEntity;
 import org.opentides.dao.BaseEntityDao;
 import org.opentides.exception.InvalidImplementationException;
 import org.opentides.service.BaseCrudService;
 import org.opentides.util.NamingUtil;
+import org.opentides.util.SecurityUtil;
 import org.opentides.util.StringUtil;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
@@ -59,6 +61,7 @@ public class BaseCrudServiceImpl<T extends BaseEntity> extends
 	 * @return List of objects
 	 */
 	public final List<T> findAll(final int start, final int total) {
+		checkAccess("SEARCH");
 		return dao.findAll(start, total);
 	}
 
@@ -68,6 +71,7 @@ public class BaseCrudServiceImpl<T extends BaseEntity> extends
 	 * @return List of objects
 	 */
 	public final List<T> findAll() {
+		checkAccess("SEARCH");
 		return dao.findAll();
 	}
 
@@ -77,6 +81,7 @@ public class BaseCrudServiceImpl<T extends BaseEntity> extends
 	 * @return List of objects
 	 */
 	public final List<T> findByExample(T example, int start, int total) {
+		checkAccess("SEARCH");
 		return dao.findByExample(example, start, total);
 	}
 
@@ -86,6 +91,7 @@ public class BaseCrudServiceImpl<T extends BaseEntity> extends
 	 * @return List of objects
 	 */
 	public final List<T> findByExample(T example) {
+		checkAccess("SEARCH");
 		return dao.findByExample(example);
 	}
 
@@ -95,6 +101,7 @@ public class BaseCrudServiceImpl<T extends BaseEntity> extends
 	 * @return List of objects
 	 */
 	public final List<T> findByExample(T example, boolean exactMatch) {
+		checkAccess("SEARCH");
 		return dao.findByExample(example, exactMatch);
 	}
 
@@ -105,6 +112,7 @@ public class BaseCrudServiceImpl<T extends BaseEntity> extends
 	 */
 	public final List<T> findByExample(T example, boolean exactMatch,
 			int start, int total) {
+		checkAccess("SEARCH");
 		return dao.findByExample(example, exactMatch, start, total);
 	}
 
@@ -158,7 +166,8 @@ public class BaseCrudServiceImpl<T extends BaseEntity> extends
 	 * @return object
 	 */
 	public final T load(Long id) {
-		return dao.loadEntityModel(id, false, false);
+		checkAccess("VIEW");
+		return dao.loadEntityModel(id, true, false);
 	}
 
 	/**
@@ -170,6 +179,7 @@ public class BaseCrudServiceImpl<T extends BaseEntity> extends
 	 * @return object
 	 */
 	public final T load(Long id, boolean filter) {
+		checkAccess("VIEW");
 		return dao.loadEntityModel(id, filter, false);
 	}
 
@@ -202,6 +212,10 @@ public class BaseCrudServiceImpl<T extends BaseEntity> extends
 	 */
 	@Transactional
 	public final void save(T obj) {
+		if (obj.getIsNew())
+			checkAccess("ADD");
+		else
+			checkAccess("EDIT");
 		dao.saveEntityModel(obj);
 	}
 
@@ -233,6 +247,7 @@ public class BaseCrudServiceImpl<T extends BaseEntity> extends
 	 */
 	@Transactional
 	public final void delete(Long id) {
+		checkAccess("DELETE");
 		dao.deleteEntityModel(id);
 	}
 
@@ -260,6 +275,21 @@ public class BaseCrudServiceImpl<T extends BaseEntity> extends
         Assert.notNull(this.dao, this.getClass().getSimpleName() + 
         					" is not associated with a dao class [" + daoBean +
         					"]. Please check your configuration.");
+	}
+	
+	/**
+	 * Private helper class that checks for permission on performing
+	 * the action.
+	 * @param action
+	 */
+	private void checkAccess(String action) {
+		if (this.getClass().isAnnotationPresent(CrudSecure.class)) {
+			String name = this.getClass().getAnnotation(CrudSecure.class).value();
+			if (StringUtil.isEmpty(name))
+				name = this.entityBeanType.getSimpleName().toUpperCase();			
+			if (!SecurityUtil.currentUserHasPermission(action+"_"+name))
+				throw new AccessDeniedException("Unauthorized access. You do not have permission to perform "+action+" on " + this.entityBeanType + ".");			
+		}		
 	}
 
 	/**

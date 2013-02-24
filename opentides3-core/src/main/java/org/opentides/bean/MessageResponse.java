@@ -49,10 +49,7 @@ public class MessageResponse extends DefaultMessageSourceResolvable {
 	
 	@JsonView(Views.BaseView.class)
 	private final String fieldName;
-	
-	@JsonView(Views.BaseView.class)
-	private final String elementClass;
-	
+		
 	@JsonView(Views.BaseView.class)
 	private String message;
 	
@@ -65,8 +62,8 @@ public class MessageResponse extends DefaultMessageSourceResolvable {
 	 * @param codes
 	 * @param arguments
 	 */
-	public MessageResponse(String elementClass, Type type, String[] codes, Object[] arguments) {
-		this(elementClass, type, null, null, codes, arguments);
+	public MessageResponse(Type type, String[] codes, Object[] arguments) {
+		this(type, null, null, codes, arguments);
 	}
 	/**
 	 * Creates a message response to be rendered on the client.
@@ -77,8 +74,8 @@ public class MessageResponse extends DefaultMessageSourceResolvable {
 	 * @param codes
 	 * @param arguments
 	 */
-	public MessageResponse(String elementClass, Type type, String objectName, String[] codes, Object[] arguments) {
-		this(elementClass, type, objectName, null, codes, arguments);
+	public MessageResponse(Type type, String objectName, String[] codes, Object[] arguments) {
+		this(type, objectName, null, codes, arguments);
 	}
 	
 
@@ -86,19 +83,17 @@ public class MessageResponse extends DefaultMessageSourceResolvable {
 	 * Creates a message response to be rendered on the client.
 	 * Use this constructor when displaying error message with reference to erring field/object.
 	 * 
-	 * @param elementClass - class name where the message will be inserted.
 	 * @param type - type of message (can be error, warning, info or notification)
 	 * @param objectName - name of erring object during validation or data binding
 	 * @param codes - message codes to be displayed
 	 * @param arguments - parameters available for the messages
 	 */
-	public MessageResponse(String elementClass, Type type, String objectName, String fieldName, String[] codes, Object[] arguments) {
+	public MessageResponse(Type type, String objectName, String fieldName, String[] codes, Object[] arguments) {
 		super(codes, arguments);
 		Assert.notNull(type, "Type name must not be null");		
 		this.type=type;
 		this.objectName=objectName;
 		this.fieldName=fieldName;
-		this.elementClass=elementClass;
 	}
 
 
@@ -137,12 +132,4 @@ public class MessageResponse extends DefaultMessageSourceResolvable {
 	public final void setMessage(String message) {
 		this.message = message;
 	}
-
-	/**
-	 * @return the elementClass
-	 */
-	public final String getElementClass() {
-		return elementClass;
-	}
-
 }

@@ -93,9 +93,13 @@ var opentides3 = (function() {
          * Displays the message response received from the server side.
          * 
          */
-        displayMessage: function(json) {        	
-			var addMessage = function(elementClass, alertClass, message) {
-				container = $('.'+elementClass);
+        displayMessage: function(json, container) {        	
+			if (container.length)
+				container = $('.top-right');
+			// remove all alerts
+        	container.find('.ot3-alert').remove();
+
+			var addMessage = function(alertClass, message) {
 				panel = container.children('.'+alertClass);
 				if (panel.length === 0) {
 					container.prepend("<div class='ot3-alert alert "+alertClass+"'><ul></ul></div>");
@@ -106,25 +110,26 @@ var opentides3 = (function() {
 				}
     			panel.children('ul').append('<li>'+message+'</li>');
 			};
+			
     		// display the message
     		$.each(json['messages'], function(i, message) {
     			if (message.type == 'error') {
 	    			// displays error message (red, fixed)
-    				addMessage(message.elementClass, 'alert-error', message.message);
+    				addMessage('alert-error', message.message);
     				if (typeof(message.fieldName) !== 'undefined' &&
     					message.fieldName.length > 0)
     					$("."+message.elementClass+" [name='"+message.fieldName+"']")
     						.closest('.control-group').addClass('error');
     			} else if (message.type == 'warning') {
     				// displays warning message (yellow, fixed)
-    				addMessage(message.elementClass, 'alert-warning', message.message);
+    				addMessage('alert-warning', message.message);
     			} else if (message.type == 'info') {
 	    			// displays warning message (fixed, closable)
-    				addMessage(message.elementClass, 'alert-success', message.message);
+    				addMessage('alert-success', message.message);
     			} else {
 	    			// assume its notification
 	    			// pops-up for a few seconds    				
-    				$('.'+message.elementClass).notify({
+    				$(container).notify({
     					message: { text: message.message }
     				}).show();
     			}
@@ -387,7 +392,6 @@ var opentides3 = (function() {
   			
   			// handle all ajax errors
 		    $(document).ajaxError(function(event, jqXHR, settings, exception) {
-	        	$('.system-error .ot3-alert').remove();
 	        	var message = 'Oopps... An unexpected error occurred. ';
 	            if (jqXHR.status === 0) {
 	            	message = "Cannot connect to server. Please verify your network connection.";
@@ -404,9 +408,8 @@ var opentides3 = (function() {
 	            }
             	opentides3.displayMessage({messages:[{
             		type: "error",
-            		elementClass: "system-error",
             		message: message,
-            	}]});
+            	}]}, $('.system-error'));
 		    });
 
 			/***********************************
@@ -439,10 +442,8 @@ var opentides3 = (function() {
   				formSubmitButton = $(this);
   			});
 	    	
-  			firstForm.on("submit", function(e) {
-	    		
-  				e.preventDefault();
-  				
+  			firstForm.on("submit", function(e) {	    		
+  				e.preventDefault(); 				
 	    		var firstForm = $(this);
 	    		var button = formSubmitButton;
 	    		
@@ -451,14 +452,13 @@ var opentides3 = (function() {
   					url:firstForm.attr('action'), 		// url
   					data:firstForm.serialize(),			// data
   					success: function(json) {			// callback
-  						firstForm.find('.ot3-alert').remove();
   						firstForm.find('.control-group').removeClass('error');
-  		    			opentides3.displayMessage(json);
+  		    			opentides3.displayMessage(json, form);
   		    			if (typeof(json.command) === 'object' &&
   		    					json.command.id > 0) {
   		    				// successfully saved
   		    				firstForm.clearForm();
-  		    				if (button.data('submit')=='save') {
+  		    				if (button.data('submit') !== 'save-and-new') {
   		    					// hide modal
   		    					if (form.hasClass('modal')) 
   		  		    				form.modal('hide');
@@ -502,8 +502,7 @@ var opentides3 = (function() {
 	    	
  			/***********************************
  		     *  (2) look for <search>, convert inner forms to json based search.
- 			 ***********************************/  		   	 
-			// convert the search form to ajax search
+ 			 ***********************************/	    	
 	    	searchForms.on('submit', function() {
 	    		// search starts on page 1
 	    		status.show();
@@ -557,7 +556,7 @@ var opentides3 = (function() {
 						    url: opentides3.getPath()+'/'+id,
 						    type: 'DELETE',
 						    success: function(json) {
-		  		    			opentides3.displayMessage(json);		    		  		    			
+		  		    			opentides3.displayMessage(json, $('.top-right'));		    		  		    			
 		  		    			tableRow.fadeOut(300, function(){ $(this).remove(); });	    		  		    			
 						    },
 						    dataType:'json'
@@ -601,6 +600,7 @@ var opentides3 = (function() {
 	  		    			history.pushState({mode:'search',data:json, formPath:searchForm.attr('id'),
 	  		    				formData:searchForm.serialize()}, null, cleanUrl);	  		    				
 		    			}
+  		    			opentides3.displayMessage(json, searchForm.closest('div'));
 		    			displayResults(searchForm, results, status, pagination, json);  		    			
 		    		}
 		    );

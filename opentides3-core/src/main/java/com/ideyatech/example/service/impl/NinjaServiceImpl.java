@@ -18,6 +18,7 @@
  */
 package com.ideyatech.example.service.impl;
 
+import org.opentides.annotation.CrudSecure;
 import org.opentides.service.impl.BaseCrudServiceImpl;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +26,7 @@ import com.ideyatech.example.bean.Ninja;
 import com.ideyatech.example.service.NinjaService;
 
 @Service("ninjaService")
+@CrudSecure
 public class NinjaServiceImpl extends BaseCrudServiceImpl<Ninja>
 		implements NinjaService {
 

@@ -92,8 +92,8 @@
 					</div>
 			  	</div>
 			 	<div class="modal-footer">
-			    	<button type="button" class="btn btn-primary" data-submit="save"><spring:message code="label.save" /></button>
-			    	<button type="button" class="btn btn-primary ${add}" data-submit="save-and-new"><spring:message code="label.save-and-new" /></button>
+			    	<button type="submit" class="btn btn-primary" data-submit="save"><spring:message code="label.save" /></button>
+			    	<button type="submit" class="btn btn-primary ${add}" data-submit="save-and-new"><spring:message code="label.save-and-new" /></button>
 			    	<button type="button" class="btn" data-dismiss="page"><spring:message code="label.back" /></button>
 			    	<form:hidden path="id"/>
 			  	</div>

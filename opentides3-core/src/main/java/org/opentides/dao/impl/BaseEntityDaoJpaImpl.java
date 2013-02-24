@@ -85,7 +85,7 @@ public class BaseEntityDaoJpaImpl<T extends BaseEntity,ID extends Serializable>
 	@SuppressWarnings("unchecked")
 	public final T loadEntityModel(ID id, boolean filter, boolean lock) {
         T entity;
-        if (filter) {        	
+        if (filter && securityFilter!=null) {        	
 			String filterClause = this.getSecurityFilter();
 			String whereClause = doSQLAppend(filterClause, "obj.id = "+id);			
 			Query query = getEntityManager().createQuery("from " + 

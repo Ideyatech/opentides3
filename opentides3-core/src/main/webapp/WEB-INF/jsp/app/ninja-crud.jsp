@@ -31,7 +31,7 @@
 					<div class="control-group">
 						<label class="control-label">&nbsp;</label>
 						<div class="controls">
-							<button type="button" class="btn btn-success" data-submit="search"><spring:message code="label.search"/></button>
+							<button type="submit" class="btn btn-success" data-submit="search"><spring:message code="label.search"/></button>
 							<button type="button" class="btn" data-submit="clear"><spring:message code="label.clear" /></button>
 						</div>
 					</div>					
@@ -97,7 +97,7 @@
 	            </table>
 	            </div>
 	            <div class="paging clearfix" data-display-pagelinks="true" data-display-summary="false">
-	            <app:paging results="${results}" displayPageLinks="true" displaySummary="false"/>
+	            <app:paging results="${results}"/>
 	            </div>
 	   		</div>
    		</div> <!-- #search-body -->
@@ -188,8 +188,8 @@
 					</div>
 			  	</div>
 			 	<div class="modal-footer">
-			    	<button type="button" class="btn btn-primary" data-submit="save"><spring:message code="label.save" /></button>
-			    	<button type="button" class="btn btn-primary ${add}" data-submit="save-and-new"><spring:message code="label.save-and-new" /></button>
+			    	<button type="submit" class="btn btn-primary" data-submit="save"><spring:message code="label.save" /></button>
+			    	<button type="submit" class="btn btn-primary ${add}" data-submit="save-and-new"><spring:message code="label.save-and-new" /></button>
 			    	<button type="button" class="btn" data-dismiss="modal"><spring:message code="label.close" /></button>
 			    	<input type="hidden" name="id" />
 			  	</div>

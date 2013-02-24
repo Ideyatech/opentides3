@@ -36,16 +36,23 @@
 
 	<!-- the transactional advice (what 'happens'; see the <aop:advisor/> bean 
 		below) -->
-	<!-- <tx:advice id="ot3ServiceAdvice" transaction-manager="transactionManager"> 
-		<tx:attributes> <tx:method name="count*" read-only="true"/> <tx:method name="find*" 
-		read-only="true"/> <tx:method name="get*" read-only="true"/> <tx:method name="is*" 
-		read-only="true"/> <tx:method name="load*" read-only="true"/> <tx:method 
-		name="*"/> </tx:attributes> </tx:advice> -->
+<!-- 		
+	<tx:advice id="ot3ControllerAdvice" transaction-manager="transactionManager"> 
+		<tx:attributes> 
+			<tx:method name="createTx" /> 
+			<tx:method name="updateTx" /> 
+			<tx:method name="deleteTx" />
+		</tx:attributes>
+	</tx:advice>
+ -->		
 	<!-- ensure that the above transactional advice runs for any execution of 
-		an operation defined by the Service interface -->
-	<!-- <aop:config> <aop:pointcut id="ot3ServiceTransaction" expression="execution(* 
-		org.opentides.service.impl.*ServiceImpl.*(..))"/> <aop:advisor advice-ref="ot3ServiceAdvice" 
-		pointcut-ref="ot3ServiceTransaction"/> </aop:config> -->
+		an operation defined by the Controller interface -->
+<!-- 
+	<aop:config> 
+		<aop:pointcut id="ot3ControllerTx" expression="execution(* org.opentides.web.controller.*.*(..))"/> 
+		<aop:advisor advice-ref="ot3ControllerAdvice" pointcut-ref="ot3ControllerTx"/> 
+	</aop:config>
+ -->	
 	<!-- Property file containing custom JPQL queries -->
 	<bean id="jpqlProperties"
 		class="org.springframework.beans.factory.config.PropertiesFactoryBean">

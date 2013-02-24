@@ -23,7 +23,6 @@ import java.util.List;
 
 import org.opentides.bean.SystemCodes;
 import org.opentides.web.controller.BaseCrudController;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,7 +35,6 @@ import com.ideyatech.example.bean.Ninja;
  * @author opentides
  */
 @RequestMapping("/ninja")
-@Secured("ACCESS_NINJA")
 @Controller 
 public class NinjaController extends BaseCrudController<Ninja> {
 
@@ -48,12 +46,7 @@ public class NinjaController extends BaseCrudController<Ninja> {
 		genderList.add(new SystemCodes("GENDER","UNKNOWN","Unknown"));
 		return genderList;
 	}
-	
-//	public Ninja loadObject() {
-//		Ninja ninja = new Ninja();
-//		ninja.set
-//	}
-	
+		
 	@ModelAttribute("statusList")
 	public List<SystemCodes> statusList() {
 		return systemCodesService.findSystemCodesByCategory("STATUS");

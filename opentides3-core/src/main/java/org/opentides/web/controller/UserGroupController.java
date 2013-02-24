@@ -24,6 +24,7 @@ import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.opentides.bean.user.UserAuthority;
 import org.opentides.bean.user.UserGroup;
 import org.opentides.service.UserGroupService;
 import org.springframework.stereotype.Controller;
@@ -46,6 +47,18 @@ public class UserGroupController extends BaseCrudController<UserGroup> {
 		singlePage = "/base/usergroup-crud";
 		// no pagination support
 		pageSize = 0;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.opentides.web.controller.BaseCrudController#preUpdate(org.opentides.bean.BaseEntity, org.springframework.validation.BindingResult, org.springframework.ui.Model, javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+	 */
+	@Override
+	protected void preUpdate(UserGroup command, BindingResult bindingResult,
+			Model uiModel, HttpServletRequest request,
+			HttpServletResponse response) {
+		for (UserAuthority deleteRole : command.getRemoveList()) {
+			((UserGroupService) getService()).removeUserAuthority(deleteRole);			
+		}
 	}
 
 	@Override

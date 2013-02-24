@@ -26,7 +26,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 /**
- * Annotation for entity classes that will be audited 
+ * Annotation for entity classes that are protected by record filter
  * based on open-tides framework.
  *
  * @author allanctan

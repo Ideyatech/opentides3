@@ -30,6 +30,4 @@ import com.ideyatech.example.bean.Ninja;
  */
 public interface NinjaService extends BaseCrudService<Ninja> {
 		
-
-
 }

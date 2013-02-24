@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
  * Parameters are: 
  *     (1) name - this is the name of the model to be retrieved
  *     (2) mode - applicable for method annotation only to indicate
- *                if objet returned is for creating new records
+ *                if object returned is for creating new records
  *                or updating existing records.
  * 
  * @author allanctan
