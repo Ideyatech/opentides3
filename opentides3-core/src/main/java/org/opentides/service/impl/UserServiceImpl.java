@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.opentides.annotation.CrudSecure;
 import org.opentides.bean.user.BaseUser;
 import org.opentides.bean.user.PasswordReset;
 import org.opentides.bean.user.SessionUser;
@@ -49,6 +50,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service(value="userService")
+@CrudSecure("USER")
 public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 		UserService {
 

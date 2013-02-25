@@ -56,201 +56,279 @@ public class BaseCrudServiceImpl<T extends BaseEntity> extends
 	private BeanFactory beanFactory;
 
 	/**
-	 * Retrieves all the records on this object.
-	 *
-	 * @return List of objects
+	 * {@inheritDoc}
 	 */
+	@Override
+	public final List<T> findAll() {
+		return findAll(false);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<T> findAll(final boolean bypassSecurity) {
+		if (!bypassSecurity)
+			checkAccess("SEARCH");
+		return dao.findAll();
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public final List<T> findAll(final int start, final int total) {
-		checkAccess("SEARCH");
+		return findAll(start, total, false);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<T> findAll(final int start, final int total, final boolean bypassSecurity) {
+		if (!bypassSecurity) 
+			checkAccess("SEARCH");
 		return dao.findAll(start, total);
 	}
 
 	/**
-	 * Retrieves all the records on this object.
-	 * 
-	 * @return List of objects
+	 * {@inheritDoc}
 	 */
-	public final List<T> findAll() {
-		checkAccess("SEARCH");
-		return dao.findAll();
-	}
-
-	/**
-	 * Retrieves matching records based on the object passed.
-	 * 
-	 * @return List of objects
-	 */
-	public final List<T> findByExample(T example, int start, int total) {
-		checkAccess("SEARCH");
-		return dao.findByExample(example, start, total);
-	}
-
-	/**
-	 * Retrieves matching records based on the object passed.
-	 * 
-	 * @return List of objects
-	 */
-	public final List<T> findByExample(T example) {
+	@Override
+	public final List<T> findByExample(final T example) {
 		checkAccess("SEARCH");
 		return dao.findByExample(example);
 	}
 
 	/**
-	 * Retrieves matching records based on the object passed.
-	 * 
-	 * @return List of objects
+	 * {@inheritDoc}
 	 */
+	@Override
+	public final List<T> findByExample(final T example, final int start, final int total) {
+		return findByExample(example, start, total, false);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<T> findByExample(final T example, final int start, final int total,
+			final boolean bypassSecurity) {
+		if (!bypassSecurity) 
+			checkAccess("SEARCH");
+		return dao.findByExample(example, start, total);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public final List<T> findByExample(T example, boolean exactMatch) {
-		checkAccess("SEARCH");
+		return findByExample(example, exactMatch, false);
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<T> findByExample(T example, boolean exactMatch,
+			boolean bypassSecurity) {
+		if (!bypassSecurity)
+			checkAccess("SEARCH");
 		return dao.findByExample(example, exactMatch);
 	}
 
 	/**
-	 * Retrieves matching records based on the object passed.
-	 * 
-	 * @return List of objects
-	 */
+	 * {@inheritDoc}
+	 */	
+	@Override
 	public final List<T> findByExample(T example, boolean exactMatch,
 			int start, int total) {
-		checkAccess("SEARCH");
+		return findByExample(example, exactMatch, start, total, false);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */	
+	@Override
+	public List<T> findByExample(T example, boolean exactMatch, int start,
+			int total, boolean bypassSecurity) {
+		if (!bypassSecurity)
+			checkAccess("SEARCH");
 		return dao.findByExample(example, exactMatch, start, total);
 	}
 
 	/**
-	 * Counts all the record of this object
-	 */
+	 * {@inheritDoc}
+	 */	
+	@Override
 	public final long countAll() {
 		return dao.countAll();
 	}
 
+
 	/**
-	 * Counts the matching record of this object
-	 */
+	 * {@inheritDoc}
+	 */		@Override
 	public final long countByExample(T example) {
 		return dao.countByExample(example);
 	}
 
 	/**
-	 * Counts the matching record of this object
-	 */
+	 * {@inheritDoc}
+	 */	
+	@Override
 	public final long countByExample(T example, boolean exactMatch) {
 		return dao.countByExample(example, exactMatch);
 	}
 
 	/**
-	 * Loads an object based on the given id
-	 * 
-	 * @param id
-	 *            to load
-	 * @return object
-	 */
+	 * {@inheritDoc}
+	 */	
+	@Override
 	public final T load(String sid) {
 		if (StringUtil.isEmpty(sid)) {
 			throw new InvalidImplementationException("ID parameter is empty.");
 		} else {
 			try {
 				Long id = Long.parseLong(sid);
-				return load(id);
+				return load(id, true, false);
 			} catch (NumberFormatException nfe) {
 				throw new InvalidImplementationException("ID parameter is not numeric.");
 			}
 		}
 	}
 	
-
 	/**
-	 * Loads an object based on the given id
-	 * 
-	 * @param id
-	 *            to load
-	 * @return object
-	 */
+	 * {@inheritDoc}
+	 */	
+	@Override
 	public final T load(Long id) {
-		checkAccess("VIEW");
 		return dao.loadEntityModel(id, true, false);
 	}
 
 	/**
-	 * Loads an object based on the given id
-	 * 
-	 * @param id
-	 *            to load
-	 * @param filter - apply security filter?
-	 * @return object
-	 */
-	public final T load(Long id, boolean filter) {
-		checkAccess("VIEW");
-		return dao.loadEntityModel(id, filter, false);
+	 * {@inheritDoc}
+	 */	
+	@Override
+	public final T load(String sid, boolean filter) {
+		return load(sid, filter, false);
 	}
 
 	/**
-	 * Loads an object based on the given id
-	 * 
-	 * @param id
-	 *            to load
-	 * @param filter - apply security filter?
-	 * @return object
-	 */
-	public final T load(String sid, boolean filter) {
+	 * {@inheritDoc}
+	 */	
+	@Override
+	public T load(String sid, boolean filter, boolean bypassSecurity) {
+		if (!bypassSecurity)
+			checkAccess("VIEW");
 		if (StringUtil.isEmpty(sid)) {
 			throw new InvalidImplementationException("id parameter is empty.");
 		} else {
 			try {
 				Long id = Long.parseLong(sid);
-				return load(id, filter);
+				if (filter)
+					return dao.loadEntityModel(id, filter, false);
+				else
+					return dao.loadEntityModel(id);
 			} catch (NumberFormatException nfe) {
 				throw new InvalidImplementationException("id parameter is not numeric.");
 			}
-		}
-	}
-	
-	/**
-	 * Save the object via DAO.
-	 * 
-	 * @param object
-	 *            to save
-	 */
-	@Transactional
-	public final void save(T obj) {
-		if (obj.getIsNew())
-			checkAccess("ADD");
-		else
-			checkAccess("EDIT");
-		dao.saveEntityModel(obj);
+		}		
 	}
 
 	/**
-	 * Deletes the object from the given id.
-	 * 
-	 * @param sid -
-	 *            id to delete
-	 */
+	 * {@inheritDoc}
+	 */	
+	@Override
+	public final T load(Long id, boolean filter) {
+		return load(id, filter, false);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */	
+	@Override
+	public T load(Long id, boolean filter, boolean bypassSecurity) {
+		if (!bypassSecurity)
+			checkAccess("VIEW");		
+		if (filter)
+			return dao.loadEntityModel(id, filter, false);
+		else
+			return dao.loadEntityModel(id);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */	
+	@Override
+	public final void save(T entity) {
+		save(entity, false);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */	
+	@Override
 	@Transactional
+	public void save(T entity, boolean bypassSecurity) {
+		if (!bypassSecurity) {
+			if (entity.getIsNew())
+				checkAccess("ADD");
+			else
+				checkAccess("EDIT");			
+		}
+		dao.saveEntityModel(entity);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */	
+	@Override
 	public final void delete(String sid) {
+		delete(sid, false);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */	
+	@Override
+	@Transactional
+	public void delete(String sid, boolean bypassSecurity) {
+		if (!bypassSecurity)
+			checkAccess("DELETE");
 		if (StringUtil.isEmpty(sid)) {
 			throw new InvalidImplementationException("ID parameter is empty.");
 		} else {
 			try {
 				Long id = Long.parseLong(sid);
-				delete(id);
+				dao.deleteEntityModel(id);
 			} catch (NumberFormatException nfe) {
 				throw new InvalidImplementationException("ID parameter is not numeric.");
 			}
-		}
+		}		
 	}
 
 	/**
-	 * Deletes the object from the given id.
-	 * 
-	 * @param sid -
-	 *            id to delete
-	 */
-	@Transactional
+	 * {@inheritDoc}
+	 */	
+	@Override
 	public final void delete(Long id) {
-		checkAccess("DELETE");
-		dao.deleteEntityModel(id);
+		delete(id, false);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	@Transactional
+	public void delete(Long id, boolean bypassSecurity) {
+		if (!bypassSecurity)
+			checkAccess("DELETE");
+		dao.deleteEntityModel(id);		
+	}
+	
 	/**
 	 * Make sure DAO is properly set.
 	 */
@@ -298,4 +376,5 @@ public class BaseCrudServiceImpl<T extends BaseEntity> extends
 	public BaseEntityDao<T, Long> getDao() {
 		return dao;
 	}
+
 }

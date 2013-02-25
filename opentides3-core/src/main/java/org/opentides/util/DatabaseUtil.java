@@ -19,16 +19,11 @@
 
 package org.opentides.util;
 
-import java.util.List;
 import java.util.Properties;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import javax.persistence.metamodel.Metamodel;
-
-import org.eclipse.persistence.internal.jpa.EntityManagerFactoryImpl;
-import org.opentides.bean.factory.support.BaseEntityRegistry;
 
 /**
  * This utility allows creation of Hibernate session directly.
@@ -47,11 +42,6 @@ public class DatabaseUtil {
      * Persistence name in hibernate.
      */
     private static String persistenceUnitName = "opentidesPU";
-    
-    /**
-     * Registry of BaseEntity available in the application
-     */
-    private static BaseEntityRegistry baseEntityRegistry;
     
     /**
      * Database driver class name (e.g. com.mysql.jdbc.Driver)
@@ -103,14 +93,7 @@ public class DatabaseUtil {
             		propertiesMap.put("javax.persistence.nonJtaDataSource", jndiName);
                	}
             	emf = Persistence.createEntityManagerFactory(persistenceUnitName, propertiesMap);		
-//            	if (emf instanceof EntityManagerFactoryImpl) {
-//            		EntityManagerFactoryImpl emfi = (EntityManagerFactoryImpl) emf;
-//            		
-//            	}
         	}
-//        	List<String> entities = baseEntityRegistry.getBaseEntities();
-//        	for (String entity:entities)
-//        		emf.getMetamodel().entity(Class.forName(entity));
         	entityManager = emf.createEntityManager();        	
         } catch (Throwable ex) {
             // Make sure you log the exception, as it might be swallowed
@@ -173,13 +156,5 @@ public class DatabaseUtil {
 	public final void setPersistenceUnitName(String persistenceUnitName) {
 		DatabaseUtil.persistenceUnitName = persistenceUnitName;
 	}
-
-	/**
-	 * @param baseEntityRegistry the baseEntityRegistry to set
-	 */
-	public final void setBaseEntityRegistry(
-			BaseEntityRegistry baseEntityRegistry) {
-		DatabaseUtil.baseEntityRegistry = baseEntityRegistry;
-	}	
 	
 }

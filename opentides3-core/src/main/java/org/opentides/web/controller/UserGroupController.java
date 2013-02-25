@@ -24,6 +24,7 @@ import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.opentides.annotation.CrudSecure;
 import org.opentides.bean.user.UserAuthority;
 import org.opentides.bean.user.UserGroup;
 import org.opentides.service.UserGroupService;

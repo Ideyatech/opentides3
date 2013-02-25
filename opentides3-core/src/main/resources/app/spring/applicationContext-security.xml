@@ -165,60 +165,69 @@
 				<entry key="MANAGE_DIVISION_PAGE">
 					<value>10.01.00.00 Manage Division Page</value>
 				</entry>
+				<entry key="SEARCH_DIVISION">
+					<value>10.01.01.00 Search Division</value>
+				</entry>
 				<entry key="VIEW_DIVISION">
-					<value>10.01.01.00 View Division</value>
+					<value>10.01.02.00 View Division</value>
 				</entry>
 				<entry key="ADD_DIVISION">
-					<value>10.01.02.00 Add Division</value>
+					<value>10.01.03.00 Add Division</value>
 				</entry>
 				<entry key="EDIT_DIVISION_MEMBERS">
-					<value>10.01.03.00 Edit Division Members</value>
+					<value>10.01.04.00 Edit Division Members</value>
 				</entry>
 				<entry key="DELETE_DIVISION">
-					<value>10.01.04.00 Delete Division</value>
+					<value>10.01.05.00 Delete Division</value>
 				</entry>
 		
 				<!-- USERS -->
 				<entry key="MANAGE_USER_PAGE">
 					<value>10.02.00.00 Manage Users Page</value>
 				</entry>
+				<entry key="SEARCH_USER">
+					<value>10.02.01.00 Search Users</value>
+				</entry>
 				<entry key="VIEW_USER">
-					<value>10.02.01.00 View Users</value>
+					<value>10.02.02.00 View Users</value>
 				</entry>
 				<entry key="ADD_USER">
-					<value>10.02.02.00 Add User</value>
+					<value>10.02.03.00 Add User</value>
 				</entry>
 				<entry key="EDIT_USER_PROFILE">
-					<value>10.02.03.00 Edit User Profile</value>
+					<value>10.02.04.00 Edit User Profile</value>
 				</entry>
 				<entry key="MARK_USER_INACTIVE">
-					<value>10.02.04.00 Mark User Inactive</value>
+					<value>10.02.05.00 Mark User Inactive</value>
 				</entry>
 				<entry key="CHANGE_ASSIGNMENT">
-					<value>10.02.05.00 Change Assignment</value>
+					<value>10.02.06.00 Change Assignment</value>
 				</entry>
 				<entry key="CHANGE_PASSWORD">
-					<value>10.02.06.00 Change Password</value>
+					<value>10.02.07.00 Change Password</value>
 				</entry>
 				<entry key="DELETE_USER">
-					<value>10.02.07.00 Delete User</value>
+					<value>10.02.08.00 Delete User</value>
 				</entry>
 				
 				<!-- ROLES -->
 				<entry key="MANAGE_USERGROUP_PAGE">
 					<value>10.03.00.00 Manage Roles</value>
 				</entry>
+				<entry key="SEARCH_USERGROUP">
+					<value>10.03.01.00 Search Role</value>
+				</entry>
 				<entry key="VIEW_USERGROUP">
-					<value>10.03.01.00 Add Role</value>
+					<value>10.03.02.00 View Role</value>
 				</entry>
 				<entry key="ADD_USERGROUP">
-					<value>10.03.02.00 Add Role</value>
+					<value>10.03.03.00 Add Role</value>
 				</entry>
 				<entry key="EDIT_USERGROUP">
-					<value>10.03.03.00 Edit Role</value>
+					<value>10.03.04.00 Edit Role</value>
 				</entry>
 				<entry key="DELETE_USERGROUP">
-					<value>10.03.04.00 Delete Role</value>
+					<value>10.03.05.00 Delete Role</value>
 				</entry>
 				
 				<!-- SYSTEM -->				
@@ -247,17 +256,20 @@
 				<entry key="MANAGE_SYSTEM_CODES_PAGE">
 					<value>11.02.00.00 Manage System Codes</value>
 				</entry>
+				<entry key="SEARCH_SYSTEM_CODES">
+					<value>11.02.01.00 Search System Codes</value>
+				</entry>
 				<entry key="VIEW_SYSTEM_CODES">
-					<value>11.02.01.00 View System Codes</value>
+					<value>11.02.02.00 View System Codes</value>
 				</entry>
 				<entry key="ADD_SYSTEM_CODES">
-					<value>11.02.02.00 Add System Codes</value>
+					<value>11.02.03.00 Add System Codes</value>
 				</entry>
 				<entry key="EDIT_SYSTEM_CODES">
-					<value>11.02.03.00 Edit System Codes</value>
+					<value>11.02.04.00 Edit System Codes</value>
 				</entry>
 				<entry key="DELETE_SYSTEM_CODES">
-					<value>11.02.04.00 Delete System Codes</value>
+					<value>11.02.05.00 Delete System Codes</value>
 				</entry>
 
 				<!-- REPORTS -->				

@@ -35,7 +35,7 @@ import com.ideyatech.example.bean.Ninja;
  * @author opentides
  */
 @RequestMapping("/ninja")
-@Controller 
+@Controller
 public class NinjaController extends BaseCrudController<Ninja> {
 
 	@ModelAttribute("genderList")

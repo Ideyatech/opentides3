@@ -37,16 +37,19 @@ import org.opentides.bean.BaseEntity;
  * @author allanctan
  */
 public interface BaseEntityDao<T extends BaseEntity, ID extends Serializable> {	
+	
 	/**
 	 * Returns all entries of this entity
 	 * @param start - start index to fetch results
 	 * @param total - total number of records to return
+	 * 
 	 * @return List of entity
 	 */
 	public List<T> findAll();
 	
 	/**
 	 * Returns all entries of this entity
+	 * 
 	 * @return List of entity
 	 */
 	public List<T> findAll(int start, int total);
@@ -54,24 +57,49 @@ public interface BaseEntityDao<T extends BaseEntity, ID extends Serializable> {
 	
 	/**
 	 * Returns all entries found by the named query
+	 * 
 	 * @return List of entity
 	 */
 	public List<T> findByNamedQuery(String name, Map<String, Object> params);
 	
 	/**
 	 * Returns all entries found by the named query with start and limit
+	 * 
 	 * @return List of entity
 	 */
-	public List<T> findByNamedQuery(final String name, final Map<String,Object> params, int start, int total);
+	public List<T> findByNamedQuery(String name, Map<String,Object> params, int start, int total);
 	
 	/**
+	 * Returns all entries found by the named query
+	 * 
+	 * @return List of entity
+	 */
+	public List<T> findByNamedQuery(String name, Object... params);
+	
+	/**
+	 * Returns all entries found by the named query with start and limit
+	 * 
+	 * @return List of entity
+	 */
+	public List<T> findByNamedQuery(final String name, int start, int total, Object... params);
+
+	/**
 	 * Returns an entry found by the named query
+	 * 
 	 * @return Single entity
 	 */
 	public T findSingleResultByNamedQuery(String name, Map<String,Object> params);
 
 	/**
+	 * Returns an entry found by the named query
+	 * 
+	 * @return Single entity
+	 */
+	public T findSingleResultByNamedQuery(String name, Object... params);
+
+	/**
 	 * Executes SQL operation by named query. 
+	 * 
 	 * Use for DDL operations.
 	 * 
 	 * @param name
@@ -79,6 +107,17 @@ public interface BaseEntityDao<T extends BaseEntity, ID extends Serializable> {
 	 * @return
 	 */
 	public int executeByNamedQuery(String name, Map<String,Object> params);
+
+	/**
+	 * Executes SQL operation by named query. 
+	 * 
+	 * Use for DDL operations.
+	 * 
+	 * @param name
+	 * @param params
+	 * @return
+	 */
+	public int executeByNamedQuery(String name, Object... params);
 
 	/**
 	 * Performs a query by example.
@@ -171,18 +210,12 @@ public interface BaseEntityDao<T extends BaseEntity, ID extends Serializable> {
 	public void saveEntityModel(T obj);
 	
 	/**
-	 * Add or update a collection of objects
+	 * Adds or updates a collection of model objects using
+	 * the recommended way of saving collections from the Hibernate site.
+	 * 
 	 * @param objects
 	 */
 	public void saveAllEntityModel(Collection<T> objects);
-	
-	/**
-	 * Sets the size by flushing when saving multiple entities
-	 * on saveAllEntityModel method.
-	 * 
-	 * @param batchSize
-	 */
-	public void setBatchSize(int batchSize);
 	
 	/**
 	 * Retrieves the jpql statement from preloaded properties file.
