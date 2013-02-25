@@ -22,6 +22,7 @@ package org.opentides.util;
 import org.apache.log4j.Logger;
 import org.opentides.bean.user.SessionUser;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 /**
@@ -68,11 +69,9 @@ public class SecurityUtil {
 	 */
 	public static boolean currentUserHasPermission(String permission) {
 		SessionUser user = SecurityUtil.getSessionUser();
-		if (user!=null) {
-		    for (GrantedAuthority auth: user.getAuthorities()) {
-		        if (permission.equals(auth.getAuthority()))
-		            return true;
-		    }
+		if (user!=null && user.getAuthorities()!=null) {
+			GrantedAuthority auth = new SimpleGrantedAuthority(permission);
+			return user.getAuthorities().contains(auth);
 		}
 		return false;
 	}
