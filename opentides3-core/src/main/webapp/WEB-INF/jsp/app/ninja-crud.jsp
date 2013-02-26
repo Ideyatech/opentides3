@@ -62,21 +62,25 @@
 	               	<tr class="table-header">
 	                   	<th class="col-1" data-class="expand" data-field-name="completeName"><spring:message code="label.ninja.completeName"/></th>
 	                   	<th class="col-2" data-hide="phone" data-field-name="email"><spring:message code="label.ninja.email"/></th>
-	                	<th class="col-3" data-hide="phone,tablet" data-field-name="age"><spring:message code="label.ninja.age"/></th>
+	                	<th class="col-3" data-hide="phone,tablet" data-field-name="age"><spring:message code="label.ninja.age"/>
+	                		<span class='template hide'>
+	                			@#age years old
+	                		</span>	                	
+	                	</th>
 	               		<th class="col-4" data-hide="phone,tablet" data-field-name="score"><spring:message code="label.ninja.score"/></th>
 	               		<th class="col-4" data-hide="phone,tablet" data-field-name="joinDate"><spring:message code="label.ninja.joinDate"/></th>
 	               		<th class="col-5" data-hide="phone,tablet" data-field-name="active"><spring:message code="label.ninja.active"/></th>
-	                	<th class="col-6" data-field-name="ot3-controls">
-	                		<span class='pre hide'>
-			                	<i class='icon-edit edit-action' data-id='#id'></i>
-								<i class='icon-remove remove-action' data-id='#id'></i>
+	                	<th class="col-6">
+	                		<span class='template hide'>
+			                	<i class='icon-edit edit-action' data-id='@#id'></i>
+								<i class='icon-remove remove-action' data-id='@#id'></i>
 	                		</span>
 	                	</th>
 	                </tr>
 	           		</thead>
 					<tbody>
 	            	<c:forEach items="${results.results}" var="record" varStatus="status">
-	            	<tr data-id="${record.id}">            
+	            	<tr data-id="${record.id}">
 	                	<td class="col-1"><c:out value="${record.completeName}" /></td>
 	                	<td class="col-2"><c:out value="${record.email}" /></td>
 	                	<td class="col-3"><c:out value="${record.age}" /></td>

@@ -635,7 +635,9 @@ var opentides3 = (function() {
 			// listed results column
 			var listedNames = {};
 			newTable.find('th').each(function(i, item) {
-				listedNames[i] = $(item).data('fieldName');
+				listedNames[i].fieldName = $(item).data('fieldName');
+				listedNames[i].template = $(item).find('.template').html();
+				
 			});
 			
 			// clear the table
@@ -732,31 +734,31 @@ var opentides3 = (function() {
     		listedNames = { };
     		// get the listed results column
 			resultsTable.find('th').each(function(i, item) {
-				listedNames[i] = $(item).data('fieldName');
+				listedNames[i].fieldName = $(item).data('fieldName');
+				listedNames[i].template = $(item).find('.template').html();
 			});
     	}
     	var tableRow = resultsTable.find('tr[data-id="'+result['id']+'"]');
     	if (tableRow.length > 0) {
     		// update the record
     		var row = "";
-			$.each(listedNames, function(j, fieldName) {
-				if (fieldName=='ot3-controls') {
+			$.each(listedNames, function(j, field) {
+				if (field.template.length > 0) {
 					row = row + "<td> <i class='icon-pencil edit-action' data-id='"+result['id']+"'/> " +
 								"<i class='icon-trash remove-action' data-id='"+result['id']+"'/></td>";
 				} else {
-    				row = row + '<td>'+opentides3.getValue(result,fieldName)+'</td>';  	  		    					
+    				row = row + '<td>'+opentides3.getValue(result,field.fieldName)+'</td>';  	  		    					
 				}
 			});
 			tableRow.html(row);
     	} else {
     		// add new record
     		var row = "<tr data-id='"+result['id']+"'>";
-			$.each(listedNames, function(j, fieldName) {
-				if (fieldName=='ot3-controls') {
-					row = row + "<td> <i class='icon-pencil edit-action' data-id='"+result['id']+"'/> " +
-								"<i class='icon-trash remove-action' data-id='"+result['id']+"'/></td>";
+			$.each(listedNames, function(j, field) {
+				if (field.template.length > 0) {
+					row = row + '<td>' + opentides3.fillTemplate(result, field.template) + '</td>';
 				} else {
-    				row = row + '<td>'+opentides3.getValue(result,fieldName)+'</td>';  	  		    					
+    				row = row + '<td>'+opentides3.getValue(result,field.fieldName)+'</td>';  	  		    					
 				}
 			});
 			row = row + "</tr>";
