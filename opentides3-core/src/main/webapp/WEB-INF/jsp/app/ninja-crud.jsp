@@ -79,6 +79,21 @@
 	                </tr>
 	           		</thead>
 					<tbody>
+					<script type="text/template" class="template">
+					<tr data-id="{{id}}">
+	                	<td class="col-1">{{completeName}}</td>
+	                	<td class="col-2">{{email}}</td>
+	                	<td class="col-3">{{age}}</td>
+	                	<td class="col-4">{{score}}</td>
+	                	<td class="col-4">{{joinDate}}</td>
+	                	<td class="col-5">
+	                	</td>
+		                <td class="col-6">
+		                	<i class='icon-edit edit-action' data-id='{{id}}'></i>	                	 
+							<i class='icon-remove remove-action' data-id='{{id}}'></i>
+		                </td>
+	            	</tr>	
+					</script>
 	            	<c:forEach items="${results.results}" var="record" varStatus="status">
 	            	<tr data-id="${record.id}">
 	                	<td class="col-1"><c:out value="${record.completeName}" /></td>
