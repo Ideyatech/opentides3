@@ -1,7 +1,6 @@
 <%--
 	- input.tag
 	- Generates form input element
-	- @param
 --%>
 <%@ tag body-content="empty" dynamic-attributes="dAttrs" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
@@ -13,8 +12,6 @@
 <%@ attribute name="type" required="false" type="java.lang.String" %>
 <%@ attribute name="appendSign" required="false" type="java.lang.String" %>
 <%@ attribute name="prependSign" required="false" type="java.lang.String" %>
-
-
 
 <c:forEach items="${dAttrs}" var="attr">
 	<c:set var="attrs" value='${attrs} ${attr.key}="${attr.value}"'/>

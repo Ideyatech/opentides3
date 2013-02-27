@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <%@ attribute name="pageTitle" required="true" type="java.lang.String"%>
-<%@ attribute name="active" required="false" type="java.lang.String"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
@@ -15,7 +14,6 @@
 <c:set var="ot_version" value="3.0" scope="application" />
 <jsp:useBean id="currentUser" class="org.opentides.util.SecurityUtil" scope="request"/>
 <spring:theme code="client_name" var="client_name" scope="application" />
-<spring:theme code="logo" var="logo" />
 <spring:theme code="favicon" var="favicon" />
 
 <html lang="${pageContext.response.locale}">
@@ -50,65 +48,8 @@
 
 </head>
 
-<body>
-
-	<div class='notifications top-left'></div>	
-    <div class='notifications top-right'></div>
-    <div class='notifications system-error'></div>
+<body class="login">
 
 	<div id="wrap">
-	
-		<div id="nav" class="navbar navbar-inverse navbar-fixed-top">
-			<div class="navbar-inner">
-				<div class="container">
-					<a class="btn btn-navbar" data-toggle="collapse"
-						data-target=".nav-collapse"> <span class="icon-bar"></span> <span
-						class="icon-bar"></span> <span class="icon-bar"></span>
-					</a>
-					<a class="brand" href="${home}">
-						<img class="logo" src="<c:url value='${logo}'/>"/>
-					</a>
-					<div class="nav-collapse collapse">
-						<ul class="nav">
-							<li class="${active eq 'home' ? 'active' : ''}">
-								<a href="${home}">
-									<i class="icon-home icon-white"></i>
-									Home
-								</a>
-							</li>
-							<li class="${active eq 'users' ? 'active' : ''}">
-								<a href="${home}/organization/users/">
-									<i class="icon-user icon-white"></i>
-									Users
-								</a>
-							</li>
-							<li class="${active eq 'system-codes' ? 'active' : ''}">
-								<a href="${home}/system/system-codes/">
-									<i class="icon-qrcode icon-white"></i>
-									System Codes
-								</a>
-							</li>
-							<li class="${active eq 'usergroups' ? 'active' : ''}">
-								<a href="${home}/organization/usergroups/">
-									<i class="icon-globe icon-white"></i>
-									User Groups
-								</a>
-							</li>
-							<li class="pull-right">
-								<a href='<c:out value="${home}/j_spring_security_logout" />'>
-									<spring:message code="label.logout"/>
-								</a>
-							</li>
-						</ul>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<header class="jumbotron">
-			<div class="container">
-				<h2><spring:message code="${pageTitle}" /></h2>
-			</div>
-		</header>
 
 		<div class="main container">

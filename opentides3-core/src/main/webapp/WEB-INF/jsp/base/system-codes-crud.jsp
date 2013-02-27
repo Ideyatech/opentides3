@@ -24,21 +24,13 @@
 			</div>
 			<div class="search-form collapse">
 				<form:form modelAttribute="searchCommand" id="system-codes-search" >
-					<form:label path="category">
-						<spring:message code="label.system-codes.category" />
-					</form:label>
-					<form:select path="category">
-						<form:option value="">
-							<spring:message code="label.select-one" />
-						</form:option>
-						<form:options items="${categories}" itemValue="category"
-							itemLabel="category" />
-					</form:select>
-					<app:input path="key" label="label.system-codes.key"/>
-					<app:input path="value" label="label.system-codes.value" />
+					<app:select path="category" label="label.system-codes.category" defaultToNull="true" class="input-block-level">
+					</app:select>
+					<app:input path="key" label="label.system-codes.key" class="input-block-level"/>
+					<app:input path="value" label="label.system-codes.value" class="input-block-level"/>
 					<hr/>
-					<input type="submit" class="btn btn-info" data-submit="search" value="<spring:message code="label.search"/>">
-					<button type="button" class="btn btn-link" data-submit="clear"><spring:message code="label.clear" /></button>
+					<input type="submit" class="btn btn-info btn-block" data-submit="search" value="<spring:message code="label.search"/>">
+					<button type="button" class="btn btn-link btn-block" data-submit="clear"><spring:message code="label.clear" /></button>
 				</form:form>
 			</div>
 		</div>
@@ -108,15 +100,7 @@
 
 		<form:form modelAttribute="formCommand" id="system-codes-form">
 			<div class="modal-body">
-				<div class="control-group">
-					<form:label path="category" cssErrorClass="highlight-error" cssClass="control-label">
-						<spring:message code="label.system-codes.category" />
-						<span class="required"><spring:message code="label.required-field" /></span>
-					</form:label>
-					<div class="controls">
-						<form:input path="category" maxlength="120" />
-					</div>
-				</div>
+				<app:input path="category" label="label.system-codes.category" required="true"/>
 				<app:input path="key" label="label.system-codes.key" required="true"/>
 				<app:input path="value" label="label.system-codes.value" required="true"/>
 			</div>
