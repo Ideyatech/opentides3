@@ -60,6 +60,7 @@ public class SystemCodesValidator implements Validator {
 		if(systemCodesService.isDuplicateKey(systemCodes)){
 			errors.reject("error.duplicate-key", new Object[]{"\""+systemCodes.getKey()+"\"","key"}, "\""+systemCodes.getKey() +"\" already exists. Please try a different key.");
 		}						
+
 	}
 
 }

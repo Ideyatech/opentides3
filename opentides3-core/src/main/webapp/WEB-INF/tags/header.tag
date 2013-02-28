@@ -52,9 +52,7 @@
 
 <body>
 
-	<div class='notifications top-left'></div>	
-    <div class='notifications top-right'></div>
-    <div class='notifications system-error'></div>
+    <div class='notifications center'></div>
 
 	<div id="wrap">
 	

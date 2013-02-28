@@ -14,6 +14,7 @@
 <c:set var="ot_version" value="3.0" scope="application" />
 <jsp:useBean id="currentUser" class="org.opentides.util.SecurityUtil" scope="request"/>
 <spring:theme code="client_name" var="client_name" scope="application" />
+<spring:theme code="logo" var="logo" />
 <spring:theme code="favicon" var="favicon" />
 
 <html lang="${pageContext.response.locale}">
@@ -48,8 +49,18 @@
 
 </head>
 
-<body class="login">
+<body class="anonymous">
 
 	<div id="wrap">
 
+		<div id="nav" class="navbar navbar-inverse">
+			<div class="navbar-inner">
+				<div class="container">
+					<a class="brand" href="${home}">
+						<img class="logo" src="<c:url value='${logo}'/>"/>
+					</a>
+				</div>
+			</div>
+		</div>
+		
 		<div class="main container">

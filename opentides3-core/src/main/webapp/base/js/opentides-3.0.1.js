@@ -18,12 +18,14 @@
 
 // helper functions
 var opentides3 = (function() {
+	
      var defaultMessages = {
          'no-results-found': 'No results found.',
          'summary-message': 'Displaying #start to #end of #total records',
          'are-you-sure-to-delete': 'Are you sure to delete #primary-value?',
          'result-seconds': '#time seconds'
      };
+
      return {
     	 /**
     	  * Returns true if current browser is support window.history which 
@@ -93,49 +95,42 @@ var opentides3 = (function() {
          * Displays the message response received from the server side.
          * 
          */
-        displayMessage: function(json, container) {        	
-			if (container.length)
-				container = $('.top-right');
-			// remove all alerts
-        	container.find('.ot3-alert').remove();
-
-			var addMessage = function(alertClass, message) {
-				panel = container.children('.'+alertClass);
-				if (panel.length === 0) {
-					container.prepend("<div class='ot3-alert alert "+alertClass+"'><ul></ul></div>");
-					panel = container.children('.'+alertClass);
-					if (alertClass === 'alert-success') {
-						panel.prepend('<button type="button" class="close" data-dismiss="modal">&times;</button>');
-					}
-				}
-    			panel.children('ul').append('<li>'+message+'</li>');
-			};
-			
-    		// display the message
+        displayMessage: function(json, container) {
+        	
+        	if(container) {
+        		//remove messages already displayed in the container
+    			container.find('.control-group').each(function(){
+    				$(this).removeClass('warning info success error');
+    				$(this).find('.help-inline').remove();
+    			});
+    			container.find('.alert').remove();
+        	}
+        	
+        	// display the message
     		$.each(json['messages'], function(i, message) {
-    			if (message.type == 'error') {
-	    			// displays error message (red, fixed)
-    				addMessage('alert-error', message.message);
-    				if (typeof(message.fieldName) !== 'undefined' &&
-    					message.fieldName.length > 0)
-    					$("."+message.elementClass+" [name='"+message.fieldName+"']")
-    						.closest('.control-group').addClass('error');
-    			} else if (message.type == 'warning') {
-    				// displays warning message (yellow, fixed)
-    				addMessage('alert-warning', message.message);
-    			} else if (message.type == 'info') {
-	    			// displays warning message (fixed, closable)
-    				addMessage('alert-success', message.message);
+    			
+    			if (message.fieldName) {
+    				var element = container.find("#" + message.fieldName);
+        			element.closest('.control-group').addClass(message.type);
+        			element.after("<span class='help-inline'><small>" + message.message + "</small></span>");
+        			
+
+        			//TODO: Insert scrolling to message.elementClass code 
+        			//      here in case error message is not visible.
+    			
     			} else {
-	    			// assume its notification
-	    			// pops-up for a few seconds    				
-    				$(container).notify({
-    					message: { text: message.message }
-    				}).show();
+    				if(message.type == 'notification') {
+    					$('.center').notify({ message: message.message, type: 'success' }).show();
+    				} else {
+    					if(container) {
+    						container.find('form').prepend("<div class='alert alert-" + message.type + "'>"+message.message+"</div>");
+    					} else {
+    						$('.center').notify({ message: message.message, type: message.type }).show();
+    					}
+    				}
     			}
-    			//TODO: Insert scrolling to message.elementClass code 
-    			//      here in case error message is not visible.
-    		}); //.each			
+    		});
+    				
         },
         /**
          * Animate slide element to the left. 
@@ -409,7 +404,7 @@ var opentides3 = (function() {
             	opentides3.displayMessage({messages:[{
             		type: "error",
             		message: message,
-            	}]}, $('.system-error'));
+            	}]});
 		    });
 
 			/***********************************
@@ -452,7 +447,6 @@ var opentides3 = (function() {
   					url:firstForm.attr('action'), 		// url
   					data:firstForm.serialize(),			// data
   					success: function(json) {			// callback
-  						firstForm.find('.control-group').removeClass('error');
   		    			opentides3.displayMessage(json, form);
   		    			if (typeof(json.command) === 'object' &&
   		    					json.command.id > 0) {
@@ -556,7 +550,7 @@ var opentides3 = (function() {
 						    url: opentides3.getPath()+'/'+id,
 						    type: 'DELETE',
 						    success: function(json) {
-		  		    			opentides3.displayMessage(json, $('.top-right'));		    		  		    			
+		  		    			opentides3.displayMessage(json);		    		  		    			
 		  		    			tableRow.fadeOut(300, function(){ $(this).remove(); });	    		  		    			
 						    },
 						    dataType:'json'
@@ -600,7 +594,7 @@ var opentides3 = (function() {
 	  		    			history.pushState({mode:'search',data:json, formPath:searchForm.attr('id'),
 	  		    				formData:searchForm.serialize()}, null, cleanUrl);	  		    				
 		    			}
-  		    			opentides3.displayMessage(json, searchForm.closest('div'));
+  		    			opentides3.displayMessage(json, searchForm);
 		    			displayResults(searchForm, results, status, pagination, json);  		    			
 		    		}
 		    );

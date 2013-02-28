@@ -2,13 +2,7 @@
   position: fixed;
 }
 
-/* Positioning */ 
-/* Positioning */ 
-.notifications.system-error {
-  right: 10px;
-  top: 25px;
-}
-
+/* Positioning */
 .notifications.top-right {
   right: 10px;
   top: 25px;
@@ -29,9 +23,24 @@
   bottom: 25px;
 }
 
+.notifications.center {
+  top: 50%;
+  width: 100%;
+  left: 0;
+}
+
 /* Notification Element */
 .notifications > div {
   position: relative;
   z-index: 9999;
-  margin: 5px 0px;
+  margin: 5px 0;
+}
+
+/*
+   Notification width centered is located here.
+*/
+.notifications.center > div {
+  margin: 5px auto;
+  width: 20%;
+  text-align: center;
 }

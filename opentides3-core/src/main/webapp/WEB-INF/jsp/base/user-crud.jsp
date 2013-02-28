@@ -24,30 +24,17 @@
 			</div>
 			<div class="search-form collapse">
 				<form:form modelAttribute="searchCommand" id="user-search">
-				    <app:input path="firstName" label="label.user.first-name" />
-				    <app:input path="lastName" label="label.user.last-name" />
+				    <app:input path="firstName" label="label.user.first-name" class="input-block-level"/>
+				    <app:input path="lastName" label="label.user.last-name" class="input-block-level"/>
 				    <hr />
-					<input type="submit" class="btn btn-info" data-submit="search" value="<spring:message code="label.search"/>">
-					<button type="button" class="btn btn-link" data-submit="clear"><spring:message code="label.clear" /></button>		
+					<input type="submit" class="btn btn-info btn-block" data-submit="search" value="<spring:message code="label.search"/>">
+					<button type="button" class="btn btn-link btn-block" data-submit="clear"><spring:message code="label.clear" /></button>		
 				</form:form>
 			</div>
 		</div>
 	</div>
 	
-	        <div id="message-panel" class="row-fluid">
-	            <div class="pull-left status"
-	            		data-summary-message='<spring:message code="message.displaying-x-of-y" 
-	            		arguments="#start,#end,#total,records"/>'>
-	            	<app:paging results="${results}" />
-	            </div>
-	            <div class="pull-right">
-	                <button id="user-add" class="btn btn-success add-action">
-	                	<i class="icon-plus-sign icon-white"></i> <spring:message code="label.user.add" />
-	                </button>
-	            </div>
-		    </div>
-		    
-	        <div class="clear"></div>                  
+	<div id="results-panel" class="span9">
 	
 		<div id="message-panel" class="row-fluid">
 			<button id="user-add" class="btn btn-info add-action">
@@ -98,6 +85,7 @@
 		</div>
 	</div>
 
+</div>
    		
 <div id="form-body" class="modal fade hide">
 
@@ -114,8 +102,8 @@
 				<app:input path="firstName" label="label.user.first-name" required="true"/>
 				<app:input path="lastName" label="label.user.last-name" required="true"/>
 				<app:input path="emailAddress" label="label.user.email" required="true"/>
-				<app:input path="credential.newPassword" label="label.user.password" required="true" type="password"/>
-				<app:input path="credential.confirmPassword" label="label.user.confirm-password" required="true" type="password"/>
+				<app:input path="credential.newPassword" label="label.user.password" type="password"/>
+				<app:input path="credential.confirmPassword" label="label.user.confirm-password" type="password"/>
 				<div class="control-group">
 					<form:label path="groups" cssClass="control-label"><spring:message code="label.user.groups" /></form:label>
 					<div class="controls">
@@ -125,10 +113,10 @@
 					</div>
 				</div>
 				<div class="control-group">
-					<form:label path="credential.enabled" cssClass="control-label"><spring:message code="label.user.active" /></form:label>
-					<div class="controls">
+					<form:label path="credential.enabled" cssClass="control-label checkbox">
 						<form:checkbox path="credential.enabled" />
-					</div>
+						<spring:message code="label.user.active" />
+					</form:label>
 				</div>
 			</div>
 		 	<div class="modal-footer">

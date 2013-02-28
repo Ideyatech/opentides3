@@ -57,8 +57,8 @@
 			  	</div>
 				<form:form modelAttribute="formCommand" id="user-form" method="${method}">	
 			  	<div class="modal-body">
-					<app:input path="name" label="label.usergroup.name" required="true"/>
-					<app:input path="description" label="label.usergroup.description" required="true"/>
+					<app:input path="name" label="label.usergroup.name"/>
+					<app:input path="description" label="label.usergroup.description"/>
 					<div class="control-group">
 						<form:label path="authorityNames" cssClass="control-label"><spring:message code="label.usergroup.actions"/></form:label>
 						<div class="controls">

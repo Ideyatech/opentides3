@@ -100,9 +100,9 @@
 
 		<form:form modelAttribute="formCommand" id="system-codes-form">
 			<div class="modal-body">
-				<app:input path="category" label="label.system-codes.category" required="true"/>
-				<app:input path="key" label="label.system-codes.key" required="true"/>
-				<app:input path="value" label="label.system-codes.value" required="true"/>
+				<app:input path="category" label="label.system-codes.category" />
+				<app:input path="key" label="label.system-codes.key" />
+				<app:input path="value" label="label.system-codes.value" />
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-link" data-dismiss="modal"><spring:message code="label.close" /></button>

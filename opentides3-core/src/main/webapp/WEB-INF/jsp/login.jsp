@@ -11,8 +11,8 @@
 	<div class="form-signin" >
 		<form method="POST" action="<c:url value='j_spring_security_check'/>">
 			
-			<img class="form-signin-heading" src="<c:url value='${logo}'/>"/>
-		
+			<h4><spring:message code='label.login' /></h4>
+			<hr/>
 			<c:if test="${not empty param.login_error}">
 				<div class="alert alert-error">
 					<a class="close" data-dismiss="alert" href="#">&times;</a>

@@ -28,8 +28,7 @@
 	
 	<div class="controls">
 	
-		<div class="${not empty prependSign ? 'input-prepend': ''} 
-					${not empty appendSign ? 'input-append': ''}">
+		<div class="${not empty prependSign ? 'input-prepend': ''} ${not empty appendSign ? 'input-append': ''}">
 			<c:if test="${not empty prependSign}">
 				<span class="add-on">${prependSign}</span>
 			</c:if>

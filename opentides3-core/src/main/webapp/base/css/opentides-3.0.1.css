@@ -3,6 +3,26 @@
 html,
 body {
 	height: 100%;
+	background-position: initial initial;
+	background-repeat: initial initial;
+	min-width: 300px;
+}
+
+.uppercase {
+	text-transform: uppercase;
+}
+
+.lowercase {
+	text-transform: lowercase;
+}
+
+.notifications.center {
+	z-index: 999999;
+	top: 50px;
+}
+
+.notifications.center > div {
+	width: 50%;
 }
 
 @media (max-width: 979px) {
@@ -34,7 +54,7 @@ body {
 
 #footer {
 	border-top: 1px solid #ddd;
-	background-color: #f5f5f5;
+	background-color: #fefefe;
 }
 
 @media ( max-width : 767px) {
@@ -52,12 +72,24 @@ body {
 
 /* LOGIN PAGE */
 
-body.login {
-	background-color: #fafafa;
+body.anonymous #nav {
+	margin-left: -20px;
+	margin-right: -20px;
 }
 
-body.login .main {
-	padding-top: 20px;
+body.anonymous .navbar-inner {
+	-webkit-border-radius: 0;
+	-moz-border-radius: 0;
+	border-radius: 0;
+}
+
+body.anonymous .logo {
+	margin: -15px 0 -8px 0 !important;
+}
+
+body.anonymous #nav .brand {
+	float: none !important;
+	text-align: center;
 }
 
 .form-signin form {
@@ -283,11 +315,24 @@ body.login .main {
 	margin-bottom: 0;
 }
 
+.modal form .alert {
+	margin: 10px 15px 0 15px;
+}
+
 .required {
 	font-size: 10px;
 	text-transform: uppercase;
 	color: #999;
 	margin-left: 5px;
+}
+
+select, textarea, input[type="text"], input[type="password"],
+input[type="datetime"], input[type="datetime-local"], input[type="date"],
+input[type="month"], input[type="time"], input[type="week"],
+input[type="number"], input[type="email"], input[type="url"],
+input[type="search"], input[type="tel"], input[type="color"],
+.uneditable-input {
+	margin-bottom: 0;
 }
 
 /* RESULTS PANEL */
