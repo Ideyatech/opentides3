@@ -55,7 +55,7 @@ public class UserGroupDaoJpaImpl extends BaseEntityDaoJpaImpl<UserGroup, Long>
 			oldRoles = new HashSet<UserAuthority>();
 		}
 		oldRoles.addAll(roles);
-		updateEntityModel(userGroup);
+		saveEntityModel(userGroup);
 	}
 
 	/*
@@ -70,7 +70,7 @@ public class UserGroupDaoJpaImpl extends BaseEntityDaoJpaImpl<UserGroup, Long>
 			throw new NullPointerException();
 		}
 		userGroup.addAuthority(role);
-		updateEntityModel(userGroup);
+		saveEntityModel(userGroup);
 	}
 	
 	public UserGroup loadUserGroupByName(String name){

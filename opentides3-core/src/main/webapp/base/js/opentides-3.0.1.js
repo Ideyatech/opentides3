@@ -65,9 +65,10 @@ var opentides3 = (function() {
 		 *            json object containing the value
 		 * @param path -
 		 *            dot notation path reference to the value.
+		 * @param escape - if true, value will be escaped
 		 * 
 		 */
-		getValue : function(json, path, safe) {
+		getValue : function(json, path, escape) {
 			var i = 0, path = path.split('.');
 			for (; i < path.length; i++) {
 				if (json == null || json.length == 0)
@@ -77,10 +78,10 @@ var opentides3 = (function() {
 			if (json == null || json.length == 0)
 				return '';
 			else {
-				if (typeof (safe) === 'undefined' || typeof (safe) === 'null')
-					safe = true;
-				if (safe == true && typeof (json) === 'string')
-					return opentides3.escapeHtml(json);
+				if (typeof (escape) === 'undefined' || typeof (escape) === 'null')
+					escape = true;
+				if (escape == true && typeof (json) === 'string')
+					return $('<div/>').text(json).html();
 				else
 					return json;
 			}
@@ -352,7 +353,7 @@ var opentides3 = (function() {
 	 *            json object containing the values
 	 */
 
-	$.fn.otbind = function(json) {
+	$.fn.bindForm = function(json) {
 		return this.each(function() {
 			var form = $(this);
 			form.clearForm();
@@ -360,15 +361,13 @@ var opentides3 = (function() {
 			form.find("input[type='text'],input[type='hidden'],textarea")
 					.each(function() {
 				var name = $(this).attr('name');
-				var prime = toPrimitive(opentides3.getValue(
-						json, name));
+				var prime = toPrimitive(opentides3.getValue(json, name));
 				$(this).val(prime);
 			});
 
 			form.find("select").each(function() {
 				var name = $(this).attr('name');
-				var normValue = normalizeValue(opentides3.getValue(
-						json, name));
+				var normValue = normalizeValue(opentides3.getValue(json, name));
 				$(this).val(normValue);
 			});
 
@@ -451,14 +450,14 @@ var opentides3 = (function() {
 	$.fn.RESTful = function(options) {
 		// extend the options with defaults
 		var settings = $.extend({
-			'search' : '#search-body',
-			'form' : '#form-body',
-			'results' : '#results-panel',
-			'status' : '.status',
+			'search'     : '#search-body',
+			'form'       : '#form-body',
+			'results'    : '#results-panel',
+			'status'     : '.status',
 			'pagination' : '.pagination',
-			'add' : '.add-action',
-			'edit' : '.edit-action',
-			'remove' : '.remove-action'
+			'add'        : '.add-action',
+			'edit'       : '.edit-action',
+			'remove'     : '.remove-action'
 		}, options);
 
 		return this
@@ -521,27 +520,28 @@ var opentides3 = (function() {
 					$(this).find('.pagination').each(function() {
 						// paging is already displayed, let's attach
 						// events to it.
-						$(this).find('li a').on("click",
-							function() {
-								// assume form used is the first
-								// visible form in the search
-								// panel.
-								var searchForm = $(settings['search']).find('form').filter(':visible:first');
-								var i = $(this).data('page');
-								doSearch(searchForm, results,
-										status, pagination, i);
-								return false;
-							});
+						$(this).find('li a').on("click",function() {
+							// assume form used is the first
+							// visible form in the search panel.
+							var searchForm = $(settings['search']).find('form').filter(':visible:first');
+							var i = $(this).data('page');
+							doSearch(searchForm, results,
+									status, pagination, i);
+							return false;
+						});
 					});
 
 					// handle all ajax errors
-					$(document).ajaxError(function(event, jqXHR, settings, exception) {
+					$(document).ajaxError(function(event, xhr, settings, exception) {
 						var message = 'Oopps... An unexpected error occurred. ';
-						if (jqXHR.status === 0) {
+						if (xhr.status === 0) {
 							message = "Cannot connect to server. Please verify your network connection.";
-						} else if (jqXHR.status == 404) {
+						} else if (xhr.status == 302) {
+							// redirect to another page.
+							message = "Redirecting to another page...";							
+						} else if (xhr.status == 404) {
 							message = 'Requested page not found. [Error: 404]';
-						} else if (jqXHR.status == 500) {
+						} else if (xhr.status == 500) {
 							message = 'Internal Server Error. [Error: 500]';
 						} else if (exception === 'parsererror') {
 							message = 'Oopps... Unable to parse your JSON request.';
@@ -549,7 +549,39 @@ var opentides3 = (function() {
 							message = 'Oopps... Server time-out error.';
 						} else if (exception === 'abort') {
 							message = 'Your request has been cancelled.';
-						}
+						} else 	if (xhr.responseText.indexOf('login-panel') > 0 ) {
+							// display login panel as modal
+							var loginModal = $('#login-modal');
+							if (loginModal.length == 0) {
+								loginModal = $('<div id="login-modal"/>').attr("class","modal fade");
+								$('body').append(loginModal);
+							}
+							var loginPanel = $('<div/>').html(xhr.responseText).find('#login-panel').attr("class","");
+							loginModal.html(loginPanel);
+							loginModal.find('.header').addClass("modal-header").removeClass("header");
+							loginModal.find('.footer').addClass("modal-footer").removeClass("footer");
+							loginModal.find('.body').addClass("modal-body").removeClass("body");
+							loginModal.find('.hide-modal').remove();								
+							loginModal.find('form:first').on("submit",function() {
+								// submit the form as ajax and close modal on success
+						        $.ajax({
+						            type: $(this).attr('method'),
+						            url: $(this).attr('action'),
+						            data: $(this).serialize(),
+						            success: function (data) {
+						            	if (typeof data === 'object' ||
+						            		data.indexOf('login-panel') < 0)
+						            		$('#login-modal').modal('hide');
+						            },
+						            error: function(e) {
+						            	alert('error' + e);
+						            }
+						        });
+						        return false;
+							});
+							$('#login-modal').removeData("modal").modal({backdrop: 'static', keyboard: false});
+							return;
+						}					
 						opentides3.displayMessage({
 							messages : [ {
 								type : "error",
@@ -588,61 +620,59 @@ var opentides3 = (function() {
 						return false;
 					});
 
-					firstForm.find("[data-submit='save'], [data-submit='save-and-new']").on("click", 
-							function() {
-								formSubmitButton = $(this);
-							});
+					firstForm.find("[data-submit='save'], [data-submit='save-and-new']").on("click", function() {
+						formSubmitButton = $(this);
+					});
 
-					firstForm.on("submit",
-							function(e) {
-								e.preventDefault();
-								var firstForm = $(this);
-								var button = formSubmitButton;
-								$.ajax({type : firstForm.attr('method'), // method
-									url : firstForm.attr('action'), // url
-									data : firstForm.serialize(), // data
-									success : function(json) { // callback
-											firstForm.find('.control-group').removeClass('error');
-											opentides3.displayMessage(json, form);
-											if (typeof (json.command) === 'object'
-													&& json.command.id > 0) {
-												// successfully saved
-												firstForm.clearForm();
-												if (button.data('submit') !== 'save-and-new') {
-													// hide modal
-													if (form.hasClass('modal'))
-														form.modal('hide');
-													else if (form.hasClass('page')) {
-														if (opentides3.supportsHistory()) {
-															var url = opentides3.getPath().replace(/\/[0-9]+$/,'');
-															history.pushState({ mode : 'hide',
-																			   	form : settings['form']}, null, url);
-														}
-														// display the search page
-														$(settings['search']).page();
-													}
+					firstForm.on("submit", function(e) {
+						e.preventDefault();
+						var firstForm = $(this);
+						var button = formSubmitButton;
+						$.ajax({type : firstForm.attr('method'), // method
+							url : firstForm.attr('action'), // url
+							data : firstForm.serialize(), // data
+							success : function(json) { // callback
+									firstForm.find('.control-group').removeClass('error');
+									opentides3.displayMessage(json, form);
+									if (typeof (json.command) === 'object'
+											&& json.command.id > 0) {
+										// successfully saved
+										firstForm.clearForm();
+										if (button.data('submit') !== 'save-and-new') {
+											// hide modal
+											if (form.hasClass('modal'))
+												form.modal('hide');
+											else if (form.hasClass('page')) {
+												if (opentides3.supportsHistory()) {
+													var url = opentides3.getPath().replace(/\/[0-9]+$/,'');
+													history.pushState({ mode : 'hide',
+																	   	form : settings['form']}, null, url);
 												}
-												displayTableRow(results.find('table'), json.command);
+												// display the search page
+												$(settings['search']).page();
 											}
-										},
-										dataType : 'json'
-									});
-								});
-
-					firstForm.find("[data-dismiss='page']").on("click",
-							function() {
-								if (form.hasClass('page')) {
-									if (opentides3.supportsHistory()) {
-										var url = opentides3.getPath().replace(
-												/\/[0-9]+$/, '');
-										history.pushState({
-											mode : 'hide',
-											form : settings['form']
-										}, null, url);
+										}
+										displayTableRow(results.find('table'), json.command);
 									}
-									$(settings['search']).page();
-								}
-							});
+								},
+								dataType : 'json'
+							}
+						);
+					});
+
+					firstForm.find("[data-dismiss='page']").on("click",function() {
+						if (form.hasClass('page')) {
+							if (opentides3.supportsHistory()) {
+								var url = opentides3.getPath().replace(
+										/\/[0-9]+$/, '');
+								history.pushState({
+									mode : 'hide',
+									form : settings['form']
+								}, null, url);
+							}
+							$(settings['search']).page();
+						}
+					});
 
 					// hide all alerts when form is displayed.
 					form.on('show', function(e) {
@@ -800,12 +830,6 @@ var opentides3 = (function() {
 			// listed results column
 			var template = opentides3.template(results.find('script.template').html());
 
-			// var listedNames = {};
-			// newTable.find('th').each(function(i, item) {
-			// listedNames[i].fieldName = $(item).data('fieldName');
-			// listedNames[i].template = $(item).find('.template').html();
-			// });
-
 			// clear the table
 			// add results as table row
 			$.each(json['results'], function(i, result) {
@@ -856,51 +880,50 @@ var opentides3 = (function() {
 			}
 		});
 		// look for paging
-		pagination
-				.each(function(i, elem) {
-					if (json['results'].length > 0
-							&& (json['totalResults'] / json['pageSize'] > 1)) {
-						html = 	"<div class='pagination pagination-centered'>" +
-								"<ul><li class='ot3-firstPage'><a href='javascript:void(0)' data-page='1'>&lt;&lt;</a></li>" + // first page
-								"<li class='ot3-prevPage'><a href='javascript:void(0)' data-page='" + (json['currPage'] - 1) + "'>&lt;</a></li>"; // prev page
-						for ( var i = json['startPage']; i <= json['endPage']; i++) {
-							html = html + "<li class='ot3-page-" + i + "'><a href='javascript:void(0)' data-page='" + i + "'>" + i + "</a></li>"; // pages
-						}
-						html = html +
-								"<li class='ot3-nextPage'><a href='javascript:void(0)' data-page='" + (json['currPage'] + 1) + "'>&gt;</a></li>" + // next page
-								"<li class='ot3-lastPage'><a href='javascript:void(0)' data-page='" + json['endPage'] + "'>&gt;&gt;</a></li>" + // last page
-								"</ul></div>";
-						$(elem).html(html);
-						// set active page
-						$('.ot3-page-' + json['currPage']).addClass('active');
-						$('.ot3-page-' + json['currPage']).html(
-								'<span>'+ $('.ot3-page-' + json['currPage'] + ' a').html() + '</span>');
+		pagination.each(function(i, elem) {
+			if (json['results'].length > 0
+					&& (json['totalResults'] / json['pageSize'] > 1)) {
+				html = 	"<div class='pagination pagination-centered'>" +
+						"<ul><li class='ot3-firstPage'><a href='javascript:void(0)' data-page='1'>&lt;&lt;</a></li>" + // first page
+						"<li class='ot3-prevPage'><a href='javascript:void(0)' data-page='" + (json['currPage'] - 1) + "'>&lt;</a></li>"; // prev page
+				for ( var i = json['startPage']; i <= json['endPage']; i++) {
+					html = html + "<li class='ot3-page-" + i + "'><a href='javascript:void(0)' data-page='" + i + "'>" + i + "</a></li>"; // pages
+				}
+				html = html +
+						"<li class='ot3-nextPage'><a href='javascript:void(0)' data-page='" + (json['currPage'] + 1) + "'>&gt;</a></li>" + // next page
+						"<li class='ot3-lastPage'><a href='javascript:void(0)' data-page='" + json['endPage'] + "'>&gt;&gt;</a></li>" + // last page
+						"</ul></div>";
+				$(elem).html(html);
+				// set active page
+				$('.ot3-page-' + json['currPage']).addClass('active');
+				$('.ot3-page-' + json['currPage']).html(
+						'<span>'+ $('.ot3-page-' + json['currPage'] + ' a').html() + '</span>');
 
-						// if first page, disable first and prev page
-						if (json['currPage'] == 1) {
-							$('.ot3-firstPage').addClass('disabled');
-							$('.ot3-prevPage').addClass('disabled');
-							$('.ot3-firstPage').html('<span>&lt;&lt;</span>');
-							$('.ot3-prevPage').html('<span>&lt;</span>');
-						}
-						// if last page, disable last and next page
-						if (json['currPage'] == json['endPage']) {
-							$('.ot3-lastPage').addClass('disabled');
-							$('.ot3-nextPage').addClass('disabled');
-							$('.ot3-lastPage').html('<span>&gt;&gt;</span>');
-							$('.ot3-nextPage').html('<span>&gt;</span>');
-						}
-						$(elem).find('li a').on(
-								"click",
-								function() {
-									var i = $(this).data('page');
-									doSearch(searchForm, results, status,
-											pagination, i);
-								})
-					} else {
-						$(elem).html('');
-					}
-				});
+				// if first page, disable first and prev page
+				if (json['currPage'] == 1) {
+					$('.ot3-firstPage').addClass('disabled');
+					$('.ot3-prevPage').addClass('disabled');
+					$('.ot3-firstPage').html('<span>&lt;&lt;</span>');
+					$('.ot3-prevPage').html('<span>&lt;</span>');
+				}
+				// if last page, disable last and next page
+				if (json['currPage'] == json['endPage']) {
+					$('.ot3-lastPage').addClass('disabled');
+					$('.ot3-nextPage').addClass('disabled');
+					$('.ot3-lastPage').html('<span>&gt;&gt;</span>');
+					$('.ot3-nextPage').html('<span>&gt;</span>');
+				}
+				$(elem).find('li a').on(
+						"click",
+						function() {
+							var i = $(this).data('page');
+							doSearch(searchForm, results, status,
+									pagination, i);
+						})
+			} else {
+				$(elem).html('');
+			}
+		});
 	};
 
 	var displayTableRow = function(resultsTable, result, template) {
@@ -929,13 +952,13 @@ var opentides3 = (function() {
 		if (mode === 'update') {
 			firstForm.attr('action', action);
 			firstForm.attr('method', 'put');
-			firstForm.otbind(json);
+			firstForm.bindForm(json);
 			form.find('.ot3-add').hide();
 			form.find('.ot3-update').show();
 		} else if (mode === 'add') {
 			firstForm.attr('action', action);
 			firstForm.attr('method', 'post');
-			firstForm.otbind(json);
+			firstForm.bindForm(json);
 			form.find('.ot3-update').hide();
 			form.find('.ot3-add').show();
 		}
