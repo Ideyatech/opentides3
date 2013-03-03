@@ -1,20 +1,17 @@
 /*
-   Licensed to the Apache Software Foundation (ASF) under one
-   or more contributor license agreements.  See the NOTICE file
-   distributed with this work for additional information
-   regarding copyright ownership.  The ASF licenses this file
-   to you under the Apache License, Version 2.0 (the
-   "License"); you may not use this file except in compliance
-   with the License.  You may obtain a copy of the License at
-
-     http://www.apache.org/licenses/LICENSE-2.0
-
-   Unless required by applicable law or agreed to in writing,
-   software distributed under the License is distributed on an
-   "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-   KIND, either express or implied.  See the License for the
-   specific language governing permissions and limitations
-   under the License.    
+ * Copyright 2002-2007 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package org.opentides.util;
@@ -27,13 +24,6 @@ package org.opentides.util;
  */
 public class NamingUtil {
 
-    public static boolean isEmpty(String obj) {
-    	if ((obj==null) || (obj.trim().length()==0))
-    		return true;
-    	else
-    		return false;
-    }
-
 	/**
 	 * Ensures that name starts with big letter.
 	 * For example:
@@ -42,7 +32,7 @@ public class NamingUtil {
 	 * @return
 	 */
 	public static String toLabel(String name) {
-		if (NamingUtil.isEmpty(name))
+		if (StringUtil.isEmpty(name))
 			return "";
 
 		StringBuffer buffer = new StringBuffer();
@@ -66,7 +56,7 @@ public class NamingUtil {
 	 * @return
 	 */
 	public static String toGetterName(String name) {
-    	if (NamingUtil.isEmpty(name) || name.length()<=0)
+    	if (StringUtil.isEmpty(name))
     		return "";
 		return "get" + name.substring(0,1).toUpperCase() + name.substring(1);
 	}
@@ -77,7 +67,7 @@ public class NamingUtil {
 	 * @return
 	 */
 	public static String toSetterName(String name) {
-    	if (NamingUtil.isEmpty(name) || name.length()<=0)
+    	if (StringUtil.isEmpty(name))
     		return "";
 		return "set" + name.substring(0,1).toUpperCase() + name.substring(1);
 	}
@@ -89,7 +79,7 @@ public class NamingUtil {
 	 */
 	public static String toAttributeName(String name) {
 
-		if (NamingUtil.isEmpty(name))
+		if (StringUtil.isEmpty(name))
 			return "";
 		
 		if (name.length()>=2) {
@@ -106,7 +96,7 @@ public class NamingUtil {
 	 * @return
 	 */
 	public static String toElementName(String name) {
-		if (NamingUtil.isEmpty(name))
+		if (StringUtil.isEmpty(name))
 			return "";
 		StringBuffer buffer = new StringBuffer();
 		int startIndex = 0;
@@ -133,7 +123,7 @@ public class NamingUtil {
      * @return
      */
     public static String getPropertyName(String methodName) {
-    	if (NamingUtil.isEmpty(methodName) || methodName.length()<=3)
+    	if (StringUtil.isEmpty(methodName) || methodName.length()<=3)
     		return null;
     	if (methodName.startsWith("get") || methodName.startsWith("set")) {
     		String prop = methodName.substring(4);

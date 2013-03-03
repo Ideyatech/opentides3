@@ -1,20 +1,17 @@
 /*
-   Licensed to the Apache Software Foundation (ASF) under one
-   or more contributor license agreements.  See the NOTICE file
-   distributed with this work for additional information
-   regarding copyright ownership.  The ASF licenses this file
-   to you under the Apache License, Version 2.0 (the
-   "License"); you may not use this file except in compliance
-   with the License.  You may obtain a copy of the License at
-
-     http://www.apache.org/licenses/LICENSE-2.0
-
-   Unless required by applicable law or agreed to in writing,
-   software distributed under the License is distributed on an
-   "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-   KIND, either express or implied.  See the License for the
-   specific language governing permissions and limitations
-   under the License.    
+ * Copyright 2002-2007 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package org.opentides.util;
@@ -30,15 +27,15 @@ public class DateUtil {
 	
 	public static String dateToString(Date obj, String format) {
     	if (obj == null)
-    		return "";    	
+    		return "";
         SimpleDateFormat dtFormatter = new SimpleDateFormat(format);
         return dtFormatter.format(obj);	
 	}
     
     public static Date stringToDate(String strDate, String format) throws ParseException {
-        SimpleDateFormat dtFormatter = new SimpleDateFormat(format);
         if (StringUtil.isEmpty(strDate))
-        	throw new ParseException("Cannot convert empty string to Date.", 0);
+        	return null;
+        SimpleDateFormat dtFormatter = new SimpleDateFormat(format);
        	return dtFormatter.parse(strDate.trim());
     }
     
@@ -66,18 +63,11 @@ public class DateUtil {
     	return stringToDate(str, "yyyyMMdd");
     }
 
-    public static Date convertShortDate(String str, Date defaultDate) {
-    	try {
-    		return stringToDate(str, "yyyyMMdd");
-    	} catch (ParseException pex) {
-    		return defaultDate;
-    	}
+    public static Date convertShortDate(String str, Date defaultDate) throws ParseException {
+   		return stringToDate(str, "yyyyMMdd");
     }
  
     public static Date convertFlexibleDate(String strDate) throws ParseException {
-    	if (StringUtil.isEmpty(strDate))
-    		throw new ParseException("Cannot convert empty string to Date.", 0);
-
     	String[] formats = { "MM/dd/yyyy",
     					     "MM-dd-yyyy", 
     					     "yyyyMMdd",
@@ -111,8 +101,11 @@ public class DateUtil {
      */
     @SuppressWarnings("deprecation")
 	public static boolean hasTime(Date date) {
+    	if (date == null)
+    		return false;
     	return (date.getHours() + date.getMinutes() +date.getSeconds() > 0);
     }
+    
     /**
 	 * Get current date according to client's time zone.
 	 * @param calendar - adapting calendar
