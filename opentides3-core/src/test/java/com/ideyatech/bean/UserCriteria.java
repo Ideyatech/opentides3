@@ -3,6 +3,8 @@ package com.ideyatech.bean;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.opentides.annotation.Auditable;
+import org.opentides.annotation.SearchableFields;
 import org.opentides.bean.SystemCodes;
 import org.opentides.bean.user.BaseUser;
 
@@ -13,6 +15,7 @@ import org.opentides.bean.user.BaseUser;
  * @author allantan
  *
  */
+@Auditable
 public class UserCriteria extends BaseUser {
 
 	private static final long serialVersionUID = 7735151314199318745L;
@@ -23,6 +26,7 @@ public class UserCriteria extends BaseUser {
 	/* (non-Javadoc)
 	 * @see com.ideyatech.core.bean.user.BaseUser#getSearchProperties()
 	 */
+	@SearchableFields
 	public List<String> getSearchableFields() {
 		List<String> props = new ArrayList<String>();
 		props.add("firstName");

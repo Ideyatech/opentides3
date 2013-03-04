@@ -33,6 +33,7 @@ import org.apache.log4j.Logger;
 import org.opentides.annotation.Auditable;
 import org.opentides.annotation.FormBind;
 import org.opentides.annotation.FormBind.Load;
+import org.opentides.annotation.PrimaryField;
 import org.opentides.annotation.SearchableFields;
 import org.opentides.bean.AuditableField;
 import org.opentides.bean.BaseEntity;
@@ -49,6 +50,8 @@ public class CacheUtil {
 
 	public static final Map<Class<?>, List<AuditableField>> auditable  = new ConcurrentHashMap<Class<?>, List<AuditableField> >();
 	
+	public static final Map<Class<?>, AuditableField> primaryField  = new ConcurrentHashMap<Class<?>, AuditableField >();
+
 	public static final Map<Class<?>, List<String>> persistentFields = new ConcurrentHashMap<Class<?>, List<String>>();
 	
 	public static final Map<Class<?>, List<String>> searchableFields = new ConcurrentHashMap<Class<?>, List<String>>();
@@ -92,6 +95,54 @@ public class CacheUtil {
 			ret =  auditable.get(obj.getClass());
 		}
 		return ret;		
+	}
+	
+	
+	/**
+	 * Retrieves the attribute that is marked as primary field within the base entity.
+	 * If not available, null is returned.
+	 * @param obj
+	 * @return
+	 */
+	public static AuditableField getPrimaryField(BaseEntity obj) {
+		Class<?> clazz = obj.getClass();
+		AuditableField ret = primaryField.get(clazz);
+		if (ret == null) {
+			// loop all fields
+            final List<Field> fields = CrudUtil.getAllFields(clazz, false);// do not include parentFields
+    		AuditableField pf = null;
+            for (Field field:fields) {
+            	if (field.isAnnotationPresent(PrimaryField.class)) {
+            		PrimaryField annot = field.getAnnotation(PrimaryField.class);
+            		if (StringUtil.isEmpty(annot.label())) {
+            			pf = new AuditableField(field.getName());
+            		} else {
+            			pf = new AuditableField(field.getName(), annot.label());
+            		}
+            		break;
+            	}
+            }
+            
+            // loop all methods
+            final List<Method> methods = CrudUtil.getAllMethods(clazz, false);// do not include parentFields
+            for (Method method:methods) {
+            	if (method.isAnnotationPresent(PrimaryField.class)) {
+            		PrimaryField annot = method.getAnnotation(PrimaryField.class);
+            		if (StringUtil.isEmpty(annot.label())) {
+            			pf = new AuditableField(method.getName());
+            		} else {
+            			pf = new AuditableField(method.getName(), annot.label());
+            		}
+            		break;
+            	}
+            }
+            
+            if (pf == null)
+            	pf = new AuditableField("","");
+            primaryField.put(obj.getClass(), pf);
+            ret = primaryField.get(obj.getClass());
+		}
+		return ret;				
 	}
 	
 	/**

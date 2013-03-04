@@ -59,7 +59,6 @@ public class BaseUser extends BaseEntity implements Photoable {
 
 	private static final long serialVersionUID = 7634675501487373408L;
 	
-	@PrimaryField
 	@Column(name = "FIRSTNAME")
 	@JsonView(Views.FormView.class)
 	private String firstName;

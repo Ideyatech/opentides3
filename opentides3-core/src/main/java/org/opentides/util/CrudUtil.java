@@ -62,18 +62,14 @@ public class CrudUtil {
     public static String buildCreateMessage(BaseEntity obj) {
 		StringBuffer message = new StringBuffer();
     	if (obj.getClass().isAnnotationPresent(Auditable.class)) {
-    		String primaryField = obj.getPrimaryField();
-    		String primaryFieldLabel = obj.getPrimaryFieldLabel();
-    		if (StringUtil.isEmpty(primaryFieldLabel)) {
-    			primaryFieldLabel = NamingUtil.toLabel(primaryField);
-    		}
+			AuditableField pf = CacheUtil.getPrimaryField(obj);    		
     		message.append("Added ");
         	String shortName = CrudUtil.getReadableName(obj); 
         	message.append(shortName)  // class name
         		.append(" ")
-        		.append(primaryFieldLabel)
+        		.append(pf.getTitle())
         		.append(":");
-        	Object value = retrieveNullableObjectValue(obj, primaryField);
+        	Object value = retrieveNullableObjectValue(obj, pf.getFieldName());
         	if (value!=null) 
         		message.append(value.toString())
         		.append(" - ");
@@ -82,7 +78,7 @@ public class CrudUtil {
     		int count = 0;
     		for (AuditableField property:auditFields) {
     			Object ret = retrieveNullableObjectValue(obj, property.getFieldName());
-    			if (ret!=null && ret.toString().trim().length()>0 && !primaryField.equals(property.getFieldName())) {
+    			if (ret!=null && ret.toString().trim().length()>0 && !pf.getFieldName().equals(property.getFieldName())) {
     				if (ret.getClass().isAssignableFrom(Date.class)) {
     					if (!DateUtil.hasTime((Date) ret))
     						ret = DateUtil.dateToString((Date)ret, "MM/dd/yyyy");
@@ -107,18 +103,14 @@ public class CrudUtil {
     public static String buildShortCreateMessage(BaseEntity obj){
 		StringBuffer message = new StringBuffer();
     	if (obj.getClass().isAnnotationPresent(Auditable.class)) {
-    		String primaryField = obj.getPrimaryField();
-    		String primaryFieldLabel = obj.getPrimaryFieldLabel();
-    		if (StringUtil.isEmpty(primaryFieldLabel)) {
-    			primaryFieldLabel = NamingUtil.toLabel(primaryField);
-    		}    		
+			AuditableField pf = CacheUtil.getPrimaryField(obj);    		
     		message.append("Added new ");
     		String shortName = CrudUtil.getReadableName(obj);
     		message.append(shortName);
-			Object value = retrieveNullableObjectValue(obj, primaryField);
+			Object value = retrieveNullableObjectValue(obj, pf.getFieldName());
 	    	if (value!=null) 
         		message.append(" ")
-        			  .append(primaryFieldLabel)
+        			  .append(pf.getTitle())
         			  .append(": " + value.toString());
     	}
     	return message.toString();
@@ -134,21 +126,20 @@ public class CrudUtil {
     	
     	StringBuffer message = new StringBuffer("Changed ");
     	String shortName = CrudUtil.getReadableName(oldObject); 
-		String primaryField = oldObject.getPrimaryField();
-		String primaryFieldLabel = oldObject.getPrimaryFieldLabel();
+    	AuditableField pf = CacheUtil.getPrimaryField(oldObject); 
 
     	message.append(shortName)  // class name
     		.append(" ")
-    		.append(primaryFieldLabel)
+    		.append(pf.getTitle())
     		.append(":");
-    	Object value = retrieveNullableObjectValue(oldObject, primaryField);
+    	Object value = retrieveNullableObjectValue(oldObject, pf.getFieldName());
     	if (value!=null) 
     		message.append(value.toString())
     		.append(" - ");
     	// loop through the fields list
-		List<AuditableField> auditFields = CacheUtil.getAuditable(oldObject);
+		List<AuditableField> auditableFields = CacheUtil.getAuditable(oldObject);
 		int count = 0;
-		for (AuditableField property:auditFields) {
+		for (AuditableField property:auditableFields) {
 			Object oldValue = retrieveNullableObjectValue(oldObject, property.getFieldName());
 			Object newValue = retrieveNullableObjectValue(newObject, property.getFieldName());
 			if (oldValue == null) oldValue = "";
@@ -164,7 +155,7 @@ public class CrudUtil {
 					message.append(" and ");
 
 				if (Collection.class.isAssignableFrom(oldValue.getClass()) &&
-						Collection.class.isAssignableFrom(newValue.getClass()) ) {
+					Collection.class.isAssignableFrom(newValue.getClass()) ) {
 					List addedList = new ArrayList();
 					addedList.addAll((List) newValue);
 					addedList.removeAll((List) oldValue);
@@ -221,14 +212,14 @@ public class CrudUtil {
     public static String buildShortUpdateMessage(BaseEntity obj){
     	StringBuffer message = new StringBuffer("Updated ");
     	String shortName = CrudUtil.getReadableName(obj);
-		String primaryField = obj.getPrimaryField();
-		String primaryFieldLabel = obj.getPrimaryFieldLabel();
+    	AuditableField pf = CacheUtil.getPrimaryField(obj); 
+    	
     	message.append(shortName);
-    	if (primaryField != null){
-    		Object value = retrieveNullableObjectValue(obj, primaryField);
+    	if (pf != null){
+    		Object value = retrieveNullableObjectValue(obj, pf.getFieldName());
         	if (value!=null) 
         		message.append(" ")
-  			  		  .append(primaryFieldLabel)
+  			  		  .append(pf.getTitle())
   			  		  .append(": " + value.toString());
     	}
     	return message.toString();
@@ -243,13 +234,12 @@ public class CrudUtil {
     public static String buildDeleteMessage(BaseEntity obj) {
     	StringBuffer message = new StringBuffer("Deleted ");
     	String shortName = CrudUtil.getReadableName(obj); 
-		String primaryField = obj.getPrimaryField();
-		String primaryFieldLabel = obj.getPrimaryFieldLabel();
+    	AuditableField pf = CacheUtil.getPrimaryField(obj);     	
     	message.append(shortName)  // class name
     		.append(" ")
-    		.append(primaryFieldLabel)
+    		.append(pf.getTitle())
     		.append(":");
-    	Object value = retrieveNullableObjectValue(obj, primaryField);
+    	Object value = retrieveNullableObjectValue(obj, pf.getFieldName());
     	if (value!=null) 
     		message.append(value.toString());
     	return message.toString();    	
@@ -364,8 +354,12 @@ public class CrudUtil {
 				if (Map.class.isAssignableFrom(obj.getClass())) {
 					Map map = (Map) obj;
 					ivalue = map.get(props[0]);					
-				} else {
-					Method method = obj.getClass().getMethod(NamingUtil.toGetterName(props[0]));
+				} else {					
+					Method method;
+					if (props[0].startsWith("get"))
+						method = obj.getClass().getMethod(props[0]);
+					else
+						method = obj.getClass().getMethod(NamingUtil.toGetterName(props[0]));
 					ivalue = method.invoke(obj);
 				}
 				if (ivalue==null)
@@ -394,7 +388,11 @@ public class CrudUtil {
 					Map map = (Map) obj;
 					return map.get(property);					
 				} else {
-					Method method = obj.getClass().getMethod(NamingUtil.toGetterName(property));
+					Method method;
+					if (property.startsWith("get"))
+						method = obj.getClass().getMethod(property);
+					else
+						method = obj.getClass().getMethod(NamingUtil.toGetterName(property));
 					return method.invoke(obj);					
 				}
 			} catch (Exception e) {
@@ -550,6 +548,33 @@ public class CrudUtil {
 		for (Field field:clazz.getDeclaredFields())
 			fields.add(field);
 		return fields;
+	}
+	
+	/**
+	 * Overloaded method to retrieve all methods, including methods from parent class.
+	 * @param clazz
+	 * @return
+	 */
+	@SuppressWarnings({ "rawtypes" })
+	public static List<Method> getAllMethods(Class clazz) {
+		return CrudUtil.getAllMethods(clazz, true);
+	}
+
+	/**
+	 * Helper method to retrieve all methods of a class including
+	 * methods declared in its superclass.
+	 * @param clazz
+	 * @param includeParent
+	 * @return
+	 */
+	@SuppressWarnings({ "rawtypes" })
+	public static List<Method> getAllMethods(Class clazz, boolean includeParent) {
+		List<Method> methods = new ArrayList<Method>();
+		if (BaseEntity.class.isAssignableFrom(clazz) && includeParent)
+			methods.addAll(getAllMethods(clazz.getSuperclass(), includeParent));
+		for (Method method:clazz.getDeclaredMethods())
+			methods.add(method);
+		return methods;
 	}
 	
 	/**

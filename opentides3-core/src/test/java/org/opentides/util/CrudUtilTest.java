@@ -80,13 +80,19 @@ public class CrudUtilTest {
 		SystemCodes oldsc = new SystemCodes("categoryold","keyold","old");
 		SystemCodes newsc = new SystemCodes("categorynew","keynew","new");
 		Ninja oldtc = new Ninja();
-//		oldtc.setStatus(oldsc);
+		oldtc.setFirstName("Samurai");
+		oldtc.setLastName("Ken");
+		oldtc.setStatus(oldsc);
 		Ninja newtc = new Ninja();
-//		newtc.setStatus(newsc);
+		newtc.setStatus(newsc);
+		newtc.setFirstName("Samurai");
+		newtc.setLastName("Ken");
 		Ninja sametc = new Ninja();
-//		sametc.setStatus(oldsc);
+		sametc.setStatus(oldsc);
+		sametc.setFirstName("Samurai");
+		sametc.setLastName("Ken");
 		
-		String expected = "Changed Test Codes Key:Status from 'keyold:old' to 'keynew:new'";
+		String expected = "Changed Ninja Complete Name:Samurai Ken - Status from 'keyold:old' to 'keynew:new'";
 		Assert.assertEquals(expected,
 				CrudUtil.buildUpdateMessage(oldtc, newtc));
 		Assert.assertEquals("",
@@ -362,7 +368,7 @@ public class CrudUtilTest {
 	@Test
 	public void testGetAllFields() throws SecurityException, NoSuchFieldException {
 		List<Field> fields = CrudUtil.getAllFields(Ninja.class);
-		Assert.assertEquals(25, fields.size());
+		Assert.assertEquals(35, fields.size());
 		Field keyField = Ninja.class.getDeclaredField("key");
 		Field statusField = Ninja.class.getDeclaredField("status");
 		Field createDateField = BaseEntity.class.getDeclaredField("createDate");

@@ -343,14 +343,6 @@ public abstract class BaseEntity implements Serializable {
         }
         return true;
     }
-	
-	public String getPrimaryField() {
-		return "";
-	}
-	
-	public String getPrimaryFieldLabel() {
-		return "";		
-	}
 
 	/**
 	 * Getter method for skipAudit.
