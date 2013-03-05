@@ -358,17 +358,19 @@ var opentides3 = (function() {
 			var form = $(this);
 			form.clearForm();
 
-			form.find("input[type='text'],input[type='hidden'],textarea")
+			form.find('textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"],input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"]')
 					.each(function() {
-				var name = $(this).attr('name');
-				var prime = toPrimitive(opentides3.getValue(json, name));
-				$(this).val(prime);
+				if($(this).attr('name')){
+					var name = $(this).attr('name');
+					var prime = toPrimitive(opentides3.getValue(json, name));
+					$(this).val(prime);
+				}
 			});
 
 			form.find("select").each(function() {
 				var name = $(this).attr('name');
 				var normValue = normalizeValue(opentides3.getValue(json, name));
-				$(this).val(normValue);
+				$(this).val(normValue).trigger("change");
 			});
 
 			form.find("input[type='checkbox']").each(function() {
@@ -884,14 +886,14 @@ var opentides3 = (function() {
 			if (json['results'].length > 0
 					&& (json['totalResults'] / json['pageSize'] > 1)) {
 				html = 	"<div class='pagination pagination-centered'>" +
-						"<ul><li class='ot3-firstPage'><a href='javascript:void(0)' data-page='1'>&lt;&lt;</a></li>" + // first page
-						"<li class='ot3-prevPage'><a href='javascript:void(0)' data-page='" + (json['currPage'] - 1) + "'>&lt;</a></li>"; // prev page
+						"<ul><li class='ot3-firstPage'><a href='javascript:void(0)' data-page='1'>&laquo;</a></li>" + // first page
+						"<li class='ot3-prevPage'><a href='javascript:void(0)' data-page='" + (json['currPage'] - 1) + "'>&lsaquo;</a></li>"; // prev page
 				for ( var i = json['startPage']; i <= json['endPage']; i++) {
 					html = html + "<li class='ot3-page-" + i + "'><a href='javascript:void(0)' data-page='" + i + "'>" + i + "</a></li>"; // pages
 				}
 				html = html +
-						"<li class='ot3-nextPage'><a href='javascript:void(0)' data-page='" + (json['currPage'] + 1) + "'>&gt;</a></li>" + // next page
-						"<li class='ot3-lastPage'><a href='javascript:void(0)' data-page='" + json['endPage'] + "'>&gt;&gt;</a></li>" + // last page
+						"<li class='ot3-nextPage'><a href='javascript:void(0)' data-page='" + (json['currPage'] + 1) + "'>&rsaquo;</a></li>" + // next page
+						"<li class='ot3-lastPage'><a href='javascript:void(0)' data-page='" + json['endPage'] + "'>&raquo;</a></li>" + // last page
 						"</ul></div>";
 				$(elem).html(html);
 				// set active page
@@ -903,15 +905,15 @@ var opentides3 = (function() {
 				if (json['currPage'] == 1) {
 					$('.ot3-firstPage').addClass('disabled');
 					$('.ot3-prevPage').addClass('disabled');
-					$('.ot3-firstPage').html('<span>&lt;&lt;</span>');
-					$('.ot3-prevPage').html('<span>&lt;</span>');
+					$('.ot3-firstPage').html('<span>&laquo;</span>');
+					$('.ot3-prevPage').html('<span>&lsaquo;</span>');
 				}
 				// if last page, disable last and next page
 				if (json['currPage'] == json['endPage']) {
 					$('.ot3-lastPage').addClass('disabled');
 					$('.ot3-nextPage').addClass('disabled');
-					$('.ot3-lastPage').html('<span>&gt;&gt;</span>');
-					$('.ot3-nextPage').html('<span>&gt;</span>');
+					$('.ot3-lastPage').html('<span>&raquo;</span>');
+					$('.ot3-nextPage').html('<span>&rsaquo;</span>');
 				}
 				$(elem).find('li a').on(
 						"click",
@@ -927,6 +929,7 @@ var opentides3 = (function() {
 	};
 
 	var displayTableRow = function(resultsTable, result, template) {
+		
 		if (typeof template === 'undefined' ||
 			typeof template === 'null')
 			template = opentides3.template(resultsTable.find('script.template').html());
@@ -940,8 +943,9 @@ var opentides3 = (function() {
 		} else {
 			// add new record
 			var row = template(result);
-			resultsTable.append(row);
+			resultsTable.find('tbody').append(row);
 		}
+
 	};
 
 	/**

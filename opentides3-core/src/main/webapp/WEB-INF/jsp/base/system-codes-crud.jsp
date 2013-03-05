@@ -24,8 +24,7 @@
 			</div>
 			<div class="search-form collapse">
 				<form:form modelAttribute="searchCommand" id="system-codes-search" >
-					<app:select path="category" label="label.system-codes.category" defaultToNull="true" class="input-block-level">
-					</app:select>
+					<app:select path="category" label="label.system-codes.category" cssClass="input-block-level"/>
 					<app:input path="key" label="label.system-codes.key" class="input-block-level"/>
 					<app:input path="value" label="label.system-codes.value" class="input-block-level"/>
 					<hr/>
@@ -65,6 +64,18 @@
 						</tr>
 					</thead>
 					<tbody>
+						<script type="text/template" class="template">
+	                		<tr data-id="{{id}}">
+								<td>{{value}}</td>
+								<td>{{key}}</td>
+								<td>{{category}}</td>
+								<td>{{numberValue}}</td>
+								<td>
+									<i class='icon-pencil edit-action' data-id='{{id}}'></i>
+									<i class='icon-trash remove-action' data-id='{{id}}'></i>
+								</td>
+							</tr>
+						</script>
 						<c:forEach items="${results.results}" var="record" varStatus="status">
 							<tr id="system-codes-row-${record.id}">
 								<td><c:out value="${record.value}" /></td>
@@ -100,9 +111,9 @@
 
 		<form:form modelAttribute="formCommand" id="system-codes-form">
 			<div class="modal-body">
-				<app:input path="category" label="label.system-codes.category" />
-				<app:input path="key" label="label.system-codes.key" />
-				<app:input path="value" label="label.system-codes.value" />
+				<app:input path="category" label="label.system-codes.category" required="true"/>
+				<app:input path="key" label="label.system-codes.key" required="true"/>
+				<app:input path="value" label="label.system-codes.value" required="true"/>
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-link" data-dismiss="modal"><spring:message code="label.close" /></button>
@@ -120,7 +131,7 @@
 <app:footer>
 	<script type="text/javascript">
 		$(document).ready(function() {
-			$('.footable').footable();
+			//$('.footable').footable();
 			$("#system-codes-body").RESTful();
 		});
 	</script>

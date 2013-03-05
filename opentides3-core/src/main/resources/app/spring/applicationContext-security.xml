@@ -25,7 +25,7 @@
 		<sec:session-management invalid-session-url="/login?login_error=expired-session">
 			<sec:concurrency-control max-sessions="1" expired-url="/login?login_error=invalid-session" session-registry-alias="sessionRegistry" />
 		</sec:session-management>
-		<sec:custom-filter ref="expiredSessionFilter" after="BASIC_AUTH_FILTER"/>
+		<!-- <sec:custom-filter ref="expiredSessionFilter" after="BASIC_AUTH_FILTER"/> -->
 <!--
 		<sec:custom-filter ref="concurrentSessionPromptFilter" before="CONCURRENT_SESSION_FILTER"/>
 		<sec:custom-filter ref="concurrentSessionRedirectFilter" after="BASIC_AUTH_FILTER"/>
@@ -48,8 +48,8 @@
 		</sec:authentication-provider>
 	</sec:authentication-manager>
 	
-   <bean id="expiredSessionFilter" class="org.opentides.web.filter.ExpiredSessionFilter" autowire="byName">
-	</bean>
+<!--    <bean id="expiredSessionFilter" class="org.opentides.web.filter.ExpiredSessionFilter" autowire="byName">
+	</bean> -->
 <!-- 	
     <bean id="concurrentSessionPromptFilter" class="com.attache.web.security.ConcurrentSessionPromptFilter"
 		autowire="byName">

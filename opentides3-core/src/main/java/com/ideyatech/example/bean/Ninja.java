@@ -11,7 +11,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import org.opentides.annotation.Auditable;
-import org.opentides.annotation.Secure;
+//import org.opentides.annotation.Secure;
 import org.opentides.annotation.field.CheckBox;
 import org.opentides.annotation.field.DatePicker;
 import org.opentides.annotation.field.DisplayOnly;
@@ -99,7 +99,7 @@ public class Ninja extends BaseEntity {
 	// Use: crud
 	// Secured to authz only
 	@CheckBox
-	@Secure
+	//@Secure
 	@JsonView(Views.SearchView.class)
 	private Boolean active;
 	

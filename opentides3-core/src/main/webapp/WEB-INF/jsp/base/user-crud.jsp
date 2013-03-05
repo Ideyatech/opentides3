@@ -104,14 +104,9 @@
 				<app:input path="emailAddress" label="label.user.email" required="true"/>
 				<app:input path="credential.newPassword" label="label.user.password" type="password"/>
 				<app:input path="credential.confirmPassword" label="label.user.confirm-password" type="password"/>
-				<div class="control-group">
-					<form:label path="groups" cssClass="control-label"><spring:message code="label.user.groups" /></form:label>
-					<div class="controls">
-						<form:select path="groups" multiple="true">
-							<form:options items="${userGroupsList}" itemLabel="name" itemValue="id"/>
-						</form:select>
-					</div>
-				</div>
+				<app:select label="label.user.groups" path="groups" multiple="true"
+					items="${userGroupsList}" itemLabel="name" itemValue="id"/>
+				
 				<div class="control-group">
 					<form:label path="credential.enabled" cssClass="control-label checkbox">
 						<form:checkbox path="credential.enabled" />
@@ -137,9 +132,6 @@
   	$(document).ready(function() {
 		$('.footable').footable();	
   		$("#user-body").RESTful();
-  		
-  		//$('#user-search').jsonSearch();  		
-  		//$('#user-add').jsonForm();
 	});
   </script>
 </app:footer>
