@@ -132,7 +132,6 @@
 
 		<form:form modelAttribute="formCommand" id="ninja-form">
 			<div class="modal-body">
-				
 				<app:input label="label.ninja.firstName" path="firstName" required="true"/>
 				<app:input label="label.ninja.lastName" path="lastName" required="true" />
 				<app:input label="label.ninja.email" path="email" type="email" />
@@ -142,13 +141,8 @@
 				<app:select label="label.ninja.gender" path="gender" items="${genderList}" itemLabel="value" itemValue="key" select2="true" required="true"/>
 				<app:select label="label.ninja.status" path="status" items="${statusList}" itemLabel="value" itemValue="key" select2="true" />
 				<app:select label="label.ninja.skills" path="skillSet" items="${skillsList}" itemLabel="value" itemValue="key" multiple="true" select2="true" />
-
-				<div class="control-group">
-					<form:label path="active" cssClass="control-label"><spring:message code="label.ninja.active" /></form:label>
-					<div class="controls">
-						<form:checkbox path="active" maxlength="50" />
-					</div>
-				</div>
+				<app:checkbox label="label.ninja.active" path="active"/>
+				<br/>
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-link" data-dismiss="modal"><spring:message code="label.close" /></button>

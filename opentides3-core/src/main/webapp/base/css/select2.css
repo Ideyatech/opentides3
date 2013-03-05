@@ -441,6 +441,9 @@ disabled look for disabled choices in the results dropdown
     background-image: -o-linear-gradient(top, #eeeeee 1%, #ffffff 15%);
     background-image: -ms-linear-gradient(top, #eeeeee 1%, #ffffff 15%);
     background-image: linear-gradient(top, #eeeeee 1%, #ffffff 15%);
+    -webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
 }
 
 .select2-locked {

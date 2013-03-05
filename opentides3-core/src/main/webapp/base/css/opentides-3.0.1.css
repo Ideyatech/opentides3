@@ -328,6 +328,7 @@ body.anonymous #nav .brand {
 	text-transform: uppercase;
 	color: #999;
 	margin-left: 5px;
+	line-height: 0;
 }
 
 select, textarea, input[type="text"], input[type="password"],
@@ -343,4 +344,29 @@ input[type="search"], input[type="tel"], input[type="color"],
 
 .edit-action, .remove-action {
 	cursor: pointer;
+}
+
+/* CHECKBOX WRAPPERS */
+
+.control-group.checkbox-wrapper label {
+	background: #f0f0f0;
+	padding: 5px 5px 5px 40px;
+	width: 175px;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+}
+
+.control-group.checkbox-wrapper input[type="checkbox"]:checked + label {
+	background: #dff0d8;
+}
+
+.control-group.checkbox-wrapper label:hover {
+	background: #e0e0e0;
+}
+
+.control-group.checkbox-wrapper input[type="checkbox"] {
+	position: absolute;
+	margin-left: 10px;
+	margin-top: 8px;
 }
