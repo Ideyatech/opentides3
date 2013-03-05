@@ -1,30 +1,23 @@
+<%--
+	- page-template.jsp
+	- A template page for your reference
+	-
+	- @author - Your name here
+--%>
 <%@ page contentType="text/html;utf-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="app" tagdir="/WEB-INF/tags"%>
 
-<%--
-	- page-template.jsp
-	- A template page for your reference
-	-
-	- @author - Your name here
-	--%>
+<app:header pageTitle="label.%%%%" active="%%%%"/>
 
-	<%@ page contentType="text/html;utf-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
-<%@ taglib prefix="app" tagdir="/WEB-INF/tags"%>
+<div id="%%%%-body">
 
-<app:header pageTitle="%%%%%" active="%%%%%"/>
-
-<div id="%%%%%-body">
-	
 <div id="search-body">
 
 	<div id="search-panel" class="span3">
-	
+
 		<div id="search-panel-inner" data-spy="affix" data-offset-top="60">
 			<div class="navbar">
 				<div class="navbar-inner">
@@ -36,89 +29,103 @@
 				</div>
 			</div>
 			<div class="search-form collapse">
-				<form:form modelAttribute="searchCommand" id="%%%%%-search">
-				    <!-- Add fields for search form here -->
-				    <hr />
-					<input type="submit" class="btn btn-info" data-submit="search" value="<spring:message code="label.search"/>">
-					<button type="button" class="btn btn-link" data-submit="clear"><spring:message code="label.clear" /></button>		
+				<form:form modelAttribute="searchCommand" id="%%%%-search" >
+					<!-- Define search fields here -->
+					<hr/>
+					<input type="submit" class="btn btn-info btn-block" data-submit="search" value="<spring:message code="label.search"/>">
+					<button type="button" class="btn btn-link btn-block" data-submit="clear"><spring:message code="label.clear" /></button>
 				</form:form>
 			</div>
 		</div>
 	</div>
 	
 	<div id="results-panel" class="span9">
-	
+		
 		<div id="message-panel" class="row-fluid">
-			<button id="%%%%%-add" class="btn btn-info add-action">
-               	<i class="icon-plus-sign icon-white"></i>
-               	<spring:message code="label.%%%%%.add" />
-               </button>
-            <div class="status" data-summary-message='
-            	<spring:message code="message.displaying-x-of-y" arguments="#start,#end,#total,records"/>
-            '>
-            	<app:paging results="${results}" />
-            </div>
-	    </div>
-	    
-	    <div class="clear"></div>
-	    
-	    <div style="overflow:hidden">
-	    	<div style="width:200%;">
-	        	<table id="%%%%%-results" class="footable table-bordered table-striped table-hover table-condensed" style="width:50%;">
-					<thead>
-		               	<tr class="table-header">
-		                   	<!-- Add table header here -->
-		                </tr>
-	           		</thead>
-	           		<tbody>
-		            	<c:forEach items="${results.results}" var="record" varStatus="status">
-			            	<tr data-id="${record.id}">            
-			                	<!-- Add fields to be displayed here -->
-			            	</tr>
-		            	</c:forEach>
-	            	</tbody>
-	            </table>
+			<button id="%%%%-add" class="btn btn-info add-action">
+				<i class="icon-plus-sign icon-white"></i>
+				<spring:message code="label.%%%%.add" />
+			</button>
+			<div class="status" data-display-pagelinks="false" data-display-summary="true" data-summary-message='
+				<spring:message code="message.displaying-x-of-y" arguments="#start,#end,#total,records"/>
+			'>
+				<app:status results="${results}" />
 			</div>
 		</div>
 		
+		<div class="clear"></div>
+		
+		<div style="overflow:hidden">
+			<div style="width:200%;">
+				<table id="%%%%-results" class="footable table-bordered table-striped table-hover table-condensed" style="width:50%;" data-page="${results.currPage}" >
+					<thead>
+						<tr class="table-header">
+							<!-- Define headers here -->
+							<th data-field-name="ot3-controls"></th>
+						</tr>
+					</thead>
+					<tbody>
+						<script type="text/template" class="template">
+	                		<tr data-id="{{id}}">
+								<!-- Define template here -->
+								<td>
+									<i class='icon-pencil edit-action' data-id='{{id}}'></i>
+									<i class='icon-trash remove-action' data-id='{{id}}'></i>
+								</td>
+							</tr>
+						</script>
+						<c:forEach items="${results.results}" var="record" varStatus="status">
+							<tr id="%%%%-row-${record.id}">
+								<!-- Define table body here -->
+								<td>
+									<i class='icon-pencil edit-action' data-id='${record.id}'></i>
+									<i class='icon-trash remove-action' data-id='${record.id}'></i>
+								</td>
+							</tr>
+						</c:forEach>
+					</tbody>
+				</table>	
+			</div>
+		</div>
+
 		<div class="paging clearfix">
 			<app:paging results="${results}"/>
 		</div>
 	</div>
+	
 </div>
-   		
+
 <div id="form-body" class="modal fade hide">
 
-	<div id="form-panel">
-	
+	<div id="form-panel" >
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal">&times;</button>
-			<h4 class="${add}"><spring:message code="label.%%%%%.add" /></h4>		    
-			<h4 class="${update}"><spring:message code="label.%%%%%.update" /></h4>			    
+			<h4 class="${add}"><spring:message code="label.%%%%.add" /></h4>
+			<h4 class="${update}"><spring:message code="label.%%%%.update" /></h4>
 		</div>
-		
-		<form:form modelAttribute="formCommand" id="%%%%%-form">	
+
+		<form:form modelAttribute="formCommand" id="%%%%-form">
 			<div class="modal-body">
-				<!-- Add fields here -->
+				<!-- Define form fields here -->
 			</div>
-		 	<div class="modal-footer">
-		    	<button type="button" class="btn btn-link" data-dismiss="modal"><spring:message code="label.close" /></button>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-link" data-dismiss="modal"><spring:message code="label.close" /></button>
 				<input type="submit" class="btn btn-info  ${add}" data-form-display="add" data-submit="save-and-new" value="<spring:message code="label.save-and-new" />" />
 				<input type="submit" class="btn btn-success" data-submit="save" value="<spring:message code="label.save" />" />
-		    	<input type="hidden" name="id" />
-		  	</div>
-		</form:form>		  	
+				<input type="hidden" name="id" />
+			</div>
+		</form:form>
 	</div>
-			
+	
 </div>
 
 </div>
 
 <app:footer>
-  <script type="text/javascript">
-  	$(document).ready(function() {
-		$('.footable').footable();	
-  		$("%%%%%-body").RESTful();
-	});
-  </script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			//$('.footable').footable();
+			$("#%%%%-body").RESTful();
+		});
+	</script>
 </app:footer>

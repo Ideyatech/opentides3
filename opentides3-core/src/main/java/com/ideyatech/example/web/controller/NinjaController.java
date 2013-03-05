@@ -43,7 +43,7 @@ public class NinjaController extends BaseCrudController<Ninja> {
 		List<SystemCodes> genderList = new ArrayList<SystemCodes>();
 		genderList.add(new SystemCodes("GENDER","MALE","Male"));
 		genderList.add(new SystemCodes("GENDER","FEMALE","Female"));
-		genderList.add(new SystemCodes("GENDER","UNKNOWN","Unknown"));
+		genderList.add(new SystemCodes("OTHER","OTHER","Other"));
 		return genderList;
 	}
 		

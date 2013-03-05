@@ -9,6 +9,7 @@
 <%@ attribute name="path" required="true" type="java.lang.String" %>
 <%@ attribute name="label" required="true" type="java.lang.String" %>
 <%@ attribute name="required" required="false" type="java.lang.Boolean" %>
+<%@ attribute name="datepicker" required="false" type="java.lang.Boolean" %>
 <%@ attribute name="type" required="false" type="java.lang.String" %>
 <%@ attribute name="appendSign" required="false" type="java.lang.String" %>
 <%@ attribute name="prependSign" required="false" type="java.lang.String" %>
@@ -49,3 +50,11 @@
 	</div>
 	
 </div>
+
+<c:if test="${datepicker}">
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$('#${path}').datepicker();
+		});
+	</script>
+</c:if>

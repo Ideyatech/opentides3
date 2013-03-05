@@ -3,223 +3,171 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="app" tagdir="/WEB-INF/tags"%>
-<app:header pageTitle="label.ninja" />
-    <!--Content-->
-	<div id="ninja-body" class="container-fluid container">
-        <div id="search-body" class="${search}">
-	        <div id="search-panel" class="row-fluid">
-	        	<form:form modelAttribute="searchCommand" id="ninja-search" cssClass="form-horizontal">
-		        	<h3> <i class="icon-search"></i> <spring:message code="label.ninja.search" /> </h3>  
+
+<app:header pageTitle="label.ninja" active="ninja"/>
+
+<div id="ninja-body">
+
+<div id="search-body">
+
+	<div id="search-panel" class="span3">
+
+		<div id="search-panel-inner" data-spy="affix" data-offset-top="60">
+			<div class="navbar">
+				<div class="navbar-inner">
+					<span class="brand"><i class="icon-search"></i><spring:message code="label.search" /></span>
+					<a class="show-search-form btn collapsed pull-right hidden-desktop hidden-tablet" data-toggle="collapse" data-target=".search-form">
+						<i class="icon-chevron-up"></i>
+						<i class="icon-chevron-down"></i>
+					</a>
+				</div>
+			</div>
+			<div class="search-form collapse">
+				<form:form modelAttribute="searchCommand" id="ninja-search" >
 					<div class="control-group">
 						<form:label path="firstName" cssClass="control-label"><spring:message code="label.ninja.firstName"/></form:label>
 						<div class="controls">
-							<form:input path="firstName" maxlength="50"/>
+							<form:input path="firstName" maxlength="50" cssClass="input-block-level"/>
 						</div>
 					</div>
 					<div class="control-group">
 						<form:label path="lastName" cssClass="control-label"><spring:message code="label.ninja.lastName"/></form:label>
 						<div class="controls">
-							<form:input path="lastName" maxlength="50"/>
+							<form:input path="lastName" maxlength="50" cssClass="input-block-level"/>
 						</div>
 					</div>
 					<div class="control-group">
 						<form:label path="email" cssClass="control-label"><spring:message code="label.ninja.email" /></form:label>
 						<div class="controls">
-							<form:input path="email" maxlength="50" />
+							<form:input path="email" maxlength="50" cssClass="input-block-level"/>
 						</div>
 					</div>
-					<div class="control-group">
-						<label class="control-label">&nbsp;</label>
-						<div class="controls">
-							<button type="submit" class="btn btn-success" data-submit="search"><spring:message code="label.search"/></button>
-							<button type="button" class="btn" data-submit="clear"><spring:message code="label.clear" /></button>
-						</div>
-					</div>					
+					<hr/>
+					<input type="submit" class="btn btn-info btn-block" data-submit="search" value="<spring:message code="label.search"/>">
+					<button type="button" class="btn btn-link btn-block" data-submit="clear"><spring:message code="label.clear" /></button>
 				</form:form>
-	        </div>
-	        
-	        <hr/>
-	
-	        <div id="message-panel" class="row-fluid">
-	            <div class="pull-left status" 
-	            		data-summary-message='<spring:message code="message.displaying-x-of-y" 
-	            		arguments="#start,#end,#total,records"/>'>
-	            	<app:status results="${results}"/>
-	            </div>
-	            <div class="pull-right">
-	                <button id="add-ninja" class="btn btn-success add-action">
-	                	<i class="icon-plus-sign icon-white"></i> <spring:message code="label.ninja.add" />
-	                </button>
-	            </div>
-		    </div>
-	                                
-	        <div class="clear"></div>                  
-	
-			<div id="results-panel" class="row-fluid" style="overflow:hidden">
-				<div class="span12" style="width:200%;">
-	        	<table id="ninja-results" class="table table-bordered table-striped table-hover table-condensed" data-page="${results.currPage}" style="width:50%;">
-					<thead>
-	               	<tr class="table-header">
-	                   	<th class="col-1" data-class="expand" data-field-name="completeName"><spring:message code="label.ninja.completeName"/></th>
-	                   	<th class="col-2" data-hide="phone" data-field-name="email"><spring:message code="label.ninja.email"/></th>
-	                	<th class="col-3" data-hide="phone,tablet" data-field-name="age"><spring:message code="label.ninja.age"/>
-	                		<span class='template hide'>
-	                			@#age years old
-	                		</span>	                	
-	                	</th>
-	               		<th class="col-4" data-hide="phone,tablet" data-field-name="score"><spring:message code="label.ninja.score"/></th>
-	               		<th class="col-4" data-hide="phone,tablet" data-field-name="joinDate"><spring:message code="label.ninja.joinDate"/></th>
-	               		<th class="col-5" data-hide="phone,tablet" data-field-name="active"><spring:message code="label.ninja.active"/></th>
-	                	<th class="col-6">
-	                		<span class='template hide'>
-			                	<i class='icon-edit edit-action' data-id='@#id'></i>
-								<i class='icon-remove remove-action' data-id='@#id'></i>
-	                		</span>
-	                	</th>
-	                </tr>
-	           		</thead>
-					<tbody>
-					<script type="text/template" class="template">
-					<tr data-id="{{id}}">
-	                	<td class="col-1">{{completeName}}</td>
-	                	<td class="col-2">{{email}}</td>
-	                	<td class="col-3">{{age}}</td>
-	                	<td class="col-4">{{score}}</td>
-	                	<td class="col-4">{{joinDate}}</td>
-	                	<td class="col-5">
-	                	</td>
-		                <td class="col-6">
-		                	<i class='icon-edit edit-action' data-id='{{id}}'></i>	                	 
-							<i class='icon-remove remove-action' data-id='{{id}}'></i>
-		                </td>
-	            	</tr>	
-					</script>
-	            	<c:forEach items="${results.results}" var="record" varStatus="status">
-	            	<tr data-id="${record.id}">
-	                	<td class="col-1"><c:out value="${record.completeName}" /></td>
-	                	<td class="col-2"><c:out value="${record.email}" /></td>
-	                	<td class="col-3"><c:out value="${record.age}" /></td>
-	                	<td class="col-4"><c:out value="${record.score}" /></td>
-	                	<td class="col-4"><c:out value="${record.joinDate}" /></td>
-	                	<td class="col-5">
-	                		<c:if test="${record.active}">Active</c:if>
-	                		<c:if test="${!record.active}">Disabled</c:if>
-	                	</td>
-		                <td class="col-6">
-		                	<i class='icon-edit edit-action' data-id='${record.id}'></i>	                	 
-							<i class='icon-remove remove-action' data-id='${record.id}'></i>
-		                </td>
-	            	</tr>
-	            	</c:forEach>
-	            	</tbody>           		
-	           		
-	            </table>
-	            </div>
-	            <div class="paging clearfix" data-display-pagelinks="true" data-display-summary="false">
-	            <app:paging results="${results}"/>
-	            </div>
-	   		</div>
-   		</div> <!-- #search-body -->
-   		
-   		<div id="form-body" class="modal fade ${form}">
-	   		<div id="form-panel">
-			  	<div class="modal-header">
-			   		<button type="button" class="close" data-dismiss="modal">&times;</button>
-			   	 	<h3 class="${add}"><spring:message code="label.ninja.add" /></h3>		    
-			   	 	<h3 class="${update}"><spring:message code="label.ninja.update" /></h3>		    
-			  	</div>
-			  	
-				<form:form modelAttribute="formCommand" id="ninja-form" >	
-			  	<div class="modal-body">
-					<div class="pull-right">
-				        <span class="required">*</span>
-				        <span class="bold"><spring:message code="label.required-field"/></span>			
-					</div>
-					<div class="control-group">
-						<form:label path="firstName" cssClass="control-label"><spring:message code="label.ninja.firstName"/></form:label>
-						<div class="controls">
-							<form:input path="firstName" maxlength="50"/>
-						</div>
-					</div>
-					<div class="control-group">
-						<form:label path="lastName" cssClass="control-label"><spring:message code="label.ninja.lastName"/></form:label>
-						<div class="controls">
-							<form:input path="lastName" maxlength="50"/>
-						</div>
-					</div>
-					<div class="control-group">
-						<form:label path="email" cssClass="control-label"><spring:message code="label.ninja.email" /></form:label>
-						<div class="controls">
-							<form:input path="email" maxlength="50" />
-						</div>
-					</div>
-					<div class="control-group">
-						<form:label path="age" cssClass="control-label"><spring:message code="label.ninja.age" /></form:label>
-						<div class="controls">
-							<form:input path="age" maxlength="50" />
-						</div>
-					</div>
-					<div class="control-group">
-						<form:label path="score" cssClass="control-label"><spring:message code="label.ninja.score" /></form:label>
-						<div class="controls">
-							<form:input path="score" maxlength="50" />
-						</div>
-					</div>
-					<div class="control-group">
-						<form:label path="joinDate" cssClass="control-label"><spring:message code="label.ninja.joinDate" /></form:label>
-						<div class="controls">
-							<form:input path="joinDate" maxlength="50" />
-						</div>
-					</div>
-					<div class="control-group">
-						<form:label path="active" cssClass="control-label"><spring:message code="label.ninja.active" /></form:label>
-						<div class="controls">
-							<form:checkbox path="active" maxlength="50" />
-						</div>
-					</div>
-					<div class="control-group">
-						<form:label path="active" cssClass="control-label"><spring:message code="label.ninja.gender" /></form:label>
-						<div class="controls">
-							<form:radiobuttons items="${genderList}" itemLabel="value" itemValue="key" path="gender"  />
-						</div>
-					</div>
-					<div class="control-group">
-						<form:label path="status" cssClass="control-label"><spring:message code="label.ninja.status" /></form:label>
-						<div class="controls">
-							<form:select path="status">
-								<form:options items="${statusList}" itemLabel="value" itemValue="key"/>
-							</form:select>
-						</div>
-					</div>
-					<div class="control-group">
-						<form:label path="skillSet" cssClass="control-label"><spring:message code="label.ninja.skills" /></form:label>
-						<div class="controls">
-							<form:select path="skillSet" multiple="true">
-								<form:options items="${skillsList}" itemLabel="value" itemValue="key"/>
-							</form:select>
-						</div>
-					</div>
-					<div class="control-group">
-						<form:label path="skillSet" cssClass="control-label"><spring:message code="label.ninja.skills" /></form:label>
-						<div class="controls">
-							<form:checkboxes items="${skillsList}" path="skillSet" itemLabel="value" itemValue="key"/>
-						</div>
-					</div>
-			  	</div>
-			 	<div class="modal-footer">
-			    	<button type="submit" class="btn btn-primary" data-submit="save"><spring:message code="label.save" /></button>
-			    	<button type="submit" class="btn btn-primary ${add}" data-submit="save-and-new"><spring:message code="label.save-and-new" /></button>
-			    	<button type="button" class="btn" data-dismiss="modal"><spring:message code="label.close" /></button>
-			    	<input type="hidden" name="id" />
-			  	</div>
-				</form:form>		  	
-			</div> <!-- #form-panel -->
-		</div> <!-- #form-body -->
+			</div>
+		</div>
 	</div>
+	
+	<div id="results-panel" class="span9">
+		
+		<div id="message-panel" class="row-fluid">
+			<button id="ninja-add" class="btn btn-info add-action">
+				<i class="icon-plus-sign icon-white"></i>
+				<spring:message code="label.ninja.add" />
+			</button>
+			<div class="status" data-display-pagelinks="false" data-display-summary="true" data-summary-message='
+				<spring:message code="message.displaying-x-of-y" arguments="#start,#end,#total,records"/>
+			'>
+				<app:status results="${results}" />
+			</div>
+		</div>
+		
+		<div class="clear"></div>
+		
+		<div style="overflow:hidden">
+			<div style="width:200%;">
+				<table id="ninja-results" class="footable table-bordered table-striped table-hover table-condensed" style="width:50%;" data-page="${results.currPage}" >
+					<thead>
+						<tr class="table-header">
+							<th data-class="expand" data-field-name="completeName"><spring:message code="label.ninja.completeName"/></th>
+		                   	<th data-hide="phone" data-field-name="email"><spring:message code="label.ninja.email"/></th>
+		                	<th data-hide="phone,tablet" data-field-name="age"><spring:message code="label.ninja.age"/></th>
+		               		<th data-hide="phone,tablet" data-field-name="score"><spring:message code="label.ninja.score"/></th>
+		               		<th data-hide="phone,tablet" data-field-name="joinDate"><spring:message code="label.ninja.joinDate"/></th>
+		               		<th data-hide="phone,tablet" data-field-name="active"><spring:message code="label.ninja.active"/></th>
+							<th data-field-name="ot3-controls"></th>
+						</tr>
+					</thead>
+					<tbody>
+						<script type="text/template" class="template">
+	                		<tr data-id="{{id}}">
+								<td>{{completeName}}</td>
+	                			<td>{{email}}</td>
+	                			<td>{{age}}</td>
+	                			<td>{{score}}</td>
+	                			<td>{{joinDate}}</td>
+								<td>{{active}}</td>
+								<td>
+									<i class='icon-pencil edit-action' data-id='{{id}}'></i>
+									<i class='icon-trash remove-action' data-id='{{id}}'></i>
+								</td>
+							</tr>
+						</script>
+						<c:forEach items="${results.results}" var="record" varStatus="status">
+							<tr id="ninja-row-${record.id}">
+								<td><c:out value="${record.completeName}" /></td>
+			                	<td><c:out value="${record.email}" /></td>
+			                	<td><c:out value="${record.age}" /></td>
+			                	<td><c:out value="${record.score}" /></td>
+			                	<td><c:out value="${record.joinDate}" /></td>
+			                	<td><c:out value="${record.active}" /></td>
+								<td>
+									<i class='icon-pencil edit-action' data-id='${record.id}'></i>
+									<i class='icon-trash remove-action' data-id='${record.id}'></i>
+								</td>
+							</tr>
+						</c:forEach>
+					</tbody>
+				</table>	
+			</div>
+		</div>
+
+		<div class="paging clearfix">
+			<app:paging results="${results}"/>
+		</div>
+	</div>
+	
+</div>
+
+<div id="form-body" class="modal fade hide">
+
+	<div id="form-panel" >
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal">&times;</button>
+			<h4 class="${add}"><spring:message code="label.ninja.add" /></h4>
+			<h4 class="${update}"><spring:message code="label.ninja.update" /></h4>
+		</div>
+
+		<form:form modelAttribute="formCommand" id="ninja-form">
+			<div class="modal-body">
+				
+				<app:input label="label.ninja.firstName" path="firstName" required="true"/>
+				<app:input label="label.ninja.lastName" path="lastName" required="true" />
+				<app:input label="label.ninja.email" path="email" type="email" />
+				<app:input label="label.ninja.age" path="age" />
+				<app:input label="label.ninja.score" path="score" />
+				<app:input label="label.ninja.joinDate" path="joinDate" datepicker="true"/>
+				<app:select label="label.ninja.gender" path="gender" items="${genderList}" itemLabel="value" itemValue="key" select2="true" required="true"/>
+				<app:select label="label.ninja.status" path="status" items="${statusList}" itemLabel="value" itemValue="key" select2="true" />
+				<app:select label="label.ninja.skills" path="skillSet" items="${skillsList}" itemLabel="value" itemValue="key" multiple="true" select2="true" />
+
+				<div class="control-group">
+					<form:label path="active" cssClass="control-label"><spring:message code="label.ninja.active" /></form:label>
+					<div class="controls">
+						<form:checkbox path="active" maxlength="50" />
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-link" data-dismiss="modal"><spring:message code="label.close" /></button>
+				<input type="submit" class="btn btn-info  ${add}" data-form-display="add" data-submit="save-and-new" value="<spring:message code="label.save-and-new" />" />
+				<input type="submit" class="btn btn-success" data-submit="save" value="<spring:message code="label.save" />" />
+				<input type="hidden" name="id" />
+			</div>
+		</form:form>
+	</div>
+	
+</div>
+
+</div>
+
 <app:footer>
-  <script type="text/javascript">
-  	$(document).ready(function() {
-  		$("#ninja-body").RESTful();
-  	});
-  </script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			//$('.footable').footable();
+			$("#ninja-body").RESTful();
+		});
+	</script>
 </app:footer>

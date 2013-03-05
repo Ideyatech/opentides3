@@ -16,6 +16,10 @@ body {
 	text-transform: lowercase;
 }
 
+.datepicker{
+	z-index:1151;
+}
+
 .notifications.center {
 	z-index: 999999;
 	top: 50px;

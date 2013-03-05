@@ -13,8 +13,8 @@
 <%@ attribute name="itemValue" required="false" type="java.lang.String" %>
 <%@ attribute name="items" required="false" type="java.util.Collection" %>
 <%@ attribute name="required" required="false" type="java.lang.Boolean" %>
+<%@ attribute name="select2" required="false" type="java.lang.Boolean" %>
 <%@ attribute name="multiple" required="false" type="java.lang.Boolean" %>
-<%@ attribute name="defaultToNull" required="false" type="java.lang.Boolean" %>
 
 <div class="control-group">
 
@@ -27,9 +27,9 @@
 	
 	<div class="controls">
 		
-		<form:select path="${path}" required="${required ? 'required' : ''}" multiple="${multiple}" cssClass="${cssClass}" style="${multiple ? 'width: 220px;':''}">
-			<c:if test="${defaultToNull}">
-				<option value=""><spring:message code="label.select-one"/></option>
+		<form:select path="${path}" required="${required ? 'required' : ''}" multiple="${multiple}" cssClass="${cssClass}" style="${select2 ? 'width: 220px;':''}">
+			<c:if test="${select2 and not multiple}">
+				<option></option>
 			</c:if>
 			<c:if test="${not empty items}">
 				<form:options items="${items}" itemLabel="${itemLabel}" itemValue="${itemValue}"/>
@@ -39,12 +39,12 @@
 	
 </div>
 
-<script type="text/javascript">
-
-	$(document).ready(function() {
-		$('#${path}').select2({
-			placeholder: '<spring:message code="label.select-one"/>'
+<c:if test="${select2}">
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$('#${path}').select2({
+				placeholder: '<spring:message code="label.select-one"/>'
+			});
 		});
-	});
-
-</script>
+	</script>
+</c:if>
