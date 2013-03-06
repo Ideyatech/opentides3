@@ -3,9 +3,6 @@
 html,
 body {
 	height: 100%;
-	background-position: initial initial;
-	background-repeat: initial initial;
-	min-width: 300px;
 }
 
 .uppercase {
@@ -32,7 +29,6 @@ body {
 @media (max-width: 979px) {
 	html,
 	body {
-		overflow-x: hidden;
 	}
 }
 
@@ -48,11 +44,12 @@ body {
 	min-height: 100%;
 	height: auto !important;
 	height: 100%;
-	margin: 0 auto -62px;
+	margin: 0 auto -82px;
 }
 
 #push,
 #footer {
+	margin-top: 20px;
 	height: 60px;
 }
 
@@ -275,6 +272,14 @@ body.anonymous #nav .brand {
 		width: 170px;
 	}
 }
+
+
+	@media (max-width: 979px) {
+	#search-panel-inner {
+		position: relative;
+		top: 0;
+	}
+	}
 
 @media (max-width: 767px) {
 	.search-form.collapse {

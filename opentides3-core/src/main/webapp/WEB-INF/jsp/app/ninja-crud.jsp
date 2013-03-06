@@ -3,6 +3,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="app" tagdir="/WEB-INF/tags"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <app:header pageTitle="label.ninja" active="ninja"/>
 
@@ -101,7 +102,7 @@
 			                	<td><c:out value="${record.email}" /></td>
 			                	<td><c:out value="${record.age}" /></td>
 			                	<td><c:out value="${record.score}" /></td>
-			                	<td><c:out value="${record.joinDate}" /></td>
+			                	<td><fmt:formatDate value="${record.joinDate}" pattern="MM/dd/yyyy"/></td>
 			                	<td><c:out value="${record.active}" /></td>
 								<td>
 									<i class='icon-pencil edit-action' data-id='${record.id}'></i>

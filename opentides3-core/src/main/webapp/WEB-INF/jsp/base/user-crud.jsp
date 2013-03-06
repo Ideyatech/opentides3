@@ -106,13 +106,8 @@
 				<app:input path="credential.confirmPassword" label="label.user.confirm-password" type="password"/>
 				<app:select label="label.user.groups" path="groups" multiple="true"
 					items="${userGroupsList}" itemLabel="name" itemValue="id" select2="true"/>
-				
-				<div class="control-group">
-					<form:label path="credential.enabled" cssClass="control-label checkbox">
-						<form:checkbox path="credential.enabled" />
-						<spring:message code="label.user.active" />
-					</form:label>
-				</div>
+				<app:checkbox label="label.user.active" path="credential.enabled"/>
+				<br/>
 			</div>
 		 	<div class="modal-footer">
 		    	<button type="button" class="btn btn-link" data-dismiss="modal"><spring:message code="label.close" /></button>
@@ -130,7 +125,7 @@
 <app:footer>
   <script type="text/javascript">
   	$(document).ready(function() {
-		$('.footable').footable();	
+		//$('.footable').footable();	
   		$("#user-body").RESTful();
 	});
   </script>
