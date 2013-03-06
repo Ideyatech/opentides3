@@ -10,8 +10,8 @@
 <%@ attribute name="label" required="true" type="java.lang.String" %>
 
 <div class="control-group checkbox-wrapper">
-
-	<spring:message code="${label}" var="checkboxLabel" />
-	<form:checkbox path="${path}" label="${checkboxLabel}"/>
-
+	<div class="controls">
+		<spring:message code="${label}" var="checkboxLabel" />
+		<form:checkbox path="${path}" label="${checkboxLabel}"/>
+	</div>
 </div>

@@ -131,15 +131,15 @@
 			<h4 class="${update}"><spring:message code="label.ninja.update" /></h4>
 		</div>
 
-		<form:form modelAttribute="formCommand" id="ninja-form">
+		<form:form modelAttribute="formCommand" id="ninja-form" cssClass="form-horizontal">
 			<div class="modal-body">
 				<app:input label="label.ninja.firstName" path="firstName" required="true"/>
 				<app:input label="label.ninja.lastName" path="lastName" required="true" />
 				<app:input label="label.ninja.email" path="email" type="email" />
 				<app:input label="label.ninja.age" path="age" />
 				<app:input label="label.ninja.score" path="score" />
-				<app:input label="label.ninja.joinDate" path="joinDate" datepicker="true"/>
-				<app:select label="label.ninja.gender" path="gender" items="${genderList}" itemLabel="value" itemValue="key" select2="true" required="true"/>
+				<app:input label="label.ninja.joinDate" path="joinDate" datepicker="true" appendIcon="icon-calendar"/>
+				<app:radio label="label.ninja.gender" path="gender" items="${genderList}" itemLabel="value" itemValue="key" required="true"/>
 				<app:select label="label.ninja.status" path="status" items="${statusList}" itemLabel="value" itemValue="key" select2="true" />
 				<app:select label="label.ninja.skills" path="skillSet" items="${skillsList}" itemLabel="value" itemValue="key" multiple="true" select2="true" />
 				<app:checkbox label="label.ninja.active" path="active"/>

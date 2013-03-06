@@ -9,9 +9,9 @@
 <%@ attribute name="path" required="true" type="java.lang.String" %>
 <%@ attribute name="label" required="true" type="java.lang.String" %>
 <%@ attribute name="itemLabel" required="false" type="java.lang.String" %>
-<%@ attribute name="cssClass" required="false" type="java.lang.String" %>
 <%@ attribute name="itemValue" required="false" type="java.lang.String" %>
 <%@ attribute name="items" required="false" type="java.util.Collection" %>
+<%@ attribute name="cssClass" required="false" type="java.lang.String" %>
 <%@ attribute name="required" required="false" type="java.lang.Boolean" %>
 <%@ attribute name="select2" required="false" type="java.lang.Boolean" %>
 <%@ attribute name="multiple" required="false" type="java.lang.Boolean" %>

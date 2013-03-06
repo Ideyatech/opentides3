@@ -11,8 +11,10 @@
 <%@ attribute name="required" required="false" type="java.lang.Boolean" %>
 <%@ attribute name="datepicker" required="false" type="java.lang.Boolean" %>
 <%@ attribute name="type" required="false" type="java.lang.String" %>
-<%@ attribute name="appendSign" required="false" type="java.lang.String" %>
-<%@ attribute name="prependSign" required="false" type="java.lang.String" %>
+<%@ attribute name="appendText" required="false" type="java.lang.String" %>
+<%@ attribute name="prependText" required="false" type="java.lang.String" %>
+<%@ attribute name="appendIcon" required="false" type="java.lang.String" %>
+<%@ attribute name="prependIcon" required="false" type="java.lang.String" %>
 
 <c:forEach items="${dAttrs}" var="attr">
 	<c:set var="attrs" value='${attrs} ${attr.key}="${attr.value}"'/>
@@ -29,12 +31,19 @@
 	
 	<div class="controls">
 	
-		<div class="${not empty prependSign ? 'input-prepend': ''} ${not empty appendSign ? 'input-append': ''}">
-			<c:if test="${not empty prependSign}">
-				<span class="add-on">${prependSign}</span>
+		<div class="
+			${datepicker ? 'date' : ''}
+			${not empty prependText or not empty prependIcon ? 'input-prepend': ''}
+			${not empty appendText or not empty appendIcon ? 'input-append': ''}">
+			
+			<c:if test="${not empty prependText}">
+				<span class="add-on">${prependText}</span>
+			</c:if>
+			<c:if test="${not empty prependIcon}">
+				<span class="add-on"><i class="${prependIcon}"></i></span>
 			</c:if>
 		
-			<input name="${path}" id="${path}"
+			<input name="${path}" id="${path}" value=""
 			
 			type="${empty type ?'text': type }"
 			
@@ -42,8 +51,11 @@
 			
 			${attrs} />
 			
-			<c:if test="${not empty appendSign}">
-				<span class="add-on">${appendSign}</span>
+			<c:if test="${not empty appendText}">
+				<span class="add-on">${appendText}</span>
+			</c:if>
+			<c:if test="${not empty appendIcon}">
+				<span class="add-on"><i class="${appendIcon}"></i></span>
 			</c:if>
 		</div>
 		
@@ -55,6 +67,9 @@
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$('#${path}').datepicker();
+			$('#${path}').siblings().on("click", function(){
+				$('#${path}').focus();
+			});
 		});
 	</script>
 </c:if>
