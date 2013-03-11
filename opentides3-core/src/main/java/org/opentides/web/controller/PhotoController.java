@@ -11,6 +11,7 @@ import org.opentides.service.BaseCrudService;
 import org.opentides.service.PhotoInfoService;
 import org.opentides.util.DateUtil;
 import org.opentides.util.FileUtil;
+import org.opentides.util.ImageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
+
 
 /**
  * 
@@ -97,16 +99,13 @@ public abstract class PhotoController<T extends BaseEntity> {
 
 			File uploadFile = new File(filePath);
 			photoInfo.setFullPath(uploadFile.getAbsolutePath());
+			
 			try {
 				FileUtil.copyMultipartFile(photo, uploadFile);
+				ImageUtil.createPhotoThumbnails(photoInfo.getFullPath());
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			
-			/*
-			 * Create thumbnails for this photo
-			 */
-			//ImageUtil.createPhotoThumbnails(fileInfo.getFullPath());
 			
 			return photoInfo;
 
