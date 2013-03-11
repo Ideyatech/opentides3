@@ -31,7 +31,6 @@ import org.opentides.annotation.GenerateCrudController;
 import org.opentides.annotation.GenerateDao;
 import org.opentides.annotation.GenerateService;
 import org.opentides.annotation.PrimaryField;
-import org.opentides.util.StringUtil;
 import org.opentides.web.json.Views;
 
 import com.fasterxml.jackson.annotation.JsonView;

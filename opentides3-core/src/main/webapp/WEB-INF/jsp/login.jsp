@@ -25,11 +25,11 @@
 			</div>
 		</c:if>
 		
-		<input class="input-block-level" type="text" name="j_username" placeholder="Username">
-		<input class="input-block-level" type="password" name="j_password" placeholder="Password">
+		<input class="input-block-level" type="text" name="j_username" placeholder="Username" value="ajalbaniel">
+		<input class="input-block-level" type="password" name="j_password" placeholder="Password" value="123123">
 		
 		<label class="checkbox">
-			<input type="checkbox">
+			<input type="checkbox" checked>
 			<small><spring:message code="label.remember-me" /></small>
 		</label>
 		

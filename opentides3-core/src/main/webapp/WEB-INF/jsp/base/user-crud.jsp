@@ -99,14 +99,6 @@
 		
 		<form:form modelAttribute="formCommand" id="user-form">	
 			<div class="modal-body">
-			
-				<div class="control-group">
-					<label>Profile Picture</label>
-					<div class="controls">
-						<input type="file" />
-					</div>
-				</div>
-			
 				<app:input path="firstName" label="label.user.first-name" required="true"/>
 				<app:input path="lastName" label="label.user.last-name" required="true"/>
 				<app:input path="emailAddress" label="label.user.email" required="true"/>

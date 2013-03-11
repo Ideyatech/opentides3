@@ -36,6 +36,7 @@ import org.opentides.dao.UserGroupDao;
 import org.opentides.dao.impl.AuditLogDaoImpl;
 import org.opentides.exception.InvalidImplementationException;
 import org.opentides.service.UserService;
+import org.opentides.util.SecurityUtil;
 import org.opentides.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -396,5 +397,14 @@ public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 	 */
 	public void setResetPasswordMailMessage(MailMessage resetPasswordMailMessage) {
 		this.resetPasswordMailMessage = resetPasswordMailMessage;
+	}
+	
+	public BaseUser getCurrentUser() {
+		SessionUser sessionUser = SecurityUtil.getSessionUser();
+		if (sessionUser != null) {
+			UserDao userDao = (UserDao) getDao();
+			return userDao.loadByUsername(sessionUser.getUsername());
+		}
+		return null;
 	}
 }

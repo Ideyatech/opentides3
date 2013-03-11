@@ -31,8 +31,8 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
-import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -43,8 +43,11 @@ import org.opentides.annotation.Auditable;
 import org.opentides.annotation.PrimaryField;
 import org.opentides.annotation.SearchableFields;
 import org.opentides.bean.BaseEntity;
+import org.opentides.bean.PhotoInfo;
+import org.opentides.bean.Photoable;
 import org.opentides.util.StringUtil;
 import org.opentides.web.json.Views;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
@@ -52,7 +55,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 @Cache
 @Table(name = "USER_PROFILE")
 @Auditable
-public class BaseUser extends BaseEntity {
+public class BaseUser extends BaseEntity implements Photoable {
 
 	private static final long serialVersionUID = 7634675501487373408L;
 	
@@ -76,14 +79,6 @@ public class BaseUser extends BaseEntity {
 	@Column(name = "OFFICE", nullable=true)
 	@JsonView(Views.SearchView.class)
 	private String office;
-	
-	/*
-	 * Lob Annotation Specifies that a persistent property or field should be
-	 * persisted as a large object to a database-supported large object type
-	 */
-	@Lob
-	@Column(name = "IMAGE", columnDefinition = "LONGBLOB")
-	private byte[] image;
 
 	@OneToOne(cascade = CascadeType.ALL, mappedBy = "user", fetch = FetchType.EAGER)
 	@JsonView(Views.SearchView.class)
@@ -121,7 +116,15 @@ public class BaseUser extends BaseEntity {
 	@Column(name="FAILED_LOGIN_COUNT")
 	@JsonView(Views.DisplayView.class)
 	private Long failedLoginCount;
-		
+	
+	@OneToMany(cascade=CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinTable(name = "USER_PHOTO", 
+			joinColumns = { @JoinColumn(name = "USER_ID", referencedColumnName = "ID") }, 
+			inverseJoinColumns = @JoinColumn(name = "PHOTO_ID")
+	)
+	private List<PhotoInfo> photos;
+	private transient CommonsMultipartFile photo;
+
 	public BaseUser() {
 		super();
 		this.setCredential(new UserCredential());
@@ -130,7 +133,7 @@ public class BaseUser extends BaseEntity {
 	
 	/**
 	 * Creates a clone of this object containing basic information including the following:
-	 * firstName, lastName, middleName, emailAddress, lastLogin, and image.
+	 * firstName, lastName, middleName, emailAddress and lastLogin.
 	 * This function is used to populate the user object associated to AuditLog.
 	 * 
 	 * Note: groups and credentials are not cloned.
@@ -144,7 +147,6 @@ public class BaseUser extends BaseEntity {
 		clone.middleName   = this.middleName;
 		clone.emailAddress = this.emailAddress;
 		clone.office	   = this.office;
-		clone.image        = this.image;
 		clone.language	   = this.language;
 		clone.lastLogin    = this.lastLogin;
 		clone.credential   = this.credential;
@@ -346,24 +348,6 @@ public class BaseUser extends BaseEntity {
 	}
 
 	/**
-	 * Getter method for image.
-	 *
-	 * @return the image
-	 */
-	public final byte[] getImage() {
-		return image;
-	}
-
-	/**
-	 * Setter method for image.
-	 *
-	 * @param image the image to set
-	 */
-	public final void setImage(byte[] image) {
-		this.image = image;
-	}
-
-	/**
 	 * Getter method for credential.
 	 *
 	 * @return the credential
@@ -542,5 +526,35 @@ public class BaseUser extends BaseEntity {
 	public final void setFailedLoginCount(Long failedLoginCount) {
 		this.failedLoginCount = failedLoginCount;
 	}
+	
+	@Override
+	public List<PhotoInfo> getPhotos() {
+		return photos;
+	}
+	
+	@Override
+	public void setPhotos(List<PhotoInfo> photos) {
+		this.photos = photos;
+	}
+	
+	@Override
+	public CommonsMultipartFile getPhoto() {
+		return photo;
+	}
+	
+	@Override
+	public void setPhoto(CommonsMultipartFile photo) {
+		this.photo = photo;
+	}
+	
+	public void addPhoto(PhotoInfo photoInfo){
+		synchronized (photoInfo) {
+			if (photos == null){
+				photos = new ArrayList<PhotoInfo>();
+			}
+			photos.add(photoInfo);
+		}
+	}
+	
 	
 }

@@ -41,7 +41,7 @@ public class SessionUser extends User {
 	
 	private final Map<String, Object> profile = new HashMap<String, Object>();
 
-	private Long   id;
+	private Long id;
 	
 	private String office;
 

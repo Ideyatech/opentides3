@@ -109,4 +109,6 @@ public interface UserService extends BaseCrudService<BaseUser> {
 	  * @return
 	  */
 	 public void forceLogout(String username);
+	 
+	 public BaseUser getCurrentUser();
 }
