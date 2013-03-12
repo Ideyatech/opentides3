@@ -5,9 +5,7 @@
 <%@ taglib prefix="app" tagdir="/WEB-INF/tags"%>
 
 <form:form commandName="command" enctype="multipart/form-data"
-	method="POST" action="/organization/users/photo/upload">
+	method="POST" action="/organization/users/photo/upload?id=${command.id}">
 	<input type="file" id="photo" name="photo" />
 	<input type="submit" value="Submit" />
-	
-	${command.id}
 </form:form>

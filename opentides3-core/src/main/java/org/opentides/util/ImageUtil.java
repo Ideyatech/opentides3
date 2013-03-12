@@ -18,28 +18,36 @@ import java.io.InputStream;
 
 import javax.imageio.ImageIO;
 
-/**
- * @author allantan
- * 
- */
+import org.springframework.util.FileCopyUtils;
+
 public class ImageUtil {
 
 	/**
+	 * Loads the image from cache if available.
+	 * 
+	 * @param fullPath
+	 * @return
+	 * @throws IOException 
+	 */
+	public static byte[] loadImage(String fullPath) throws IOException {
+		File file = new File(fullPath);
+		
+		return FileCopyUtils.copyToByteArray(file);
+	}
+	
+	/**
 	 * Checks if image is valid
 	 * 
-	 * Image must be at least 250 x 250 pixels
-	 * File size must not exceed 10 Megabytes
-	 * @param inputStream 
+	 * Image must be at least 200 x 200 pixels
 	 * 
-	 * @param input
-	 * @return
+	 * @author ajalbaniel
 	 */
 	public static boolean isValidSize(InputStream inputStream) {
 		try {
 			BufferedImage image = ImageIO.read(inputStream);
 			Integer width = image.getWidth();
 			Integer height = image.getHeight();
-			if(width >= 250 && height >= 250)
+			if(width >= 200 && height >= 200)
 				return true;
 			else
 				return false;
@@ -49,9 +57,11 @@ public class ImageUtil {
 	}
 	
 	/**
+	 * @author ajalbaniel
 	 * 
-	 * @author AJ
-	 * @throws IOException 
+	 * Generate photo thumbnails of sizes L, M, S and XS.
+	 * If this does not work, please do not blame me.
+	 * 
 	 */
 	public static void createPhotoThumbnails(String filePath) throws IOException {
 		

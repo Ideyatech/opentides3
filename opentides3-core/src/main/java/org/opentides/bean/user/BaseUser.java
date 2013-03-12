@@ -116,14 +116,6 @@ public class BaseUser extends BaseEntity implements Photoable {
 	@Column(name="FAILED_LOGIN_COUNT")
 	@JsonView(Views.DisplayView.class)
 	private Long failedLoginCount;
-	
-	@OneToMany(cascade=CascadeType.ALL, fetch = FetchType.LAZY)
-	@JoinTable(name = "USER_PHOTO", 
-			joinColumns = { @JoinColumn(name = "USER_ID", referencedColumnName = "ID") }, 
-			inverseJoinColumns = @JoinColumn(name = "PHOTO_ID")
-	)
-	private List<PhotoInfo> photos;
-	private transient CommonsMultipartFile photo;
 
 	public BaseUser() {
 		super();
@@ -527,6 +519,16 @@ public class BaseUser extends BaseEntity implements Photoable {
 		this.failedLoginCount = failedLoginCount;
 	}
 	
+	// Photoable requirements
+	
+	@OneToMany(cascade=CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinTable(name = "USER_PHOTO", 
+			joinColumns = { @JoinColumn(name = "USER_ID", referencedColumnName = "ID") }, 
+			inverseJoinColumns = @JoinColumn(name = "PHOTO_ID")
+	)
+	private List<PhotoInfo> photos;
+	private transient CommonsMultipartFile photo;
+	
 	@Override
 	public List<PhotoInfo> getPhotos() {
 		return photos;
@@ -556,5 +558,6 @@ public class BaseUser extends BaseEntity implements Photoable {
 		}
 	}
 	
+	// End of Photoable requirements
 	
 }

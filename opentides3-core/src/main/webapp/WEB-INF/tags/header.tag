@@ -34,6 +34,7 @@
     <link rel="stylesheet" type="text/css" href="<c:url value='/css/opentides-3.0.1.css'/>" />
     <link rel="stylesheet" type="text/css" href="<c:url value='/css/select2.css'/>" />
     <link rel="stylesheet" type="text/css" href="<c:url value='/css/datepicker.css'/>" />
+    <link rel="stylesheet" type="text/css" href="<c:url value='/css/bootstrap-modal.css'/>" />
     
 	<script type="text/javascript" src="<c:url value='/js/jquery-1.9.0.min.js'/>"></script>	
 	<script type="text/javascript" src="<c:url value='/js/jquery.deserialize.js'/>"></script>	
@@ -44,6 +45,8 @@
 	<script type="text/javascript" src="<c:url value='/js/select2.js'/>"></script>
 	<script type="text/javascript" src="<c:url value='/js/bootstrap-datepicker.js'/>"></script>
 	<script type="text/javascript" src="<c:url value='/js/opentides-3.0.1.js'/>"></script>
+	<script type="text/javascript" src="<c:url value='/js/bootstrap-modal.js'/>"></script>
+	<script type="text/javascript" src="<c:url value='/js/bootstrap-modalmanager.js'/>"></script>
     
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>

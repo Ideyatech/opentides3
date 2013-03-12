@@ -72,6 +72,7 @@
 				<table id="ninja-results" class="footable table-bordered table-striped table-hover table-condensed" style="width:50%;" data-page="${results.currPage}" >
 					<thead>
 						<tr class="table-header">
+							<th data-class="expand" data-field-name="completeName"><spring:message code="label.ninja.photo"/></th>
 							<th data-class="expand" data-field-name="completeName"><spring:message code="label.ninja.completeName"/></th>
 		                   	<th data-hide="phone" data-field-name="email"><spring:message code="label.ninja.email"/></th>
 		                	<th data-hide="phone,tablet" data-field-name="age"><spring:message code="label.ninja.age"/></th>
@@ -84,6 +85,9 @@
 					<tbody>
 						<script type="text/template" class="template">
 	                		<tr data-id="{{id}}">
+								<td>
+									<img class="ninja-photo img-polaroid" src="${home}/ninja/photo?id={{id}}&size=s"/>
+								</td>
 								<td>{{completeName}}</td>
 	                			<td>{{email}}</td>
 	                			<td>{{age}}</td>
@@ -98,6 +102,9 @@
 						</script>
 						<c:forEach items="${results.results}" var="record" varStatus="status">
 							<tr id="ninja-row-${record.id}">
+								<td>
+									<img class="ninja-photo img-polaroid" src="${home}/ninja/photo?id=${record.id}&size=s"/>
+								</td>
 								<td><c:out value="${record.completeName}" /></td>
 			                	<td><c:out value="${record.email}" /></td>
 			                	<td><c:out value="${record.age}" /></td>
@@ -158,11 +165,25 @@
 
 </div>
 
+
+<div id="ajax-modal" class="modal hide fade" tabindex="-1"></div>
+
 <app:footer>
 	<script type="text/javascript">
 		$(document).ready(function() {
 			//$('.footable').footable();
 			$("#ninja-body").RESTful();
+			
+			var $modal = $('#ajax-modal');
+			
+			$('.ninja-photo').on("click", function(){
+				
+				$modal.load('${home}/ninja/photo/upload?id=6', '', function(){
+					$modal.modal();
+				});
+				
+			});
+			
 		});
 	</script>
 </app:footer>

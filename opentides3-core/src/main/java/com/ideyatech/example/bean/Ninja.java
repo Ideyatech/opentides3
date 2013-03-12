@@ -1,11 +1,17 @@
 package com.ideyatech.example.bean;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -19,9 +25,12 @@ import org.opentides.annotation.field.TextArea;
 import org.opentides.annotation.field.TextField;
 import org.opentides.annotation.field.Validation;
 import org.opentides.bean.BaseEntity;
+import org.opentides.bean.PhotoInfo;
+import org.opentides.bean.Photoable;
 import org.opentides.bean.SystemCodes;
 import org.opentides.util.StringUtil;
 import org.opentides.web.json.Views;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
@@ -32,7 +41,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 @Entity
 @Table(name="NINJA")
 @Auditable
-public class Ninja extends BaseEntity {
+public class Ninja extends BaseEntity implements Photoable {
 	
 	private static final long serialVersionUID = -4142599915292096152L;
 	
@@ -429,5 +438,46 @@ public class Ninja extends BaseEntity {
 		}
 		return name;
 	}
-
+	
+	// Photoable requirements
+	
+	@OneToMany(cascade=CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinTable(name = "NINJA_PHOTO", 
+			joinColumns = { @JoinColumn(name = "USER_ID", referencedColumnName = "ID") }, 
+			inverseJoinColumns = @JoinColumn(name = "PHOTO_ID")
+	)
+	private List<PhotoInfo> photos;
+	private transient CommonsMultipartFile photo;
+	
+	@Override
+	public List<PhotoInfo> getPhotos() {
+		return photos;
+	}
+	
+	@Override
+	public void setPhotos(List<PhotoInfo> photos) {
+		this.photos = photos;
+	}
+	
+	@Override
+	public CommonsMultipartFile getPhoto() {
+		return photo;
+	}
+	
+	@Override
+	public void setPhoto(CommonsMultipartFile photo) {
+		this.photo = photo;
+	}
+	
+	public void addPhoto(PhotoInfo photoInfo){
+		synchronized (photoInfo) {
+			if (photos == null){
+				photos = new ArrayList<PhotoInfo>();
+			}
+			photos.add(photoInfo);
+		}
+	}
+	
+	// End of Photoable requirements
+	
 }
