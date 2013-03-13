@@ -4,7 +4,7 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="app" tagdir="/WEB-INF/tags"%>
 
-<app:header-anonymous pageTitle="label.login" />
+<app:header pageTitle="label.login" pageType="anonymous-page" />
 
 <spring:theme code="logo_large" var="logo" />
 
@@ -25,7 +25,7 @@
 			</div>
 		</c:if>
 		
-		<input class="input-block-level" type="text" name="j_username" placeholder="Username" value="ajalbaniel">
+		<input class="input-block-level" type="text" name="j_username" placeholder="Username" value="admin">
 		<input class="input-block-level" type="password" name="j_password" placeholder="Password" value="123123">
 		
 		<label class="checkbox">

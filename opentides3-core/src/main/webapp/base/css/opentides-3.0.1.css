@@ -73,22 +73,22 @@ body {
 
 /* LOGIN PAGE */
 
-body.anonymous #nav {
+body.anonymous-page #nav {
 	margin-left: -20px;
 	margin-right: -20px;
 }
 
-body.anonymous .navbar-inner {
+body.anonymous-page .navbar-inner {
 	-webkit-border-radius: 0;
 	-moz-border-radius: 0;
 	border-radius: 0;
 }
 
-body.anonymous .logo {
+body.anonymous-page .logo {
 	margin: 10px !important;
 }
 
-body.anonymous #nav .brand {
+body.anonymous-page #nav .brand {
 	float: none !important;
 	text-align: center;
 }
@@ -343,7 +343,7 @@ input[type="search"], input[type="tel"], input[type="color"],
 
 /* RESULTS PANEL */
 
-.edit-action, .remove-action {
+.edit-action, .remove-action, .edit-photo-action {
 	cursor: pointer;
 }
 
@@ -462,3 +462,6 @@ input[type="search"], input[type="tel"], input[type="color"],
 	left: 0;
 	background: url('../img/grid.png') repeat;
 }
+
+/* PHOTO */
+

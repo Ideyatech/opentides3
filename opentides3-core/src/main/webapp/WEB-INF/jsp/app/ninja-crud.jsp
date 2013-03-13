@@ -84,9 +84,9 @@
 					</thead>
 					<tbody>
 						<script type="text/template" class="template">
-	                		<tr data-id="{{id}}">
+	                		<tr id="ninja-row-{{id}}" data-id="{{id}}">
 								<td>
-									<img class="ninja-photo img-polaroid" src="${home}/ninja/photo?id={{id}}&size=s"/>
+									<img class="img-polaroid edit-photo-action" src="${home}/ninja/photo?id={{id}}&size=s"/>
 								</td>
 								<td>{{completeName}}</td>
 	                			<td>{{email}}</td>
@@ -101,9 +101,9 @@
 							</tr>
 						</script>
 						<c:forEach items="${results.results}" var="record" varStatus="status">
-							<tr id="ninja-row-${record.id}">
+							<tr id="ninja-row-${record.id}" data-id="${record.id}">
 								<td>
-									<img class="ninja-photo img-polaroid" src="${home}/ninja/photo?id=${record.id}&size=s"/>
+									<img class="img-polaroid edit-photo-action" src="${home}/ninja/photo?id=${record.id}&size=s"/>
 								</td>
 								<td><c:out value="${record.completeName}" /></td>
 			                	<td><c:out value="${record.email}" /></td>
@@ -176,9 +176,10 @@
 			
 			var $modal = $('#ajax-modal');
 			
-			$('.ninja-photo').on("click", function(){
+			$('.edit-photo-action').on("click", function(){
 				
-				$modal.load('${home}/ninja/photo/upload?id=6', '', function(){
+				var id = $(this).closest('tr').data('id');
+				$modal.load('${home}/ninja/photo/upload?id=' + id, '', function(){
 					$modal.modal();
 				});
 				
