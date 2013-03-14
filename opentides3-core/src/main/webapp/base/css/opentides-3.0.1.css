@@ -465,3 +465,14 @@ input[type="search"], input[type="tel"], input[type="color"],
 
 /* PHOTO */
 
+#original-image {
+	max-width: 100%;
+}
+
+.original-image-wrapper {
+	background: #000;
+}
+
+.original-image-wrapper > div {
+	margin: 0 auto;
+}

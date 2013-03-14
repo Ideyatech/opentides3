@@ -12,20 +12,21 @@
 		<img class="img-polaroid" src="${home}/ninja/photo?id=${command.id}&size=l"/>
 	</div>
 	<div class="span4">
-		<input type="file" id="photo" name="photo" class="hide"/>
+		<input type="file" id="photo" name="photo" class="hide" accept="image/*"/>
 		
 		<div class="control-group">
 			<div class="input-append">
 			   <input id="photo-path" class="input-large" type="text" readonly>
-			   <a class="btn" id="browse-photo">Browse</a>
+			   <a class="btn" id="browse-photo"><spring:message code="photo.browse" /></a>
 			</div>
+			<small><spring:message code="photo.upload-instructions" /></small>
 		</div>
 		<div class="control-group">
-			<input type="submit" value="Change Photo" class="btn btn-success" />
+			<input type="submit" value="<spring:message code="photo.change-photo" />" class="btn btn-success" />
 		</div>
 		<hr/>
 		<div class="control-group">
-			<a href="${home}/ninja/photo/crop?id=${command.id}">Adjust current photo</a>
+			<a href="${home}/ninja/photo/adjust?id=${command.id}"><spring:message code="photo.adjust-current-photo" /></a>
 		</div>
 	</div>
 	

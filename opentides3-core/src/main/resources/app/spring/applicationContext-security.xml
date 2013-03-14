@@ -16,7 +16,7 @@
 		access-decision-manager-ref="httpRequestAccessDecisionManager">
 		
 		<sec:form-login login-page="/login"
-			default-target-url="/home"
+			default-target-url="/"
 			authentication-failure-url="/login?login_error=authentication-failed" />
 		<sec:anonymous />
 		<sec:http-basic />

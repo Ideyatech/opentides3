@@ -25,7 +25,7 @@ public class UserPhotoController extends PhotoController<BaseUser> {
 	@PostConstruct
 	public void init() {
 		uploadPage = "/base/user-photo-upload";
-		cropPage = "/base/user-photo-crop";
+		adjustPhoto = "/base/user-photo-adjust";
 	}
 	
 	/*

@@ -97,13 +97,13 @@
 							data-target=".nav-collapse"> <span class="icon-bar"></span> <span
 							class="icon-bar"></span> <span class="icon-bar"></span>
 						</a>
-						<a class="brand" href="${home}/home">
+						<a class="brand" href="${home}">
 							<img class="logo" src="<c:url value='${logo}'/>"/>
 						</a>
 						<div class="nav-collapse collapse">
 							<ul class="nav">
 								<li class="${active eq 'home' ? 'active' : ''}">
-									<a href="${home}/home">
+									<a href="${home}">
 										<i class="icon-home icon-white"></i>
 										Home
 									</a>

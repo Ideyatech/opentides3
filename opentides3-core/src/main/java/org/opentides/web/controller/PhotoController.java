@@ -55,7 +55,7 @@ public abstract class PhotoController<T extends BaseEntity> {
 			.append("uploads").toString();
 	
 	protected String uploadPage = "";
-	protected String cropPage = "";
+	protected String adjustPhoto = "";
 
 	@Autowired
 	protected BeanFactory beanFactory;
@@ -123,7 +123,6 @@ public abstract class PhotoController<T extends BaseEntity> {
 					
 				}
 				
-
 				if (barray != null) {
 					response.setContentType("image/jpeg");
 					response.setHeader("Cache-Control", "public");
@@ -167,9 +166,9 @@ public abstract class PhotoController<T extends BaseEntity> {
 		return uploadPage;
 	}
 	
-	@RequestMapping(method = RequestMethod.GET, value="/crop")
-	public final String displayCropForm(){
-		return cropPage;
+	@RequestMapping(method = RequestMethod.GET, value="/adjust")
+	public final String displayAdjustForm(){
+		return adjustPhoto;
 	}
 	
 	
@@ -197,11 +196,11 @@ public abstract class PhotoController<T extends BaseEntity> {
 					+ " does not implement Photoable");
 		}
 		
-		return cropPage;
+		return adjustPhoto;
 	}
 	
-	@RequestMapping(method = RequestMethod.POST, value="/crop")
-	public final String processCrop(final HttpServletRequest request, @ModelAttribute("command") final T command) {
+	@RequestMapping(method = RequestMethod.POST, value="/adjust")
+	public final String processAdjust(final HttpServletRequest request, @ModelAttribute("command") final T command) {
 		
 		if (Photoable.class.isAssignableFrom(command.getClass())) { // ensure that the command implements Photoable.
 			
@@ -217,14 +216,12 @@ public abstract class PhotoController<T extends BaseEntity> {
 					System.out.println(request.getParameter("x2"));
 					System.out.println(request.getParameter("y"));
 					System.out.println(request.getParameter("y2"));
-					System.out.println(photoInfo);
 					
-					service.save((T) photoable);
 				}
 			});
 			
 		} else {
-			System.out.println("Could not process crop : "
+			System.out.println("Could not process adjust : "
 					+ command.getClass().getSimpleName()
 					+ " does not implement Photoable");
 		}
@@ -308,10 +305,10 @@ public abstract class PhotoController<T extends BaseEntity> {
 					+ NamingUtil.toElementName(this.entityBeanType
 							.getSimpleName()) + "-photo-upload";
 		}
-		if (StringUtil.isEmpty(this.cropPage)) {
-			this.cropPage = "app/"
+		if (StringUtil.isEmpty(this.adjustPhoto)) {
+			this.adjustPhoto = "app/"
 				+ NamingUtil.toElementName(this.entityBeanType
-						.getSimpleName()) + "-photo-crop";
+						.getSimpleName()) + "-photo-adjust";
 		}
 		Assert.notNull(service, this.getClass().getSimpleName()
 				+ " is not associated with a service class [" + serviceBean
