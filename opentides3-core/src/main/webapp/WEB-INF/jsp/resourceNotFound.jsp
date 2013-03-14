@@ -1,6 +1,8 @@
 <%@ taglib prefix="app" tagdir="/WEB-INF/tags"%>
-<app:header pageTitle="label.empty" />
+<app:header pageTitle="label.error-page" />
 
-	${exception.customMsg}
+	<div class="alert alert-error">
+		${exception.customMsg}
+	</div>
 	
 <app:footer/>

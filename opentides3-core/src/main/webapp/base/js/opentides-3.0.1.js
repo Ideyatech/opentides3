@@ -309,14 +309,45 @@ var opentides3 = (function() {
 				$(this).remove();
 			});
 		},
+		
 		/**
-		 * Update coordinates
+		 * Display Upload Photo form
+		 * 
+		 * @author ajalbaniel
 		 */
-		updateThumbnailCoordinates : function(c) {
-			$('#x').val(c.x);
-		    $('#y').val(c.y);
-		    $('#x2').val(c.x2);
-		    $('#y2').val(c.y2);
+		showUploadPhoto : function() {
+			var id = $(this).closest('tr').data('id');
+			var url = $(this).closest('td').data('photo-url') + '/upload?id=' + id;
+			
+			$('.upload-photo-modal').load(url, function(){
+				$('.upload-photo-modal').modal();
+			});
+		},
+		/**
+		 * Display Adjust Photo form
+		 * 
+		 * @author ajalbaniel
+		 */
+		showAdjustPhoto : function() {
+			var id = $(this).closest('tr').data('id');
+			var url = $(this).closest('td').data('photo-url') + '/adjust?id=' + id;
+			
+			$('.adjust-photo-modal').load(url, function(){
+				$('.adjust-photo-modal').modal().on('shown', function(){
+					$('#original-image').Jcrop({
+						setSelect: [0, 0, 200, 200],
+						allowSelect: false,
+						minSize: [ 200, 200 ],
+						aspectRatio: 1,
+						onChange: function(c){
+							$('#x').val(c.x);
+						    $('#y').val(c.y);
+						    $('#x2').val(c.x2);
+						    $('#y2').val(c.y2);
+						}
+					});
+				});
+			});
 		}
 
 	};

@@ -465,6 +465,11 @@ input[type="search"], input[type="tel"], input[type="color"],
 
 /* PHOTO */
 
+.img-polaroid + .dropdown-toggle {
+	padding: 7px 7px 6px 6px;
+	border-left: 0;
+}
+
 #original-image {
 	max-width: 100%;
 	visibility: hidden;

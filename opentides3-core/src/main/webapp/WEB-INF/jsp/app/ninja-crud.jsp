@@ -88,10 +88,15 @@
 					<tbody>
 						<script type="text/template" class="template">
 	                		<tr id="ninja-row-{{id}}" data-id="{{id}}">
-								<td>
-									<img class="img-polaroid" src="${home}/ninja/photo?id={{id}}&size=xs"/>
-									<i class='icon-upload upload-photo'></i>
-									<i class='icon-edit adjust-photo'></i>
+								<td data-photo-url="${home}/ninja/photo">
+									<div class="btn-group">
+									  <img class="img-polaroid" src="${home}/ninja/photo?id={{id}}&size=xs"/>
+									  <a class="btn dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>
+									  <ul class="dropdown-menu">
+									    <li><a class="upload-photo"><i class="icon-upload"></i> <spring:message code="photo.change-photo" /></a></li>
+									    <li><a class="adjust-photo"><i class="icon-edit"></i> <spring:message code="photo.edit-thumbnail" /></a></li>
+									  </ul>
+									</div>
 								</td>
 								<td>{{completeName}}</td>
 	                			<td>{{email}}</td>
@@ -107,10 +112,15 @@
 						</script>
 						<c:forEach items="${results.results}" var="record" varStatus="status">
 							<tr id="ninja-row-${record.id}" data-id="${record.id}">
-								<td>
-									<img class="img-polaroid" src="${home}/ninja/photo?id=${record.id}&size=xs"/>
-									<i class='icon-upload upload-photo'></i>
-									<i class='icon-edit adjust-photo'></i>
+								<td data-photo-url="${home}/ninja/photo">
+									<div class="btn-group">
+									  <img class="img-polaroid" src="${home}/ninja/photo?id=${record.id}&size=xs"/>
+									  <a class="btn dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>
+									  <ul class="dropdown-menu">
+									    <li><a class="upload-photo"><i class="icon-upload"></i> <spring:message code="photo.change-photo" /></a></li>
+									    <li><a class="adjust-photo"><i class="icon-edit"></i> <spring:message code="photo.edit-thumbnail" /></a></li>
+									  </ul>
+									</div>
 								</td>
 								<td><c:out value="${record.completeName}" /></td>
 			                	<td><c:out value="${record.email}" /></td>
@@ -179,36 +189,11 @@
 <app:footer>
 	<script type="text/javascript">
 		$(document).ready(function() {
-			//$('.footable').footable();
 			$("#ninja-body").RESTful();
-			
-		}).on("click", '.adjust-photo', showAdjustPhoto).on("click", '.upload-photo', showUploadPhoto);
-		
-		function showUploadPhoto(){
-			var id = $(this).closest('tr').data('id');
-			var url = '${home}/ninja/photo/upload?id=' + id;
-			
-			$('.upload-photo-modal').load(url, function(){
-				$('.upload-photo-modal').modal();
-			});
-		}
-		
-		function showAdjustPhoto(){
-			var id = $(this).closest('tr').data('id');
-			var url = '${home}/ninja/photo/adjust?id=' + id;
-			
-			$('.adjust-photo-modal').load(url, function(){
-				$('.adjust-photo-modal').modal().on('shown', function(){
-					$('#original-image').Jcrop({
-						setSelect: [0, 0, 200, 200],
-						allowSelect: false,
-						minSize: [ 200, 200 ],
-						aspectRatio: 1,
-						onChange: opentides3.updateThumbnailCoordinates
-					});
-				});
-			});
-		}
+		})
+		.on("click", '.adjust-photo', opentides3.showAdjustPhoto)
+		.on("click", '.upload-photo', opentides3.showUploadPhoto);
+
 		
 	</script>
 </app:footer>

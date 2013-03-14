@@ -10,7 +10,7 @@
 	<div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal"
 			aria-hidden="true">&times;</button>
-		<h3>Change Photo</h3>
+		<h3><spring:message code="photo.change-photo" /></h3>
 	</div>
 	
 	<div class="modal-body">
