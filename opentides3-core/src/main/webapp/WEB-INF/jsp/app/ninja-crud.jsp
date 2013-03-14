@@ -163,6 +163,9 @@
 	
 </div>
 
+	
+<div id="ajax-modal" class="modal hide fade" data-width="760" tabindex="-1"></div>
+	
 </div>
 
 <app:footer>
@@ -174,8 +177,19 @@
 			$('.edit-photo-action').on("click", function(){
 				
 				var id = $(this).closest('tr').data('id');
-				window.location.href ='${home}/ninja/photo/upload?id=' + id;
+				var url = '${home}/ninja/photo/upload?id=' + id;
 				
+				$.ajax(url, {
+	                type: "GET",
+	                dataType: "html",
+	                cache: false,
+					success : function(data){
+						$('#ajax-modal').empty();
+	                	$('#ajax-modal').append(data);
+		                $('#ajax-modal').modal();
+	                }
+	            });
+
 			});
 			
 		});

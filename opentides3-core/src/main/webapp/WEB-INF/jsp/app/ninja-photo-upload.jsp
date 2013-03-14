@@ -3,42 +3,52 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="app" tagdir="/WEB-INF/tags"%>
-<app:header pageType="modal-page" />
 
 <form:form commandName="command" enctype="multipart/form-data"
-	method="POST" action="/ninja/photo/upload?id=${command.id}">
-	
-	<div class="span3">
-		<img class="img-polaroid" src="${home}/ninja/photo?id=${command.id}&size=l"/>
-	</div>
-	<div class="span6">
-		<input type="file" id="photo" name="photo" class="hide" accept="image/*"/>
+		method="POST" action="/ninja/photo/upload?id=${command.id}">
 		
-		<div class="control-group">
-			<div class="input-append">
-			   <input id="photo-path" class="input-large" type="text" readonly>
-			   <a class="btn" id="browse-photo"><spring:message code="photo.browse" /></a>
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal"
+			aria-hidden="true">&times;</button>
+		<h3>Upload Photo</h3>
+	</div>
+	
+	<div class="modal-body">
+
+		<div class="span2">
+			<div class="current-image-wrapper">
+				<img class="img-polaroid current-image" src="${home}/ninja/photo?id=${command.id}&size=l"/>
 			</div>
-			<small><spring:message code="photo.upload-instructions" /></small>
 		</div>
-		<div class="control-group">
-			<input type="submit" value="<spring:message code="photo.change-photo" />" class="btn btn-success" />
+		<div class="span5">
+			<input type="file" id="photo" name="photo" class="hide" accept="image/*"/>
+			
+			<div class="control-group">
+				<div class="input-append">
+				   <input id="photo-path" class="input-large" type="text" readonly>
+				   <a class="btn" id="browse-photo"><spring:message code="photo.browse" /></a>
+				</div>
+				<hr/>
+				<small><spring:message code="photo.upload-instructions" /></small>
+			</div>
 		</div>
-		<hr/>
-		<div class="control-group">
-			<a href="${home}/ninja/photo/adjust?id=${command.id}"><spring:message code="photo.adjust-current-photo" /></a>
-		</div>
+		
+	</div>
+
+	<div class="modal-footer">
+		<button class="btn btn-link" onclick="window.location.href='${home}/ninja/photo/adjust?id=${command.id}'">
+			<spring:message code="photo.edit-thumbnail" />
+		</button>
+		<input type="submit" value="<spring:message code="photo.change-photo" />" class="btn btn-success" />
 	</div>
 	
 </form:form>
 
-<app:footer pageType="modal-page">
-	<script type="text/javascript">
-		$('#browse-photo, #photo-path').on("click", function(){
-			$('#photo').click();
-		});
-		$('#photo').on("change", function() {
-		   $('#photo-path').val($(this).val());
-		});
-	</script>
-</app:footer>
+<script type="text/javascript">
+	$('#browse-photo, #photo-path').on("click", function(){
+		$('#photo').click();
+	});
+	$('#photo').on("change", function() {
+	   $('#photo-path').val($(this).val());
+	});
+</script>
