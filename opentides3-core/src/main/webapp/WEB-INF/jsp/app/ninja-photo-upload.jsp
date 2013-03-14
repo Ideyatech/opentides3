@@ -3,8 +3,9 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="app" tagdir="/WEB-INF/tags"%>
+<app:header pageType="modal-page"/>
 
-<form:form commandName="command" enctype="multipart/form-data"
+<form:form id="ninja-upload-photo" commandName="command" enctype="multipart/form-data"
 		method="POST" action="/ninja/photo/upload?id=${command.id}">
 		
 	<div class="modal-header">
@@ -59,4 +60,11 @@
 	$('#photo').on("change", function() {
 	   $('#photo-path').val($(this).val());
 	});
+	
+	$('#ninja-upload-photo').ajaxForm(function() { 
+        alert("You have uploaded the photo via AJAX! Nice!"); 
+    }); 
+	
 </script>
+
+<app:footer pageType="modal-page"/>

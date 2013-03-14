@@ -56,6 +56,7 @@
 	<script type="text/javascript" src="<c:url value='/js/opentides-3.0.1.js'/>"></script>
 	<script type="text/javascript" src="<c:url value='/js/bootstrap-modal.js'/>"></script>
 	<script type="text/javascript" src="<c:url value='/js/bootstrap-modalmanager.js'/>"></script>
+	<script type="text/javascript" src="<c:url value='/js/jquery.form.js'/>"></script>
     
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>

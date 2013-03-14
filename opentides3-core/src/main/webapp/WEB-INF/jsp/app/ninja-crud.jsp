@@ -6,8 +6,11 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <app:header pageTitle="label.ninja" active="ninja">
+	
+	<!-- Required for photo cropping -->
 	<link rel="stylesheet" type="text/css" href="<c:url value='/css/jquery-jcrop.min.css'/>" />
 	<script type="text/javascript" src="<c:url value='/js/jquery-jcrop.min.js'/>"></script>
+	
 </app:header>
 
 <div id="ninja-body">
@@ -193,7 +196,5 @@
 		})
 		.on("click", '.adjust-photo', opentides3.showAdjustPhoto)
 		.on("click", '.upload-photo', opentides3.showUploadPhoto);
-
-		
 	</script>
 </app:footer>
