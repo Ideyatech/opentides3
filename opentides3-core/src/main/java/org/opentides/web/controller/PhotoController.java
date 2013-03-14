@@ -10,6 +10,7 @@ import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.opentides.annotation.Valid;
 import org.opentides.bean.BaseEntity;
 import org.opentides.bean.PhotoInfo;
 import org.opentides.bean.Photoable;
@@ -20,6 +21,7 @@ import org.opentides.util.FileUtil;
 import org.opentides.util.ImageUtil;
 import org.opentides.util.NamingUtil;
 import org.opentides.util.StringUtil;
+import org.opentides.web.validator.PhotoValidator;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -28,12 +30,15 @@ import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.Assert;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 
 
 /**
@@ -50,6 +55,9 @@ public abstract class PhotoController<T extends BaseEntity> {
 	
 	@Autowired
 	protected PhotoInfoService photoInfoService;
+	
+	@Autowired
+	protected PhotoValidator photoValidator;
 	
 	protected String uploadPath = (new StringBuilder()).append(File.separator)
 			.append("uploads").toString();
@@ -173,7 +181,11 @@ public abstract class PhotoController<T extends BaseEntity> {
 	
 	
 	@RequestMapping(method = RequestMethod.POST, value="/upload")
-	public final String processUpload(@ModelAttribute("command") final T command) {
+	public final String processUpload(@Valid @ModelAttribute("command") final T command, BindingResult result) {
+		
+		if(result.hasErrors()) {
+			return uploadPage;
+		}
 		
 		if (Photoable.class.isAssignableFrom(command.getClass())) { // ensure that the command implements Photoable.
 			
@@ -228,7 +240,7 @@ public abstract class PhotoController<T extends BaseEntity> {
 		return uploadPage;
 	}
 	
-	public PhotoInfo uploadPhoto(CommonsMultipartFile photo) {
+	public PhotoInfo uploadPhoto(MultipartFile photo) {
 
 		PhotoInfo photoInfo = new PhotoInfo();
 		photoInfo.setFilename(photo.getOriginalFilename());
@@ -317,6 +329,11 @@ public abstract class PhotoController<T extends BaseEntity> {
 		PlatformTransactionManager txManager = (PlatformTransactionManager) beanFactory
 				.getBean("transactionManager");
 		this.transactionTemplate = new TransactionTemplate(txManager);
+	}
+	
+	@InitBinder
+	protected void initBinder(WebDataBinder binder){
+		binder.setValidator(photoValidator);
 	}
 	
 }

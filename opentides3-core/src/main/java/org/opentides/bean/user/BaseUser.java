@@ -47,7 +47,7 @@ import org.opentides.bean.PhotoInfo;
 import org.opentides.bean.Photoable;
 import org.opentides.util.StringUtil;
 import org.opentides.web.json.Views;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
@@ -527,7 +527,7 @@ public class BaseUser extends BaseEntity implements Photoable {
 			inverseJoinColumns = @JoinColumn(name = "PHOTO_ID")
 	)
 	private List<PhotoInfo> photos;
-	private transient CommonsMultipartFile photo;
+	private transient MultipartFile photo;
 	
 	@Override
 	public List<PhotoInfo> getPhotos() {
@@ -540,12 +540,12 @@ public class BaseUser extends BaseEntity implements Photoable {
 	}
 	
 	@Override
-	public CommonsMultipartFile getPhoto() {
+	public MultipartFile getPhoto() {
 		return photo;
 	}
 	
 	@Override
-	public void setPhoto(CommonsMultipartFile photo) {
+	public void setPhoto(MultipartFile photo) {
 		this.photo = photo;
 	}
 	

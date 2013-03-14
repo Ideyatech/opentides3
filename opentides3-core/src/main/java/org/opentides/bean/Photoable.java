@@ -2,7 +2,8 @@ package org.opentides.bean;
 
 import java.util.List;
 
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
+
 
 /**
  * 
@@ -15,8 +16,8 @@ public interface Photoable {
 	public abstract void setPhotos(List<PhotoInfo> photos);
 	
 	// Required upon form submit, suggested to be a transient variable. 
-	public CommonsMultipartFile getPhoto();
-	public void setPhoto(CommonsMultipartFile photo);
+	public MultipartFile getPhoto();
+	public void setPhoto(MultipartFile photo);
 	
 	public void addPhoto(PhotoInfo photoInfo);
 

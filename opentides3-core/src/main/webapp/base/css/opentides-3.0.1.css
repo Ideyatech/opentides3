@@ -320,10 +320,6 @@ body.anonymous-page #nav .brand {
 	margin-bottom: 0;
 }
 
-.modal form .alert {
-	margin: 10px 15px 10px 15px;
-}
-
 .required {
 	font-size: 10px;
 	text-transform: uppercase;

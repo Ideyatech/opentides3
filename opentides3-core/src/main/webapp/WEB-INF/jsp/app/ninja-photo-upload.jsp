@@ -15,6 +15,14 @@
 	
 	<div class="modal-body">
 
+		<spring:bind path="command.*">
+			<c:if test="${status.error}">
+				<div class="alert alert-error">
+					<form:errors path="*" />
+				</div>
+			</c:if>
+		</spring:bind>
+		
 		<div class="span2">
 			<div class="current-image-wrapper">
 				<img class="img-polaroid current-image" src="${home}/ninja/photo?id=${command.id}&size=l"/>
