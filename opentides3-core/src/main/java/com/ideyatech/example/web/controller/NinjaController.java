@@ -21,9 +21,15 @@ package com.ideyatech.example.web.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.opentides.bean.SystemCodes;
+import org.opentides.bean.user.BaseUser;
 import org.opentides.web.controller.BaseCrudController;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -55,6 +61,13 @@ public class NinjaController extends BaseCrudController<Ninja> {
 	@ModelAttribute("skillsList")
 	public List<SystemCodes> skillsList() {
 		return systemCodesService.findSystemCodesByCategory("SKILLS");
+	}
+	
+	@Override
+	protected void onLoadSearch(Ninja command, BindingResult bindingResult, 
+			Model uiModel, HttpServletRequest request,
+			HttpServletResponse response) {
+		uiModel.addAttribute("results", search(command, request));
 	}
 
 }

@@ -5,7 +5,10 @@
 <%@ taglib prefix="app" tagdir="/WEB-INF/tags"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<app:header pageTitle="label.ninja" active="ninja"/>
+<app:header pageTitle="label.ninja" active="ninja">
+	<link rel="stylesheet" type="text/css" href="<c:url value='/css/jquery-jcrop.min.css'/>" />
+	<script type="text/javascript" src="<c:url value='/js/jquery-jcrop.min.js'/>"></script>
+</app:header>
 
 <div id="ninja-body">
 
@@ -86,7 +89,9 @@
 						<script type="text/template" class="template">
 	                		<tr id="ninja-row-{{id}}" data-id="{{id}}">
 								<td>
-									<img class="img-polaroid edit-photo-action" src="${home}/ninja/photo?id={{id}}&size=s"/>
+									<img class="img-polaroid" src="${home}/ninja/photo?id={{id}}&size=xs"/>
+									<i class='icon-upload upload-photo'></i>
+									<i class='icon-edit adjust-photo'></i>
 								</td>
 								<td>{{completeName}}</td>
 	                			<td>{{email}}</td>
@@ -103,7 +108,9 @@
 						<c:forEach items="${results.results}" var="record" varStatus="status">
 							<tr id="ninja-row-${record.id}" data-id="${record.id}">
 								<td>
-									<img class="img-polaroid edit-photo-action" src="${home}/ninja/photo?id=${record.id}&size=s"/>
+									<img class="img-polaroid" src="${home}/ninja/photo?id=${record.id}&size=xs"/>
+									<i class='icon-upload upload-photo'></i>
+									<i class='icon-edit adjust-photo'></i>
 								</td>
 								<td><c:out value="${record.completeName}" /></td>
 			                	<td><c:out value="${record.email}" /></td>
@@ -164,7 +171,8 @@
 </div>
 
 	
-<div id="ajax-modal" class="modal hide fade" data-width="760" tabindex="-1"></div>
+<div class="adjust-photo-modal modal hide fade" data-width="760" tabindex="-1"></div>
+<div class="upload-photo-modal modal hide fade" data-width="760" tabindex="-2"></div>
 	
 </div>
 
@@ -174,24 +182,33 @@
 			//$('.footable').footable();
 			$("#ninja-body").RESTful();
 			
-			$('.edit-photo-action').on("click", function(){
-				
-				var id = $(this).closest('tr').data('id');
-				var url = '${home}/ninja/photo/upload?id=' + id;
-				
-				$.ajax(url, {
-	                type: "GET",
-	                dataType: "html",
-	                cache: false,
-					success : function(data){
-						$('#ajax-modal').empty();
-	                	$('#ajax-modal').append(data);
-		                $('#ajax-modal').modal();
-	                }
-	            });
-
-			});
+		}).on("click", '.adjust-photo', showAdjustPhoto).on("click", '.upload-photo', showUploadPhoto);
+		
+		function showUploadPhoto(){
+			var id = $(this).closest('tr').data('id');
+			var url = '${home}/ninja/photo/upload?id=' + id;
 			
-		});
+			$('.upload-photo-modal').load(url, function(){
+				$('.upload-photo-modal').modal();
+			});
+		}
+		
+		function showAdjustPhoto(){
+			var id = $(this).closest('tr').data('id');
+			var url = '${home}/ninja/photo/adjust?id=' + id;
+			
+			$('.adjust-photo-modal').load(url, function(){
+				$('.adjust-photo-modal').modal().on('shown', function(){
+					$('#original-image').Jcrop({
+						setSelect: [0, 0, 200, 200],
+						allowSelect: false,
+						minSize: [ 200, 200 ],
+						aspectRatio: 1,
+						onChange: opentides3.updateThumbnailCoordinates
+					});
+				});
+			});
+		}
+		
 	</script>
 </app:footer>

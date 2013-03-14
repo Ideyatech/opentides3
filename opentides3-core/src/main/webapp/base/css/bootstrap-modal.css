@@ -59,7 +59,7 @@
 
 .modal-body {
 	max-height: none;
-	overflow: auto;
+	overflow: auto !important;
 }
 
 .modal.modal-absolute {
@@ -149,7 +149,7 @@
 		margin: 0;
 		height: auto !important;
 		max-height: none !important;
-		overflow: visible !important;
+		overflow: visible;
 	}
 	
 	.modal-footer,

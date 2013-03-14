@@ -308,6 +308,15 @@ var opentides3 = (function() {
 			}, 300, 'swing', function() {
 				$(this).remove();
 			});
+		},
+		/**
+		 * Update coordinates
+		 */
+		updateThumbnailCoordinates : function(c) {
+			$('#x').val(c.x);
+		    $('#y').val(c.y);
+		    $('#x2').val(c.x2);
+		    $('#y2').val(c.y2);
 		}
 
 	};

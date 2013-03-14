@@ -116,7 +116,7 @@ public abstract class PhotoController<T extends BaseEntity> {
 					} else if("xs".equals(size)) {
 						barray = ImageUtil.loadImage(ImageUtil.buildFileName(defaultImage, "_xs.png"));
 					} else if("original".equals(size)) {
-						barray = ImageUtil.loadImage(filePath);
+						barray = ImageUtil.loadImage(defaultImage);
 					} else {
 						barray = ImageUtil.loadImage(ImageUtil.buildFileName(defaultImage, "_l.png"));
 					}

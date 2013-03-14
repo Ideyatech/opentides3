@@ -343,7 +343,7 @@ input[type="search"], input[type="tel"], input[type="color"],
 
 /* RESULTS PANEL */
 
-.edit-action, .remove-action, .edit-photo-action {
+.edit-action, .remove-action, .adjust-photo, .upload-photo {
 	cursor: pointer;
 }
 
@@ -467,6 +467,7 @@ input[type="search"], input[type="tel"], input[type="color"],
 
 #original-image {
 	max-width: 100%;
+	visibility: hidden;
 }
 
 .original-image-wrapper {
@@ -476,6 +477,7 @@ input[type="search"], input[type="tel"], input[type="color"],
 .original-image-wrapper > div {
 	margin: 0 auto;
 }
+
 @media (min-width: 768px) {
 	.current-image-wrapper {
 		text-align: center;

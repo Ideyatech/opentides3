@@ -10,7 +10,7 @@
 	<div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal"
 			aria-hidden="true">&times;</button>
-		<h3>Upload Photo</h3>
+		<h3>Change Photo</h3>
 	</div>
 	
 	<div class="modal-body">
@@ -21,6 +21,7 @@
 			</div>
 		</div>
 		<div class="span5">
+			<br/>
 			<input type="file" id="photo" name="photo" class="hide" accept="image/*"/>
 			
 			<div class="control-group">
@@ -28,7 +29,6 @@
 				   <input id="photo-path" class="input-large" type="text" readonly>
 				   <a class="btn" id="browse-photo"><spring:message code="photo.browse" /></a>
 				</div>
-				<hr/>
 				<small><spring:message code="photo.upload-instructions" /></small>
 			</div>
 		</div>
