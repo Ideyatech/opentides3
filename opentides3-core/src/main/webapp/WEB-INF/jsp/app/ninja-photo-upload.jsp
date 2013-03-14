@@ -13,13 +13,20 @@
 	</div>
 	<div class="span4">
 		<input type="file" id="photo" name="photo" class="hide"/>
-		<div class="input-append">
-		   <input id="photo-path" class="input-large" type="text" readonly>
-		   <a class="btn" id="browse-photo">Browse</a>
-		</div>
 		
+		<div class="control-group">
+			<div class="input-append">
+			   <input id="photo-path" class="input-large" type="text" readonly>
+			   <a class="btn" id="browse-photo">Browse</a>
+			</div>
+		</div>
+		<div class="control-group">
+			<input type="submit" value="Change Photo" class="btn btn-success" />
+		</div>
 		<hr/>
-		<input type="submit" value="Change Photo" class="btn btn-success btn-large" />
+		<div class="control-group">
+			<a href="${home}/ninja/photo/crop?id=${command.id}">Adjust current photo</a>
+		</div>
 	</div>
 	
 </form:form>

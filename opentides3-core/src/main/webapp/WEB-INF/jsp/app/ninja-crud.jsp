@@ -165,23 +165,16 @@
 
 </div>
 
-
-<div id="ajax-modal" class="modal hide fade" tabindex="-1"></div>
-
 <app:footer>
 	<script type="text/javascript">
 		$(document).ready(function() {
 			//$('.footable').footable();
 			$("#ninja-body").RESTful();
 			
-			var $modal = $('#ajax-modal');
-			
 			$('.edit-photo-action').on("click", function(){
 				
 				var id = $(this).closest('tr').data('id');
-				$modal.load('${home}/ninja/photo/upload?id=' + id, '', function(){
-					$modal.modal();
-				});
+				window.location.href ='${home}/ninja/photo/upload?id=' + id;
 				
 			});
 			

@@ -163,22 +163,23 @@ public abstract class PhotoController<T extends BaseEntity> {
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value="/upload")
-	public final String displayUploadForm(ModelMap modelMap){
+	public final String displayUploadForm(){
 		return uploadPage;
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value="/crop")
-	public final String displayCropForm(ModelMap modelMap){
+	public final String displayCropForm(){
 		return cropPage;
 	}
 	
-	@SuppressWarnings("unchecked")
+	
 	@RequestMapping(method = RequestMethod.POST, value="/upload")
-	public final String processUpload(ModelMap modelMap, @ModelAttribute("command") final T command) {
+	public final String processUpload(@ModelAttribute("command") final T command) {
 		
 		if (Photoable.class.isAssignableFrom(command.getClass())) { // ensure that the command implements Photoable.
 			
 			transactionTemplate.execute(new TransactionCallbackWithoutResult() {
+				@SuppressWarnings("unchecked")
 				protected void doInTransactionWithoutResult(TransactionStatus status) {
 
 					Photoable photoable = (Photoable) command;
@@ -195,8 +196,38 @@ public abstract class PhotoController<T extends BaseEntity> {
 					+ command.getClass().getSimpleName()
 					+ " does not implement Photoable");
 		}
+		
+		return cropPage;
+	}
+	
+	@RequestMapping(method = RequestMethod.POST, value="/crop")
+	public final String processCrop(final HttpServletRequest request, @ModelAttribute("command") final T command) {
+		
+		if (Photoable.class.isAssignableFrom(command.getClass())) { // ensure that the command implements Photoable.
+			
+			transactionTemplate.execute(new TransactionCallbackWithoutResult() {
+				@SuppressWarnings("unchecked")
+				protected void doInTransactionWithoutResult(TransactionStatus status) {
 
-		modelMap.addAttribute("command", command);
+					Photoable photoable = (Photoable) command;
+					PhotoInfo photoInfo = photoable.getPhotos().get(photoable.getPhotos().size()-1);
+					
+					System.out.println(request);
+					System.out.println(request.getParameter("x"));
+					System.out.println(request.getParameter("x2"));
+					System.out.println(request.getParameter("y"));
+					System.out.println(request.getParameter("y2"));
+					System.out.println(photoInfo);
+					
+					service.save((T) photoable);
+				}
+			});
+			
+		} else {
+			System.out.println("Could not process crop : "
+					+ command.getClass().getSimpleName()
+					+ " does not implement Photoable");
+		}
 		
 		return uploadPage;
 	}
