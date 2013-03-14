@@ -3,7 +3,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
 
-<c:if test="${not pageType eq 'modal-page'}">
+<c:if test="${pageType != 'modal-page'}">
 		</div>
 		
 		<div id="push"></div>

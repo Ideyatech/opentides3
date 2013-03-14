@@ -8,10 +8,10 @@
 <form:form commandName="command" enctype="multipart/form-data"
 	method="POST" action="/ninja/photo/upload?id=${command.id}">
 	
-	<div class="span2">
+	<div class="span3">
 		<img class="img-polaroid" src="${home}/ninja/photo?id=${command.id}&size=l"/>
 	</div>
-	<div class="span4">
+	<div class="span6">
 		<input type="file" id="photo" name="photo" class="hide" accept="image/*"/>
 		
 		<div class="control-group">

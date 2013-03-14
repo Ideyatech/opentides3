@@ -204,21 +204,20 @@ public abstract class PhotoController<T extends BaseEntity> {
 		
 		if (Photoable.class.isAssignableFrom(command.getClass())) { // ensure that the command implements Photoable.
 			
-			transactionTemplate.execute(new TransactionCallbackWithoutResult() {
-				@SuppressWarnings("unchecked")
-				protected void doInTransactionWithoutResult(TransactionStatus status) {
-
-					Photoable photoable = (Photoable) command;
-					PhotoInfo photoInfo = photoable.getPhotos().get(photoable.getPhotos().size()-1);
-					
-					System.out.println(request);
-					System.out.println(request.getParameter("x"));
-					System.out.println(request.getParameter("x2"));
-					System.out.println(request.getParameter("y"));
-					System.out.println(request.getParameter("y2"));
-					
-				}
-			});
+			Photoable photoable = (Photoable) command;
+			PhotoInfo photoInfo = photoable.getPhotos().get(photoable.getPhotos().size()-1);
+			
+			int x = Integer.parseInt(request.getParameter("x")); // X Coordinate
+			int y = Integer.parseInt(request.getParameter("y")); // Y2 Coordinate
+			int x2 = Integer.parseInt(request.getParameter("x2")); // X2 Coordinate 
+			int y2 = Integer.parseInt(request.getParameter("y2")); // Y2 Coordinate
+			int rw = Integer.parseInt(request.getParameter("rw")); // Resized width of Image
+			
+			try {
+				ImageUtil.adjustPhotoThumbnails(photoInfo.getFullPath(), x, y, x2, y2, rw);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 			
 		} else {
 			System.out.println("Could not process adjust : "

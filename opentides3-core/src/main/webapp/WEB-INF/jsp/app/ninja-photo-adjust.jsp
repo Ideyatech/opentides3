@@ -11,17 +11,18 @@
 <form:form commandName="command" enctype="multipart/form-data"
 	method="POST" action="/ninja/photo/adjust?id=${command.id}">
 	
-	
 	<div class="span6 original-image-wrapper">
 		<img id="original-image" src="${home}/ninja/photo?id=${command.id}&size=original"/>
 	</div>
-	<div class="span4">
+	<div class="span3">
 		<input type="hidden" id="x" name="x" value="0"/>
 		<input type="hidden" id="y" name="y" value="0"/>
 		<input type="hidden" id="x2" name="x2" value="200"/>
 		<input type="hidden" id="y2" name="y2" value="200"/>
+		
+		<input type="text" id="rw" name="rw" value="0"/>
 		<div class="control-group">
-			<input type="submit" value="<spring:message code="photo.save-changes" />" class="btn btn-success" />
+			<input id="adjust-photo-submit" type="button" value="<spring:message code="photo.save-changes" />" class="btn btn-success" />
 		</div>
 		<hr/>
 		<div class="control-group">
@@ -47,6 +48,12 @@
 			    $('#x2').val(c.x2);
 			    $('#y2').val(c.y2);
 			};
+			
+			$('#adjust-photo-submit').on("click", function(e){
+				e.preventDefault();
+				$('#rw').val($('#original-image').width());
+				$(this).closest('form').submit();
+			});
 			
 		});
 	</script>

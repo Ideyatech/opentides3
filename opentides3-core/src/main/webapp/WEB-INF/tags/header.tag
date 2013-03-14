@@ -68,7 +68,7 @@
 
 <body class="${pageType}">
 
-	<c:if test="${not pageType eq 'modal-page'}">
+	<c:if test="${pageType != 'modal-page'}">
     	<div class='notifications center'></div>
 		<div id="wrap">
 	</c:if>

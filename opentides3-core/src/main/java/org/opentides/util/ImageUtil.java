@@ -80,6 +80,35 @@ public class ImageUtil {
 	}
 	
 	/**
+	 * @author ajalbaniel
+	 * 
+	 * Adjust thumbnails for existing photo
+	 * 
+	 * Requires thumbnail coordinates and the image's resized width to do it's magic
+	 * 
+	 */
+	public static void adjustPhotoThumbnails(String filePath, int x, int y, int x2, int y2, int rw) throws IOException {
+		
+		Image img = ImageLoader.fromFile(filePath);
+		
+		if(img.getWidth() != rw)
+			img = img.getResizedToWidth(rw);
+			
+		Image adjustedImg = img.crop(x, y, x2, y2);
+
+		Image l = adjustedImg.getResizedToSquare(200, 0.0);
+		Image m = adjustedImg.getResizedToSquare(100, 0.0);
+		Image s = adjustedImg.getResizedToSquare(50, 0.0);
+		Image xs = adjustedImg.getResizedToSquare(25, 0.0);
+		
+		l.writeToFile(new File(buildFileName(filePath, "_l") + ".png"));
+		m.writeToFile(new File(buildFileName(filePath, "_m") + ".png"));
+		s.writeToFile(new File(buildFileName(filePath, "_s") + ".png"));
+		xs.writeToFile(new File(buildFileName(filePath, "_xs") + ".png"));
+		
+	}
+	
+	/**
 	 * Public helper used to concatenate postFix of image
 	 */
 	public static String buildFileName(String fullPath, String postFix) {
