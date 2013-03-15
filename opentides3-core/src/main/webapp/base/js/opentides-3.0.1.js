@@ -319,7 +319,7 @@ var opentides3 = (function() {
 			var id = $(this).closest('tr').data('id');
 			var url = $(this).closest('td').data('photo-url') + '/upload?id=' + id;
 			
-			$('.upload-photo-modal').load(url, function(){
+			$('.upload-photo-modal').load(url, '', function(){
 				$('.upload-photo-modal').modal();
 			});
 		},
@@ -332,7 +332,7 @@ var opentides3 = (function() {
 			var id = $(this).closest('tr').data('id');
 			var url = $(this).closest('td').data('photo-url') + '/adjust?id=' + id;
 			
-			$('.adjust-photo-modal').load(url, function(){
+			$('.adjust-photo-modal').load(url, '', function(){
 				$('.adjust-photo-modal').modal().on('shown', function(){
 					$('#original-image').Jcrop({
 						setSelect: [0, 0, 200, 200],

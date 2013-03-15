@@ -3,8 +3,6 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="app" tagdir="/WEB-INF/tags"%>
-<app:header pageType="modal-page"/>
-
 <form:form id="ninja-upload-photo" commandName="command" enctype="multipart/form-data"
 		method="POST" action="/ninja/photo/upload?id=${command.id}">
 		
@@ -66,5 +64,3 @@
     }); 
 	
 </script>
-
-<app:footer pageType="modal-page"/>

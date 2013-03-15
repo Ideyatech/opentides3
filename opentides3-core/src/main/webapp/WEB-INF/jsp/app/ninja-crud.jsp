@@ -118,7 +118,7 @@
 								<td data-photo-url="${home}/ninja/photo">
 									<div class="btn-group">
 									  <img class="img-polaroid" src="${home}/ninja/photo?id=${record.id}&size=xs"/>
-									  <a class="btn dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>
+									  <a class="btn dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></a>
 									  <ul class="dropdown-menu">
 									    <li><a class="upload-photo"><i class="icon-upload"></i> <spring:message code="photo.change-photo" /></a></li>
 									    <li><a class="adjust-photo"><i class="icon-edit"></i> <spring:message code="photo.edit-thumbnail" /></a></li>
