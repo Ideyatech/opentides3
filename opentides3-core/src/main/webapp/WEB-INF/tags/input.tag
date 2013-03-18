@@ -11,6 +11,8 @@
 <%@ attribute name="required" required="false" type="java.lang.Boolean" %>
 <%@ attribute name="datepicker" required="false" type="java.lang.Boolean" %>
 <%@ attribute name="type" required="false" type="java.lang.String" %>
+<%@ attribute name="placeholder" required="false" type="java.lang.String" %>
+<%@ attribute name="cssClass" required="false" type="java.lang.String" %>
 <%@ attribute name="appendText" required="false" type="java.lang.String" %>
 <%@ attribute name="prependText" required="false" type="java.lang.String" %>
 <%@ attribute name="appendIcon" required="false" type="java.lang.String" %>
@@ -43,13 +45,14 @@
 				<span class="add-on"><i class="${prependIcon}"></i></span>
 			</c:if>
 		
-			<input name="${path}" id="${path}" value=""
+			<form:input path="${path}"
 			
-			type="${empty type ?'text': type }"
-			
-			${required ? 'required="required"' : ''}
-			
-			${attrs} />
+				required="${required}"
+				type="${empty type ?'text': type }"			
+				placeholder="${placeholder}"
+				cssClass="${cssClass}"
+				
+				/>
 			
 			<c:if test="${not empty appendText}">
 				<span class="add-on">${appendText}</span>

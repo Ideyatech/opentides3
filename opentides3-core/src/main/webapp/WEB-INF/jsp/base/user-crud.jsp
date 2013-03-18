@@ -24,8 +24,8 @@
 			</div>
 			<div class="search-form collapse">
 				<form:form modelAttribute="searchCommand" id="user-search">
-				    <app:input path="firstName" label="label.user.first-name" class="input-block-level"/>
-				    <app:input path="lastName" label="label.user.last-name" class="input-block-level"/>
+				    <app:input path="firstName" label="label.user.first-name" cssClass="input-block-level"/>
+				    <app:input path="lastName" label="label.user.last-name" cssClass="input-block-level"/>
 				    <hr />
 					<input type="submit" class="btn btn-info btn-block" data-submit="search" value="<spring:message code="label.search"/>">
 					<button type="button" class="btn btn-link btn-block" data-submit="clear"><spring:message code="label.clear" /></button>		
