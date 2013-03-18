@@ -82,11 +82,6 @@ public class PhotoValidator implements Validator {
 				}
 
 			}
-		} else {
-
-			errors.rejectValue("photo", "photo.image-required",
-					"Please specify the image to upload");
-
 		}
 
 	}

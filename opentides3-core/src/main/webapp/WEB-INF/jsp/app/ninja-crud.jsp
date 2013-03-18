@@ -91,13 +91,13 @@
 					<tbody>
 						<script type="text/template" class="template">
 	                		<tr id="ninja-row-{{id}}" data-id="{{id}}">
-								<td data-photo-url="${home}/ninja/photo">
+								<td>
 									<div class="btn-group">
 									  <img class="img-polaroid" src="${home}/ninja/photo?id={{id}}&size=xs"/>
 									  <a class="btn dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>
 									  <ul class="dropdown-menu">
-									    <li><a class="upload-photo"><i class="icon-upload"></i> <spring:message code="photo.change-photo" /></a></li>
-									    <li><a class="adjust-photo"><i class="icon-edit"></i> <spring:message code="photo.edit-thumbnail" /></a></li>
+									    <li><a data-url="${home}/ninja/photo/upload?id={{id}}" class="upload-photo"><i class="icon-upload"></i> <spring:message code="photo.change-photo" /></a></li>
+									    <li><a data-url="${home}/ninja/photo/adjust?id={{id}}" class="adjust-photo"><i class="icon-edit"></i> <spring:message code="photo.edit-thumbnail" /></a></li>
 									  </ul>
 									</div>
 								</td>
@@ -115,13 +115,13 @@
 						</script>
 						<c:forEach items="${results.results}" var="record" varStatus="status">
 							<tr id="ninja-row-${record.id}" data-id="${record.id}">
-								<td data-photo-url="${home}/ninja/photo">
+								<td>
 									<div class="btn-group">
 									  <img class="img-polaroid" src="${home}/ninja/photo?id=${record.id}&size=xs"/>
 									  <a class="btn dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></a>
 									  <ul class="dropdown-menu">
-									    <li><a class="upload-photo"><i class="icon-upload"></i> <spring:message code="photo.change-photo" /></a></li>
-									    <li><a class="adjust-photo"><i class="icon-edit"></i> <spring:message code="photo.edit-thumbnail" /></a></li>
+									    <li><a data-url="${home}/ninja/photo/upload?id=${record.id}" class="upload-photo"><i class="icon-upload"></i> <spring:message code="photo.change-photo" /></a></li>
+									    <li><a data-url="${home}/ninja/photo/adjust?id=${record.id}" class="adjust-photo"><i class="icon-edit"></i> <spring:message code="photo.edit-thumbnail" /></a></li>
 									  </ul>
 									</div>
 								</td>

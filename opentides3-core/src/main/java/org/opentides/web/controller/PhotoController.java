@@ -4,7 +4,12 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.ParameterizedType;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
@@ -12,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.opentides.annotation.Valid;
 import org.opentides.bean.BaseEntity;
+import org.opentides.bean.MessageResponse;
 import org.opentides.bean.PhotoInfo;
 import org.opentides.bean.Photoable;
 import org.opentides.service.BaseCrudService;
@@ -24,6 +30,7 @@ import org.opentides.util.StringUtil;
 import org.opentides.web.validator.PhotoValidator;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
@@ -31,6 +38,8 @@ import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -38,6 +47,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 
@@ -67,6 +77,9 @@ public abstract class PhotoController<T extends BaseEntity> {
 
 	@Autowired
 	protected BeanFactory beanFactory;
+
+	@Autowired
+	protected MessageSource messageSource;
 	
 	protected Class<T> entityBeanType;
 
@@ -180,11 +193,19 @@ public abstract class PhotoController<T extends BaseEntity> {
 	}
 	
 	
-	@RequestMapping(method = RequestMethod.POST, value="/upload")
-	public final String processUpload(@Valid @ModelAttribute("command") final T command, BindingResult result) {
+	@RequestMapping(method = RequestMethod.POST, value="/upload", produces = "application/json")
+	public final @ResponseBody Map<String, Object>
+		processUpload(@Valid @ModelAttribute("command") final T command,
+		BindingResult result, final HttpServletRequest request) {
+		
+		Map<String, Object> model = new HashMap<String, Object>();
+		final List<MessageResponse> messages = new ArrayList<MessageResponse>();
 		
 		if(result.hasErrors()) {
-			return uploadPage;
+			messages.addAll(convertErrorMessage(result,
+					request.getLocale()));
+			model.put("messages", messages);
+			return model;
 		}
 		
 		if (Photoable.class.isAssignableFrom(command.getClass())) { // ensure that the command implements Photoable.
@@ -198,6 +219,8 @@ public abstract class PhotoController<T extends BaseEntity> {
 					
 					photoable.addPhoto(p);
 					
+					messages.addAll(buildSuccessMessage(command, "upload-photo", request.getLocale()));
+					
 					service.save((T) photoable);
 				}
 			});
@@ -208,11 +231,16 @@ public abstract class PhotoController<T extends BaseEntity> {
 					+ " does not implement Photoable");
 		}
 		
-		return adjustPhoto;
+		model.put("messages", messages);
+		return model;
 	}
 	
-	@RequestMapping(method = RequestMethod.POST, value="/adjust")
-	public final String processAdjust(final HttpServletRequest request, @ModelAttribute("command") final T command) {
+	@RequestMapping(method = RequestMethod.POST, value="/adjust", produces = "application/json")
+	public final @ResponseBody Map<String, Object>
+		processAdjust(final HttpServletRequest request, @ModelAttribute("command") final T command) {
+		
+		Map<String, Object> model = new HashMap<String, Object>();
+		final List<MessageResponse> messages = new ArrayList<MessageResponse>();
 		
 		if (Photoable.class.isAssignableFrom(command.getClass())) { // ensure that the command implements Photoable.
 			
@@ -227,6 +255,7 @@ public abstract class PhotoController<T extends BaseEntity> {
 			
 			try {
 				ImageUtil.adjustPhotoThumbnails(photoInfo.getFullPath(), x, y, x2, y2, rw);
+				messages.addAll(buildSuccessMessage(command, "adjust-photo", request.getLocale()));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -237,7 +266,8 @@ public abstract class PhotoController<T extends BaseEntity> {
 					+ " does not implement Photoable");
 		}
 		
-		return uploadPage;
+		model.put("messages", messages);
+		return model;
 	}
 	
 	public PhotoInfo uploadPhoto(MultipartFile photo) {
@@ -329,6 +359,63 @@ public abstract class PhotoController<T extends BaseEntity> {
 		PlatformTransactionManager txManager = (PlatformTransactionManager) beanFactory
 				.getBean("transactionManager");
 		this.transactionTemplate = new TransactionTemplate(txManager);
+	}
+	
+	/**
+	 * Converts the binding error messages to list of MessageResponse
+	 * 
+	 * @param bindingResult
+	 */
+	protected List<MessageResponse> convertErrorMessage(
+			BindingResult bindingResult, Locale locale) {
+		List<MessageResponse> errorMessages = new ArrayList<MessageResponse>();
+		if (bindingResult.hasErrors()) {
+			for (ObjectError error : bindingResult.getAllErrors()) {
+				MessageResponse message = null;
+				if (error instanceof FieldError) {
+					FieldError ferror = (FieldError) error;
+					message = new MessageResponse(MessageResponse.Type.error,
+							error.getObjectName(), ferror.getField(),
+							error.getCodes(), error.getArguments());
+				} else
+					message = new MessageResponse(MessageResponse.Type.error,
+							error.getObjectName(), null, error.getCodes(),
+							error.getArguments());
+				message.setMessage(messageSource.getMessage(message, locale));
+				errorMessages.add(message);
+			}
+		}
+		return errorMessages;
+	}
+
+	/**
+	 * Builds success message by convention. Success messages are displayed as
+	 * notifications only.
+	 * 
+	 * Standard convention in order of resolving message is: (1)
+	 * message.<className>.
+	 * <code>-success (e.g. message.system-codes.add-success)
+	 *     (2) message.add-success (generic message)
+	 * 
+	 * @param elementClass
+	 * @param object
+	 * @param code
+	 * @param locale
+	 * @return
+	 */
+	protected List<MessageResponse> buildSuccessMessage(BaseEntity object,
+			String code, Locale locale) {
+		List<MessageResponse> messages = new ArrayList<MessageResponse>();
+		Assert.notNull(object);
+		String prefix = "message."
+				+ NamingUtil.toElementName(object.getClass().getSimpleName());
+		String codes = prefix + "." + code + "-success,message." + code
+				+ "-success";
+		MessageResponse message = new MessageResponse(
+				MessageResponse.Type.notification, codes.split("\\,"), null);
+		message.setMessage(messageSource.getMessage(message, locale));
+		messages.add(message);
+		return messages;
 	}
 	
 	@InitBinder

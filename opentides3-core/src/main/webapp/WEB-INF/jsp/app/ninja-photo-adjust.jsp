@@ -4,11 +4,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="app" tagdir="/WEB-INF/tags"%>
 
-<link rel="stylesheet" type="text/css" href="<c:url value='/css/jquery-jcrop.min.css'/>" />
-<script type="text/javascript" src="<c:url value='/js/jquery-jcrop.min.js'/>"></script>
-
-
-<form:form commandName="command" enctype="multipart/form-data"
+<form:form id="ninja-adjust-photo" commandName="command" enctype="multipart/form-data"
 	method="POST" action="/ninja/photo/adjust?id=${command.id}">
 	
 	<div class="modal-header">
@@ -29,9 +25,10 @@
 	</div>
 	
 	<div class="modal-footer">
-		<button class="btn btn-link" onclick="window.location.href='${home}/ninja/photo/upload?id=${command.id}'">
-			<spring:message code="photo.upload-different-photo" />
-		</button>
+		<input type="button" class="btn btn-link switch-modal"
+			data-url="${home}/ninja/photo/upload?id=${command.id}"
+			value="<spring:message code="photo.upload-different-photo" />"
+		/>
 		<input id="adjust-photo-submit" type="submit" value="<spring:message code="photo.save-changes" />" class="btn btn-success" />
 	</div>
 	
@@ -43,4 +40,10 @@
 		$('#rw').val($('#original-image').width());
 		$(this).closest('form').submit();
 	});
+	
+	$('.switch-modal').on("click", opentides3.showUploadPhoto);
+	
+	$('#ninja-adjust-photo').ajaxForm(function(data) {
+		opentides3.displayPhotoResponse($('#ninja-adjust-photo'), data);
+    });
 </script>

@@ -25,7 +25,7 @@
 			</div>
 		</c:if>
 		
-		<input class="input-block-level" type="text" name="j_username" placeholder="Username" value="admin">
+		<input class="input-block-level" type="text" name="j_username" placeholder="Username" value="admin" autofocus="autofocus">
 		<input class="input-block-level" type="password" name="j_password" placeholder="Password" value="123123">
 		
 		<label class="checkbox">

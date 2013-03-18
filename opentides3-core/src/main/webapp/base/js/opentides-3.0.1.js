@@ -120,7 +120,6 @@ var opentides3 = (function() {
 		 * 
 		 */
         displayMessage: function(json, container) {
-        	
         	if(container) {
         		//remove messages already displayed in the container
     			container.find('.control-group').each(function(){
@@ -147,7 +146,14 @@ var opentides3 = (function() {
     					$('.center').notify({ message: message.message, type: 'success' }).show();
     				} else {
     					if(container) {
-    						container.find('form').prepend("<div class='alert alert-" + message.type + "'>"+message.message+"</div>");
+    						var messageContainer;
+    						
+    						if (container.find('.messageContainer'))
+    							messageContainer = container.find('.message-container');
+    						else
+    							messageContainer = container.find('form');
+    						
+    						messageContainer.prepend("<div class='alert alert-" + message.type + "'>"+message.message+"</div>");
     					} else {
     						$('.center').notify({ message: message.message, type: message.type }).show();
     					}
@@ -316,12 +322,14 @@ var opentides3 = (function() {
 		 * @author ajalbaniel
 		 */
 		showUploadPhoto : function() {
-			var id = $(this).closest('tr').data('id');
-			var url = $(this).closest('td').data('photo-url') + '/upload?id=' + id;
+			$('.adjust-photo-modal').modal('hide');
+			
+			var url = $(this).data('url');
 			
 			$('.upload-photo-modal').load(url, '', function(){
 				$('.upload-photo-modal').modal();
 			});
+			
 		},
 		/**
 		 * Display Adjust Photo form
@@ -329,8 +337,9 @@ var opentides3 = (function() {
 		 * @author ajalbaniel
 		 */
 		showAdjustPhoto : function() {
-			var id = $(this).closest('tr').data('id');
-			var url = $(this).closest('td').data('photo-url') + '/adjust?id=' + id;
+			$('.upload-photo-modal').modal('hide');
+			
+			var url = $(this).data('url');
 			
 			$('.adjust-photo-modal').load(url, '', function(){
 				$('.adjust-photo-modal').modal().on('shown', function(){
@@ -347,6 +356,24 @@ var opentides3 = (function() {
 						}
 					});
 				});
+			});
+		},
+		displayPhotoResponse : function(form, data) {
+			$.each(data['messages'], function(i, result) {
+				if(result.type == 'error') {
+					opentides3.displayMessage({ messages : [ {
+							type : "error",
+							message : result.message,
+						}]}, form);
+
+				} else {
+					opentides3.displayMessage({ messages : [ {
+						type : "success",
+						message : result.message,
+					}]});
+
+					form.find('.switch-modal').click();
+				}
 			});
 		}
 
@@ -674,7 +701,6 @@ var opentides3 = (function() {
 							url : firstForm.attr('action'), // url
 							data : firstForm.serialize(), // data
 							success : function(json) { // callback
-									firstForm.find('.control-group').removeClass('error');
 									opentides3.displayMessage(json, form);
 									if (typeof (json.command) === 'object'
 											&& json.command.id > 0) {
