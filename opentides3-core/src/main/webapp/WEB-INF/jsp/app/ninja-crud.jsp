@@ -31,19 +31,6 @@
 			</div>
 			<div class="search-form collapse">
 				<form:form modelAttribute="searchCommand" id="ninja-search" >
-					<div class="control-group">
-						<form:label path="firstName" cssClass="control-label"><spring:message code="label.ninja.firstName"/></form:label>
-						<div class="controls">
-							<form:input path="firstName" maxlength="50" cssClass="input-block-level"/>
-						</div>
-					</div>
-					<div class="control-group">
-						<form:label path="lastName" cssClass="control-label"><spring:message code="label.ninja.lastName"/></form:label>
-						<div class="controls">
-							<form:input path="lastName" maxlength="50" cssClass="input-block-level"/>
-						</div>
-					</div>
-					
 				    <app:input path="firstName" label="label.ninja.firstName" cssClass="input-block-level"/>
 				    <app:input path="lastName" label="label.ninja.lastName" cssClass="input-block-level"/>
 					<hr/>
@@ -105,8 +92,8 @@
 	                			<td>{{joinDate}}</td>
 								<td>{{active}}</td>
 								<td>
-									<i class='icon-pencil edit-action' data-id='{{id}}'></i>
-									<i class='icon-trash remove-action' data-id='{{id}}'></i>
+									<i class='icon-pencil edit-action' data-id='{{id}}' data-title="<spring:message code="label.edit" />"></i>
+									<i class='icon-trash remove-action' data-id='{{id}}' data-title="<spring:message code="label.delete" />"></i>
 								</td>
 							</tr>
 						</script>
@@ -129,8 +116,8 @@
 			                	<td><fmt:formatDate value="${record.joinDate}" pattern="MM/dd/yyyy"/></td>
 			                	<td><c:out value="${record.active}" /></td>
 								<td>
-									<i class='icon-pencil edit-action' data-id='${record.id}'></i>
-									<i class='icon-trash remove-action' data-id='${record.id}'></i>
+									<i class='icon-pencil edit-action' data-id='${record.id}' data-title="<spring:message code="label.edit" />"></i>
+									<i class='icon-trash remove-action' data-id='${record.id}' data-title="<spring:message code="label.delete" />"></i>
 								</td>
 							</tr>
 						</c:forEach>
@@ -190,6 +177,8 @@
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$("#ninja-body").RESTful();
+			
+			$('body').tooltip({selector: '.edit-action, .remove-action'});
 		})
 		.on("click", '.adjust-photo', opentides3.showAdjustPhoto)
 		.on("click", '.upload-photo', opentides3.showUploadPhoto);

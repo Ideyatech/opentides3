@@ -70,8 +70,8 @@
 			                	<td><c:out value="${record.displayGroups}" /></td>
 			                	<td><c:out value="${record.credential.enabled}" /></td>
 				                <td>
-									<i class='icon-pencil edit-action' data-id='${record.id}'></i>
-									<i class='icon-trash remove-action' data-id='${record.id}'></i>
+									<i class='icon-pencil edit-action' data-id='${record.id}' data-title="<spring:message code="label.edit" />"></i>
+									<i class='icon-trash remove-action' data-id='${record.id}' data-title="<spring:message code="label.delete" />"></i>
 				                </td>
 			            	</tr>
 		            	</c:forEach>
@@ -125,8 +125,8 @@
 <app:footer>
   <script type="text/javascript">
   	$(document).ready(function() {
-		//$('.footable').footable();	
   		$("#user-body").RESTful();
+		$('body').tooltip({selector: '.edit-action, .remove-action'});
 	});
   </script>
 </app:footer>

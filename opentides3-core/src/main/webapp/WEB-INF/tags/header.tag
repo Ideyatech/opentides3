@@ -105,35 +105,30 @@
 							<ul class="nav">
 								<li class="${active eq 'home' ? 'active' : ''}">
 									<a href="${home}">
-										<i class="icon-home icon-white"></i>
 										Home
 									</a>
 								</li>
 								<li class="${active eq 'users' ? 'active' : ''}">
 									<a href="${home}/organization/users/">
-										<i class="icon-user icon-white"></i>
 										Users
 									</a>
 								</li>
 								<li class="${active eq 'system-codes' ? 'active' : ''}">
 									<a href="${home}/system/system-codes/">
-										<i class="icon-barcode icon-white"></i>
 										System Codes
 									</a>
 								</li>
 								<li class="${active eq 'usergroups' ? 'active' : ''}">
 									<a href="${home}/organization/usergroups/">
-										<i class="icon-globe icon-white"></i>
 										User Groups
 									</a>
 								</li>
 								<li class="${active eq 'ninja' ? 'active' : ''}">
 									<a href="${home}/ninja/">
-										<i class="icon-leaf icon-white"></i>
 										Ninja
 									</a>
 								</li>
-								<li class="pull-right">
+								<li>
 									<a href='<c:out value="${home}/j_spring_security_logout" />'>
 										<spring:message code="label.logout"/>
 									</a>

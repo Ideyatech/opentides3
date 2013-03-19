@@ -25,8 +25,8 @@
 			<div class="search-form collapse">
 				<form:form modelAttribute="searchCommand" id="system-codes-search" >
 					<app:select path="category" label="label.system-codes.category" cssClass="input-block-level"/>
-					<app:input path="key" label="label.system-codes.key" class="input-block-level"/>
-					<app:input path="value" label="label.system-codes.value" class="input-block-level"/>
+					<app:input path="key" label="label.system-codes.key" cssClass="input-block-level"/>
+					<app:input path="value" label="label.system-codes.value" cssClass="input-block-level"/>
 					<hr/>
 					<input type="submit" class="btn btn-info btn-block" data-submit="search" value="<spring:message code="label.search"/>">
 					<button type="button" class="btn btn-link btn-block" data-submit="clear"><spring:message code="label.clear" /></button>
@@ -71,8 +71,8 @@
 								<td>{{category}}</td>
 								<td>{{numberValue}}</td>
 								<td>
-									<i class='icon-pencil edit-action' data-id='{{id}}'></i>
-									<i class='icon-trash remove-action' data-id='{{id}}'></i>
+									<i class='icon-pencil edit-action' data-id='{{id}}' data-title="<spring:message code="label.edit" />"></i>
+									<i class='icon-trash remove-action' data-id='{{id}}' data-title="<spring:message code="label.delete" />"></i>
 								</td>
 							</tr>
 						</script>
@@ -83,8 +83,8 @@
 								<td><c:out value="${record.category}" /></td>
 								<td><c:out value="${record.numberValue}" /></td>
 								<td>
-									<i class='icon-pencil edit-action' data-id='${record.id}'></i>
-									<i class='icon-trash remove-action' data-id='${record.id}'></i>
+									<i class='icon-pencil edit-action' data-id='${record.id}' data-title="<spring:message code="label.edit" />"></i>
+									<i class='icon-trash remove-action' data-id='${record.id}' data-title="<spring:message code="label.delete" />"></i>
 								</td>
 							</tr>
 						</c:forEach>
@@ -131,8 +131,8 @@
 <app:footer>
 	<script type="text/javascript">
 		$(document).ready(function() {
-			//$('.footable').footable();
 			$("#system-codes-body").RESTful();
+			$('body').tooltip({selector: '.edit-action, .remove-action'});
 		});
 	</script>
 </app:footer>

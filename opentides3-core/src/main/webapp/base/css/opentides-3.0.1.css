@@ -155,7 +155,6 @@ body.anonymous-page #nav .brand {
 	}
 	.jumbotron {
 		position: static;
-		text-align: center;
 		margin-right: -20px;
 		margin-left: -20px;
 		padding: 10px 20px;
@@ -175,6 +174,7 @@ body.anonymous-page #nav .brand {
 
 .jumbotron h2 {
 	font-weight: normal;
+	text-align: center;
 }
 
 #main {

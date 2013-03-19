@@ -853,8 +853,8 @@ var opentides3 = (function() {
 			function(json) { // callback
 				if (opentides3.supportsHistory()) { // change the url
 					var cleanUrl = '?' + data.replace(/[^&]+=\.?(?:&|$)/g, '');
-					if (searchForm.attr('id').length === 0) {
-						alert('id attribute is required for search form. Please check your html.');
+					if (!searchForm.attr('id')) {
+						//alert('id attribute is required for search form. Please check your html.');
 					}
 					history.pushState({
 						mode : 'search',
