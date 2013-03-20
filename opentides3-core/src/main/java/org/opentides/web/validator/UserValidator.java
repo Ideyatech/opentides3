@@ -19,19 +19,24 @@
 
 package org.opentides.web.validator;
 
+import org.opentides.bean.SystemCodes;
 import org.opentides.bean.user.BaseUser;
 import org.opentides.dao.UserDao;
 import org.opentides.util.StringUtil;
 import org.opentides.util.ValidatorUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
+@Component
 public class UserValidator implements Validator {
+	
+	@Autowired
 	private UserDao userDao;
 
-	@SuppressWarnings("rawtypes")
-	public boolean supports(Class clazz) {
+	public boolean supports(Class<?> clazz) {
 		return BaseUser.class.isAssignableFrom(clazz);
 	}
 
@@ -46,18 +51,20 @@ public class UserValidator implements Validator {
 
 		ValidationUtils.rejectIfEmptyOrWhitespace(e, "credential.username", 
 				"error.required", new Object[]{"Username"},"Username is required.");
-		if (isDuplicateUsername(user)) {
+		
+		/*if (isDuplicateUsername(user)) {
 			e.reject("error.duplicate-field", new Object[]{user.getCredential().getUsername(), "username"}, "User name already exists.");
-		}
+		}*/
 
 		ValidationUtils.rejectIfEmptyOrWhitespace(e, "emailAddress", 
 				"error.required", new Object[]{"Email Address"},"Email address is required.");
-		if (!ValidatorUtil.isEmail(user.getEmailAddress())) {
+		
+		/*if (!ValidatorUtil.isEmail(user.getEmailAddress())) {
 			e.rejectValue("emailAddress", "error.invalid-email-address",new Object[]{user.getEmailAddress()},"Email Address is invalid.");
 		}
 		if (isDuplicateEmail(user)) {
 			e.reject("error.duplicate-field", new Object[]{user.getEmailAddress(),"email"}, "Email address already exists.");
-		}
+		}*/
 
 		if (user.getIsNew()) {
 			ValidationUtils.rejectIfEmptyOrWhitespace(e, "credential.newPassword", 
@@ -108,10 +115,4 @@ public class UserValidator implements Validator {
 		return false;
 	}
 
-	/**
-	 * @param ecmtUserDao the ecmtUserDao to set
-	 */
-	public void setUserDao(UserDao userDao) {
-		this.userDao = userDao;
-	}
 }

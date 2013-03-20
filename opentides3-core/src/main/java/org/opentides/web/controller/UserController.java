@@ -30,6 +30,7 @@ import org.opentides.bean.user.UserGroup;
 import org.opentides.service.UserGroupService;
 import org.opentides.service.UserService;
 import org.opentides.util.StringUtil;
+import org.opentides.web.validator.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -49,9 +50,13 @@ public class UserController extends BaseCrudController<BaseUser> {
 	@Autowired
 	private UserGroupService userGroupService;
 	
+	@Autowired
+	private UserValidator userValidator;
+	
 	@PostConstruct
 	public void init() {
 		singlePage = "/base/user-crud";
+		formValidator = userValidator;
 	}
 	
 	@ModelAttribute("userGroupsList")
