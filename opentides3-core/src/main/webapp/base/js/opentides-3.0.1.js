@@ -738,7 +738,13 @@ var opentides3 = (function() {
 
 					// hide all alerts when form is displayed.
 					form.on('show', function(e) {
-						$(this).find('.ot3-alert').remove();
+						
+						$(this).find('.control-group').each(function(){
+							$(this).removeClass('warning info success error');
+							$(this).find('.help-inline').remove();
+						});
+						$(this).find('.alert').remove();
+					
 					});
 
 					/***********************************************************
