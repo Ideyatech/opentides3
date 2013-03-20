@@ -133,6 +133,7 @@ var opentides3 = (function() {
     		$.each(json['messages'], function(i, message) {
     			
     			if (message.fieldName) {
+    				
     				var element = container.find("#" + message.fieldName);
         			element.closest('.control-group').addClass(message.type);
         			element.after("<span class='help-inline'><small>" + message.message + "</small></span>");
@@ -146,14 +147,7 @@ var opentides3 = (function() {
     					$('.center').notify({ message: message.message, type: 'success' }).show();
     				} else {
     					if(container) {
-    						var messageContainer;
-    						
-    						if (container.find('.messageContainer'))
-    							messageContainer = container.find('.message-container');
-    						else
-    							messageContainer = container.find('form');
-    						
-    						messageContainer.prepend("<div class='alert alert-" + message.type + "'>"+message.message+"</div>");
+    						container.find('.message-container').prepend("<div class='alert alert-" + message.type + "'>"+message.message+"</div>");
     					} else {
     						$('.center').notify({ message: message.message, type: message.type }).show();
     					}

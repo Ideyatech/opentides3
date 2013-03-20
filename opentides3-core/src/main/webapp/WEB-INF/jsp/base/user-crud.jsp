@@ -97,13 +97,14 @@
 			<h4 class="${update}"><spring:message code="label.user.update" /></h4>			    
 		</div>
 		
-		<form:form modelAttribute="formCommand" id="user-form">	
+		<form:form modelAttribute="formCommand" id="user-form" >
 			<div class="modal-body">
+				<div class="message-container"></div>
 				<app:input path="firstName" label="label.user.first-name" required="true"/>
 				<app:input path="lastName" label="label.user.last-name" required="true"/>
 				<app:input path="emailAddress" label="label.user.email" required="true"/>
-				<app:input path="credential.newPassword" label="label.user.password" type="password"/>
-				<app:input path="credential.confirmPassword" label="label.user.confirm-password" type="password"/>
+				<app:input path="credential.newPassword" label="label.user.password" type="password" />
+				<app:input path="credential.confirmPassword" label="label.user.confirm-password" type="password" />
 				<app:select label="label.user.groups" path="groups" multiple="true"
 					items="${userGroupsList}" itemLabel="name" itemValue="id" select2="true"/>
 				<app:checkbox label="label.user.active" path="credential.enabled"/>

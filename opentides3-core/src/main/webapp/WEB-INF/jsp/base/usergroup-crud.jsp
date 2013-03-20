@@ -86,6 +86,7 @@
 			</div>
 	
 			<form:form modelAttribute="formCommand" id="usergroup-form">
+				<div class="message-container"></div>
 				<div>
 					<app:input path="name" label="label.usergroup.name" required="true"/>
 					<app:input path="description" label="label.usergroup.description"/>

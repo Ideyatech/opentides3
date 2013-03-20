@@ -144,6 +144,7 @@
 
 		<form:form modelAttribute="formCommand" id="ninja-form" cssClass="form-horizontal">
 			<div class="modal-body">
+				<div class="message-container"></div>
 				<app:input label="label.ninja.firstName" path="firstName" required="true"/>
 				<app:input label="label.ninja.lastName" path="lastName" required="true" />
 				<app:input label="label.ninja.email" path="email" type="email" />

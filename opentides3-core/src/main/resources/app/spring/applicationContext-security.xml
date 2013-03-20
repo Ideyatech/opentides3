@@ -198,7 +198,7 @@
 				<entry key="ADD_USER">
 					<value>10.02.03.00 Add User</value>
 				</entry>
-				<entry key="EDIT_USER_PROFILE">
+				<entry key="EDIT_USER">
 					<value>10.02.04.00 Edit User Profile</value>
 				</entry>
 				<entry key="MARK_USER_INACTIVE">

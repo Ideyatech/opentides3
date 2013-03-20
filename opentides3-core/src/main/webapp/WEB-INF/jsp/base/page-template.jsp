@@ -106,6 +106,7 @@
 
 		<form:form modelAttribute="formCommand" id="%%%%-form">
 			<div class="modal-body">
+				<div class="message-container"></div>
 				<!-- Define form fields here -->
 			</div>
 			<div class="modal-footer">
