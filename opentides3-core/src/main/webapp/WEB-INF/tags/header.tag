@@ -105,27 +105,32 @@
 							<ul class="nav">
 								<li class="${active eq 'home' ? 'active' : ''}">
 									<a href="${home}">
-										Home
+										<spring:message code="label.home"/>
 									</a>
 								</li>
 								<li class="${active eq 'users' ? 'active' : ''}">
 									<a href="${home}/organization/users/">
-										Users
+										<spring:message code="label.user"/>
 									</a>
 								</li>
 								<li class="${active eq 'system-codes' ? 'active' : ''}">
 									<a href="${home}/system/system-codes/">
-										System Codes
+										<spring:message code="label.system-codes"/>
 									</a>
 								</li>
 								<li class="${active eq 'usergroups' ? 'active' : ''}">
 									<a href="${home}/organization/usergroups/">
-										User Groups
+										<spring:message code="label.usergroup"/>
 									</a>
 								</li>
 								<li class="${active eq 'ninja' ? 'active' : ''}">
 									<a href="${home}/ninja/">
-										Ninja
+										<spring:message code="label.ninja"/>
+									</a>
+								</li>
+								<li class="${active eq 'form-builder' ? 'active' : ''}">
+									<a href="${home}/form-builder/">
+										<spring:message code="label.form-builder"/>
 									</a>
 								</li>
 								<li>

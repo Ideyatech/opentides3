@@ -120,6 +120,7 @@ var opentides3 = (function() {
 		 * 
 		 */
         displayMessage: function(json, container) {
+        console.log(json, container);
         	if(container) {
         		//remove messages already displayed in the container
     			container.find('.control-group').each(function(){

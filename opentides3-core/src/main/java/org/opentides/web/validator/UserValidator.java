@@ -19,11 +19,9 @@
 
 package org.opentides.web.validator;
 
-import org.opentides.bean.SystemCodes;
 import org.opentides.bean.user.BaseUser;
 import org.opentides.dao.UserDao;
 import org.opentides.util.StringUtil;
-import org.opentides.util.ValidatorUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
