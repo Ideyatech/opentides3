@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.opentides.annotation.Auditable;
+import org.opentides.annotation.AuditableFields;
 import org.opentides.annotation.SearchableFields;
+import org.opentides.bean.AuditableField;
 import org.opentides.bean.SystemCodes;
 import org.opentides.bean.user.BaseUser;
 
@@ -23,6 +25,10 @@ public class UserCriteria extends BaseUser {
 	private List<SystemCodes> favorites;
 	private List<String> alias;
 	
+	private SystemCodes status;
+	
+	private BaseUser supervisor;
+	
 	/* (non-Javadoc)
 	 * @see com.ideyatech.core.bean.user.BaseUser#getSearchProperties()
 	 */
@@ -32,6 +38,8 @@ public class UserCriteria extends BaseUser {
 		props.add("firstName");
 		props.add("lastName");
 		props.add("emailAddress");
+		props.add("status");
+		props.add("supervisor");
 		props.add("favorites.value");
 		props.add("credential.username");
 		props.add("credential.enabled");
@@ -39,6 +47,16 @@ public class UserCriteria extends BaseUser {
 		return props;
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.opentides.bean.BaseEntity#getAuditableFields()
+	 */
+	@AuditableFields
+	public List<AuditableField> getAuditableFields() {
+		List<AuditableField> fields = new ArrayList<AuditableField>();
+		fields.add(new AuditableField("favorites.value","Favorites"));
+		return fields;
+	}
+
 	/**
 	 * Getter method for favorites.
 	 *
@@ -71,4 +89,32 @@ public class UserCriteria extends BaseUser {
 	public final void setAlias(List<String> alias) {
 		this.alias = alias;
 	}
+	/**
+	 * @return the status
+	 */
+	public final SystemCodes getStatus() {
+		return status;
+	}
+
+	/**
+	 * @param status the status to set
+	 */
+	public final void setStatus(SystemCodes status) {
+		this.status = status;
+	}
+
+	/**
+	 * @return the supervisor
+	 */
+	public final BaseUser getSupervisor() {
+		return supervisor;
+	}
+
+	/**
+	 * @param supervisor the supervisor to set
+	 */
+	public final void setSupervisor(BaseUser supervisor) {
+		this.supervisor = supervisor;
+	}
+	
 }

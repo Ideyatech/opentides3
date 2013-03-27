@@ -34,7 +34,6 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
 import org.opentides.persistence.listener.AuditLogListener;
-import org.opentides.util.CrudUtil;
 
 /**
  * This class is responsible for handling all audit functions needed to be
@@ -282,13 +281,6 @@ public class AuditLog implements Serializable {
 		this.entityId = entityId;
 	}
 
-	/**
-	 * Getter to retrieve name of entity class. 
-	 * @return
-	 */
-	public final String getEntityName() {
-		return CrudUtil.getReadableName(entityClass);
-	}
 	/**
 	 * Getter method for entityClass.
 	 *

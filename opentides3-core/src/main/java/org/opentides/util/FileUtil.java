@@ -201,19 +201,6 @@ public class FileUtil {
 			}
 		}
 	}
-
-	
-	/**
-	 * Helper class to read certain file and return contents as string. The file
-	 * must be located relative to classpath.
-	 * 
-	 * @param filename
-	 * @return
-	 */
-	public static String backupFile(String filename) {
-		File source = new File(filename);
-		return FileUtil.backupFile(source);
-	}
 	
 	/**
 	 * Helper class to read certain file and return contents as string. The file
@@ -388,11 +375,10 @@ public class FileUtil {
 	 * @param filename
 	 * @return
 	 */
-	public static Properties readProperty(String filename) {
+	public static Properties readProperty(File f) {
 		Properties properties = new Properties();
         FileInputStream fis = null;
 		try {
-	        File f = new File(filename);
 			if (!f.exists()) {
 				f.getParentFile().mkdirs();
 				f.createNewFile();
@@ -400,7 +386,7 @@ public class FileUtil {
 			fis = new FileInputStream(f);
 			properties.load(fis);
 		} catch (IOException e) {
-			_log.error("Failed to load properties ["+filename+"]", e);
+			_log.error("Failed to load properties ["+f.getAbsolutePath()+"]", e);
 		} finally {
 		    if (fis!=null)
                 try {

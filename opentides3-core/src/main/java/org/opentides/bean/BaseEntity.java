@@ -19,7 +19,7 @@
 package org.opentides.bean;
 
 import java.io.Serializable;
-import java.util.Calendar;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.EntityListeners;
@@ -70,14 +70,14 @@ public abstract class BaseEntity implements Serializable {
      */
     @Column(name = "CREATEDATE")
     @Temporal(TemporalType.TIMESTAMP)
-    private Calendar createDate;
+    private Date createDate;
     
     /**
      * Last update date.
      */
     @Column(name = "UPDATEDATE")
     @Temporal(TemporalType.TIMESTAMP)
-    private Calendar updateDate;
+    private Date updateDate;
     
     /**
      * Random id generated used for session mapping.
@@ -185,7 +185,7 @@ public abstract class BaseEntity implements Serializable {
      * 
      * @return create date
      */
-    public final Calendar getCreateDate() {
+    public final Date getCreateDate() {
         return this.createDate;
     }
 
@@ -194,7 +194,7 @@ public abstract class BaseEntity implements Serializable {
      * 
      * @param createDate create date
      */
-    public final void setCreateDate(final Calendar createDate) {
+    public final void setCreateDate(final Date createDate) {
         if (this.createDate == null) {
             this.createDate = createDate;
         }
@@ -205,7 +205,7 @@ public abstract class BaseEntity implements Serializable {
      * 
      * @return last update date.
      */
-    public final Calendar getUpdateDate() {
+    public final Date getUpdateDate() {
         return this.updateDate;
     }
 
@@ -214,7 +214,7 @@ public abstract class BaseEntity implements Serializable {
      * 
      * @param updateDate last update date
      */
-    public final void setUpdateDate(final Calendar updateDate) {
+    public final void setUpdateDate(final Date updateDate) {
         this.updateDate = updateDate;
     }
 

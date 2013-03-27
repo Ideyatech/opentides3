@@ -35,16 +35,18 @@ public class NamingUtil {
 		if (StringUtil.isEmpty(name))
 			return "";
 
+    	String label = name.startsWith("get")?name.replaceFirst("get", ""):name;
+
 		StringBuffer buffer = new StringBuffer();
-		for (int i=0; i<name.length();i++) {
+		for (int i=0; i<label.length();i++) {
 			if (i==0) {
 				// capitalize first character
-				buffer.append(name.substring(0, 1).toUpperCase());
+				buffer.append(label.substring(0, 1).toUpperCase());
 			} else {
 				// append spaces between words
-				if (name.charAt(i) >= 'A' && name.charAt(i)<= 'Z') 
+				if (label.charAt(i) >= 'A' && label.charAt(i)<= 'Z') 
 					buffer.append(" ");
-				buffer.append(name.charAt(i));
+				buffer.append(label.charAt(i));
 			}
 		}
 		return buffer.toString();

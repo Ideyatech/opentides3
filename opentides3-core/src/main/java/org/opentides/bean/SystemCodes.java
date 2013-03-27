@@ -42,7 +42,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 @Entity
 @Table(name = "SYSTEM_CODES")
 @Cache(type = CacheType.SOFT, size = 64000)
-@Auditable
+@Auditable(label="System Codes")
 public class SystemCodes extends BaseEntity implements Serializable {
 
 

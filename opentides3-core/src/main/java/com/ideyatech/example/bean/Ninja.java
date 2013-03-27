@@ -438,7 +438,7 @@ public class Ninja extends BaseEntity implements Photoable {
 		if (!StringUtil.isEmpty(getLastName())) {
 			name += getLastName() + " ";
 		}
-		return name;
+		return name.trim();
 	}
 	
 	// Photoable requirements

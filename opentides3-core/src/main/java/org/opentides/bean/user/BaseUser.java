@@ -178,9 +178,21 @@ public class BaseUser extends BaseEntity implements Photoable {
 		if (!StringUtil.isEmpty(getLastName())) {
 			name += getLastName() + " ";
 		}
-		return name;
+		return name.trim();
 	}
 
+	/**
+	 * Returns the username from credential object
+	 * @return
+	 */
+	@PrimaryField(label="Username")
+	public String getUsername() {
+		if (credential != null) 
+			return credential.getUsername();
+		else
+			return null;		
+	}
+	
 	/**
 	 * Returns Last Name, First Name Middle Name
 	 * 
