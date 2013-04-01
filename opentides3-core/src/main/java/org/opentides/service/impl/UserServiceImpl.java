@@ -158,7 +158,7 @@ public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 		}
 		// check if password reset is active and not expired
 		PasswordReset actual = actuals.get(0);
-		Date updated = actual.getUpdateDate().getTime();
+		Date updated = actual.getUpdateDate();
 		Date expireDate = new Date(updated.getTime() + 86400000);
 		Date today = new Date();
 		if (expireDate.getTime() < today.getTime()) {

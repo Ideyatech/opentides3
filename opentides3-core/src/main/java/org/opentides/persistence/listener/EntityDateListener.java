@@ -19,7 +19,7 @@
 
 package org.opentides.persistence.listener;
 
-import java.util.Calendar;
+import java.util.Date;
 
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
@@ -38,7 +38,7 @@ public class EntityDateListener {
 	@PrePersist
 	public void setDates(BaseEntity entity) {
 		// set dateCreated and dateUpdated fields
-		Calendar now = Calendar.getInstance();
+		Date now = new Date();
 		if (entity.getCreateDate() == null) {
 			entity.setCreateDate(now);
 		}
@@ -48,6 +48,6 @@ public class EntityDateListener {
 	@PreUpdate
 	public void updateDates(BaseEntity entity) {
 		// set dateUpdated fields
-		entity.setUpdateDate(Calendar.getInstance());
+		entity.setUpdateDate(new Date());
 	}
 }

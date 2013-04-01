@@ -17,6 +17,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import org.opentides.annotation.Auditable;
+import org.opentides.annotation.PrimaryField;
 //import org.opentides.annotation.Secure;
 import org.opentides.annotation.field.CheckBox;
 import org.opentides.annotation.field.DatePicker;
@@ -428,6 +429,7 @@ public class Ninja extends BaseEntity implements Photoable {
 	}
 	
 	@JsonView(Views.SearchView.class)
+	@PrimaryField(label="Complete Name")
 	public final String getCompleteName() {
 		String name = "";
 		if (!StringUtil.isEmpty(getFirstName())) {
@@ -436,7 +438,7 @@ public class Ninja extends BaseEntity implements Photoable {
 		if (!StringUtil.isEmpty(getLastName())) {
 			name += getLastName() + " ";
 		}
-		return name;
+		return name.trim();
 	}
 	
 	// Photoable requirements

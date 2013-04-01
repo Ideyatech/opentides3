@@ -31,8 +31,10 @@ import javax.persistence.Transient;
 
 import org.apache.log4j.Logger;
 import org.opentides.annotation.Auditable;
+import org.opentides.annotation.AuditableFields;
 import org.opentides.annotation.FormBind;
 import org.opentides.annotation.FormBind.Load;
+import org.opentides.annotation.PrimaryField;
 import org.opentides.annotation.SearchableFields;
 import org.opentides.bean.AuditableField;
 import org.opentides.bean.BaseEntity;
@@ -49,6 +51,10 @@ public class CacheUtil {
 
 	public static final Map<Class<?>, List<AuditableField>> auditable  = new ConcurrentHashMap<Class<?>, List<AuditableField> >();
 	
+	public static final Map<Class<?>, AuditableField> primaryField  = new ConcurrentHashMap<Class<?>, AuditableField >();
+
+	public static final Map<Class<?>, String> readableName  = new ConcurrentHashMap<Class<?>, String >();
+
 	public static final Map<Class<?>, List<String>> persistentFields = new ConcurrentHashMap<Class<?>, List<String>>();
 	
 	public static final Map<Class<?>, List<String>> searchableFields = new ConcurrentHashMap<Class<?>, List<String>>();
@@ -58,6 +64,43 @@ public class CacheUtil {
 	private static final Map<Class<?>, Method> formBindUpdateMethods = new ConcurrentHashMap<Class<?>, Method>();
 
 	/**
+	 * Helper method to retrieve a readable name for a given class.
+	 * This method tries to access static method named readableName and returns its value if exist.
+	 * Otherwise, the method tries to convert the class to a more readable form.
+	 * (e.g. InboundDocument becomes Inbound Document);
+	 * @param entityClass
+	 * @return
+	 */
+	public static String getReadableName(BaseEntity obj) {
+		Class<?> clazz = obj.getClass();
+		String ret = readableName.get(clazz);
+		if (ret==null) {
+			if (clazz.isAnnotationPresent(Auditable.class)) {
+				String label = (clazz.getAnnotation(Auditable.class)).label();
+				if (!StringUtil.isEmpty(label)) {
+					ret = label;
+				}
+			}
+			if (ret==null) {
+				// no annotation, try readableName method
+				try {
+					Method method = clazz.getMethod("getReadableName");
+					return method.invoke(null).toString().trim();
+				} catch (Exception e) {
+					String name = clazz.getSimpleName();
+					return NamingUtil.toLabel(name);
+				}			
+			}
+	        if (_log.isDebugEnabled()) {	        	
+		        _log.debug(clazz.getSimpleName()+" has readable name of '" + ret + "'");
+	        }
+	        readableName.put(obj.getClass(), ret);
+			ret =  readableName.get(obj.getClass());
+		}
+		return ret;
+	}
+	
+	/**
 	 * Retrieves auditable settings from the cache, if available.
      * Returns the list of field names that are auditable. By default, these 
      * are fields that are not transient and not volatile.
@@ -65,33 +108,100 @@ public class CacheUtil {
 	 * @param obj
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	public static List<AuditableField> getAuditable(BaseEntity obj) {
 		Class<?> clazz = obj.getClass();
 		List<AuditableField> ret = auditable.get(clazz);
 		if (ret == null) {
 			List<AuditableField> auditableFields = new ArrayList<AuditableField>();
-	        Auditable annotation = clazz.getAnnotation(Auditable.class);
-	        if (annotation!=null) {
-	            final List<Field> fields = CrudUtil.getAllFields(clazz, annotation.includeParentFields());
-	            String[] exclude = annotation.excludeFields();
-	            for (Field field : fields) {        	
-	            	if ( (!Modifier.isTransient(field.getModifiers())) &&
-	            		 (!Modifier.isVolatile(field.getModifiers())) &&
-	            		 (!Modifier.isStatic(field.getModifiers())) &&            		 
-	            		 (!field.isAnnotationPresent(Transient.class)) &&
-	            		 (!Arrays.asList(exclude).contains(field.getName())) ) {            		
-	                    auditableFields.add(new AuditableField(field.getName()));
-	                }
-	            }
-	        }
-	        _log.debug(clazz.getSimpleName()+" contains the following auditable fields");
-	        for (AuditableField audit:auditableFields) {
-	            _log.debug(audit.getTitle() + ":" + audit.getFieldName());        	
+			// check if there is method marked as AuditableField
+            final List<Method> methods = CrudUtil.getAllMethods(clazz, true);// do not include parentFields
+            for (Method method:methods) {
+            	if (method.isAnnotationPresent(AuditableFields.class)) {
+            		try {
+            			auditableFields = (List<AuditableField>) method.invoke(obj);
+					} catch (Exception e) {
+						_log.warn("Unable to execute annotated method @AuditableFields of " +
+								obj.getClass().getSimpleName(), e);
+					}
+					break;
+            	}
+            }
+			if (auditableFields.isEmpty()) {
+				// no annotated method, use auto-detection
+		        Auditable annotation = clazz.getAnnotation(Auditable.class);
+		        if (annotation!=null) {
+		            final List<Field> fields = CrudUtil.getAllFields(clazz, annotation.includeParentFields());
+		            List<String> exclude = Arrays.asList(annotation.excludeFields());
+		            for (Field field : fields) {        	
+		            	if ( (!Modifier.isTransient(field.getModifiers())) &&
+		            		 (!Modifier.isVolatile(field.getModifiers())) &&
+		            		 (!Modifier.isStatic(field.getModifiers())) &&            		 
+		            		 (!field.isAnnotationPresent(Transient.class)) &&
+		            		 (!exclude.contains(field.getName())) ) {            		
+		                    auditableFields.add(new AuditableField(field.getName()));
+		                }
+		            }
+		        }				
+			}
+	        if (_log.isDebugEnabled()) {	        	
+		        _log.debug(clazz.getSimpleName()+" contains the following auditable fields");
+		        for (AuditableField audit:auditableFields) {
+		            _log.debug(audit.getTitle() + ":" + audit.getFieldName());        	
+		        }
 	        }
 			auditable.put(obj.getClass(), auditableFields);
 			ret =  auditable.get(obj.getClass());
 		}
 		return ret;		
+	}
+	
+	
+	/**
+	 * Retrieves the attribute that is marked as primary field within the base entity.
+	 * If not available, null is returned.
+	 * @param obj
+	 * @return
+	 */
+	public static AuditableField getPrimaryField(BaseEntity obj) {
+		Class<?> clazz = obj.getClass();
+		AuditableField ret = primaryField.get(clazz);
+		if (ret == null) {
+			// loop all fields
+            final List<Field> fields = CrudUtil.getAllFields(clazz, true);// do not include parentFields
+    		AuditableField pf = null;
+            for (Field field:fields) {
+            	if (field.isAnnotationPresent(PrimaryField.class)) {
+            		PrimaryField annot = field.getAnnotation(PrimaryField.class);
+            		if (StringUtil.isEmpty(annot.label())) {
+            			pf = new AuditableField(field.getName());
+            		} else {
+            			pf = new AuditableField(field.getName(), annot.label());
+            		}
+            		break;
+            	}
+            }
+            
+            // loop all methods
+            final List<Method> methods = CrudUtil.getAllMethods(clazz, true);// do not include parentFields
+            for (Method method:methods) {
+            	if (method.isAnnotationPresent(PrimaryField.class)) {
+            		PrimaryField annot = method.getAnnotation(PrimaryField.class);
+            		if (StringUtil.isEmpty(annot.label())) {
+            			pf = new AuditableField(method.getName());
+            		} else {
+            			pf = new AuditableField(method.getName(), annot.label());
+            		}
+            		break;
+            	}
+            }
+            
+            if (pf == null)
+            	pf = new AuditableField("","");
+            primaryField.put(obj.getClass(), pf);
+            ret = primaryField.get(obj.getClass());
+		}
+		return ret;				
 	}
 	
 	/**
@@ -146,7 +256,7 @@ public class CacheUtil {
 					try {
 						fields = (List<String>) m.invoke(obj);
 					} catch (Exception e) {
-						_log.warn("Unable to execute annotated searchableFields method of " +
+						_log.warn("Unable to execute annotated method @SearchableFields of " +
 								obj.getClass().getSimpleName(), e);
 					}
 					break;

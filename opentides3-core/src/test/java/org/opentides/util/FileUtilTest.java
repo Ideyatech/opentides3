@@ -40,22 +40,11 @@ public class FileUtilTest {
 	@Test
 	public void testReadFile() {
 		// read file as string
-		String content = FileUtil.readFile("resources/testing.txt");
+		String content = FileUtil.readFile("testing.txt");
 		Assert.assertEquals("ideyatech\nsample file\n", content);
 		
 		try {
 			FileUtil.readFile("test/missing.txt");
-			fail("No Exception thrown with missing file.");
-		} catch (Exception e) {
-			// do nothing
-		}
-
-		// read file as byte
-		content = FileUtil.readFile(new File("test/resources/testing.txt"));
-		Assert.assertEquals("ideyatech\nsample file\n", content);
-		
-		try {
-			FileUtil.readFile(new File("test/missing.txt"));
 			fail("No Exception thrown with missing file.");
 		} catch (Exception e) {
 			// do nothing
@@ -68,7 +57,7 @@ public class FileUtilTest {
 	 */
 	@Test
 	public void testReadFileAsBytes() {
-		byte[] bytes = FileUtil.readFileAsBytes("resources/testing.txt");
+		byte[] bytes = FileUtil.readFileAsBytes("testing.txt");
 		byte[] expected = {105, 100, 101, 121, 97, 116, 101, 99, 104, 10, 115, 
 							97, 109, 112, 108, 101, 32, 102, 105, 108, 101};
 		Assert.assertEquals(21,bytes.length);
@@ -82,17 +71,6 @@ public class FileUtilTest {
 			// do nothing
 		}
 
-		bytes = FileUtil.readFileAsBytes(new File("test/resources/testing.txt"));
-		Assert.assertEquals(21,bytes.length);
-		for (int i=0;i<expected.length; i++) 
-			Assert.assertEquals(expected[i], bytes[i]);
-
-		try {
-			FileUtil.readFileAsBytes(new File("test/missing.txt"));
-			fail("No Exception thrown with missing file.");
-		} catch (Exception e) {
-			// do nothing
-		}
 	}
 
 	/**
@@ -100,13 +78,13 @@ public class FileUtilTest {
 	 */
 	@Test
 	public void testBackupFile() {
-		String content = FileUtil.readFile("test/resources/testing.txt");
-		FileUtil.backupFile("test/resources/testing.txt");
-		String content2 = FileUtil.readFile("test/resources/~testing.txt");
+		String content = FileUtil.readFile("testing.txt");
+		FileUtil.backupFile(new File("src/test/resources/testing.txt"));
+		String content2 = FileUtil.readFile("~testing.txt");
 		Assert.assertEquals(content, content2);
 
 		try {
-			FileUtil.backupFile("test/missing.txt");
+			FileUtil.backupFile(new File("test/missing.txt"));
 			fail("No Exception thrown with missing file.");
 		} catch (Exception e) {
 			// do nothing
@@ -163,7 +141,7 @@ public class FileUtilTest {
 	 */
 	@Test
 	public void testReadProperty() {
-		Properties props = FileUtil.readProperty("test/resources/test.properties");
+		Properties props = FileUtil.readProperty(new File("src/test/resources/test.properties"));
 		Assert.assertEquals(2, props.size());
 		Assert.assertEquals("test", props.get("run.environment"));
 		Assert.assertEquals("true", props.get("application.mode.debug"));

@@ -1,7 +1,11 @@
 package org.opentides.util;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
+import org.junit.Assert;
 import org.junit.Test;
 
 public class UrlUtilTest {
@@ -47,5 +51,12 @@ public class UrlUtilTest {
 				UrlUtil.getURLParam("http://www.test.com?dum=dum&key=value&key2=sample", "key"));
 		assertEquals("value",
 				UrlUtil.getURLParam("http://www.test.com.ph?key2=sample&key=value", "key"));
+	}
+	
+	@Test
+	public void testConvertIPString() throws UnknownHostException {
+		byte[] IPBytes = { (byte) 210, (byte)12, (byte)1, (byte)10 };
+		assertEquals(InetAddress.getByAddress(IPBytes), UrlUtil.convertIPString("210.12.1.10"));
+		Assert.assertNull(UrlUtil.convertIPString("labo-labo"));
 	}
 }

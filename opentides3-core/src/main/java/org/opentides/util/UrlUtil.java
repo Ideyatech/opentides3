@@ -20,7 +20,6 @@
 package org.opentides.util;
 
 import java.net.InetAddress;
-import java.net.UnknownHostException;
 
 import org.apache.log4j.Logger;
 
@@ -180,7 +179,7 @@ public class UrlUtil {
 					(byte) Integer.parseInt(IPAddress[2]),
 					(byte) Integer.parseInt(IPAddress[3]) };
 			return InetAddress.getByAddress(IPBytes);
-		} catch (UnknownHostException uhe) {
+		} catch (Exception uhe) {
 			_log.error("FAILED to convert IP address  [" + IPString + "]",
 					uhe);
 			return null;

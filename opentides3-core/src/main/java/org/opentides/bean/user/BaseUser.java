@@ -59,7 +59,6 @@ public class BaseUser extends BaseEntity implements Photoable {
 
 	private static final long serialVersionUID = 7634675501487373408L;
 	
-	@PrimaryField
 	@Column(name = "FIRSTNAME")
 	@JsonView(Views.FormView.class)
 	private String firstName;
@@ -179,9 +178,21 @@ public class BaseUser extends BaseEntity implements Photoable {
 		if (!StringUtil.isEmpty(getLastName())) {
 			name += getLastName() + " ";
 		}
-		return name;
+		return name.trim();
 	}
 
+	/**
+	 * Returns the username from credential object
+	 * @return
+	 */
+	@PrimaryField(label="Username")
+	public String getUsername() {
+		if (credential != null) 
+			return credential.getUsername();
+		else
+			return null;		
+	}
+	
 	/**
 	 * Returns Last Name, First Name Middle Name
 	 * 

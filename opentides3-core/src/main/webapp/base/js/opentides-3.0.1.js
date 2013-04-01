@@ -614,38 +614,9 @@ var opentides3 = (function() {
 						} else if (exception === 'abort') {
 							message = 'Your request has been cancelled.';
 						} else 	if (xhr.responseText.indexOf('login-panel') > 0 ) {
-							// display login panel as modal
-							var loginModal = $('#login-modal');
-							if (loginModal.length == 0) {
-								loginModal = $('<div id="login-modal"/>').attr("class","modal fade");
-								$('body').append(loginModal);
-							}
-							var loginPanel = $('<div/>').html(xhr.responseText).find('#login-panel').attr("class","");
-							loginModal.html(loginPanel);
-							loginModal.find('.header').addClass("modal-header").removeClass("header");
-							loginModal.find('.footer').addClass("modal-footer").removeClass("footer");
-							loginModal.find('.body').addClass("modal-body").removeClass("body");
-							loginModal.find('.hide-modal').remove();								
-							loginModal.find('form:first').on("submit",function() {
-								// submit the form as ajax and close modal on success
-						        $.ajax({
-						            type: $(this).attr('method'),
-						            url: $(this).attr('action'),
-						            data: $(this).serialize(),
-						            success: function (data) {
-						            	if (typeof data === 'object' ||
-						            		data.indexOf('login-panel') < 0)
-						            		$('#login-modal').modal('hide');
-						            },
-						            error: function(e) {
-						            	alert('error' + e);
-						            }
-						        });
-						        return false;
-							});
-							$('#login-modal').removeData("modal").modal({backdrop: 'static', keyboard: false});
+							showLoginModal(xhr.responseText);
 							return;
-						}					
+						}				
 						opentides3.displayMessage({
 							messages : [ {
 								type : "error",
@@ -843,6 +814,46 @@ var opentides3 = (function() {
 							return false;
 						});
 				});
+	}
+	
+	// private method to display login as modal
+	var showLoginModal = function(data) {
+		if (data.indexOf('login-panel') > 0 ) {
+			// display login panel as modal
+			var loginModal = $('#login-modal');
+			if (loginModal.length == 0) {
+				loginModal = $('<div id="login-modal"/>').attr("class","modal fade");
+				$('body').append(loginModal);
+			}
+			var loginPanel = $('<div/>').html(data).find('#login-panel').attr("class","");
+			loginModal.html(loginPanel);
+			loginModal.find('.header').addClass("modal-header").removeClass("header");
+			loginModal.find('.footer').addClass("modal-footer").removeClass("footer");
+			loginModal.find('.body').addClass("modal-body").removeClass("body");
+			loginModal.find('.hide-modal').remove();								
+			loginModal.find('form:first').on("submit",function() {
+				// submit the form as ajax and close modal on success
+		        $.ajax({
+		            type: $(this).attr('method'),
+		            url: $(this).attr('action'),
+		            data: $(this).serialize(),
+		            success: function (data) {
+		            	if (typeof data === 'object' ||
+		            		data.indexOf('login-panel') < 0) {
+		            		$('#login-modal').modal('hide');
+		            	} else {
+		            		showLoginModal(data);
+		            	}
+		            }
+		        });
+		        return false;
+			});
+
+			if (typeof $('#login-modal').data('modal') == 'undefined' || 
+				$('#login-modal').data('modal').isShown == false)
+				$('#login-modal').removeData("modal").modal({backdrop: 'static', keyboard: false});
+			return;
+		}		
 	}
 
 	// private method to perform search
