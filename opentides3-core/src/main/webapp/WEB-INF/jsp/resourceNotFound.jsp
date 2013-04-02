@@ -1,10 +1,8 @@
 <%@ taglib prefix="app" tagdir="/WEB-INF/tags"%>
-<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
-
-<app:header pageTitle="label.404-page" />
+<app:header pageTitle="label.error-page" />
 
 	<div class="alert alert-error">
-		<spring:message code="label.404-note" />
+		${exception.customMsg}
 	</div>
 	
 <app:footer/>

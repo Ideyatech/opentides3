@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  */
 @RequestMapping("/organization/users/photo") /* Define the request mapping */
 @Controller 
-public class UserPhotoController extends PhotoController<BaseUser> {
+public class UserPhotoController extends BasePhotoController<BaseUser> {
 
 	/*
 	 * Define the JSP page, may not be required for Photo implementation

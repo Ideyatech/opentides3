@@ -61,7 +61,7 @@ import org.springframework.web.multipart.MultipartFile;
  * 
  * @author ajalbaniel
  */
-public abstract class PhotoController<T extends BaseEntity> {
+public abstract class BasePhotoController<T extends BaseEntity> {
 	
 	@Autowired
 	protected PhotoInfoService photoInfoService;

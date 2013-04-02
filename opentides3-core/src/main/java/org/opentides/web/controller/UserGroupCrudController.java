@@ -18,20 +18,15 @@
  */
 package org.opentides.web.controller;
 
-import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.opentides.bean.user.BaseUser;
-import org.opentides.bean.user.UserCredential;
+import org.opentides.bean.user.UserAuthority;
 import org.opentides.bean.user.UserGroup;
 import org.opentides.service.UserGroupService;
-import org.opentides.service.UserService;
-import org.opentides.util.StringUtil;
-import org.opentides.web.validator.UserValidator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -44,49 +39,39 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @author opentides
  */
 @Controller 
-@RequestMapping("/organization/users")
-public class UserController extends BaseCrudController<BaseUser> {
+@RequestMapping("/organization/usergroups")
+public class UserGroupCrudController extends BaseCrudController<UserGroup> {
 
-	@Autowired
-	private UserGroupService userGroupService;
-	
-	@Autowired
-	private UserValidator userValidator;
-	
 	@PostConstruct
 	public void init() {
-		singlePage = "/base/user-crud";
-		formValidator = userValidator;
+		singlePage = "/base/usergroup-crud";
+		// no pagination support
+		pageSize = 0;
 	}
-	
-	@ModelAttribute("userGroupsList")
-	public List<UserGroup> getUserGroupsList() {
-		return userGroupService.findAll();
-	}
-	
-	@Autowired
-	public void setService(UserService userService) {
-		this.service = userService;
-	}
-	
+
+	/* (non-Javadoc)
+	 * @see org.opentides.web.controller.BaseCrudController#preUpdate(org.opentides.bean.BaseEntity, org.springframework.validation.BindingResult, org.springframework.ui.Model, javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+	 */
 	@Override
-	protected void preCreate(BaseUser command) {
-		UserCredential credential = command.getCredential();
-		if (!StringUtil.isEmpty(credential.getNewPassword()))
-			credential.setPassword(((UserService)service).encryptPassword(credential.getNewPassword()));
+	protected void preUpdate(UserGroup command, BindingResult bindingResult,
+			Model uiModel, HttpServletRequest request,
+			HttpServletResponse response) {
+		for (UserAuthority deleteRole : command.getRemoveList()) {
+			((UserGroupService) getService()).removeUserAuthority(deleteRole);			
+		}
 	}
 
 	@Override
-	protected void preUpdate(BaseUser command) {
-		UserCredential credential = command.getCredential();
-        if (!StringUtil.isEmpty(credential.getNewPassword()))
-            credential.setPassword(((UserService)service).encryptPassword(credential.getNewPassword()));
-	}
-	
-	@Override
-	protected void onLoadSearch(BaseUser command, BindingResult bindingResult, 
+	protected void onLoadSearch(UserGroup command, BindingResult bindingResult, 
 			Model uiModel, HttpServletRequest request,
 			HttpServletResponse response) {
 		uiModel.addAttribute("results", search(command, request));
 	}
+	
+	@ModelAttribute("authoritiesList")
+	public Map<String, String> getAuthoritiesList() {
+		return ((UserGroupService)service).getAuthorities();
+	}
+	
+
 }
