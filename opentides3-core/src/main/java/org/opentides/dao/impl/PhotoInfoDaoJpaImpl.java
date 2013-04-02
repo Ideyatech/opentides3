@@ -18,10 +18,6 @@
  */
 package org.opentides.dao.impl;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.opentides.bean.PhotoInfo;
 import org.opentides.dao.PhotoInfoDao;
 import org.springframework.stereotype.Repository;
@@ -29,12 +25,5 @@ import org.springframework.stereotype.Repository;
 @Repository(value="photoInfoDao")
 public class PhotoInfoDaoJpaImpl extends BaseEntityDaoJpaImpl<PhotoInfo, Long> implements
                 PhotoInfoDao {
-        
-        public List<PhotoInfo> findPhotoInfoByFullPath(String fullPath) {
-                Map<String, Object> params = new HashMap<String, Object>();
-                params.put("path", fullPath.trim());
-                List<PhotoInfo> result = findByNamedQuery("jpql.photoInfo.findPhotoInfoByFullPath", params);
-                return result;
-        }
 
 }

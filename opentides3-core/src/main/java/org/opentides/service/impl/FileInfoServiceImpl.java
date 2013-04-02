@@ -31,7 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author allantan
  *
  */
-@Service(value="fileInfoService")
+@Service(value="FileInfoService")
 public class FileInfoServiceImpl extends BaseCrudServiceImpl<FileInfo>
                 implements FileInfoService {
         

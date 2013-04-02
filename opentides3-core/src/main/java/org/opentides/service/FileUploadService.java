@@ -1,5 +1,6 @@
 package org.opentides.service;
 
+import org.opentides.bean.FileInfo;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -9,6 +10,6 @@ import org.springframework.web.multipart.MultipartFile;
  */
 public interface FileUploadService {
 	
-	public String upload(MultipartFile multipartFile);
+	public FileInfo upload(MultipartFile multipartFile, FileInfo fileInfo);
 	
 }

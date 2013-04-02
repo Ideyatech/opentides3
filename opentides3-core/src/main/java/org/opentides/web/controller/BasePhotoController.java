@@ -1,11 +1,9 @@
 package org.opentides.web.controller;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -17,13 +15,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.opentides.annotation.Valid;
 import org.opentides.bean.BaseEntity;
+import org.opentides.bean.FileInfo;
 import org.opentides.bean.MessageResponse;
 import org.opentides.bean.PhotoInfo;
 import org.opentides.bean.Photoable;
 import org.opentides.service.BaseCrudService;
 import org.opentides.service.PhotoInfoService;
-import org.opentides.util.DateUtil;
-import org.opentides.util.FileUtil;
+import org.opentides.service.impl.DefaultFileUploadServiceImpl;
 import org.opentides.util.ImageUtil;
 import org.opentides.util.NamingUtil;
 import org.opentides.util.StringUtil;
@@ -48,7 +46,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
 
 
 /**
@@ -69,8 +66,8 @@ public abstract class BasePhotoController<T extends BaseEntity> {
 	@Autowired
 	protected PhotoValidator photoValidator;
 	
-	protected String uploadPath = (new StringBuilder()).append(File.separator)
-			.append("uploads").toString();
+	@Autowired
+	protected DefaultFileUploadServiceImpl fileUploadService;
 	
 	protected String uploadPage = "";
 	protected String adjustPhoto = "";
@@ -215,9 +212,16 @@ public abstract class BasePhotoController<T extends BaseEntity> {
 				protected void doInTransactionWithoutResult(TransactionStatus status) {
 
 					Photoable photoable = (Photoable) command;
-					PhotoInfo p = uploadPhoto(photoable.getPhoto());
+					FileInfo f = new PhotoInfo();
+					f = fileUploadService.upload(photoable.getPhoto(), new PhotoInfo());
 					
-					photoable.addPhoto(p);
+					try {
+						ImageUtil.createPhotoThumbnails(f.getFullPath());
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					
+					photoable.addPhoto((PhotoInfo) f);
 					
 					messages.addAll(buildSuccessMessage(command, "upload-photo", request.getLocale()));
 					
@@ -268,50 +272,6 @@ public abstract class BasePhotoController<T extends BaseEntity> {
 		
 		model.put("messages", messages);
 		return model;
-	}
-	
-	public PhotoInfo uploadPhoto(MultipartFile photo) {
-
-		PhotoInfo photoInfo = new PhotoInfo();
-		photoInfo.setFilename(photo.getOriginalFilename());
-		photoInfo.setFileSize(Long.valueOf(photo.getSize()));
-		photoInfo.setOriginalFileName(photo.getOriginalFilename());
-		
-		File directory = FileUtil.createDirectory(uploadPath);
-		String subdir = (new StringBuilder())
-				.append(directory.getAbsoluteFile()).append(File.separator)
-				.append(DateUtil.convertShortDate(new Date())).toString();
-		File subDirectory = FileUtil.createDirectory(subdir);
-		String filePath = (new StringBuilder())
-				.append(subDirectory.getAbsoluteFile())
-				.append(File.separator)
-				.append(photo.getOriginalFilename()).toString();
-		
-		Long fileCnt = Long.valueOf(1L);
-		while (photoInfoService.getPhotoInfoByFullPath(filePath) != null) {
-			
-			String newFilePath;
-			newFilePath = (new StringBuilder())
-					.append(subDirectory.getAbsoluteFile())
-					.append(File.separator).append(fileCnt.toString())
-					.append("_")
-					.append(photo.getOriginalFilename()).toString();
-			fileCnt++;
-			filePath = newFilePath;
-		}
-
-		File uploadFile = new File(filePath);
-		photoInfo.setFullPath(uploadFile.getAbsolutePath());
-		
-		try {
-			FileUtil.copyMultipartFile(photo, uploadFile);
-			ImageUtil.createPhotoThumbnails(photoInfo.getFullPath());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		return photoInfo;
-
 	}
 	
 	@SuppressWarnings("unchecked")
