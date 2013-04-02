@@ -44,7 +44,7 @@ import org.opentides.annotation.PrimaryField;
 import org.opentides.annotation.SearchableFields;
 import org.opentides.bean.BaseEntity;
 import org.opentides.bean.PhotoInfo;
-import org.opentides.bean.Photoable;
+import org.opentides.bean.impl.Photoable;
 import org.opentides.util.StringUtil;
 import org.opentides.web.json.Views;
 import org.springframework.web.multipart.MultipartFile;

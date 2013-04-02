@@ -1,7 +1,8 @@
-package org.opentides.bean;
+package org.opentides.bean.impl;
 
 import java.util.List;
 
+import org.opentides.bean.PhotoInfo;
 import org.springframework.web.multipart.MultipartFile;
 
 

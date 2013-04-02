@@ -20,7 +20,7 @@ package org.opentides.web.validator;
 
 import java.io.IOException;
 
-import org.opentides.bean.Photoable;
+import org.opentides.bean.impl.Photoable;
 import org.opentides.util.ImageUtil;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;

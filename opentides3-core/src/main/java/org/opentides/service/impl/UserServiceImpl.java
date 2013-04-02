@@ -51,7 +51,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service(value="userService")
-@CrudSecure("USER")
 public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 		UserService {
 

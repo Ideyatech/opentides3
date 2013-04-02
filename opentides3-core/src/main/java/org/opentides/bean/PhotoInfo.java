@@ -1,7 +1,5 @@
 package org.opentides.bean;
 
-import java.io.Serializable;
-
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
@@ -12,7 +10,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "PHOTO_INFO")
-public class PhotoInfo extends FileInfo implements Serializable {
+public class PhotoInfo extends FileInfo {
 
 	private static final long serialVersionUID = 4727824117459616776L;
 	

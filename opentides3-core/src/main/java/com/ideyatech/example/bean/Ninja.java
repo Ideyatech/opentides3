@@ -26,9 +26,11 @@ import org.opentides.annotation.field.TextArea;
 import org.opentides.annotation.field.TextField;
 import org.opentides.annotation.field.Validation;
 import org.opentides.bean.BaseEntity;
+import org.opentides.bean.Comment;
 import org.opentides.bean.PhotoInfo;
-import org.opentides.bean.Photoable;
 import org.opentides.bean.SystemCodes;
+import org.opentides.bean.impl.Commentable;
+import org.opentides.bean.impl.Photoable;
 import org.opentides.util.StringUtil;
 import org.opentides.web.json.Views;
 import org.springframework.web.multipart.MultipartFile;
@@ -42,7 +44,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 @Entity
 @Table(name="NINJA")
 @Auditable
-public class Ninja extends BaseEntity implements Photoable {
+public class Ninja extends BaseEntity implements Photoable, Commentable {
 	
 	private static final long serialVersionUID = -4142599915292096152L;
 	
@@ -445,7 +447,7 @@ public class Ninja extends BaseEntity implements Photoable {
 	
 	@OneToMany(cascade=CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinTable(name = "NINJA_PHOTO", 
-			joinColumns = { @JoinColumn(name = "USER_ID", referencedColumnName = "ID") }, 
+			joinColumns = { @JoinColumn(name = "NINJA_ID", referencedColumnName = "ID") }, 
 			inverseJoinColumns = @JoinColumn(name = "PHOTO_ID")
 	)
 	private List<PhotoInfo> photos;
@@ -481,5 +483,26 @@ public class Ninja extends BaseEntity implements Photoable {
 	}
 	
 	// End of Photoable requirements
+	
+	// Commentable requirements
+	
+	@OneToMany(cascade=CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinTable(name = "NINJA_COMMENT", 
+			joinColumns = { @JoinColumn(name = "NINJA_ID", referencedColumnName = "ID") }, 
+			inverseJoinColumns = @JoinColumn(name = "COMMENT_ID")
+	)
+	private List<Comment> comments;
+
+	@Override
+	public List<Comment> getComments() {
+		return comments;
+	}
+	
+	@Override
+	public void setComments(List<Comment> comments) {
+		this.comments = comments;
+	}
+	
+	// End of Commentable requirements 
 	
 }

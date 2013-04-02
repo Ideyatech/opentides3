@@ -18,7 +18,7 @@ import org.opentides.bean.BaseEntity;
 import org.opentides.bean.FileInfo;
 import org.opentides.bean.MessageResponse;
 import org.opentides.bean.PhotoInfo;
-import org.opentides.bean.Photoable;
+import org.opentides.bean.impl.Photoable;
 import org.opentides.service.BaseCrudService;
 import org.opentides.service.PhotoInfoService;
 import org.opentides.service.impl.DefaultFileUploadServiceImpl;
