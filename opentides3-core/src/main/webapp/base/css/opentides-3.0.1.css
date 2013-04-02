@@ -26,9 +26,14 @@ body {
 	width: 50%;
 }
 
-@media (max-width: 979px) {
-	html,
-	body {
+
+.main.container {
+	margin-top: 20px;
+}
+
+@media (min-width: 980px) {
+	.main.container {
+		margin-top: 60px;
 	}
 }
 
@@ -174,11 +179,6 @@ body.anonymous-page #nav .brand {
 
 .jumbotron h2 {
 	font-weight: normal;
-	text-align: center;
-}
-
-#main {
-	padding-top: 20px;
 }
 
 .logo {

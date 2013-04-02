@@ -5,8 +5,9 @@
 	<artifactId>codegen</artifactId>
 	<version>3.0.1-SNAPSHOT</version>
 	<name>Opentides Code Generation</name>
-	<properties>	
-			<junit-version>4.8.2</junit-version>
+	<properties>
+		<junit-version>4.8.2</junit-version>
+		<java-version>1.7</java-version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -14,20 +15,20 @@
 			<artifactId>velocity</artifactId>
 			<version>1.7</version>
 		</dependency>
-		
+
 		<dependency>
-            <groupId>com.sun</groupId>
-            <artifactId>tools</artifactId>
-            <version>1.7</version>
-            <scope>system</scope>
-            <systemPath>${java.home}/../lib/tools.jar</systemPath>
-        </dependency>
+			<groupId>com.sun</groupId>
+			<artifactId>tools</artifactId>
+			<version>1.7</version>
+			<scope>system</scope>
+			<systemPath>${java.home}/../lib/tools.jar</systemPath>
+		</dependency>
 		<dependency>
 			<groupId>org.opentides</groupId>
 			<artifactId>common</artifactId>
 			<version>3.0.1-SNAPSHOT</version>
 		</dependency>
-		
+
 		<!-- Test -->
 		<dependency>
 			<groupId>junit</groupId>
@@ -36,9 +37,9 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-	
-	
-	
+
+
+
 	<build>
 		<plugins>
 			<plugin>

@@ -15,6 +15,11 @@
 
 <div id="ninja-body">
 
+<ul class="breadcrumb">
+  <li><a href="${home}"><spring:message code="label.home"/></a> <span class="divider">/</span></li>
+  <li><spring:message code="label.ninja"/></li>
+</ul>
+
 <div id="search-body">
 
 	<div id="search-panel" class="span3">
@@ -62,8 +67,8 @@
 				<table id="ninja-results" class="footable table-bordered table-striped table-hover table-condensed" style="width:50%;" data-page="${results.currPage}" >
 					<thead>
 						<tr class="table-header">
-							<th data-class="expand" data-field-name="completeName"><spring:message code="label.ninja.photo"/></th>
 							<th data-class="expand" data-field-name="completeName"><spring:message code="label.ninja.completeName"/></th>
+							<th data-class="expand" data-field-name="completeName"><spring:message code="label.ninja.photo"/></th>
 		                   	<th data-hide="phone" data-field-name="email"><spring:message code="label.ninja.email"/></th>
 		                	<th data-hide="phone,tablet" data-field-name="age"><spring:message code="label.ninja.age"/></th>
 		               		<th data-hide="phone,tablet" data-field-name="score"><spring:message code="label.ninja.score"/></th>
@@ -76,6 +81,11 @@
 						<script type="text/template" class="template">
 	                		<tr id="ninja-row-{{id}}" data-id="{{id}}">
 								<td>
+									<a href="${home}/ninja/profile/{{id}}">
+										{{completeName}}
+									</a>
+								</td>
+								<td>
 									<div class="btn-group">
 									  <img class="img-polaroid" src="${home}/ninja/photo?id={{id}}&size=xs"/>
 									  <a class="btn dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>
@@ -85,7 +95,6 @@
 									  </ul>
 									</div>
 								</td>
-								<td>{{completeName}}</td>
 	                			<td>{{email}}</td>
 	                			<td>{{age}}</td>
 	                			<td>{{score}}</td>
@@ -100,6 +109,11 @@
 						<c:forEach items="${results.results}" var="record" varStatus="status">
 							<tr id="ninja-row-${record.id}" data-id="${record.id}">
 								<td>
+									<a href="${home}/ninja/profile/${record.id}">
+										<c:out value="${record.completeName}" />
+									</a>
+								</td>
+								<td>
 									<div class="btn-group">
 									  <img class="img-polaroid" src="${home}/ninja/photo?id=${record.id}&size=xs"/>
 									  <a class="btn dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></a>
@@ -109,7 +123,6 @@
 									  </ul>
 									</div>
 								</td>
-								<td><c:out value="${record.completeName}" /></td>
 			                	<td><c:out value="${record.email}" /></td>
 			                	<td><c:out value="${record.age}" /></td>
 			                	<td><c:out value="${record.score}" /></td>

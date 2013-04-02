@@ -22,11 +22,21 @@ package org.opentides.util;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.AnnotationValue;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.TypeElement;
 
 import org.apache.log4j.Logger;
 import org.opentides.annotation.field.CheckBox;
 import org.opentides.annotation.field.DropDown;
 import org.opentides.annotation.field.RadioButton;
+import org.opentides.bean.AnnotationDefinition;
 import org.opentides.bean.BaseEntity;
 import org.opentides.bean.SystemCodes;
 
@@ -113,5 +123,30 @@ public final class AnnotationUtil {
 							+ clazz.getName());
 		}
 		return "";
+	}
+	
+	/**
+	 * Retrieves the parameters that are declared in the annotation.
+	 * @param te
+	 * @param e
+	 * @return
+	 */
+	public static final AnnotationDefinition getAnnotationDefinition(TypeElement te, Element e) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		
+		// get all specified parameters		
+		List<? extends AnnotationMirror> mirrors = e.getAnnotationMirrors();
+		for (AnnotationMirror mirror : mirrors) {
+			if (mirror.getAnnotationType().equals(te.asType())) {
+				Map<? extends ExecutableElement, ? extends AnnotationValue> values = mirror.getElementValues();
+				for (ExecutableElement ee:values.keySet()) {
+					params.put(ee.getSimpleName().toString(), values.get(ee));
+				}				
+			}			
+		}
+		
+		AnnotationDefinition annotationDefn = new AnnotationDefinition(te.toString());
+		annotationDefn.setParams(params);
+		return annotationDefn;
 	}
 }

@@ -12,6 +12,11 @@
 
 <div id="usergroup-body" class="container">
 
+<ul class="breadcrumb">
+  <li><a href="${home}"><spring:message code="label.home"/></a> <span class="divider">/</span></li>
+  <li><spring:message code="label.usergroup"/></li>
+</ul>
+
 	<div id="search-body" class="${search}">
 		
 		<div id="results-panel">
