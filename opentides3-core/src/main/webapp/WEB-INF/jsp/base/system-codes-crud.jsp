@@ -8,6 +8,11 @@
 
 <div id="system-codes-body">
 
+<ul class="breadcrumb">
+  <li><a href="${home}"><spring:message code="label.home"/></a> <span class="divider">/</span></li>
+  <li><spring:message code="label.system-codes"/></li>
+</ul>
+
 <div id="search-body">
 
 	<div id="search-panel" class="span3">

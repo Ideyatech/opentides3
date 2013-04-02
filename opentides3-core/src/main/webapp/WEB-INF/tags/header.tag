@@ -143,12 +143,6 @@
 					</div>
 				</div>
 			</div>
-	
-			<header class="jumbotron">
-				<div class="container">
-					<h2><spring:message code="${pageTitle}" /></h2>
-				</div>
-			</header>
 			
 			<div class="main container">
 		</c:otherwise>
