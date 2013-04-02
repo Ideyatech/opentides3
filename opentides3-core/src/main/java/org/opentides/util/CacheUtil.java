@@ -31,7 +31,7 @@ import javax.persistence.Transient;
 
 import org.apache.log4j.Logger;
 import org.opentides.annotation.Auditable;
-import org.opentides.annotation.AuditableFields;
+//import org.opentides.annotation.AuditableFields;
 import org.opentides.annotation.FormBind;
 import org.opentides.annotation.FormBind.Load;
 import org.opentides.annotation.PrimaryField;
@@ -117,7 +117,7 @@ public class CacheUtil {
 			// check if there is method marked as AuditableField
             final List<Method> methods = CrudUtil.getAllMethods(clazz, true);// do not include parentFields
             for (Method method:methods) {
-            	if (method.isAnnotationPresent(AuditableFields.class)) {
+            	//if (method.isAnnotationPresent(AuditableFields.class)) {
             		try {
             			auditableFields = (List<AuditableField>) method.invoke(obj);
 					} catch (Exception e) {
@@ -125,7 +125,7 @@ public class CacheUtil {
 								obj.getClass().getSimpleName(), e);
 					}
 					break;
-            	}
+            	//}
             }
 			if (auditableFields.isEmpty()) {
 				// no annotated method, use auto-detection

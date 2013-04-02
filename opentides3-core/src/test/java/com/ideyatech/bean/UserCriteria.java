@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.opentides.annotation.Auditable;
-import org.opentides.annotation.AuditableFields;
+//import org.opentides.annotation.AuditableFields;
 import org.opentides.annotation.SearchableFields;
 import org.opentides.bean.AuditableField;
 import org.opentides.bean.SystemCodes;
@@ -50,7 +50,7 @@ public class UserCriteria extends BaseUser {
 	/* (non-Javadoc)
 	 * @see org.opentides.bean.BaseEntity#getAuditableFields()
 	 */
-	@AuditableFields
+	//@AuditableFields
 	public List<AuditableField> getAuditableFields() {
 		List<AuditableField> fields = new ArrayList<AuditableField>();
 		fields.add(new AuditableField("favorites.value","Favorites"));

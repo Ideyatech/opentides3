@@ -120,7 +120,6 @@ var opentides3 = (function() {
 		 * 
 		 */
         displayMessage: function(json, container) {
-        console.log(json, container);
         	if(container) {
         		//remove messages already displayed in the container
     			container.find('.control-group').each(function(){
@@ -554,7 +553,7 @@ var opentides3 = (function() {
 
 					if ($(this).find(settings['results'] + ' table tr').length <= 1) {
 						// no search results, hide the table and message
-						$(this).find(settings['results']).hide();
+						results.find('table').hide();
 					}
 
 					// bind to popstate event for history tracking
@@ -896,7 +895,7 @@ var opentides3 = (function() {
 
 		// show the results
 		if (json['results'].length > 0) {
-			results.show();
+			results.find('table').show();
 
 			// old table
 			var oldTable = results.find('table:first');
@@ -932,7 +931,7 @@ var opentides3 = (function() {
 			}
 
 		} else {
-			results.hide();
+			results.find('table').hide();
 		}
 
 		// look for status bar
@@ -942,9 +941,9 @@ var opentides3 = (function() {
 						+ opentides3.getMessage('no-results-found', elem)
 						+ "</div>";
 				$(elem).html(html);
-				results.hide();
+				results.find('table').hide();
 			} else {
-				results.show();
+				results.find('table').show();
 				html = "<span class='records'>"
 						+ opentides3.getMessage('summary-message', elem)
 								.replace('#start', json['startIndex'] + 1)
