@@ -66,7 +66,7 @@
     <jsp:doBody />
 
 </head>
-
+ 
 <body class="${pageType}">
 
 	<c:if test="${pageType != 'modal-page'}">
