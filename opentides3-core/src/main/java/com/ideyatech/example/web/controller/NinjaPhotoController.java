@@ -11,7 +11,7 @@ import com.ideyatech.example.bean.Ninja;
 /**
  * Photo implementation for Ninja
  * 
- * Ninjas have photos too!
+ * A good Ninja takes a picture of himself.
  * 
  * @author AJ
  */

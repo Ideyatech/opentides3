@@ -299,6 +299,14 @@
 			<artifactId>template</artifactId>
 			<version>${org.opentides-version}</version>
 		</dependency>
+		
+		<!-- Pretty Time -->
+		<dependency>
+			<groupId>com.ocpsoft</groupId>
+			<artifactId>ocpsoft-pretty-time</artifactId>
+			<version>1.0.7</version>
+		</dependency>
+		
 	</dependencies>
 
 	<build>

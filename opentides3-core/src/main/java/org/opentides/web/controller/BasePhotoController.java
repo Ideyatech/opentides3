@@ -38,7 +38,6 @@ import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
-import org.springframework.validation.Validator;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -79,8 +78,6 @@ public abstract class BasePhotoController<T extends BaseEntity> {
 	protected MessageSource messageSource;
 	
 	protected Class<T> entityBeanType;
-
-	protected Validator formValidator;
 	
 	private TransactionTemplate transactionTemplate;
 	
@@ -289,18 +286,16 @@ public abstract class BasePhotoController<T extends BaseEntity> {
 		Assert.notNull(this.entityBeanType,
 				"Unable to retrieve entityBeanType for "
 						+ this.getClass().getSimpleName());
-		// try setting up service and validator by convention
+		
+		// try setting up service by convention
 		String attributeName = NamingUtil.toAttributeName(this.entityBeanType
 				.getSimpleName());
 		String serviceBean = attributeName + "Service";
-		String validatorBean = attributeName + "Validator";
 
 		if (this.service == null && beanFactory.containsBean(serviceBean))
 			this.service = (BaseCrudService<T>) beanFactory
 					.getBean(serviceBean);
-		if (this.formValidator == null
-				&& beanFactory.containsBean(validatorBean))
-			this.formValidator = (Validator) beanFactory.getBean(validatorBean);
+		
 		if (StringUtil.isEmpty(this.uploadPage)) {
 			this.uploadPage = "app/"
 					+ NamingUtil.toElementName(this.entityBeanType

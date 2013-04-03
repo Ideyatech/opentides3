@@ -5,6 +5,10 @@ body {
 	height: 100%;
 }
 
+textarea {
+	resize: vertical;
+}
+
 .uppercase {
 	text-transform: uppercase;
 }

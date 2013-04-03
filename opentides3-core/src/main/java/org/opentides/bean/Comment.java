@@ -9,6 +9,8 @@ import javax.persistence.Table;
 
 import org.opentides.bean.user.BaseUser;
 
+import com.ocpsoft.pretty.time.PrettyTime;
+
 @Entity
 @Table(name = "COMMENT")
 public class Comment extends BaseEntity {
@@ -36,6 +38,11 @@ public class Comment extends BaseEntity {
 	
 	public void setAuthor(BaseUser author) {
 		this.author = author;
+	}
+	
+	public String getPrettyCreateDate(){
+		PrettyTime prettyTime = new PrettyTime();
+		return prettyTime.format(getCreateDate());
 	}
 	
 }

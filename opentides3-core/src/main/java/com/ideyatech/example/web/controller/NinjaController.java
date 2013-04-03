@@ -29,8 +29,11 @@ import com.ideyatech.example.bean.Ninja;
 import com.ideyatech.example.service.NinjaService;
 
 /**
- * This is the controller class for Ninja.
- * @author ajalbaniel
+ * This is the controller class for Ninja
+ * 
+ * So we get to know more about our Ninjas
+ * 
+ * @author AJ
  * 
  */
 @RequestMapping("/ninja/profile")

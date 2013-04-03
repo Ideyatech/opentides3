@@ -77,29 +77,6 @@
 
 <!-- Comments Area -->
 
-<div>
-
-	<h4>Comments</h4>
-
-	<c:if test="${empty ninja.comments}">
-		No comments
-	</c:if>
-	<c:forEach items="${ninja.comments}" var="comment">
-	
-		<div class="row-fluid">
-			<div class="span1">
-				<img class="img-circle" src="${home}/organization/users/photo?id=${comment.author.id}&size=s"/>
-			</div>
-			<div class="span11">
-				<blockquote>
-					<p>${comment.text}</p>
-					<small>${comment.author.completeName}</small>
-				</blockquote>
-			</div>
-		</div>
-		
-	</c:forEach>
-
-</div>
+<app:comments commentList="${ninja.comments}" action="/ninja/comment" commentableId="${ninja.id}"/>
 
 <app:footer/>
