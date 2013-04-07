@@ -1,5 +1,5 @@
 /*
-Version: 3.3.1 Timestamp: Wed Feb 20 09:57:22 PST 2013
+Version: 3.3.2 Timestamp: Mon Mar 25 12:14:18 PDT 2013
 */
 .select2-container {
     position: relative;
@@ -7,7 +7,7 @@ Version: 3.3.1 Timestamp: Wed Feb 20 09:57:22 PST 2013
     /* inline-block for ie7 */
     zoom: 1;
     *display: inline;
-    vertical-align: top;
+    vertical-align: middle;
 }
 
 .select2-container,
@@ -105,7 +105,7 @@ Version: 3.3.1 Timestamp: Wed Feb 20 09:57:22 PST 2013
     text-decoration: none;
 
     border: 0;
-    background: url('../img/select2.png') right top no-repeat;
+    background: url('../img/../img/../img/select2.png') right top no-repeat;
     cursor: pointer;
     outline: 0;
 }
@@ -119,12 +119,16 @@ Version: 3.3.1 Timestamp: Wed Feb 20 09:57:22 PST 2013
     left: 0;
     top: 0;
     z-index: 9998;
+    background-color: #fff;
     opacity: 0;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)"; /* works in IE 8 */
+        filter: "alpha(opacity=0)"; /* expected to work in IE 8 */
+        filter: alpha(opacity=0); /* IE 4-7 */
 }
 
 .select2-drop {
     width: 100%;
-    margin-top:-3px;
+    margin-top:-1px;
     position: absolute;
     z-index: 9999;
     top: 100%;
@@ -188,7 +192,7 @@ Version: 3.3.1 Timestamp: Wed Feb 20 09:57:22 PST 2013
     display: block;
     width: 100%;
     height: 100%;
-    background: url('../img/select2.png') no-repeat 0 1px;
+    background: url('../img/../img/select2.png') no-repeat 0 1px;
 }
 
 .select2-search {
@@ -231,13 +235,13 @@ Version: 3.3.1 Timestamp: Wed Feb 20 09:57:22 PST 2013
        -moz-box-shadow: none;
             box-shadow: none;
 
-    background: #fff url('../img/select2.png') no-repeat 100% -22px;
-    background: url('../img/select2.png') no-repeat 100% -22px, -webkit-gradient(linear, left bottom, left top, color-stop(0.85, white), color-stop(0.99, #eeeeee));
-    background: url('../img/select2.png') no-repeat 100% -22px, -webkit-linear-gradient(center bottom, white 85%, #eeeeee 99%);
-    background: url('../img/select2.png') no-repeat 100% -22px, -moz-linear-gradient(center bottom, white 85%, #eeeeee 99%);
-    background: url('../img/select2.png') no-repeat 100% -22px, -o-linear-gradient(bottom, white 85%, #eeeeee 99%);
-    background: url('../img/select2.png') no-repeat 100% -22px, -ms-linear-gradient(top, #ffffff 85%, #eeeeee 99%);
-    background: url('../img/select2.png') no-repeat 100% -22px, linear-gradient(top, #ffffff 85%, #eeeeee 99%);
+    background: #fff url('../img/../img/select2.png') no-repeat 100% -22px;
+    background: url('../img/../img/select2.png') no-repeat 100% -22px, -webkit-gradient(linear, left bottom, left top, color-stop(0.85, white), color-stop(0.99, #eeeeee));
+    background: url('../img/../img/select2.png') no-repeat 100% -22px, -webkit-linear-gradient(center bottom, white 85%, #eeeeee 99%);
+    background: url('../img/../img/select2.png') no-repeat 100% -22px, -moz-linear-gradient(center bottom, white 85%, #eeeeee 99%);
+    background: url('../img/../img/select2.png') no-repeat 100% -22px, -o-linear-gradient(bottom, white 85%, #eeeeee 99%);
+    background: url('../img/../img/select2.png') no-repeat 100% -22px, -ms-linear-gradient(top, #ffffff 85%, #eeeeee 99%);
+    background: url('../img/../img/select2.png') no-repeat 100% -22px, linear-gradient(top, #ffffff 85%, #eeeeee 99%);
 }
 
 .select2-drop.select2-drop-above .select2-search input {
@@ -335,6 +339,8 @@ Version: 3.3.1 Timestamp: Wed Feb 20 09:57:22 PST 2013
     margin: 0;
     cursor: pointer;
 
+    min-height: 1em;
+
     -webkit-touch-callout: none;
       -webkit-user-select: none;
        -khtml-user-select: none;
@@ -366,11 +372,8 @@ Version: 3.3.1 Timestamp: Wed Feb 20 09:57:22 PST 2013
 .select2-results .select2-no-results,
 .select2-results .select2-searching,
 .select2-results .select2-selection-limit {
-    background: none;
+    background: #f4f4f4;
     display: list-item;
-    text-align: center;
-    color: #aaa;
-    font-size: 11px;
 }
 
 /*
@@ -441,9 +444,6 @@ disabled look for disabled choices in the results dropdown
     background-image: -o-linear-gradient(top, #eeeeee 1%, #ffffff 15%);
     background-image: -ms-linear-gradient(top, #eeeeee 1%, #ffffff 15%);
     background-image: linear-gradient(top, #eeeeee 1%, #ffffff 15%);
-    -webkit-border-radius: 4px;
-	-moz-border-radius: 4px;
-	border-radius: 4px;
 }
 
 .select2-locked {
@@ -496,8 +496,8 @@ disabled look for disabled choices in the results dropdown
 }
 
 .select2-container-multi .select2-choices .select2-search-choice {
-	padding: 4px 8px 4px 20px;
-	margin: 4px 0 4px 4px;
+    padding: 3px 5px 3px 18px;
+    margin: 3px 0 3px 5px;
     position: relative;
 
     line-height: 13px;
@@ -550,7 +550,7 @@ disabled look for disabled choices in the results dropdown
 
     font-size: 1px;
     outline: none;
-    background: url('../img/select2.png') right top no-repeat;
+    background: url('../img/../img/select2.png') right top no-repeat;
 }
 
 .select2-container-multi .select2-search-choice-close {
@@ -591,8 +591,14 @@ disabled look for disabled choices in the results dropdown
 }
 
 .select2-offscreen {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
     position: absolute;
-    left: -10000px;
+    width: 1px;
 }
 
 /* Retina-ize icons */

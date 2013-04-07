@@ -12,6 +12,7 @@ import org.opentides.bean.BaseEntity;
 import org.opentides.bean.Comment;
 import org.opentides.bean.impl.Commentable;
 import org.opentides.service.BaseCrudService;
+import org.opentides.service.CommentService;
 import org.opentides.service.UserService;
 import org.opentides.util.NamingUtil;
 import org.opentides.web.validator.CommentValidator;
@@ -43,6 +44,9 @@ public abstract class BaseCommentController<T extends BaseEntity> {
 	protected BaseCrudService<T> service;
 	
 	@Autowired
+	protected CommentService commentService;
+	
+	@Autowired
 	protected UserService userService;
 	
 	@Autowired
@@ -62,7 +66,7 @@ public abstract class BaseCommentController<T extends BaseEntity> {
 	public final @ResponseBody Map<String, Object>
 		sendComment(@Valid final Comment command, BindingResult result, final HttpServletRequest request) {
 		
-		final Map<String, Object> model = new HashMap<String, Object>();
+		Map<String, Object> model = new HashMap<String, Object>();
 		
 		final String commentableId = request.getParameter("commentableId");
 		
@@ -76,18 +80,22 @@ public abstract class BaseCommentController<T extends BaseEntity> {
 			protected void doInTransactionWithoutResult(TransactionStatus status) {
 
 				command.setAuthor(userService.getCurrentUser());
+				
+				commentService.save(command);
+				
 				Commentable commentable = (Commentable) service.load(commentableId);
 				commentable.getComments().add(command);
 
 				service.save((T) commentable);
 
-				model.put("author", command.getAuthor().getCompleteName());
-				model.put("authorId", command.getAuthor().getId());
-				model.put("text", command.getText());
-				model.put("timestamp", command.getPrettyCreateDate());
-				
 			}
 		});
+
+		model.put("id", command.getId());
+		model.put("author", command.getAuthor().getCompleteName());
+		model.put("authorId", command.getAuthor().getId());
+		model.put("text", command.getText());
+		model.put("timestamp", command.getPrettyCreateDate());
 		
 		model.put("sent", true);
 		return model;

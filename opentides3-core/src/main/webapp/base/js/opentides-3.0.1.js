@@ -325,6 +325,7 @@ var opentides3 = (function() {
 			});
 			
 		},
+		
 		/**
 		 * Display Adjust Photo form
 		 * 
@@ -352,6 +353,12 @@ var opentides3 = (function() {
 				});
 			});
 		},
+		
+		/**
+		 * Display response for photo tasks
+		 * 
+		 * @author ajalbaniel
+		 */
 		displayPhotoResponse : function(form, data) {
 			$.each(data['messages'], function(i, result) {
 				if(result.type == 'error') {

@@ -4,6 +4,11 @@ import java.util.List;
 
 import org.opentides.bean.Comment;
 
+/**
+ * 
+ * @author AJ
+ *
+ */
 public interface Commentable {
 	
 	public List<Comment> getComments();

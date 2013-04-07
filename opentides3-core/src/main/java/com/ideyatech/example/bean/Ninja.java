@@ -29,8 +29,10 @@ import org.opentides.bean.BaseEntity;
 import org.opentides.bean.Comment;
 import org.opentides.bean.PhotoInfo;
 import org.opentides.bean.SystemCodes;
+import org.opentides.bean.Tag;
 import org.opentides.bean.impl.Commentable;
 import org.opentides.bean.impl.Photoable;
+import org.opentides.bean.impl.Taggable;
 import org.opentides.util.StringUtil;
 import org.opentides.web.json.Views;
 import org.springframework.web.multipart.MultipartFile;
@@ -44,7 +46,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 @Entity
 @Table(name="NINJA")
 @Auditable
-public class Ninja extends BaseEntity implements Photoable, Commentable {
+public class Ninja extends BaseEntity implements Photoable, Commentable, Taggable {
 	
 	private static final long serialVersionUID = -4142599915292096152L;
 	
@@ -504,5 +506,22 @@ public class Ninja extends BaseEntity implements Photoable, Commentable {
 	}
 	
 	// End of Commentable requirements 
+	
+	// Taggable requirements
+	
+	@JsonView(Views.FormView.class)
+	private Set<Tag> tags;
+	
+	@Override
+	public Set<Tag> getTags() {
+		return tags;
+	}
+	
+	@Override
+	public void setTags(Set<Tag> tags) {
+		this.tags = tags;
+	}
+	
+	// End of Taggable requirements 
 	
 }
