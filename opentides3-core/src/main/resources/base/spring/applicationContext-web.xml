@@ -54,6 +54,7 @@
 	<mvc:resources location="/base/css/,/app/css/" mapping="/css/**" />
 	<mvc:resources location="/base/js/,/app/js/" mapping="/js/**" />
 	<mvc:resources location="/base/img/,/app/img/" mapping="/img/**" />
+	<mvc:resources location="/base/font/,/app/font/" mapping="/font/**" />
 	<!-- Allows for mapping the DispatcherServlet to "/" by forwarding static 
 		resource requests to the container's default Servlet -->
 	<!-- <mvc:default-servlet-handler /> -->

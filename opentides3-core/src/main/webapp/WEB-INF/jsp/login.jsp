@@ -13,19 +13,20 @@
 
 <div class="form-signin modal" >
 	<div class="modal-body">
+		<c:if test="${not empty param.login_error}">
+			<div class="alert alert-error">
+				<a class="close" data-dismiss="alert" href="#">&times;</a>
+				<spring:message code='error.${param.login_error}' /> 
+				<c:out value="${SPRING_SECURITY_LAST_EXCEPTION.message}" />
+			</div>
+		</c:if>
 		<div class="row-fluid">
+			
 			<form class="span6" method="POST" action="<c:url value='j_spring_security_check'/>">
 				
 				<h4><spring:message code='label.login' /></h4>
 				<hr/>
-				<c:if test="${not empty param.login_error}">
-					<div class="alert alert-error">
-						<a class="close" data-dismiss="alert" href="#">&times;</a>
-						<spring:message code='error.${param.login_error}' />
-						<br />
-						<c:out value="${SPRING_SECURITY_LAST_EXCEPTION.message}" />
-					</div>
-				</c:if>
+				
 				<div class="control-group">
 					<input class="input-block-level" type="text" name="j_username" placeholder="Username" value="admin" autofocus="autofocus">
 				</div>
@@ -44,10 +45,19 @@
 				
 			</form>
 			<div class="span6 alternative-logins pagination-centered">
-				<div class="control-group"><small>Login if your account is connected with Facebook, Twitter or Google</small></div>
-				<div class="control-group"><button class="btn btn-primary btn-block">Login with Facebook</button></div>
-				<div class="control-group"><button class="btn btn-info btn-block">Login with Twitter</button></div>
-				<div class="control-group"><button class="btn btn-danger btn-block">Login with Google</button></div>
+				<div class="control-group"><small>Login if your account is connected with Facebook, Twitter or Google+</small></div>
+				<div class="control-group">
+					<button class="btn btn-primary btn-block">
+					<i class="icon-facebook-sign"></i>Login with Facebook</button>
+				</div>
+				<div class="control-group">
+					<button class="btn btn-info btn-block">
+					<i class="icon-twitter-sign"></i>Login with Twitter</button>
+				</div>
+				<div class="control-group">
+					<button class="btn btn-danger btn-block">
+					<i class="icon-google-plus-sign"></i>Login with Google+</button>
+				</div>
 			</div>
 		</div>
 	</div>

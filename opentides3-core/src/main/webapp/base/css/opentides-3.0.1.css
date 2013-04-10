@@ -103,13 +103,21 @@ body.anonymous-page #nav .brand {
 }
 
 .form-signin {
-	top: 100px !important;
+	position: relative !important;
 }
 
 .alternative-logins {
 	padding-top: 20px;
 	margin-top: 20px;
 	border-top: 1px solid #eee;
+}
+
+.alternative-logins button {
+	text-align: left;
+}
+
+.alternative-logins i {
+	margin: 0 10px 0 20px;
 }
 
 @media (min-width: 768px) {
