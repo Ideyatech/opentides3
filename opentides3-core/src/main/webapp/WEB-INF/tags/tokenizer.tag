@@ -26,7 +26,7 @@
 	</form:label>
 	
 	<div class="controls">
-		<form:hidden path="${path}" required="${required ? 'required' : ''}" cssClass="${cssClass}" cssStyle="width: 220px;" />
+		<form:hidden path="${path}" required="${required ? 'required' : ''}" cssClass="${cssClass} tokenizer" cssStyle="width: 220px;" />
 		<p class="help-block"><small><spring:message code="message.tokenizer-help"/></small></p>
 	</div>
 	
@@ -35,7 +35,8 @@
 <script type="text/javascript">
 	$(document).ready(function() {
 		$('#${path}').select2({
-            tags: null,
-            tokenSeparators: [",", " "]});
+            tags: [],
+            tokenSeparators: [",", " "]
+		});
 	});
 </script>

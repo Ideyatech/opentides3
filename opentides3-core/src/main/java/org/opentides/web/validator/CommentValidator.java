@@ -21,6 +21,7 @@ package org.opentides.web.validator;
 import org.opentides.bean.Comment;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
+import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
 /**
@@ -44,7 +45,8 @@ public class CommentValidator implements Validator {
 	@Override
 	public void validate(Object obj, Errors errors) {
 
-		//TODO Validate the object
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "text", 
+				"error.required", new Object[]{"Text"}, "Text is required.");
 
 	}
 

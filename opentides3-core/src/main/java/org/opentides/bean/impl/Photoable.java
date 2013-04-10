@@ -16,7 +16,7 @@ public interface Photoable {
 	public abstract List<PhotoInfo> getPhotos();
 	public abstract void setPhotos(List<PhotoInfo> photos);
 	
-	// Required upon form submit, suggested to be a transient variable. 
+	// Required upon form submit, should a transient variable. 
 	public MultipartFile getPhoto();
 	public void setPhoto(MultipartFile photo);
 	

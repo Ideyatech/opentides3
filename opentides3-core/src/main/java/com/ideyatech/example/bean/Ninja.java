@@ -510,16 +510,30 @@ public class Ninja extends BaseEntity implements Photoable, Commentable, Taggabl
 	// Taggable requirements
 	
 	@JsonView(Views.FormView.class)
-	private Set<Tag> tags;
+	private List<Tag> tags;
+
+	@Column(name="TAGS")
+	@JsonView(Views.FormView.class)
+	private String csTags;
 	
 	@Override
-	public Set<Tag> getTags() {
+	public List<Tag> getTags() {
 		return tags;
 	}
 	
 	@Override
-	public void setTags(Set<Tag> tags) {
+	public void setTags(List<Tag> tags) {
 		this.tags = tags;
+	}
+	
+	@Override
+	public String getCsTags() {
+		return csTags;
+	}
+	
+	@Override
+	public void setCsTags(String csTags) {
+		this.csTags = csTags;
 	}
 	
 	// End of Taggable requirements 

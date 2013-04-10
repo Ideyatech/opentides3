@@ -669,6 +669,7 @@ var opentides3 = (function() {
 						e.preventDefault();
 						var firstForm = $(this);
 						var button = formSubmitButton;
+						
 						$.ajax({type : firstForm.attr('method'), // method
 							url : firstForm.attr('action'), // url
 							data : firstForm.serialize(), // data
@@ -1050,6 +1051,12 @@ var opentides3 = (function() {
 			form.find('.ot3-update').hide();
 			form.find('.ot3-add').show();
 		}
+		
+		// Refresh javascript/jquery form plugins here (if necessary)
+		$('.tokenizer').select2({
+            tags: [],
+            tokenSeparators: [",", " "]
+		});
 	};
 
 	/**

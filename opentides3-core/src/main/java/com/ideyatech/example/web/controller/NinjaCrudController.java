@@ -19,12 +19,14 @@
 package com.ideyatech.example.web.controller;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.opentides.bean.SystemCodes;
+import org.opentides.bean.Tag;
 import org.opentides.web.controller.BaseCrudController;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -68,6 +70,18 @@ public class NinjaCrudController extends BaseCrudController<Ninja> {
 			Model uiModel, HttpServletRequest request,
 			HttpServletResponse response) {
 		uiModel.addAttribute("results", search(command, request));
+	}
+	
+	@Override
+	protected void preUpdate(Ninja command) {
+		List<String> items = Arrays.asList( command.getCsTags().split(",") );
+		List<Tag> tags = new ArrayList<Tag>();
+		
+		for (String item : items) {
+			tags.add(new Tag(item));
+		}
+		
+		command.setTags(tags);
 	}
 
 }

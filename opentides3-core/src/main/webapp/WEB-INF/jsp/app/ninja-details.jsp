@@ -50,8 +50,14 @@
 		<td>${ninja.score}</td>
 	</tr>
 	<tr>
+		<td><spring:message code="label.ninja.tags"/></td>
+		<td><c:forEach items="${ninja.tags}" var="tag">
+			<span class="label label-info">${tag.text}</span>
+		</c:forEach></td>
+	</tr>
+	<tr>
 		<td><spring:message code="label.ninja.joinDate"/></td>
-		<td><fmt:formatDate value="${record.joinDate}" pattern="MM/dd/yyyy"/></td>
+		<td><fmt:formatDate value="${ninja.joinDate}" pattern="MM/dd/yyyy"/></td>
 	</tr>
 	<tr>
 		<td><spring:message code="label.ninja.gender"/></td>
