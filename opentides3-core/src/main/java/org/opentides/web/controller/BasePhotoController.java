@@ -55,7 +55,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * 
  * As much as you do not understand the code below, so do I.
  * 
- * @author ajalbaniel
+ * @author AJ
  */
 public abstract class BasePhotoController<T extends BaseEntity> {
 	
@@ -209,8 +209,7 @@ public abstract class BasePhotoController<T extends BaseEntity> {
 				protected void doInTransactionWithoutResult(TransactionStatus status) {
 
 					Photoable photoable = (Photoable) command;
-					FileInfo f = new PhotoInfo();
-					f = fileUploadService.upload(photoable.getPhoto(), new PhotoInfo());
+					FileInfo f = fileUploadService.upload(photoable.getPhoto(), new PhotoInfo());
 					
 					try {
 						ImageUtil.createPhotoThumbnails(f.getFullPath());

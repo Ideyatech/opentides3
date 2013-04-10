@@ -37,7 +37,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * 
  * Remember: Command must implement Commentable
  * 
- * @author ajalbaniel
+ * @author AJ
  */
 public abstract class BaseCommentController<T extends BaseEntity> {
 	
@@ -61,6 +61,21 @@ public abstract class BaseCommentController<T extends BaseEntity> {
 	protected CommentValidator commentValidator;
 	
 	private TransactionTemplate transactionTemplate;
+	
+	@RequestMapping(method = RequestMethod.GET, value="/delete")
+	public @ResponseBody Map<String, Object>
+	deleteComment(HttpServletRequest request) {
+
+		Map<String, Object> model = new HashMap<String, Object>();
+		
+		String commentId = request.getParameter("commentId");
+		
+		commentService.delete(commentId);
+		
+		model.put("deleted", true);
+		return model;
+		
+	}
 	
 	@RequestMapping(method = RequestMethod.POST, produces = "application/json")
 	public final @ResponseBody Map<String, Object>

@@ -26,7 +26,7 @@ import org.springframework.validation.Validator;
 /**
  * Validates comments
  * 
- * @author ajalbaniel
+ * @author AJ
  * 
  */
 @Component
@@ -44,7 +44,6 @@ public class CommentValidator implements Validator {
 	@Override
 	public void validate(Object obj, Errors errors) {
 
-		System.out.println("Validating : " + obj);
 		//TODO Validate the object
 
 	}

@@ -4,7 +4,7 @@ package org.opentides.service;
 import org.opentides.bean.PhotoInfo;
 
 /**
- * @author ajalbaniel
+ * @author AJ
  *
  */
 public interface PhotoInfoService extends BaseCrudService<PhotoInfo> {

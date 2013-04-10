@@ -14,3 +14,7 @@
 	overflow-y: auto; 
 	-webkit-overflow-scrolling: touch; 
 }
+
+.pagination-centered{
+	text-align:center !important;
+}

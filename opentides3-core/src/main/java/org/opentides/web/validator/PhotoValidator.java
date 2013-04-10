@@ -30,7 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 /**
  * Ensures validity of photos uploaded
  * 
- * @author ajalbaniel
+ * @author AJ
  * 
  */
 @Component

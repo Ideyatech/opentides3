@@ -102,41 +102,33 @@ body.anonymous-page #nav .brand {
 	text-align: center;
 }
 
-.form-signin form {
-	padding: 19px 29px 29px;
-	background-color: #fff;
-	border: 1px solid #e5e5e5;
-	-webkit-border-radius: 5px;
-	-moz-border-radius: 5px;
-	border-radius: 5px;
-	-webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, .05);
-	-moz-box-shadow: 0 1px 2px rgba(0, 0, 0, .05);
-	box-shadow: 0 1px 2px rgba(0, 0, 0, .05);
-}
-
 .form-signin {
-	margin-top: 40px;
-	max-width: 350px;
-	margin: 0 auto 20px;
+	top: 100px !important;
 }
 
-.form-signin .checkbox {
-	margin-left: 5px;
-	margin-bottom: 15px;
-	color: #555555;
+.alternative-logins {
+	padding-top: 20px;
+	margin-top: 20px;
+	border-top: 1px solid #eee;
 }
 
-.form-signin .form-signin-heading {
-	margin: -10px auto 20px auto;
+@media (min-width: 768px) {
+	.form-signin form {
+		padding-right: 20px;
+	}
+	
+	.alternative-logins {
+		border-top: 0;
+		margin-top: 0;
+		border-left: 1px solid #eee;
+		padding: 40px 0 40px 30px;
+	}
+	
+	.form-signin .modal-body {
+		padding: 30px;
+	}
 }
 
-.form-signin input[type="text"],
-.form-signin input[type="password"] {
-	font-size: 16px;
-	height: auto;
-	margin-bottom: 15px;
-	padding: 7px 9px;
-}
 
 /* HEADER */
 

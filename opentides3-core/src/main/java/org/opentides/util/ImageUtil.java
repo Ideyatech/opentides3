@@ -40,7 +40,7 @@ public class ImageUtil {
 	 * 
 	 * Image must be at least 200 x 200 pixels
 	 * 
-	 * @author ajalbaniel
+	 * @author AJ
 	 */
 	public static boolean isValidSize(InputStream inputStream) {
 		try {
@@ -57,7 +57,7 @@ public class ImageUtil {
 	}
 	
 	/**
-	 * @author ajalbaniel
+	 * @author AJ
 	 * 
 	 * Generate photo thumbnails of sizes L, M, S and XS.
 	 * If this does not work, please do not blame me.
@@ -80,7 +80,7 @@ public class ImageUtil {
 	}
 	
 	/**
-	 * @author ajalbaniel
+	 * @author AJ
 	 * 
 	 * Adjust thumbnails for existing photo
 	 * 

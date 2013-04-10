@@ -17,7 +17,7 @@
 	<ul class="media-list">
 	
 	<script type="text/template" class="template">
-		<li class="media">
+		<li class="media" data-id="{{id}}">
 			<a class="pull-left" style="margin-right: 20px;">
 				<img class="img-circle" src="${home}/organization/users/photo?id={{authorId}}&size=s"/>
 			</a>
@@ -27,13 +27,14 @@
 					<p>{{text}}</p>
 					<small>{{timestamp}}</small>
 				</blockquote>
+				<button class="btn btn-link btn-small remove-comment"><spring:message code="label.remove-comment"/></button>
 			</div>
 		</li>
 	</script>
 	
 	<c:forEach items="${commentList}" var="comment">
 	
-		<li class="media">
+		<li class="media comment" data-id="${comment.id}">
 			<a class="pull-left" style="margin-right: 20px;">
 				<img class="img-circle" src="${home}/organization/users/photo?id=${comment.author.id}&size=s"/>
 			</a>
@@ -43,7 +44,7 @@
 					<p>${comment.text}</p>
 					<small>${comment.prettyCreateDate}</small>
 				</blockquote>
-				<button class="btn btn-link btn-small"><spring:message code="label.remove-comment"/></button>
+				<button class="btn btn-link btn-small remove-comment"><spring:message code="label.remove-comment"/></button>
 			</div>
 		</li>
 		
@@ -59,6 +60,14 @@
 				placeholder="<spring:message code="label.write-comment"/>"></textarea>
 		</div>
 		<div class="form-actions">
+		
+			<input type="file" id="attachment" name="attachment" class="hide" />
+		
+			<div class="input-append pull-left">
+				<input id="attachment-path" type="text" readonly>
+				<a class="btn" id="browse-attachment"><spring:message code="label.comment.attach-file" /></a>
+			</div>
+		
 			<button class="btn btn-info pull-right">
 				<spring:message code="label.send-comment" />
 			</button>
@@ -68,10 +77,48 @@
 </div>
 
 <script type="text/javascript">
-	$('#send-comment-form').ajaxForm(function(data) {
-		var template = opentides3.template($('.media-list').find('script.template').html());
-		$('.media-list').append(template(data));
 
-		$('#text').val('');
+	$(document).ready(function() {
+		$('#send-comment-form').ajaxForm(function(data) {
+			var template = opentides3.template($('.media-list').find('script.template').html());
+			$('.media-list').append(template(data));
+	
+			$('#text').val('');
+		});
+		
+		$('#browse-attachment').on("click", function(){
+			$('#attachment').click();
+		});
+		
+		$('#attachment').on("change", function() {
+		   $('#attachment-path').val($(this).val());
+		   $('#browse-attachment').text('<spring:message code="label.comment.change-attachment" />');
+		});
+		
+	}).on("click", '.remove-comment', function(){
+
+		var commentId = $(this).closest('.comment').data('id');
+		var url = '${home}${action}/delete?commentId=' + commentId; 
+			
+		bootbox.dialog('<spring:message code="label.comment.confirm-remove" />',
+				[{"label" : '<spring:message code="label.remove-comment"/>',
+				  "class" : "btn-danger",
+				  "callback" : function() {
+
+						$.ajax({
+							url : url,
+							success : function(data) {
+								if(data.deleted) {
+									$('.comment[data-id="' + commentId + '"]').remove();
+								}
+							},
+							dataType : 'json'
+						});
+					}
+				},
+				{"label" : "Cancel",
+				 "class" : "btn"
+				}]);
 	});
+	
 </script>

@@ -2,7 +2,7 @@
 	- ninja-details.jsp
 	- Displays complete Ninja details
 	-
-	- @author - ajalbaniel
+	- @author - AJ
 --%>
 <%@ page contentType="text/html;utf-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>

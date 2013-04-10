@@ -313,7 +313,7 @@ var opentides3 = (function() {
 		/**
 		 * Display Upload Photo form
 		 * 
-		 * @author ajalbaniel
+		 * @author AJ
 		 */
 		showUploadPhoto : function() {
 			$('.adjust-photo-modal').modal('hide');
@@ -329,7 +329,7 @@ var opentides3 = (function() {
 		/**
 		 * Display Adjust Photo form
 		 * 
-		 * @author ajalbaniel
+		 * @author AJ
 		 */
 		showAdjustPhoto : function() {
 			$('.upload-photo-modal').modal('hide');
@@ -357,7 +357,7 @@ var opentides3 = (function() {
 		/**
 		 * Display response for photo tasks
 		 * 
-		 * @author ajalbaniel
+		 * @author AJ
 		 */
 		displayPhotoResponse : function(form, data) {
 			$.each(data['messages'], function(i, result) {

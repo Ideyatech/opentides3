@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 
 /**
- * @author ajalbaniel
+ * @author AJ
  *
  */
 @Service(value="PhotoInfoService")
