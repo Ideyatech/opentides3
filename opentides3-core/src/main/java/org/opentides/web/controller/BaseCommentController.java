@@ -10,10 +10,12 @@ import javax.servlet.http.HttpServletRequest;
 import org.opentides.annotation.Valid;
 import org.opentides.bean.BaseEntity;
 import org.opentides.bean.Comment;
+import org.opentides.bean.FileInfo;
 import org.opentides.bean.impl.Commentable;
 import org.opentides.service.BaseCrudService;
 import org.opentides.service.CommentService;
 import org.opentides.service.UserService;
+import org.opentides.service.impl.DefaultFileUploadServiceImpl;
 import org.opentides.util.NamingUtil;
 import org.opentides.web.validator.CommentValidator;
 import org.springframework.beans.factory.BeanFactory;
@@ -25,6 +27,7 @@ import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,6 +48,9 @@ public abstract class BaseCommentController<T extends BaseEntity> {
 	
 	@Autowired
 	protected CommentService commentService;
+	
+	@Autowired
+	protected DefaultFileUploadServiceImpl fileUploadService;
 	
 	@Autowired
 	protected UserService userService;
@@ -85,7 +91,7 @@ public abstract class BaseCommentController<T extends BaseEntity> {
 		
 		final String commentableId = request.getParameter("commentableId");
 		
-		if(result.hasErrors()) {
+		if(result.hasGlobalErrors()) {
 			model.put("sent", false);
 			return model;
 		}
@@ -93,6 +99,13 @@ public abstract class BaseCommentController<T extends BaseEntity> {
 		transactionTemplate.execute(new TransactionCallbackWithoutResult() {
 			@SuppressWarnings("unchecked")
 			protected void doInTransactionWithoutResult(TransactionStatus status) {
+				
+				if(command.getFile() != null && !command.getFile().isEmpty()) {
+					
+					FileInfo attachment = fileUploadService.upload(command.getFile(), new FileInfo());
+					command.addFile(attachment);
+					
+				}
 
 				command.setAuthor(userService.getCurrentUser());
 				

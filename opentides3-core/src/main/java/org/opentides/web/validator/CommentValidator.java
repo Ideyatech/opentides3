@@ -45,8 +45,11 @@ public class CommentValidator implements Validator {
 	@Override
 	public void validate(Object obj, Errors errors) {
 
-		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "text", 
-				"error.required", new Object[]{"Text"}, "Text is required.");
+		Comment comment = (Comment) obj;
+		
+		if(comment.getText().isEmpty() || comment.getText() == null) {
+			errors.reject("error.required", "Text is required.");
+		}
 
 	}
 

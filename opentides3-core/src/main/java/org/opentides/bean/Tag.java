@@ -18,7 +18,7 @@ public class Tag extends BaseEntity {
 	public Tag() {
 	}
 	
-	@Column(name = "TEXT", length = 2000)
+	@Column(name = "TEXT", length = 2000, unique=true)
 	private String text;
 
 	public String getText() {

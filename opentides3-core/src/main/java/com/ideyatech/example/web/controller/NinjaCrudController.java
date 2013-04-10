@@ -19,15 +19,15 @@
 package com.ideyatech.example.web.controller;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.opentides.bean.SystemCodes;
-import org.opentides.bean.Tag;
+import org.opentides.service.TagService;
 import org.opentides.web.controller.BaseCrudController;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -46,6 +46,9 @@ import com.ideyatech.example.bean.Ninja;
 @Controller
 public class NinjaCrudController extends BaseCrudController<Ninja> {
 
+	@Autowired
+	private TagService tagService;
+	
 	@ModelAttribute("genderList")
 	public List<SystemCodes> genderList() {
 		List<SystemCodes> genderList = new ArrayList<SystemCodes>();
@@ -74,14 +77,9 @@ public class NinjaCrudController extends BaseCrudController<Ninja> {
 	
 	@Override
 	protected void preUpdate(Ninja command) {
-		List<String> items = Arrays.asList( command.getCsTags().split(",") );
-		List<Tag> tags = new ArrayList<Tag>();
 		
-		for (String item : items) {
-			tags.add(new Tag(item));
-		}
+		command.setTags(tagService.createTags(command.getCsTags().split(",")));
 		
-		command.setTags(tags);
 	}
 
 }

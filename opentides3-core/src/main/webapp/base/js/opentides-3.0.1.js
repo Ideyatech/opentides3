@@ -1104,4 +1104,10 @@ var opentides3 = (function() {
 		}
 		return value;
 	}
+	
+	$(document).ready().on("click", ".download", function(){
+		var downloadPath = $(this).data('download-path');
+		window.location.href = downloadPath;
+	});
+	
 })(jQuery);

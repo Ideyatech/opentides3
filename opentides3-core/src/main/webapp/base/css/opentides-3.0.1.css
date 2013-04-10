@@ -3,6 +3,7 @@
 html,
 body {
 	height: 100%;
+	overflow-x: none;
 }
 
 textarea {
@@ -82,9 +83,11 @@ textarea {
 
 /* LOGIN PAGE */
 
-body.anonymous-page #nav {
-	margin-left: -20px;
-	margin-right: -20px;
+@media (max-width: 767px) {
+	body.anonymous-page #nav {
+		margin-left: -20px;
+		margin-right: -20px;
+	}
 }
 
 body.anonymous-page .navbar-inner {

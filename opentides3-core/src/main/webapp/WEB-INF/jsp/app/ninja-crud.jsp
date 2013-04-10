@@ -62,7 +62,7 @@
 		
 		<div class="clear"></div>
 		
-		<div style="overflow:hidden">
+		<div >
 			<div style="width:200%;">
 				<table id="ninja-results" class="footable table-bordered table-striped table-hover table-condensed" style="width:50%;" data-page="${results.currPage}" >
 					<thead>

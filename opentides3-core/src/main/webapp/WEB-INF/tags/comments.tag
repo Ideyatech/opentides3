@@ -44,6 +44,11 @@
 					<p>${comment.text}</p>
 					<small>${comment.prettyCreateDate}</small>
 				</blockquote>
+				
+				<c:forEach items="${comment.files}" var="file">
+					<button data-download-path="${file.fullPath}" class="btn btn-link btn-small download">Download attachment</button>
+				</c:forEach>
+				
 				<button class="btn btn-link btn-small remove-comment"><spring:message code="label.remove-comment"/></button>
 			</div>
 		</li>
@@ -51,6 +56,8 @@
 	</c:forEach>
 	
 	</ul>
+
+	<hr/>
 
 	<form:form id="send-comment-form" commandName="command"
 		enctype="multipart/form-data" method="POST"
@@ -61,11 +68,11 @@
 		</div>
 		<div class="form-actions">
 		
-			<input type="file" id="attachment" name="attachment" class="hide" />
+			<input type="file" id="file" name="file" class="hide" />
 		
 			<div class="input-append pull-left">
-				<input id="attachment-path" type="text" readonly>
-				<a class="btn" id="browse-attachment"><spring:message code="label.comment.attach-file" /></a>
+				<input id="file-path" type="text" readonly>
+				<a class="btn" id="browse-file"><spring:message code="label.comment.attach-file" /></a>
 			</div>
 		
 			<button class="btn btn-info pull-right">
@@ -80,19 +87,24 @@
 
 	$(document).ready(function() {
 		$('#send-comment-form').ajaxForm(function(data) {
-			var template = opentides3.template($('.media-list').find('script.template').html());
-			$('.media-list').append(template(data));
-	
-			$('#text').val('');
+			if(data.sent){
+				var template = opentides3.template($('.media-list').find('script.template').html());
+				$('.media-list').append(template(data));
+		
+				$('#text').val('');
+				$('#file').val('');
+				$('#file-path').val('');
+				$('#browse-file').text('<spring:message code="label.comment.attach-file" />');
+			}
 		});
 		
-		$('#browse-attachment').on("click", function(){
-			$('#attachment').click();
+		$('#browse-file').on("click", function(){
+			$('#file').click();
 		});
 		
-		$('#attachment').on("change", function() {
-		   $('#attachment-path').val($(this).val());
-		   $('#browse-attachment').text('<spring:message code="label.comment.change-attachment" />');
+		$('#file').on("change", function() {
+		   $('#file-path').val($(this).val());
+		   $('#browse-file').text('<spring:message code="label.comment.change-attachment" />');
 		});
 		
 	}).on("click", '.remove-comment', function(){
