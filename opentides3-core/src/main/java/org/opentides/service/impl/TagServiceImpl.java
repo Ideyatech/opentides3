@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.opentides.bean.Tag;
 import org.opentides.dao.TagDao;
-import org.opentides.dao.UserDao;
 import org.opentides.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,10 +35,8 @@ public class TagServiceImpl extends BaseCrudServiceImpl<Tag>
 			
 			
 			if(existingTag != null) {
-				System.out.println("Tag is already existing!");
 				tags.add(existingTag);
 			} else {
-				System.out.println("Creating new tag!");
 				tags.add(new Tag(item));
 			}
 			
