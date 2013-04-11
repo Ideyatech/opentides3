@@ -9,5 +9,6 @@ import org.opentides.bean.Tag;
  */
 public interface TagDao extends BaseEntityDao<Tag, Long> {
 
+	public Tag loadByText(String text);
 
 }
