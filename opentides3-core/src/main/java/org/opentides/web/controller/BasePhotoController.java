@@ -6,7 +6,6 @@ import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
@@ -22,6 +21,7 @@ import org.opentides.bean.impl.Photoable;
 import org.opentides.service.BaseCrudService;
 import org.opentides.service.PhotoInfoService;
 import org.opentides.service.impl.DefaultFileUploadServiceImpl;
+import org.opentides.util.CrudUtil;
 import org.opentides.util.ImageUtil;
 import org.opentides.util.NamingUtil;
 import org.opentides.util.StringUtil;
@@ -36,8 +36,6 @@ import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -196,8 +194,8 @@ public abstract class BasePhotoController<T extends BaseEntity> {
 		final List<MessageResponse> messages = new ArrayList<MessageResponse>();
 		
 		if(result.hasErrors()) {
-			messages.addAll(convertErrorMessage(result,
-					request.getLocale()));
+			messages.addAll(CrudUtil.convertErrorMessage(result,
+					request.getLocale(), messageSource));
 			model.put("messages", messages);
 			return model;
 		}
@@ -219,7 +217,7 @@ public abstract class BasePhotoController<T extends BaseEntity> {
 					
 					photoable.addPhoto((PhotoInfo) f);
 					
-					messages.addAll(buildSuccessMessage(command, "upload-photo", request.getLocale()));
+					messages.addAll(CrudUtil.buildSuccessMessage(command, "upload-photo", request.getLocale(), messageSource));
 					
 					service.save((T) photoable);
 				}
@@ -255,7 +253,7 @@ public abstract class BasePhotoController<T extends BaseEntity> {
 			
 			try {
 				ImageUtil.adjustPhotoThumbnails(photoInfo.getFullPath(), x, y, x2, y2, rw);
-				messages.addAll(buildSuccessMessage(command, "adjust-photo", request.getLocale()));
+				messages.addAll(CrudUtil.buildSuccessMessage(command, "adjust-photo", request.getLocale(), messageSource));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -313,63 +311,6 @@ public abstract class BasePhotoController<T extends BaseEntity> {
 		PlatformTransactionManager txManager = (PlatformTransactionManager) beanFactory
 				.getBean("transactionManager");
 		this.transactionTemplate = new TransactionTemplate(txManager);
-	}
-	
-	/**
-	 * Converts the binding error messages to list of MessageResponse
-	 * 
-	 * @param bindingResult
-	 */
-	protected List<MessageResponse> convertErrorMessage(
-			BindingResult bindingResult, Locale locale) {
-		List<MessageResponse> errorMessages = new ArrayList<MessageResponse>();
-		if (bindingResult.hasErrors()) {
-			for (ObjectError error : bindingResult.getAllErrors()) {
-				MessageResponse message = null;
-				if (error instanceof FieldError) {
-					FieldError ferror = (FieldError) error;
-					message = new MessageResponse(MessageResponse.Type.error,
-							error.getObjectName(), ferror.getField(),
-							error.getCodes(), error.getArguments());
-				} else
-					message = new MessageResponse(MessageResponse.Type.error,
-							error.getObjectName(), null, error.getCodes(),
-							error.getArguments());
-				message.setMessage(messageSource.getMessage(message, locale));
-				errorMessages.add(message);
-			}
-		}
-		return errorMessages;
-	}
-
-	/**
-	 * Builds success message by convention. Success messages are displayed as
-	 * notifications only.
-	 * 
-	 * Standard convention in order of resolving message is: (1)
-	 * message.<className>.
-	 * <code>-success (e.g. message.system-codes.add-success)
-	 *     (2) message.add-success (generic message)
-	 * 
-	 * @param elementClass
-	 * @param object
-	 * @param code
-	 * @param locale
-	 * @return
-	 */
-	protected List<MessageResponse> buildSuccessMessage(BaseEntity object,
-			String code, Locale locale) {
-		List<MessageResponse> messages = new ArrayList<MessageResponse>();
-		Assert.notNull(object);
-		String prefix = "message."
-				+ NamingUtil.toElementName(object.getClass().getSimpleName());
-		String codes = prefix + "." + code + "-success,message." + code
-				+ "-success";
-		MessageResponse message = new MessageResponse(
-				MessageResponse.Type.notification, codes.split("\\,"), null);
-		message.setMessage(messageSource.getMessage(message, locale));
-		messages.add(message);
-		return messages;
 	}
 	
 	@InitBinder

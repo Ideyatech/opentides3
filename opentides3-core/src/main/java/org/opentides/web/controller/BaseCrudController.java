@@ -23,7 +23,6 @@ import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
@@ -40,6 +39,7 @@ import org.opentides.exception.DataAccessException;
 import org.opentides.service.BaseCrudService;
 import org.opentides.service.SystemCodesService;
 import org.opentides.util.CacheUtil;
+import org.opentides.util.CrudUtil;
 import org.opentides.util.NamingUtil;
 import org.opentides.util.StringUtil;
 import org.opentides.web.json.ResponseView;
@@ -57,8 +57,6 @@ import org.springframework.ui.Model;
 import org.springframework.util.Assert;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-import org.springframework.validation.ObjectError;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -136,8 +134,8 @@ public abstract class BaseCrudController<T extends BaseEntity> {
 		List<MessageResponse> messages = new ArrayList<MessageResponse>();
 		if (ex instanceof BindException) {
 			BindException e = (BindException) ex;
-			messages.addAll(convertErrorMessage(e.getBindingResult(),
-					request.getLocale()));
+			messages.addAll(CrudUtil.convertErrorMessage(e.getBindingResult(),
+					request.getLocale(), messageSource));
 			if (_log.isDebugEnabled())
 				_log.debug("Bind error encountered.", e);
 		} else {
@@ -225,7 +223,7 @@ public abstract class BaseCrudController<T extends BaseEntity> {
 		Map<String, Object> model = new HashMap<String, Object>();
 		List<MessageResponse> messages = new ArrayList<MessageResponse>();
 		createTx(command, bindingResult, uiModel, request, response);
-		messages.addAll(buildSuccessMessage(command, "add", request.getLocale()));
+		messages.addAll(CrudUtil.buildSuccessMessage(command, "add", request.getLocale(), messageSource));
 		model.put("command", command);
 		model.put("messages", messages);
 		return model;
@@ -241,8 +239,8 @@ public abstract class BaseCrudController<T extends BaseEntity> {
 		Map<String, Object> model = new HashMap<String, Object>();
 		List<MessageResponse> messages = new ArrayList<MessageResponse>();
 		updateTx(command, bindingResult, uiModel, request, response);
-		messages.addAll(buildSuccessMessage(command, "update",
-				request.getLocale()));
+		messages.addAll(CrudUtil.buildSuccessMessage(command, "update",
+				request.getLocale(), messageSource));
 		model.put("command", command);
 		model.put("messages", messages);
 		return model;
@@ -297,8 +295,8 @@ public abstract class BaseCrudController<T extends BaseEntity> {
 		if (id >= 0) {
 			try {
 				deleteTx(id, bindingResult, uiModel, request, response);
-				messages.addAll(buildSuccessMessage(command, "delete",
-						request.getLocale()));
+				messages.addAll(CrudUtil.buildSuccessMessage(command, "delete",
+						request.getLocale(), messageSource));
 				model.put("messages", messages);
 				return model;
 			} catch (Exception e) {
@@ -602,63 +600,6 @@ public abstract class BaseCrudController<T extends BaseEntity> {
 		} else {
 			return service.countByExample(command);
 		}
-	}
-
-	/**
-	 * Converts the binding error messages to list of MessageResponse
-	 * 
-	 * @param bindingResult
-	 */
-	protected List<MessageResponse> convertErrorMessage(
-			BindingResult bindingResult, Locale locale) {
-		List<MessageResponse> errorMessages = new ArrayList<MessageResponse>();
-		if (bindingResult.hasErrors()) {
-			for (ObjectError error : bindingResult.getAllErrors()) {
-				MessageResponse message = null;
-				if (error instanceof FieldError) {
-					FieldError ferror = (FieldError) error;
-					message = new MessageResponse(MessageResponse.Type.error,
-							error.getObjectName(), ferror.getField(),
-							error.getCodes(), error.getArguments());
-				} else
-					message = new MessageResponse(MessageResponse.Type.error,
-							error.getObjectName(), null, error.getCodes(),
-							error.getArguments());
-				message.setMessage(messageSource.getMessage(message, locale));
-				errorMessages.add(message);
-			}
-		}
-		return errorMessages;
-	}
-
-	/**
-	 * Builds success message by convention. Success messages are displayed as
-	 * notifications only.
-	 * 
-	 * Standard convention in order of resolving message is: (1)
-	 * message.<className>.
-	 * <code>-success (e.g. message.system-codes.add-success)
-	 *     (2) message.add-success (generic message)
-	 * 
-	 * @param elementClass
-	 * @param object
-	 * @param code
-	 * @param locale
-	 * @return
-	 */
-	protected List<MessageResponse> buildSuccessMessage(BaseEntity object,
-			String code, Locale locale) {
-		List<MessageResponse> messages = new ArrayList<MessageResponse>();
-		Assert.notNull(object);
-		String prefix = "message."
-				+ NamingUtil.toElementName(object.getClass().getSimpleName());
-		String codes = prefix + "." + code + "-success,message." + code
-				+ "-success";
-		MessageResponse message = new MessageResponse(
-				MessageResponse.Type.notification, codes.split("\\,"), null);
-		message.setMessage(messageSource.getMessage(message, locale));
-		messages.add(message);
-		return messages;
 	}
 
 	/**

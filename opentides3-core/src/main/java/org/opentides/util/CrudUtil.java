@@ -27,6 +27,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -35,11 +36,17 @@ import org.apache.log4j.Logger;
 import org.opentides.annotation.Auditable;
 import org.opentides.bean.AuditableField;
 import org.opentides.bean.BaseEntity;
+import org.opentides.bean.MessageResponse;
 import org.opentides.bean.SystemCodes;
 import org.opentides.exception.CodeGenerationException;
+import org.springframework.context.MessageSource;
 import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
+import org.springframework.util.Assert;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 
 /**
  * @author allanctan
@@ -550,5 +557,64 @@ public class CrudUtil {
 		for (Method method:clazz.getDeclaredMethods())
 			methods.add(method);
 		return methods;
+	}
+	
+
+	
+	/**
+	 * Converts the binding error messages to list of MessageResponse
+	 * 
+	 * @param bindingResult
+	 */
+	public static List<MessageResponse> convertErrorMessage(
+			BindingResult bindingResult, Locale locale, MessageSource messageSource) {
+		List<MessageResponse> errorMessages = new ArrayList<MessageResponse>();
+		if (bindingResult.hasErrors()) {
+			for (ObjectError error : bindingResult.getAllErrors()) {
+				MessageResponse message = null;
+				if (error instanceof FieldError) {
+					FieldError ferror = (FieldError) error;
+					message = new MessageResponse(MessageResponse.Type.error,
+							error.getObjectName(), ferror.getField(),
+							error.getCodes(), error.getArguments());
+				} else
+					message = new MessageResponse(MessageResponse.Type.error,
+							error.getObjectName(), null, error.getCodes(),
+							error.getArguments());
+				message.setMessage(messageSource.getMessage(message, locale));
+				errorMessages.add(message);
+			}
+		}
+		return errorMessages;
+	}
+
+	/**
+	 * Builds success message by convention. Success messages are displayed as
+	 * notifications only.
+	 * 
+	 * Standard convention in order of resolving message is: (1)
+	 * message.<className>.
+	 * <code>-success (e.g. message.system-codes.add-success)
+	 *     (2) message.add-success (generic message)
+	 * 
+	 * @param elementClass
+	 * @param object
+	 * @param code
+	 * @param locale
+	 * @return
+	 */
+	public static List<MessageResponse> buildSuccessMessage(BaseEntity object,
+			String code, Locale locale, MessageSource messageSource) {
+		List<MessageResponse> messages = new ArrayList<MessageResponse>();
+		Assert.notNull(object);
+		String prefix = "message."
+				+ NamingUtil.toElementName(object.getClass().getSimpleName());
+		String codes = prefix + "." + code + "-success,message." + code
+				+ "-success";
+		MessageResponse message = new MessageResponse(
+				MessageResponse.Type.notification, codes.split("\\,"), null);
+		message.setMessage(messageSource.getMessage(message, locale));
+		messages.add(message);
+		return messages;
 	}
 }

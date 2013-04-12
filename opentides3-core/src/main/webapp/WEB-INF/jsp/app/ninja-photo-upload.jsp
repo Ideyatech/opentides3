@@ -57,8 +57,8 @@
 	$('#photo').on("change", function() {
 	   $('#photo-path').val($(this).val());
 	});
-	
-	$('#ninja-upload-photo').ajaxForm(function(data) {
-		opentides3.displayPhotoResponse($('#ninja-upload-photo'), data);
-    });
+
+	opentides3.jsonForm($('#ninja-upload-photo'), function(){
+		$('#ninja-upload-photo').find('.switch-modal').click();
+	});
 </script>

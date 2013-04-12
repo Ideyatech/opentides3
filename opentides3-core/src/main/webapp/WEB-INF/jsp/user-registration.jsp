@@ -32,8 +32,5 @@
 </div>
 
 <script type="text/javascript">
-	$('.form-signup form').ajaxForm(function(data) {
-		console.log(data);
-		console.log($('.form-signup form'));
-    });
+	opentides3.jsonForm($('.form-signup form'));
 </script>

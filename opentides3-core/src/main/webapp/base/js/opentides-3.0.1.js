@@ -359,22 +359,27 @@ var opentides3 = (function() {
 		 * 
 		 * @author AJ
 		 */
-		displayPhotoResponse : function(form, data) {
-			$.each(data['messages'], function(i, result) {
-				if(result.type == 'error') {
-					opentides3.displayMessage({ messages : [ {
-							type : "error",
+		jsonForm : function(form, successCallback, errorCallback) {
+			
+			$(form).ajaxForm(function(data) {
+				$.each(data['messages'], function(i, result) {
+					if(result.type == 'error') {
+						opentides3.displayMessage({ messages : [ {
+								type : "error",
+								message : result.message,
+							}]}, form);
+						
+						if(errorCallback) { errorCallback(); };
+	
+					} else {
+						opentides3.displayMessage({ messages : [ {
+							type : "success",
 							message : result.message,
-						}]}, form);
-
-				} else {
-					opentides3.displayMessage({ messages : [ {
-						type : "success",
-						message : result.message,
-					}]});
-
-					form.find('.switch-modal').click();
-				}
+						}]});
+	
+						if(successCallback) { successCallback(); };
+					}
+				});
 			});
 		}
 

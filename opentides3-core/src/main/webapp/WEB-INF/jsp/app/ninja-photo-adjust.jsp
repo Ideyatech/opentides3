@@ -43,7 +43,7 @@
 	
 	$('.switch-modal').on("click", opentides3.showUploadPhoto);
 	
-	$('#ninja-adjust-photo').ajaxForm(function(data) {
-		opentides3.displayPhotoResponse($('#ninja-adjust-photo'), data);
-    });
+	opentides3.jsonForm($('#ninja-adjust-photo'), function() {
+		$('#ninja-adjust-photo').find('.switch-modal').click();
+	});
 </script>
