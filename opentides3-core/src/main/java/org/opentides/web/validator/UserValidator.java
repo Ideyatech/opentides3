@@ -41,7 +41,7 @@ public class UserValidator implements Validator {
 	}
 
 	public void validate(Object object, Errors e) {
-		
+		System.out.println("##### VALIDATING");
 		BaseUser user = (BaseUser) object;
 
 		ValidationUtils.rejectIfEmptyOrWhitespace(e, "firstName", 

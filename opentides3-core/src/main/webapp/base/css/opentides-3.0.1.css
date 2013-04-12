@@ -105,7 +105,7 @@ body.anonymous-page #nav .brand {
 	text-align: center;
 }
 
-.form-signin {
+.form-login {
 	position: relative !important;
 }
 
@@ -124,7 +124,7 @@ body.anonymous-page #nav .brand {
 }
 
 @media (min-width: 768px) {
-	.form-signin form {
+	.form-login form {
 		padding-right: 20px;
 	}
 	
@@ -135,7 +135,7 @@ body.anonymous-page #nav .brand {
 		padding: 40px 0 40px 30px;
 	}
 	
-	.form-signin .modal-body {
+	.form-login .modal-body {
 		padding: 30px;
 	}
 }

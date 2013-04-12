@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="app" tagdir="/WEB-INF/tags"%>
@@ -11,7 +12,7 @@
 <div class="wallpaper"></div>
 <div class="wallpaper-grid"></div>
 
-<div class="form-signin modal" >
+<div class="form-login modal">
 	<div class="modal-body">
 		<c:if test="${not empty param.login_error}">
 			<div class="alert alert-error">
@@ -62,11 +63,34 @@
 		</div>
 	</div>
 	<div class="modal-footer">
-		<small class="pull-left"><spring:message code="message.signup-help" /> <a href="#"><spring:message code="message.signup-now" /></a></small>
+		<small class="pull-left"><spring:message code="message.signup-help" /> <a href="#" data-url="${home}/register" class="show-signup"><spring:message code="message.signup-now" /></a></small>
 		<small class="pull-right"><a href="#"><spring:message code="message.forgot-your-password" /></a></small>
 	</div>
 </div>
 
+<div class="form-signup modal hide fade" data-width="460" tabindex="10"></div>
+
+
+
 <app:footer>
+
+	<script type="text/javascript">
+		$(document).ready(function() {
+			
+		}).on('click', 'a.show-signup', function(){
+
+			var url = $(this).data('url');
+			
+			$('.form-signup').load(url, '', function(){
+				$('.form-login').fadeOut();
+				$('.form-signup').modal();
+			});
+			
+		}).on('click', 'a.show-login', function () {
+			$('.form-signup').modal('hide');
+		}).on('hidden', '.form-signup', function () {
+			$('.form-login').fadeIn();
+		});
+	</script>
 	
 </app:footer>
