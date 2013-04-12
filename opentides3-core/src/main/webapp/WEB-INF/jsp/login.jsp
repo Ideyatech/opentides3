@@ -45,25 +45,28 @@
 				
 			</form>
 			<div class="span6 alternative-logins pagination-centered">
-				<div class="control-group"><small>Login if your account is connected with Facebook, Twitter or Google+</small></div>
+				<div class="control-group"><small><spring:message code="message.alternative-login-help" /></small></div>
 				<div class="control-group">
 					<button class="btn btn-primary btn-block">
-					<i class="icon-facebook-sign"></i>Login with Facebook</button>
+					<i class="icon-facebook-sign"></i><spring:message code="message.login-with-facebook" /></button>
 				</div>
 				<div class="control-group">
 					<button class="btn btn-info btn-block">
-					<i class="icon-twitter-sign"></i>Login with Twitter</button>
+					<i class="icon-twitter-sign"></i><spring:message code="message.login-with-twitter" /></button>
 				</div>
 				<div class="control-group">
 					<button class="btn btn-danger btn-block">
-					<i class="icon-google-plus-sign"></i>Login with Google+</button>
+					<i class="icon-google-plus-sign"></i><spring:message code="message.login-with-google" /></button>
 				</div>
 			</div>
 		</div>
 	</div>
-	<div class="modal-footer pagination-centered">
-		<a href="#"><small><spring:message code="message.forgot-your-password" /></small></a>
+	<div class="modal-footer">
+		<small class="pull-left"><spring:message code="message.signup-help" /> <a href="#"><spring:message code="message.signup-now" /></a></small>
+		<small class="pull-right"><a href="#"><spring:message code="message.forgot-your-password" /></a></small>
 	</div>
 </div>
 
-<app:footer />
+<app:footer>
+	
+</app:footer>

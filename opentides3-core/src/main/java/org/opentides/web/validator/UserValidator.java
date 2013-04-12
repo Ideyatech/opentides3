@@ -23,11 +23,16 @@ import org.opentides.bean.user.BaseUser;
 import org.opentides.dao.UserDao;
 import org.opentides.util.StringUtil;
 import org.opentides.util.ValidatorUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
+@Component
 public class UserValidator implements Validator {
+	
+	@Autowired
 	private UserDao userDao;
 
 	@SuppressWarnings("rawtypes")
@@ -36,6 +41,7 @@ public class UserValidator implements Validator {
 	}
 
 	public void validate(Object object, Errors e) {
+		
 		BaseUser user = (BaseUser) object;
 
 		ValidationUtils.rejectIfEmptyOrWhitespace(e, "firstName", 
