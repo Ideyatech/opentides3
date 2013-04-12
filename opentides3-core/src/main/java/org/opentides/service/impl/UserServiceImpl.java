@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.opentides.annotation.CrudSecure;
 import org.opentides.bean.user.BaseUser;
 import org.opentides.bean.user.PasswordReset;
 import org.opentides.bean.user.SessionUser;
@@ -399,11 +398,17 @@ public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 	}
 	
 	public BaseUser getCurrentUser() {
-		SessionUser sessionUser = SecurityUtil.getSessionUser();
-		if (sessionUser != null) {
+		try {
+			SessionUser sessionUser = SecurityUtil.getSessionUser();
+
 			UserDao userDao = (UserDao) getDao();
-			return userDao.loadByUsername(sessionUser.getUsername());
+			if(sessionUser != null)
+				return userDao.loadByUsername(sessionUser.getUsername());
+			else
+				return null;
+		} catch (Exception e) {
+			return null;
 		}
-		return null;
 	}
+	
 }

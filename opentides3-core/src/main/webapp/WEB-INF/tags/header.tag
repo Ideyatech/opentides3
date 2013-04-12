@@ -131,7 +131,7 @@
 									</a>
 								</li>
 								<li>
-									<a href='<c:out value="${home}/j_spring_security_logout" />'>
+									<a href='<c:url value='logout'/>'>
 										<spring:message code="label.logout"/>
 									</a>
 								</li>

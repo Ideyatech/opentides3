@@ -9,35 +9,41 @@
 	<sec:http pattern="/js/**" security="none"/>
 	<sec:http pattern="/img/**" security="none"/>
 	<sec:http pattern="/font/**" security="none"/>
-	<sec:http pattern="/login/**" security="none"/>
+	
 	
     <sec:global-method-security secured-annotations="enabled"/>
 
 	<sec:http auto-config='false' use-expressions="true"
 		access-decision-manager-ref="httpRequestAccessDecisionManager">
-		
-		<sec:form-login login-page="/login"
+		<sec:intercept-url pattern="/"  access="permitAll"/>
+
+		<sec:form-login login-page="/"
 			default-target-url="/"
-			authentication-failure-url="/login?login_error=authentication-failed" />
+			authentication-failure-url="/?login_error=authentication-failed" login-processing-url="/login"/>
+
+		<sec:logout logout-url="/logout" logout-success-url="/" />
+		<sec:intercept-url pattern="/**" access="isAuthenticated()" />
+
 		<sec:anonymous />
 		<sec:http-basic />
-		<sec:logout invalidate-session="true" success-handler-ref="logoutHandler" />
+		
 		<sec:remember-me />
-		<sec:session-management invalid-session-url="/login?login_error=expired-session">
-			<sec:concurrency-control max-sessions="1" expired-url="/login?login_error=invalid-session" session-registry-alias="sessionRegistry" />
+		<sec:session-management invalid-session-url="/?login_error=expired-session">
+			<sec:concurrency-control max-sessions="1" expired-url="/?login_error=invalid-session" session-registry-alias="sessionRegistry" />
 		</sec:session-management>
-		<!-- <sec:custom-filter ref="expiredSessionFilter" after="BASIC_AUTH_FILTER"/> -->
-<!--
+<!-- 	
+		
+		<sec:custom-filter ref="expiredSessionFilter" after="BASIC_AUTH_FILTER"/>
+
 		<sec:custom-filter ref="concurrentSessionPromptFilter" before="CONCURRENT_SESSION_FILTER"/>
 		<sec:custom-filter ref="concurrentSessionRedirectFilter" after="BASIC_AUTH_FILTER"/>
- -->		
-		<!-- <sec:intercept-url pattern="/widgetDisplay.jspx*" access="hasIpAddress('127.0.0.1/24') OR hasIpAddress('::1/128')"/> -->
-<!-- 		
+
+		<sec:intercept-url pattern="/widgetDisplay.jspx*" access="hasIpAddress('127.0.0.1/24') OR hasIpAddress('::1/128')"/>
+	
 		<sec:intercept-url pattern="/login*" access="hasRole('ROLE_ANONYMOUS')" />
 		<sec:intercept-url pattern="/organization/**" access="hasRole('ACCESS_ORGANIZATION_TAB')" />
 		<sec:intercept-url pattern="/system/**" access="hasRole('ACCESS_SYSTEM_TAB')" />
- -->		
-		<sec:intercept-url pattern="/**" access="isAuthenticated()" />
+ -->
 
 	</sec:http>
 	

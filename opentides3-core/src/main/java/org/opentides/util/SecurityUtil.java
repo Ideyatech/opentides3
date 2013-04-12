@@ -42,16 +42,13 @@ public class SecurityUtil {
 		try {
 			Object userObj = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 			if (userObj instanceof SessionUser)
-				return (SessionUser) userObj;
+				return ((SessionUser) userObj);
 		} catch (NullPointerException npe) {
-		    // SecurityContextholder.getContext() could return null or
-		    // SecurityContextholder.getContext().getAuthentication could return null;
-		    _log.warn("No security context found on Spring Security.");
+			_log.warn("No Security Context Found!");
 		} catch (Exception e) {
-			_log.error(e,e);
+			_log.error(e.getMessage());
 		}
-        return null;
-
+		return null;
 	}
 	/**
 	 * Non-static accessor for JSTL. 

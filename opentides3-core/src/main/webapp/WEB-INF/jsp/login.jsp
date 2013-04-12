@@ -22,7 +22,7 @@
 		</c:if>
 		<div class="row-fluid">
 			
-			<form class="span6" method="POST" action="<c:url value='j_spring_security_check'/>">
+			<form class="span6" method="POST" action="<c:url value='login'/>">
 				
 				<h4><spring:message code='label.login' /></h4>
 				<hr/>

@@ -108,9 +108,6 @@
 	<mvc:view-controller path="/uncaughtException" />
 	<mvc:view-controller path="/resourceNotFound" />
 	<mvc:view-controller path="/dataAccessFailure" />
-	<mvc:view-controller path="/login" />
-	<mvc:view-controller path="/home" view-name="home"/>
-	<mvc:view-controller path="/" view-name="home"/>
 
 	<!-- Default View Resolver -->
 	<bean id="viewResolver"
