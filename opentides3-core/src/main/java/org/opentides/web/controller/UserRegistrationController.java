@@ -1,9 +1,17 @@
 package org.opentides.web.controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.opentides.annotation.Valid;
+import org.opentides.bean.MessageResponse;
 import org.opentides.bean.user.BaseUser;
+import org.opentides.service.UserService;
+import org.opentides.util.CrudUtil;
 import org.opentides.web.validator.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -14,6 +22,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * Registration Controller
@@ -29,6 +38,9 @@ public class UserRegistrationController {
 	protected MessageSource messageSource;
 	
 	@Autowired
+	protected UserService userService;
+	
+	@Autowired
 	private UserValidator userValidator;
 	
 	@RequestMapping(method = RequestMethod.GET)
@@ -40,12 +52,25 @@ public class UserRegistrationController {
 
 	}
 	
-	@RequestMapping(method = RequestMethod.POST)
-	public String registerUser(@Valid BaseUser baseUser,  BindingResult result) {
+	@RequestMapping(method = RequestMethod.POST, produces = "application/json")
+	public @ResponseBody Map<String, Object> registerUser(@Valid BaseUser baseUser,  BindingResult result, HttpServletRequest request) {
 		
-		System.out.println("##### REGISTERING + " + baseUser.getUsername());
+		Map<String, Object> model = new HashMap<String, Object>();
+		List<MessageResponse> messages = new ArrayList<MessageResponse>();
 		
-		return "user-registration"; 
+		if(result.hasErrors()) {
+			messages.addAll(CrudUtil.convertErrorMessage(result,
+					request.getLocale(), messageSource));
+			model.put("messages", messages);
+			return model;
+		}
+		
+		userService.registerUser(baseUser);
+		messages.addAll(CrudUtil.buildSuccessMessage(baseUser, "user-registration", request.getLocale(), messageSource));
+		
+		model.put("email", baseUser.getEmailAddress());
+		model.put("messages", messages);
+		return model; 
 
 	}
 	

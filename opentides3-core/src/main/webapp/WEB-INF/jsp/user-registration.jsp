@@ -11,6 +11,7 @@
 	<hr/>
 
 	<form:form commandName="baseUser" action="${home}/register" method="POST" cssClass="form-horizontal" >
+		<div class="message-container"></div>
 	
 		<app:input path="credential.username" label="label.user.username"/>
 		<app:input path="firstName" label="label.user.first-name"/>
@@ -32,5 +33,10 @@
 </div>
 
 <script type="text/javascript">
-	opentides3.jsonForm($('.form-signup form'));
+
+	opentides3.jsonForm($('.form-signup form'), function(data){
+		$('.signup-email').text(data.email);
+		$('.form-signup').modal('hide');
+		$('.confirm-signup').modal();
+	});
 </script>

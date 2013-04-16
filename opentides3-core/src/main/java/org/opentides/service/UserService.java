@@ -20,10 +20,8 @@
 package org.opentides.service;
 
 import java.util.List;
-import java.util.Map;
 
 import org.opentides.bean.user.BaseUser;
-import org.opentides.bean.user.PasswordReset;
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.session.SessionInformation;
@@ -34,45 +32,6 @@ import org.springframework.security.core.session.SessionInformation;
  * @author allanctan
  */
 public interface UserService extends BaseCrudService<BaseUser> {
-	/**
-	 * Returns the list of authorities
-	 * @return
-	 */
-	public Map<String,String> getAuthorities();
-	
-	/**
-	 * Inject roles allowed for the application here.
-	 * @param roles
-	 */
-	public void setAuthorities(Map<String,String>  authorities);
-	
-	/**
-	 * Requests for password reset 
-	 * @param emailAddress
-	 */
-	public void requestPasswordReset(String emailAddress);
-	
-	/**
-	 * Confirms the password by validating the email address and token
-	 * @param emailAddress
-	 * @param token
-	 * @return
-	 */
-	public boolean confirmPasswordReset(String emailAddress, String token);
-	
-	/**
-	 * Confirms the password by validating the cipher
-	 * @param passwd
-	 * @return
-	 */
-	public boolean confirmPasswordResetByCipher(PasswordReset passwd);
-	
-	/**
-	 * Resets the password
-	 * @param passwd
-	 * @return
-	 */
-	public boolean resetPassword(PasswordReset passwd);
 	
 	/**
 	 * Encrypts the password if passwordEncoder is available.
@@ -111,4 +70,9 @@ public interface UserService extends BaseCrudService<BaseUser> {
 	 public void forceLogout(String username);
 	 
 	 public BaseUser getCurrentUser();
+
+	 /**
+	  * 
+	  */
+	 public void registerUser(BaseUser baseUser);
 }
