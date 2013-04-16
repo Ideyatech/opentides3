@@ -258,11 +258,4 @@ public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 				templateVariables);
 	}
 	
-	public void sendEmailVerification(String name, Long userId,
-			String emailAddress, String activationCode) {
-		
-		
-		
-	}
-	
 }
