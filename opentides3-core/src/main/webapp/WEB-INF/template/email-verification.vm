@@ -1,0 +1,7 @@
+Hi ${name},
+<br/>
+<h4>Thank you for signing up for Opentides 3!</h4>
+To complete your registration, verify your email address by clicking this <a href="${activationLink}">link</a>.
+<br/><br/>
+Regards,<br/>
+Admin

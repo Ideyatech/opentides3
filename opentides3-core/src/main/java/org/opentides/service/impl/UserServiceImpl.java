@@ -20,6 +20,7 @@ package org.opentides.service.impl;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -32,6 +33,7 @@ import org.opentides.dao.PasswordResetDao;
 import org.opentides.dao.UserDao;
 import org.opentides.dao.UserGroupDao;
 import org.opentides.dao.impl.AuditLogDaoImpl;
+import org.opentides.service.MailingService;
 import org.opentides.service.UserGroupService;
 import org.opentides.service.UserService;
 import org.opentides.util.SecurityUtil;
@@ -52,7 +54,10 @@ public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 		UserService {
 
 	private static Logger _log = Logger.getLogger(UserServiceImpl.class);
-
+	
+	@Autowired
+	private MailingService mailingService;
+	
 	@Autowired
 	private UserGroupService userGroupService;
 	
@@ -241,8 +246,23 @@ public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 		
 		//set authorities
 		baseUser.addGroup(userGroupService.load(1L));
-		
+
 		save(baseUser);
+		
+		//send verification email
+		Map<String, Object> templateVariables = new HashMap<String, Object>();
+		templateVariables.put("name", baseUser.getCompleteName());
+		templateVariables.put("activationLink", "http://www.google.com");
+		mailingService.sendEmail(new String[] { baseUser.getEmailAddress() },
+				"Verify your Email Address", "email-verification.vm",
+				templateVariables);
+	}
+	
+	public void sendEmailVerification(String name, Long userId,
+			String emailAddress, String activationCode) {
+		
+		
+		
 	}
 	
 }

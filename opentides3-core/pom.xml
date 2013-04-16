@@ -273,9 +273,7 @@
 			<artifactId>jackson-databind</artifactId>
 			<version>${jackson-version}</version>
 		</dependency>
-		<!-- JSR 303 Validation -->
-		<!-- <dependency> <groupId>javax.validation</groupId> <artifactId>validation-api</artifactId> 
-			<version>${validation-api-version}</version> </dependency> -->
+
 		<!-- Test -->
 		<dependency>
 			<groupId>junit</groupId>
@@ -305,6 +303,13 @@
 			<groupId>com.ocpsoft</groupId>
 			<artifactId>ocpsoft-pretty-time</artifactId>
 			<version>1.0.7</version>
+		</dependency>
+		
+		<!-- Java Mail -->
+		<dependency>
+			<groupId>javax.mail</groupId>
+			<artifactId>mail</artifactId>
+			<version>1.4.7</version>
 		</dependency>
 		
 	</dependencies>

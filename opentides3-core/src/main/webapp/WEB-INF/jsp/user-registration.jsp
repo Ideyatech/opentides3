@@ -37,6 +37,6 @@
 	opentides3.jsonForm($('.form-signup form'), function(data){
 		$('.signup-email').text(data.email);
 		$('.form-signup').modal('hide');
-		$('.confirm-signup').modal();
+		$('.verify-signup').modal();
 	});
 </script>

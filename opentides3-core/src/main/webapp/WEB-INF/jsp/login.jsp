@@ -70,11 +70,11 @@
 
 <div class="form-signup modal hide fade" data-width="460"></div>
 
-<div class="confirm-signup modal hide fade" data-width="660">
+<div class="verify-signup modal hide fade" data-width="660">
 	<div class="modal-body">
 		<h4>Registration Success!</h4>
 		<hr/>
-		<p>An verification email has been sent to <code class="signup-email"></code>.
+		<p>A verification email has been sent to <code class="signup-email"></code>.
 		</p>
 		<a href="#">Resend verification email</a>
 	</div>

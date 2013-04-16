@@ -107,10 +107,15 @@
 		</property>
 	</bean>
 	
-	<!-- Configure the multipart resolver -->
+	<!-- Multipart Resolver -->
     <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
-        <!-- one of the properties available; the maximum file size in bytes -->
         <property name="maxUploadSize" value="10485760"/>
     </bean>
+    
+    <!-- Velocity Engine -->
+    <bean id="velocityEngine"
+		class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
+		<property name="resourceLoaderPath" value="/WEB-INF/template/"/>
+	</bean>
 
 </beans>
