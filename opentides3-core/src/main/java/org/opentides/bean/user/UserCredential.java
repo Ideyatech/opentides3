@@ -144,7 +144,11 @@ public class UserCredential extends BaseEntity {
     public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
     }
-		
+	
+    public String getPassword() {
+		return password;
+	}
+    
     /**
      * Ensures that password is enrypted according to configured passwordEncoder.
      * @param password
@@ -152,9 +156,7 @@ public class UserCredential extends BaseEntity {
     public void setPassword(String password) {
         this.password = password;
     }
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

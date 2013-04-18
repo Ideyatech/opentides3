@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.util.Assert;
@@ -65,8 +66,7 @@ public abstract class BaseCommentController<T extends BaseEntity> {
 	@Autowired
 	protected CommentValidator commentValidator;
 	
-	private TransactionTemplate transactionTemplate;
-	
+	@Transactional
 	@RequestMapping(method = RequestMethod.GET, value="/delete")
 	public @ResponseBody Map<String, Object>
 	deleteComment(HttpServletRequest request) {
@@ -82,6 +82,7 @@ public abstract class BaseCommentController<T extends BaseEntity> {
 		
 	}
 	
+	@Transactional
 	@RequestMapping(method = RequestMethod.POST, produces = "application/json")
 	public final @ResponseBody Map<String, Object>
 		sendComment(@Valid final Comment command, BindingResult result, final HttpServletRequest request) {
@@ -95,29 +96,24 @@ public abstract class BaseCommentController<T extends BaseEntity> {
 			return model;
 		}
 		
-		transactionTemplate.execute(new TransactionCallbackWithoutResult() {
-			@SuppressWarnings("unchecked")
-			protected void doInTransactionWithoutResult(TransactionStatus status) {
-				
-				if(command.getFile() != null && !command.getFile().isEmpty()) {
-					
-					FileInfo attachment = fileUploadService.upload(command.getFile(), new FileInfo());
-					command.addFile(attachment);
-					
-				}
+		
+		if(command.getFile() != null && !command.getFile().isEmpty()) {
+			
+			FileInfo attachment = fileUploadService.upload(command.getFile(), new FileInfo());
+			command.addFile(attachment);
+			
+		}
 
-				command.setAuthor(userService.getCurrentUser());
-				
-				commentService.save(command);
-				
-				Commentable commentable = (Commentable) service.load(commentableId);
-				commentable.getComments().add(command);
+		command.setAuthor(userService.getCurrentUser());
+		
+		commentService.save(command);
+		
+		Commentable commentable = (Commentable) service.load(commentableId);
+		commentable.getComments().add(command);
 
-				service.save((T) commentable);
+		service.save((T) commentable);
 
-			}
-		});
-
+		
 		model.put("id", command.getId());
 		model.put("author", command.getAuthor().getCompleteName());
 		model.put("authorId", command.getAuthor().getId());
@@ -157,10 +153,6 @@ public abstract class BaseCommentController<T extends BaseEntity> {
 				+ " is not associated with a service class [" + serviceBean
 				+ "]. Please check your configuration.");
 
-		// initialize transaction template.
-		PlatformTransactionManager txManager = (PlatformTransactionManager) beanFactory
-				.getBean("transactionManager");
-		this.transactionTemplate = new TransactionTemplate(txManager);
 	}
 	
 	@InitBinder

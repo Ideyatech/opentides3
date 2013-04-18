@@ -55,43 +55,43 @@ public class Comment extends BaseEntity implements Uploadable {
 	
 	// Uploadable requirements
 	
-		@OneToMany(cascade=CascadeType.ALL, fetch = FetchType.LAZY)
-		@JoinTable(name = "COMMENT_FILE", 
-				joinColumns = { @JoinColumn(name = "COMMENT_ID", referencedColumnName = "ID") }, 
-				inverseJoinColumns = @JoinColumn(name = "FILE_ID")
-		)
-		private List<FileInfo> files;
-		private transient MultipartFile file;
-		
-		@Override
-		public List<FileInfo> getFiles() {
-			return files;
-		}
-		
-		@Override
-		public void setFiles(List<FileInfo> files) {
-			this.files = files;
-		}
-		
-		@Override
-		public MultipartFile getFile() {
-			return file;
-		}
-		
-		@Override
-		public void setFile(MultipartFile file) {
-			this.file = file;
-		}
-		
-		public void addFile(FileInfo fileInfo){
-			synchronized (fileInfo) {
-				if (files == null){
-					files = new ArrayList<FileInfo>();
-				}
-				files.add(fileInfo);
+	@OneToMany(cascade=CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinTable(name = "COMMENT_FILE", 
+			joinColumns = { @JoinColumn(name = "COMMENT_ID", referencedColumnName = "ID") }, 
+			inverseJoinColumns = @JoinColumn(name = "FILE_ID")
+	)
+	private List<FileInfo> files;
+	private transient MultipartFile file;
+	
+	@Override
+	public List<FileInfo> getFiles() {
+		return files;
+	}
+	
+	@Override
+	public void setFiles(List<FileInfo> files) {
+		this.files = files;
+	}
+	
+	@Override
+	public MultipartFile getFile() {
+		return file;
+	}
+	
+	@Override
+	public void setFile(MultipartFile file) {
+		this.file = file;
+	}
+	
+	public void addFile(FileInfo fileInfo){
+		synchronized (fileInfo) {
+			if (files == null){
+				files = new ArrayList<FileInfo>();
 			}
+			files.add(fileInfo);
 		}
-		
-		// End of Uploadable requirements
+	}
+	
+	// End of Uploadable requirements
 	
 }

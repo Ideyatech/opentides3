@@ -46,6 +46,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
+import org.springframework.social.facebook.api.FacebookProfile;
+import org.springframework.social.facebook.api.impl.FacebookTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -133,27 +135,31 @@ public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 			AuthenticationSuccessEvent authenticationSuccessEvent) {
 		UserDao userDao = (UserDao) getDao();
 		String username = authenticationSuccessEvent.getAuthentication().getName();
-		BaseUser user = userDao.loadByUsername(username);
-		WebAuthenticationDetails details = (WebAuthenticationDetails) authenticationSuccessEvent.getAuthentication().getDetails();
-		String address = details.getRemoteAddress();
-		if (user.getTotalLoginCount()== null)
-			user.setTotalLoginCount(1l);
-		else
-			user.setTotalLoginCount(user.getTotalLoginCount()+1);
-		user.setPrevLoginIP(user.getLastLoginIP());
-		user.setLastLoginIP(address);
-		user.setLastLogin(new Date());
-		user.setSkipAudit(true);		
-		userDao.saveEntityModel(user);
 		
-		// force the audit user details
-		String completeName = user.getCompleteName() + " [" + username + "] ";
-		user.setAuditUserId(user.getId());
-		user.setAuditUsername(username);
-		user.setSkipAudit(false);
-		String message = completeName + " has logged-in";
-		AuditLogDaoImpl.logEvent(message, message, user);
-		
+		if(username != null && !username.isEmpty()) {
+			BaseUser user = userDao.loadByUsername(username);
+			WebAuthenticationDetails details = (WebAuthenticationDetails) authenticationSuccessEvent.getAuthentication().getDetails();
+			if(details != null) {
+				String address = details.getRemoteAddress();
+				if (user.getTotalLoginCount()== null)
+					user.setTotalLoginCount(1l);
+				else
+					user.setTotalLoginCount(user.getTotalLoginCount()+1);
+				user.setPrevLoginIP(user.getLastLoginIP());
+				user.setLastLoginIP(address);
+				user.setLastLogin(new Date());
+				user.setSkipAudit(true);		
+				userDao.saveEntityModel(user);
+				
+				// force the audit user details
+				String completeName = user.getCompleteName() + " [" + username + "] ";
+				user.setAuditUserId(user.getId());
+				user.setAuditUsername(username);
+				user.setSkipAudit(false);
+				String message = completeName + " has logged-in";
+				AuditLogDaoImpl.logEvent(message, message, user);
+			}
+		}
 	}
 
 	/**
@@ -232,7 +238,7 @@ public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 
 	@Transactional
 	@Override
-	public void registerUser(BaseUser baseUser) {
+	public void registerUser(BaseUser baseUser, boolean sendEmail) {
 		
 		//TODO enable user (should be disabled by default)
 		baseUser.getCredential().setEnabled(true);
@@ -248,19 +254,64 @@ public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 
 		save(baseUser);
 		
-		//send verification email
-		Map<String, Object> templateVariables = new HashMap<String, Object>();
-		templateVariables.put("name", baseUser.getCompleteName());
-		templateVariables.put("activationLink", "http://www.google.com");
-		mailingService.sendEmail(new String[] { baseUser.getEmailAddress() },
-				"Verify your Email Address", "email-verification.vm",
-				templateVariables);
+		if(sendEmail) {
+			//send verification email
+			Map<String, Object> templateVariables = new HashMap<String, Object>();
+			templateVariables.put("name", baseUser.getCompleteName());
+			templateVariables.put("activationLink", "http://www.google.com");
+			mailingService.sendEmail(new String[] { baseUser.getEmailAddress() },
+					"Verify your Email Address", "email-verification.vm",
+					templateVariables);
+		}
 	}
 
 	@Override
 	public BaseUser getUserByFacebookId(String facebookId) {
 		UserDao userDao = (UserDao) getDao();
 		return userDao.loadByFacebookId(facebookId);
+	}
+
+	@Override
+	public BaseUser getUserByFacebookAccessToken(String facebookAccessToken) {
+		FacebookTemplate facebookTemplate = new FacebookTemplate(facebookAccessToken);
+		String facebookId = facebookTemplate.userOperations().getUserProfile().getId();
+		UserDao userDao = (UserDao) getDao();
+		return userDao.loadByFacebookId(facebookId);
+	}
+
+	@Override
+	@Transactional
+	public void registerFacebookAccount(BaseUser user,
+			String facebookAccessToken) {
+		
+		FacebookTemplate facebookTemplate = new FacebookTemplate(facebookAccessToken);
+		FacebookProfile profile = facebookTemplate.userOperations().getUserProfile();
+
+		if(user.getFirstName() == null || user.getFirstName().isEmpty())
+			user.setFirstName(profile.getFirstName());
+		if(user.getLastName() == null || user.getLastName().isEmpty())
+			user.setLastName(profile.getLastName());
+		if(user.getMiddleName() == null || user.getMiddleName().isEmpty())
+			user.setMiddleName(profile.getMiddleName());
+		if(user.getEmailAddress() == null || user.getEmailAddress().isEmpty())
+			user.setEmailAddress(profile.getEmail());
+		
+		user.setFacebookId(profile.getId());
+		user.setFacebookAccessToken(facebookAccessToken);
+		
+		if(user.isNew()) {
+			
+			UserCredential credential = new UserCredential();
+			credential.setUsername(profile.getEmail());
+			credential.setPassword(new Date().toString());
+			user.setCredential(credential);
+			
+			registerUser(user, false);
+			
+		} else {
+			save(user);
+		}
+		
 	}
 	
 }

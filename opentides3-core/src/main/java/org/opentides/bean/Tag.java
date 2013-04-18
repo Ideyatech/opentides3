@@ -6,16 +6,16 @@ import javax.persistence.Table;
 
 
 @Entity
-@Table(name = "TAG")
+@Table(name = "OT_TAG")
 public class Tag extends BaseEntity {
+	
+	private static final long serialVersionUID = 7593186662964727295L;
 
-	private static final long serialVersionUID = -7643692652937089079L;
+	public Tag() {
+	}
 	
 	public Tag(String text) {
 		this.text = text;
-	}
-	
-	public Tag() {
 	}
 	
 	@Column(name = "TEXT", length = 2000, unique=true)

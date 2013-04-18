@@ -19,8 +19,8 @@
 
 package org.opentides.bean.user;
 
-import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.opentides.util.StringUtil;
@@ -49,6 +49,10 @@ public class SessionUser extends User {
 	public SessionUser(UserDetails user) {
 		super(user.getUsername(), user.getPassword(), user.isEnabled(), user.isAccountNonExpired(), 
 				user.isCredentialsNonExpired(), user.isAccountNonLocked(), user.getAuthorities());
+	}
+	
+	public SessionUser(BaseUser user, List<GrantedAuthority> authorities) {
+		super(user.getCredential().getUsername(), user.getCredential().getPassword(), user.getCredential().getEnabled(), true, true, true, authorities);
 	}
 
 	/**

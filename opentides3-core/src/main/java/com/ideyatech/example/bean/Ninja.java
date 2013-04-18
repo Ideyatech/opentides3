@@ -512,7 +512,7 @@ public class Ninja extends BaseEntity implements Photoable, Commentable, Taggabl
 	@JsonView(Views.FormView.class)
 	private List<Tag> tags;
 
-	@Column(name="TAGS")
+	@Column(name="CS_TAGS")
 	@JsonView(Views.FormView.class)
 	private String csTags;
 	

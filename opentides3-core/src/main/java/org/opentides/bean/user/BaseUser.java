@@ -37,6 +37,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import org.eclipse.persistence.annotations.Cache;
 import org.opentides.annotation.Auditable;
@@ -228,6 +229,16 @@ public class BaseUser extends BaseEntity implements Photoable {
 			}
 		}
 		return false;
+	}
+	
+	public List<UserAuthority> getAuthorities() {
+		List<UserAuthority> permissions = new ArrayList<UserAuthority>();
+		for (UserGroup group : groups) {
+			for (UserAuthority userAuthority : group.getAuthorities()) {
+				permissions.add(userAuthority);
+			}
+		}
+		return permissions;
 	}
 
 	@Override
@@ -536,6 +547,22 @@ public class BaseUser extends BaseEntity implements Photoable {
 		this.failedLoginCount = failedLoginCount;
 	}
 	
+	public String getFacebookId() {
+		return facebookId;
+	}
+	
+	public void setFacebookId(String facebookId) {
+		this.facebookId = facebookId;
+	}
+	
+	public String getFacebookAccessToken() {
+		return facebookAccessToken;
+	}
+	
+	public void setFacebookAccessToken(String facebookAccessToken) {
+		this.facebookAccessToken = facebookAccessToken;
+	}
+	
 	// Photoable requirements
 	
 	@OneToMany(cascade=CascadeType.ALL, fetch = FetchType.LAZY)
@@ -544,6 +571,8 @@ public class BaseUser extends BaseEntity implements Photoable {
 			inverseJoinColumns = @JoinColumn(name = "PHOTO_ID")
 	)
 	private List<PhotoInfo> photos;
+	
+	@Transient
 	private transient MultipartFile photo;
 	
 	@Override

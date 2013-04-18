@@ -65,7 +65,7 @@ public class UserRegistrationController {
 			return model;
 		}
 		
-		userService.registerUser(baseUser);
+		userService.registerUser(baseUser, true);
 		messages.addAll(CrudUtil.buildSuccessMessage(baseUser, "user-registration", request.getLocale(), messageSource));
 		
 		model.put("email", baseUser.getEmailAddress());

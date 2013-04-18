@@ -68,7 +68,10 @@ public interface UserService extends BaseCrudService<BaseUser> {
 	 
 	 public BaseUser getCurrentUser();
 
-	 public void registerUser(BaseUser baseUser);
+	 public void registerUser(BaseUser baseUser, boolean sendEmail);
+	 public void registerFacebookAccount(BaseUser baseUser, String facebookAccessToken);
 	 
 	 public BaseUser getUserByFacebookId(String facebookId);
+	 public BaseUser getUserByFacebookAccessToken(String facebookAccessToken);
+
 }

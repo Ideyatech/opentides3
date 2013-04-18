@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.opentides.bean.user.BaseUser;
+import org.opentides.bean.user.SessionUser;
 import org.opentides.enums.SocialMediaType;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -16,6 +17,7 @@ public class SocialMediaAuthenticationToken extends AbstractAuthenticationToken 
 	private Long userId;
 	private String socialMediaId;
 	private SocialMediaType socialMediaType;
+	private List<GrantedAuthority> authorities;
 	
 	public SocialMediaAuthenticationToken(BaseUser user, Long userId,
 			String socialMediaId, SocialMediaType socialMediaType,
@@ -25,7 +27,13 @@ public class SocialMediaAuthenticationToken extends AbstractAuthenticationToken 
 		this.userId = userId;
 		this.socialMediaId = socialMediaId;
 		this.socialMediaType = socialMediaType;
+		this.authorities = authorities;
 		super.setAuthenticated(true);
+	}
+	
+	public SocialMediaAuthenticationToken(BaseUser user, Long userId,
+			String socialMediaId, SocialMediaType socialMediaType) {
+		this(user, userId, socialMediaId, socialMediaType, null);
 	}
 	
 	public SocialMediaAuthenticationToken(
@@ -35,12 +43,12 @@ public class SocialMediaAuthenticationToken extends AbstractAuthenticationToken 
 
 	@Override
 	public Object getCredentials() {
-		return null; //TODO
+		return new SessionUser(user, authorities);
 	}
 
 	@Override
 	public Object getPrincipal() {
-		return null; //TODO
+		return new SessionUser(user, authorities);
 	}
 	
 	public BaseUser getUser() {

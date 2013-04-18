@@ -318,7 +318,14 @@
 			<artifactId>spring-social-core</artifactId>
 			<version>1.0.2.RELEASE</version>
 		</dependency>
-            
+		
+		<!-- Facebook API -->
+		<dependency>
+			<groupId>org.springframework.social</groupId>
+			<artifactId>spring-social-facebook</artifactId>
+			<version>1.0.2.RELEASE</version>
+		</dependency>
+		            
 		<!-- Scribe -->
 		<dependency>
 			<groupId>org.scribe</groupId>

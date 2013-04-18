@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.opentides.bean.user.BaseUser;
+import org.opentides.bean.user.UserAuthority;
 import org.opentides.enums.SocialMediaType;
 import org.opentides.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +18,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 public class SocialMediaAuthenticationProvider implements AuthenticationProvider {
 
-	private String[] roles;
-	
 	@Autowired
 	UserService userService;
 	
@@ -31,15 +30,7 @@ public class SocialMediaAuthenticationProvider implements AuthenticationProvider
 			throw new BadCredentialsException("User is not authenticated through " + socialMediaAuthenticationToken.getSocialMediaType());
 		}
 		
-		if (roles == null) {
-			roles = new String[] {};
-		}
-		
 		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-
-		for (String role : roles) {
-			authorities.add(new SimpleGrantedAuthority(role));
-		}
 		
 		BaseUser currentUser = null;
 		SocialMediaType socialMediaType = socialMediaAuthenticationToken.getSocialMediaType();
@@ -53,8 +44,9 @@ public class SocialMediaAuthenticationProvider implements AuthenticationProvider
 			throw new UsernameNotFoundException("User does not exist.");
 		}
 		
-		socialMediaAuthenticationToken.setUser(currentUser);
-		//authorities.add(new SimpleGrantedAuthority(currentUser.get));
+		for (UserAuthority userAuthority : currentUser.getAuthorities()) {
+			authorities.add(new SimpleGrantedAuthority(userAuthority.getAuthority()));
+		}
 		
 		SocialMediaAuthenticationToken succeedToken = new SocialMediaAuthenticationToken(
 				currentUser, currentUser.getId(),
