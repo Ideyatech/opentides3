@@ -107,4 +107,19 @@ public class UserDaoJpaImpl extends BaseEntityDaoJpaImpl<BaseUser, Long> impleme
 		update.executeUpdate();
 	}
 
+	@Override
+	public BaseUser loadByFacebookId(String facebookId) {
+		if (StringUtil.isEmpty(facebookId))
+			return null;
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("facebookId", facebookId);
+		List<BaseUser> result = findByNamedQuery("jpql.user.findByFacebookId",
+				params);
+		if (result == null || result.size() == 0) {
+			return null;
+		} else {
+			return result.get(0);
+		}
+	}
+
 }

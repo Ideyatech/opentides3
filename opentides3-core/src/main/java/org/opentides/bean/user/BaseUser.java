@@ -115,6 +115,12 @@ public class BaseUser extends BaseEntity implements Photoable {
 	@Column(name="FAILED_LOGIN_COUNT")
 	@JsonView(Views.DisplayView.class)
 	private Long failedLoginCount;
+	
+	@Column(name="FACEBOOK_ID")
+	private String facebookId;
+	
+	@Column(name="FACEBOOK_ACCESS_TOKEN")
+	private String facebookAccessToken;
 
 	public BaseUser() {
 		super();

@@ -48,7 +48,7 @@
 			<div class="span6 alternative-logins pagination-centered">
 				<div class="control-group"><small><spring:message code="message.alternative-login-help" /></small></div>
 				<div class="control-group">
-					<button class="btn btn-primary btn-block">
+					<button class="btn btn-primary btn-block" onclick="window.location.href='${home}/facebook/connect'">
 					<i class="icon-facebook-sign"></i><spring:message code="message.login-with-facebook" /></button>
 				</div>
 				<div class="control-group">
@@ -72,14 +72,14 @@
 
 <div class="verify-signup modal hide fade" data-width="660">
 	<div class="modal-body">
-		<h4>Registration Success!</h4>
+		<h4><spring:message code="message.registration.heading" /></h4>
 		<hr/>
-		<p>A verification email has been sent to <code class="signup-email"></code>.
+		<p><spring:message code="message.registration.email-sent" /> <code class="signup-email"></code>.
 		</p>
-		<a href="#">Resend verification email</a>
+		<a href="#"><spring:message code="message.registration.resend-email" /></a>
 	</div>
 	<div class="modal-footer pagination-centered">
-		<button class="btn btn-success btn-large" data-dismiss="modal">Login your account</button>
+		<button class="btn btn-success btn-large" data-dismiss="modal"><spring:message code="message.login-now" /></button>
 	</div>
 </div>
 

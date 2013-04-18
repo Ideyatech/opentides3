@@ -9,8 +9,8 @@
 	<sec:http pattern="/js/**" security="none"/>
 	<sec:http pattern="/img/**" security="none"/>
 	<sec:http pattern="/font/**" security="none"/>
+	<sec:http pattern="/facebook/**" security="none"/>
 	<sec:http pattern="/register**" security="none"/>
-	
 	
     <sec:global-method-security secured-annotations="enabled"/>
 
@@ -48,26 +48,16 @@
 
 	</sec:http>
 	
-	
-	<sec:authentication-manager>
+	<sec:authentication-manager alias="authenticationManager">
 		<sec:authentication-provider
 			user-service-ref="authenticationService">
 			<sec:password-encoder ref="passwordEncoder" />
 		</sec:authentication-provider>
+		<sec:authentication-provider ref="socialMediaAuthenticationProvider" />
 	</sec:authentication-manager>
-	
-<!--    <bean id="expiredSessionFilter" class="org.opentides.web.filter.ExpiredSessionFilter" autowire="byName">
-	</bean> -->
-<!-- 	
-    <bean id="concurrentSessionPromptFilter" class="com.attache.web.security.ConcurrentSessionPromptFilter"
-		autowire="byName">
-	</bean>
-	
-	<bean id="concurrentSessionRedirectFilter" 
-		class="com.attache.web.security.ConcurrentSessionRedirectFilter"
-		autowire="byName">
-	</bean>
- -->	
+		
+	<bean id="socialMediaAuthenticationProvider" class="org.opentides.security.SocialMediaAuthenticationProvider"/>
+
 	<bean id="httpRequestAccessDecisionManager"
 		class="org.springframework.security.access.vote.AffirmativeBased">
 		<property name="allowIfAllAbstainDecisions">

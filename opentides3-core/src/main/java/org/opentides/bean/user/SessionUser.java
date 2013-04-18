@@ -19,6 +19,7 @@
 
 package org.opentides.bean.user;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 

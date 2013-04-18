@@ -237,9 +237,8 @@ public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 		//TODO enable user (should be disabled by default)
 		baseUser.getCredential().setEnabled(true);
 		
-		UserCredential credential = baseUser.getCredential();
-		
 		//encrypt password
+		UserCredential credential = baseUser.getCredential();
 		if (!StringUtil.isEmpty(credential.getNewPassword()))
 			credential.setPassword( encryptPassword(credential.getNewPassword()) );
 		baseUser.setCredential(credential);
@@ -256,6 +255,12 @@ public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 		mailingService.sendEmail(new String[] { baseUser.getEmailAddress() },
 				"Verify your Email Address", "email-verification.vm",
 				templateVariables);
+	}
+
+	@Override
+	public BaseUser getUserByFacebookId(String facebookId) {
+		UserDao userDao = (UserDao) getDao();
+		return userDao.loadByFacebookId(facebookId);
 	}
 	
 }

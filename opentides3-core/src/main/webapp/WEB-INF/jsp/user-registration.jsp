@@ -7,7 +7,7 @@
 
 <div class="modal-body">
 
-	<h4>Sign up</h4>
+	<h4><spring:message code="label.user-registration" /></h4>
 	<hr/>
 
 	<form:form commandName="baseUser" action="${home}/register" method="POST" cssClass="form-horizontal" >
@@ -29,7 +29,7 @@
 </div>
 	
 <div class="modal-footer">
-	<small class="pull-left">Already have an account? <a href="#" data-url="${home}/register" class="show-login">Login here</a></small>
+	<small class="pull-left"><spring:message code="message.login-help" /> <a href="#" data-url="${home}/register" class="show-login"><spring:message code="message.login-now" /></a></small>
 </div>
 
 <script type="text/javascript">

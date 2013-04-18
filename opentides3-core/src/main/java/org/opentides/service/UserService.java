@@ -36,7 +36,6 @@ public interface UserService extends BaseCrudService<BaseUser> {
 	/**
 	 * Encrypts the password if passwordEncoder is available.
 	 * @param password
-	 * @return
 	 */
 	public String encryptPassword(String password);
 
@@ -59,20 +58,17 @@ public interface UserService extends BaseCrudService<BaseUser> {
 	 
 	 /**
 	  * Returns the list of user session that is logged-in to the system.
-	  * @return
 	  */
 	 public List<SessionInformation> getAllLoggedUsers();
 	 
 	 /**
 	  * Performs a force logout to specified username
-	  * @return
 	  */
 	 public void forceLogout(String username);
 	 
 	 public BaseUser getCurrentUser();
 
-	 /**
-	  * 
-	  */
 	 public void registerUser(BaseUser baseUser);
+	 
+	 public BaseUser getUserByFacebookId(String facebookId);
 }

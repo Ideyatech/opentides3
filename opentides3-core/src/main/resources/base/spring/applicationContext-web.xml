@@ -55,6 +55,7 @@
 	<mvc:resources location="/base/js/,/app/js/" mapping="/js/**" />
 	<mvc:resources location="/base/img/,/app/img/" mapping="/img/**" />
 	<mvc:resources location="/base/font/,/app/font/" mapping="/font/**" />
+	
 	<!-- Allows for mapping the DispatcherServlet to "/" by forwarding static 
 		resource requests to the container's default Servlet -->
 	<!-- <mvc:default-servlet-handler /> -->
@@ -131,4 +132,27 @@
 	<bean id="startupListener" class="org.opentides.listener.ApplicationStartupListener">
 		<property name="propertyName" value="${property.name}" />
 	</bean>
+
+	<!-- Add system properties through spring XML configuration. -->
+	<bean
+		class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+		<property name="targetObject">
+			<bean
+				class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+				<property name="targetClass" value="java.lang.System" />
+				<property name="targetMethod" value="getProperties" />
+			</bean>
+		</property>
+		<property name="targetMethod" value="putAll" />
+		<property name="arguments">
+			<util:properties>
+				<prop key="facebook.domainUrl">http://einstein.ideyatech.com:8153/Opentides/</prop>
+				<prop key="facebook.appID">443772175710131</prop>
+				<prop key="facebook.clientSecret">5264d6fbef180542cc2d41190366d547</prop>
+				<prop key="facebook.callback">http://einstein.ideyatech.com:8153/Opentides/facebook/callback</prop>
+				<prop key="facebook.apiClass">org.scribe.builder.api.FacebookApi</prop>
+			</util:properties>
+		</property>
+	</bean>
+	
 </beans>

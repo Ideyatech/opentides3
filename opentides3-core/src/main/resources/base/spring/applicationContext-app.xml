@@ -34,25 +34,6 @@
 	<!-- Aspect Oriented and Annotation Transaction Declaration -->
 	<tx:annotation-driven transaction-manager="transactionManager" />
 
-	<!-- the transactional advice (what 'happens'; see the <aop:advisor/> bean 
-		below) -->
-<!-- 		
-	<tx:advice id="ot3ControllerAdvice" transaction-manager="transactionManager"> 
-		<tx:attributes> 
-			<tx:method name="createTx" /> 
-			<tx:method name="updateTx" /> 
-			<tx:method name="deleteTx" />
-		</tx:attributes>
-	</tx:advice>
- -->		
-	<!-- ensure that the above transactional advice runs for any execution of 
-		an operation defined by the Controller interface -->
-<!-- 
-	<aop:config> 
-		<aop:pointcut id="ot3ControllerTx" expression="execution(* org.opentides.web.controller.*.*(..))"/> 
-		<aop:advisor advice-ref="ot3ControllerAdvice" pointcut-ref="ot3ControllerTx"/> 
-	</aop:config>
- -->	
 	<!-- Property file containing custom JPQL queries -->
 	<bean id="jpqlProperties"
 		class="org.springframework.beans.factory.config.PropertiesFactoryBean">
