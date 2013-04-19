@@ -30,6 +30,18 @@ public class SocialProviderServiceImpl implements SocialProviderService {
 	         .build();
 		return service;
 	}
+	
+	@Override
+	public OAuthService getOAuthService(String scope) {
+		OAuthService service = new ServiceBuilder()
+	         .provider(provider)
+	         .apiKey(apiKey)
+	         .apiSecret(apiSecret)
+	         .callback(callback)
+	         .scope(scope)
+	         .build();
+		return service;
+	}
 
 	public void setProvider(Class provider) {
 		this.provider = provider;

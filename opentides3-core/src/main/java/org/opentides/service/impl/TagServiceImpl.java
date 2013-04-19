@@ -37,7 +37,9 @@ public class TagServiceImpl extends BaseCrudServiceImpl<Tag>
 			if(existingTag != null) {
 				tags.add(existingTag);
 			} else {
-				tags.add(new Tag(item));
+				Tag tag = new Tag();
+				tag.setTagText(item);
+				tags.add(tag);
 			}
 			
 		}

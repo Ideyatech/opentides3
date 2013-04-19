@@ -56,7 +56,7 @@
 					<i class="icon-twitter-sign"></i><spring:message code="message.login-with-twitter" /></button>
 				</div>
 				<div class="control-group">
-					<button class="btn btn-danger btn-block">
+					<button class="btn btn-danger btn-block" onclick="window.location.href='${home}/google/connect'">
 					<i class="icon-google-plus-sign"></i><spring:message code="message.login-with-google" /></button>
 				</div>
 			</div>

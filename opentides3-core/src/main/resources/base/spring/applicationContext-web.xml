@@ -151,6 +151,12 @@
 				<prop key="facebook.clientSecret">5264d6fbef180542cc2d41190366d547</prop>
 				<prop key="facebook.callback">http://einstein.ideyatech.com:8153/Opentides/facebook/callback</prop>
 				<prop key="facebook.apiClass">org.scribe.builder.api.FacebookApi</prop>
+			
+				<prop key="google.domainUrl">http://einstein.ideyatech.com:8153/Opentides/</prop>
+				<prop key="google.appID">403711571000.apps.googleusercontent.com</prop>
+				<prop key="google.clientSecret">nzW9HyRqJJSn5-JeMdoPPYNh</prop>
+				<prop key="google.callback">http://einstein.ideyatech.com:8153/Opentides/google/callback</prop>
+				<prop key="google.apiClass">org.opentides.social.bean.Google2Api</prop>
 			</util:properties>
 		</property>
 	</bean>

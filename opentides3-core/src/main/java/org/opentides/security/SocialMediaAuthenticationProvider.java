@@ -38,6 +38,10 @@ public class SocialMediaAuthenticationProvider implements AuthenticationProvider
 		
 		if(SocialMediaType.FACEBOOK.equals(socialMediaType)) {
 			currentUser = userService.getUserByFacebookId(socialId);
+		} else if (SocialMediaType.GOOGLE.equals(socialMediaType)) {
+			currentUser = userService.getUserByGoogleId(socialId);
+		} else if (SocialMediaType.TWITTER.equals(socialMediaType)) {
+			currentUser = userService.getUserByTwitterId(socialId);
 		}
 
 		if (currentUser == null) {

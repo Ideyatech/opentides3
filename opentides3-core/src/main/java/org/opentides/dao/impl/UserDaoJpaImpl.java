@@ -121,5 +121,36 @@ public class UserDaoJpaImpl extends BaseEntityDaoJpaImpl<BaseUser, Long> impleme
 			return result.get(0);
 		}
 	}
+	
+	@Override
+	public BaseUser loadByGoogleId(String googleId) {
+		if (StringUtil.isEmpty(googleId))
+			return null;
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("googleId", googleId);
+		List<BaseUser> result = findByNamedQuery("jpql.user.findByGoogleId",
+				params);
+		if (result == null || result.size() == 0) {
+			return null;
+		} else {
+			return result.get(0);
+		}
+	}
+	
+	@Override
+	public BaseUser loadByTwitterId(String twitterId) {
+		if (StringUtil.isEmpty(twitterId))
+			return null;
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("twitterId", twitterId);
+		List<BaseUser> result = findByNamedQuery("jpql.user.findByTwitterId",
+				params);
+		if (result == null || result.size() == 0) {
+			return null;
+		} else {
+			return result.get(0);
+		}
+	}
+	
 
 }

@@ -70,8 +70,13 @@ public interface UserService extends BaseCrudService<BaseUser> {
 
 	 public void registerUser(BaseUser baseUser, boolean sendEmail);
 	 public void registerFacebookAccount(BaseUser baseUser, String facebookAccessToken);
+	 public void registerGoogleAccount(BaseUser baseUser, String googleAccessToken);
 	 
 	 public BaseUser getUserByFacebookId(String facebookId);
 	 public BaseUser getUserByFacebookAccessToken(String facebookAccessToken);
+	 public BaseUser getUserByGoogleId(String googleId);
+	 public BaseUser getUserByGoogleAccessToken(String googleAccessToken);
+	 public BaseUser getUserByTwitterId(String twitterId);
+	 public BaseUser getUserByTwitterAccessToken(String twitterAccessToken);
 
 }

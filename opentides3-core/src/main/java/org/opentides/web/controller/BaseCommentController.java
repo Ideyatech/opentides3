@@ -21,11 +21,7 @@ import org.opentides.web.validator.CommentValidator;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.TransactionCallbackWithoutResult;
-import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
@@ -96,12 +92,9 @@ public abstract class BaseCommentController<T extends BaseEntity> {
 			return model;
 		}
 		
-		
 		if(command.getFile() != null && !command.getFile().isEmpty()) {
-			
 			FileInfo attachment = fileUploadService.upload(command.getFile(), new FileInfo());
 			command.addFile(attachment);
-			
 		}
 
 		command.setAuthor(userService.getCurrentUser());
@@ -112,7 +105,6 @@ public abstract class BaseCommentController<T extends BaseEntity> {
 		commentable.getComments().add(command);
 
 		service.save((T) commentable);
-
 		
 		model.put("id", command.getId());
 		model.put("author", command.getAuthor().getCompleteName());

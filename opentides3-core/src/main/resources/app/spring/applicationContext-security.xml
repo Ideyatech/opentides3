@@ -10,6 +10,8 @@
 	<sec:http pattern="/img/**" security="none"/>
 	<sec:http pattern="/font/**" security="none"/>
 	<sec:http pattern="/facebook/**" security="none"/>
+	<sec:http pattern="/twitter/**" security="none"/>
+	<sec:http pattern="/google/**" security="none"/>
 	<sec:http pattern="/register**" security="none"/>
 	
     <sec:global-method-security secured-annotations="enabled"/>

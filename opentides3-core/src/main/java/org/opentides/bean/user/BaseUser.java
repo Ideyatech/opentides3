@@ -122,6 +122,18 @@ public class BaseUser extends BaseEntity implements Photoable {
 	
 	@Column(name="FACEBOOK_ACCESS_TOKEN")
 	private String facebookAccessToken;
+	
+	@Column(name="GOOGLE_ID")
+	private String googleId;
+	
+	@Column(name="GOOGLE_ACCESS_TOKEN")
+	private String googleAccessToken;
+
+	@Column(name="TWITTER_ID")
+	private String twitterId;
+	
+	@Column(name="TWITTER_ACCESS_TOKEN")
+	private String twitterAccessToken;
 
 	public BaseUser() {
 		super();
@@ -561,6 +573,38 @@ public class BaseUser extends BaseEntity implements Photoable {
 	
 	public void setFacebookAccessToken(String facebookAccessToken) {
 		this.facebookAccessToken = facebookAccessToken;
+	}
+	
+	public String getGoogleId() {
+		return googleId;
+	}
+	
+	public void setGoogleId(String googleId) {
+		this.googleId = googleId;
+	}
+	
+	public String getGoogleAccessToken() {
+		return googleAccessToken;
+	}
+	
+	public void setGoogleAccessToken(String googleAccessToken) {
+		this.googleAccessToken = googleAccessToken;
+	}
+	
+	public String getTwitterId() {
+		return twitterId;
+	}
+	
+	public void setTwitterId(String twitterId) {
+		this.twitterId = twitterId;
+	}
+	
+	public String getTwitterAccessToken() {
+		return twitterAccessToken;
+	}
+	
+	public void setTwitterAccessToken(String twitterAccessToken) {
+		this.twitterAccessToken = twitterAccessToken;
 	}
 	
 	// Photoable requirements

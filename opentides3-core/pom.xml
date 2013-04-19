@@ -39,6 +39,11 @@
 			<url>http://download.eclipse.org/rt/eclipselink/maven.repo</url>
 			<name>EclipseLink Repo</name>
 		</repository>
+		<repository>
+		    <id>spring.social.google</id>
+		    <name>Spring Social Google</name>
+		    <url>https://github.com/GabiAxel/maven/raw/master/</url>
+		</repository>
 	</repositories>
 	<dependencies>
 		<!-- Spring -->
@@ -325,8 +330,22 @@
 			<artifactId>spring-social-facebook</artifactId>
 			<version>1.0.2.RELEASE</version>
 		</dependency>
-		            
-		<!-- Scribe -->
+		
+		<!-- Google API -->
+		<dependency>
+		   <groupId>org.springframework.social</groupId>
+		   <artifactId>spring-social-google</artifactId>
+		   <version>1.0.0.M2</version>
+		</dependency>
+		
+		<!-- Twitter API -->
+		<dependency>
+			<groupId>org.springframework.social</groupId>
+			<artifactId>spring-social-twitter</artifactId>
+			<version>1.0.3.RELEASE</version>
+		</dependency>
+		
+		<!-- Scribe --> 
 		<dependency>
 			<groupId>org.scribe</groupId>
 			<artifactId>scribe</artifactId>

@@ -48,6 +48,9 @@ import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.social.facebook.api.FacebookProfile;
 import org.springframework.social.facebook.api.impl.FacebookTemplate;
+import org.springframework.social.google.api.Google;
+import org.springframework.social.google.api.impl.GoogleTemplate;
+import org.springframework.social.google.api.legacyprofile.LegacyGoogleProfile;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -280,6 +283,32 @@ public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 	}
 
 	@Override
+	public BaseUser getUserByGoogleId(String googleId) {
+		UserDao userDao = (UserDao) getDao();
+		return userDao.loadByGoogleId(googleId);
+	}
+
+	@Override
+	public BaseUser getUserByGoogleAccessToken(String googleAccessToken) {
+		Google google = new GoogleTemplate(googleAccessToken);
+		String googleUserId = google.userOperations().getUserProfile().getId();
+		UserDao userDao = (UserDao) getDao();
+		return userDao.loadByGoogleId(googleUserId);
+	}
+
+	@Override
+	public BaseUser getUserByTwitterId(String twitterId) {
+		UserDao userDao = (UserDao) getDao();
+		return userDao.loadByTwitterId(twitterId);
+	}
+
+	@Override
+	public BaseUser getUserByTwitterAccessToken(String twitterAccessToken) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
 	@Transactional
 	public void registerFacebookAccount(BaseUser user,
 			String facebookAccessToken) {
@@ -287,31 +316,51 @@ public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 		FacebookTemplate facebookTemplate = new FacebookTemplate(facebookAccessToken);
 		FacebookProfile profile = facebookTemplate.userOperations().getUserProfile();
 
-		if(user.getFirstName() == null || user.getFirstName().isEmpty())
+		if(StringUtil.isEmpty(user.getFirstName()))
 			user.setFirstName(profile.getFirstName());
-		if(user.getLastName() == null || user.getLastName().isEmpty())
+		if(StringUtil.isEmpty(user.getLastName()))
 			user.setLastName(profile.getLastName());
-		if(user.getMiddleName() == null || user.getMiddleName().isEmpty())
+		if(StringUtil.isEmpty(user.getMiddleName()))
 			user.setMiddleName(profile.getMiddleName());
-		if(user.getEmailAddress() == null || user.getEmailAddress().isEmpty())
+		if(StringUtil.isEmpty(user.getEmailAddress()))
 			user.setEmailAddress(profile.getEmail());
 		
 		user.setFacebookId(profile.getId());
 		user.setFacebookAccessToken(facebookAccessToken);
 		
-		if(user.isNew()) {
-			
-			UserCredential credential = new UserCredential();
-			credential.setUsername(profile.getEmail());
-			credential.setPassword(new Date().toString());
-			user.setCredential(credential);
-			
-			registerUser(user, false);
-			
-		} else {
-			save(user);
-		}
+		UserCredential credential = new UserCredential();
+		credential.setUsername(profile.getEmail());
+		credential.setPassword(new Date().toString());
+		user.setCredential(credential);
+		
+		registerUser(user, false);
 		
 	}
-	
+
+	@Override
+	@Transactional
+	public void registerGoogleAccount(BaseUser user,
+			String googleAccessToken) {
+		
+		Google google = new GoogleTemplate(googleAccessToken);
+		LegacyGoogleProfile profile = google.userOperations().getUserProfile();
+		
+		if(StringUtil.isEmpty(user.getFirstName()))
+			user.setFirstName(profile.getFirstName());
+		if(StringUtil.isEmpty(user.getLastName()))
+			user.setLastName(profile.getLastName());
+		if(StringUtil.isEmpty(user.getEmailAddress()))
+			user.setEmailAddress(profile.getEmail());
+		
+		user.setGoogleId(profile.getId());
+		user.setGoogleAccessToken(googleAccessToken);
+		
+		UserCredential credential = new UserCredential();
+		credential.setUsername(profile.getEmail());
+		credential.setPassword(new Date().toString());
+		user.setCredential(credential);
+		
+		registerUser(user, false);
+		
+	}
 }
