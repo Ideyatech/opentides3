@@ -134,6 +134,9 @@ public class BaseUser extends BaseEntity implements Photoable {
 	
 	@Column(name="TWITTER_ACCESS_TOKEN")
 	private String twitterAccessToken;
+	
+	@Column(name="TWITTER_SECRET")
+	private String twitterSecret;
 
 	public BaseUser() {
 		super();
@@ -605,6 +608,14 @@ public class BaseUser extends BaseEntity implements Photoable {
 	
 	public void setTwitterAccessToken(String twitterAccessToken) {
 		this.twitterAccessToken = twitterAccessToken;
+	}
+	
+	public String getTwitterSecret() {
+		return twitterSecret;
+	}
+	
+	public void setTwitterSecret(String twitterSecret) {
+		this.twitterSecret = twitterSecret;
 	}
 	
 	// Photoable requirements

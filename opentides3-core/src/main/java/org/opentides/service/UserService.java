@@ -22,6 +22,7 @@ package org.opentides.service;
 import java.util.List;
 
 import org.opentides.bean.user.BaseUser;
+import org.scribe.model.Token;
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.session.SessionInformation;
@@ -71,12 +72,13 @@ public interface UserService extends BaseCrudService<BaseUser> {
 	 public void registerUser(BaseUser baseUser, boolean sendEmail);
 	 public void registerFacebookAccount(BaseUser baseUser, String facebookAccessToken);
 	 public void registerGoogleAccount(BaseUser baseUser, String googleAccessToken);
+	 public void registerTwitterAccount(BaseUser user, String appId, String clientSecret, Token accessToken);
 	 
 	 public BaseUser getUserByFacebookId(String facebookId);
 	 public BaseUser getUserByFacebookAccessToken(String facebookAccessToken);
 	 public BaseUser getUserByGoogleId(String googleId);
 	 public BaseUser getUserByGoogleAccessToken(String googleAccessToken);
 	 public BaseUser getUserByTwitterId(String twitterId);
-	 public BaseUser getUserByTwitterAccessToken(String twitterAccessToken);
+	 public BaseUser getUserByTwitterAccessToken(String appId, String clientSecret, Token token);
 
 }

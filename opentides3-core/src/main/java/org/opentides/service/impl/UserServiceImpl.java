@@ -38,6 +38,7 @@ import org.opentides.service.UserGroupService;
 import org.opentides.service.UserService;
 import org.opentides.util.SecurityUtil;
 import org.opentides.util.StringUtil;
+import org.scribe.model.Token;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.encoding.PasswordEncoder;
@@ -51,6 +52,8 @@ import org.springframework.social.facebook.api.impl.FacebookTemplate;
 import org.springframework.social.google.api.Google;
 import org.springframework.social.google.api.impl.GoogleTemplate;
 import org.springframework.social.google.api.legacyprofile.LegacyGoogleProfile;
+import org.springframework.social.twitter.api.TwitterProfile;
+import org.springframework.social.twitter.api.impl.TwitterTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -290,8 +293,8 @@ public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 
 	@Override
 	public BaseUser getUserByGoogleAccessToken(String googleAccessToken) {
-		Google google = new GoogleTemplate(googleAccessToken);
-		String googleUserId = google.userOperations().getUserProfile().getId();
+		Google googleTemplate = new GoogleTemplate(googleAccessToken);
+		String googleUserId = googleTemplate.userOperations().getUserProfile().getId();
 		UserDao userDao = (UserDao) getDao();
 		return userDao.loadByGoogleId(googleUserId);
 	}
@@ -303,9 +306,11 @@ public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 	}
 
 	@Override
-	public BaseUser getUserByTwitterAccessToken(String twitterAccessToken) {
-		// TODO Auto-generated method stub
-		return null;
+	public BaseUser getUserByTwitterAccessToken(String appId, String clientSecret, Token token) {
+		TwitterTemplate twitterTemplate = new TwitterTemplate(appId, clientSecret, token.getToken(), token.getSecret());
+		long twitterUserId = twitterTemplate.userOperations().getUserProfile().getId();
+		UserDao userDao = (UserDao) getDao();
+		return userDao.loadByTwitterId(String.valueOf(twitterUserId));
 	}
 	
 	@Override
@@ -342,8 +347,8 @@ public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 	public void registerGoogleAccount(BaseUser user,
 			String googleAccessToken) {
 		
-		Google google = new GoogleTemplate(googleAccessToken);
-		LegacyGoogleProfile profile = google.userOperations().getUserProfile();
+		Google googleTemplate = new GoogleTemplate(googleAccessToken);
+		LegacyGoogleProfile profile = googleTemplate.userOperations().getUserProfile();
 		
 		if(StringUtil.isEmpty(user.getFirstName()))
 			user.setFirstName(profile.getFirstName());
@@ -357,6 +362,28 @@ public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 		
 		UserCredential credential = new UserCredential();
 		credential.setUsername(profile.getEmail());
+		credential.setPassword(new Date().toString());
+		user.setCredential(credential);
+		
+		registerUser(user, false);
+		
+	}
+
+	@Override
+	@Transactional
+	public void registerTwitterAccount(BaseUser user, String appId, String clientSecret, Token token) {
+		TwitterTemplate twitterTemplate = new TwitterTemplate(appId, clientSecret, token.getToken(), token.getSecret());
+		TwitterProfile profile = twitterTemplate.userOperations().getUserProfile();
+		
+		if(StringUtil.isEmpty(user.getFirstName()))
+			user.setFirstName(profile.getName());
+		
+		user.setTwitterId(String.valueOf(profile.getId()));
+		user.setTwitterSecret(token.getSecret());
+		user.setGoogleAccessToken(token.getToken());
+		
+		UserCredential credential = new UserCredential();
+		credential.setUsername(profile.getScreenName());
 		credential.setPassword(new Date().toString());
 		user.setCredential(credential);
 		

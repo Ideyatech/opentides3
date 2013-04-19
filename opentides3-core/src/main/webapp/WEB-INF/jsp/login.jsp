@@ -52,7 +52,7 @@
 					<i class="icon-facebook-sign"></i><spring:message code="message.login-with-facebook" /></button>
 				</div>
 				<div class="control-group">
-					<button class="btn btn-info btn-block">
+					<button class="btn btn-info btn-block" onclick="window.location.href='${home}/twitter/connect'">
 					<i class="icon-twitter-sign"></i><spring:message code="message.login-with-twitter" /></button>
 				</div>
 				<div class="control-group">
