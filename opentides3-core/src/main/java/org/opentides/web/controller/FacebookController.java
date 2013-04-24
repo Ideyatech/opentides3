@@ -38,11 +38,17 @@ public class FacebookController {
 
 	@Autowired
 	private UserService userService;
+	
+	@RequestMapping(value = "/link", method = RequestMethod.GET)
+	public String link(HttpServletRequest request) {
+		request.getSession().setAttribute("currentUser", userService.getCurrentUser());
+		return "redirect:/facebook/connect";
+	}
 
 	@RequestMapping(value = "/connect", method = RequestMethod.GET)
 	public String connect(ModelMap modelMap,
 			HttpServletRequest request, HttpServletResponse response) {
-
+		
 		OAuthService service = facebookServiceProvider.getOAuthService();
 		String authorizationURL = service.getAuthorizationUrl(EMPTY_TOKEN)
 				.concat("&scope=email,user_about_me,read_stream");
@@ -60,28 +66,37 @@ public class FacebookController {
 		Token accessToken = service.getAccessToken(EMPTY_TOKEN, verifier);
 
 		if (accessToken != null) {
+
+			BaseUser currentUser = (BaseUser) request.getSession().getAttribute("currentUser");
+			request.getSession().removeAttribute("currentUser");
 			
-			BaseUser user = userService.getUserByFacebookAccessToken(accessToken.getToken());
+			if(currentUser != null) {
+				userService.registerFacebookAccount(currentUser, accessToken.getToken());
+				return "redirect:/account-settings";
+			} else {
 				
-			if (user == null) {
-				user = new BaseUser();
-				userService.registerFacebookAccount(user, accessToken.getToken());
+				BaseUser user = userService.getUserByFacebookAccessToken(accessToken.getToken());
+				
+				if (user == null) {
+					user = new BaseUser();
+					userService.registerFacebookAccount(user, accessToken.getToken());
+				}
+				
+				// Login user
+				
+				SocialMediaAuthenticationToken authToken = new SocialMediaAuthenticationToken(
+						user, user.getId(), user.getFacebookId(),
+						SocialMediaType.FACEBOOK);
+				Authentication authentication = authenticationManager
+						.authenticate(authToken);
+				SecurityContext context = SecurityContextHolder.getContext();
+				context.setAuthentication(authentication);
+				request.getSession()
+						.setAttribute(
+								HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
+								context);
+			
 			}
-			
-			// Login user
-			
-			SocialMediaAuthenticationToken authToken = new SocialMediaAuthenticationToken(
-					user, user.getId(), user.getFacebookId(),
-					SocialMediaType.FACEBOOK);
-			Authentication authentication = authenticationManager
-					.authenticate(authToken);
-			SecurityContext context = SecurityContextHolder.getContext();
-			context.setAuthentication(authentication);
-			request.getSession()
-					.setAttribute(
-							HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
-							context);
-			
 		}
 
 		return "redirect:/";

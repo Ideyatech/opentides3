@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  * 
  * @author AJ
  */
-@RequestMapping("/organization/users/photo") /* Define the request mapping */
+@RequestMapping("/user/photo") /* Define the request mapping */
 @Controller 
 public class UserPhotoController extends BasePhotoController<BaseUser> {
 

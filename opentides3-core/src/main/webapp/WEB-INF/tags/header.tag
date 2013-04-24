@@ -125,9 +125,9 @@
 										<spring:message code="label.ninja"/>
 									</a>
 								</li>
-								<li class="${active eq 'form-builder' ? 'active' : ''}">
-									<a href="${home}/form-builder/">
-										<spring:message code="label.form-builder"/>
+								<li class="${active eq 'account-settings' ? 'active' : ''}">
+									<a href="${home}/account-settings/">
+										<spring:message code="label.account-settings"/>
 									</a>
 								</li>
 								<li>

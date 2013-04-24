@@ -19,7 +19,7 @@
 	<script type="text/template" class="template">
 		<li class="media" data-id="{{id}}">
 			<a class="pull-left" style="margin-right: 20px;">
-				<img class="img-circle" src="${home}/organization/users/photo?id={{authorId}}&size=s"/>
+				<img class="img-circle" src="${home}/user/photo?id={{authorId}}&size=s"/>
 			</a>
 			<div class="media-body">
 				<h4 class="media-heading">{{author}}</h4>
@@ -36,7 +36,7 @@
 	
 		<li class="media comment" data-id="${comment.id}">
 			<a class="pull-left" style="margin-right: 20px;">
-				<img class="img-circle" src="${home}/organization/users/photo?id=${comment.author.id}&size=s"/>
+				<img class="img-polaroid" src="${home}/user/photo?id=${currentUser.id}"/>
 			</a>
 			<div class="media-body">
 				<h4 class="media-heading">${comment.author.completeName}</h4>

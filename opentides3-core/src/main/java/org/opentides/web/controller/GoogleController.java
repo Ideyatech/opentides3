@@ -41,6 +41,12 @@ public class GoogleController {
 
 	private static final String SCOPE = "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile";
 	
+	@RequestMapping(value = "/link", method = RequestMethod.GET)
+	public String link(HttpServletRequest request) {
+		request.getSession().setAttribute("currentUser", userService.getCurrentUser());
+		return "redirect:/google/connect";
+	}
+	
 	@RequestMapping(value = "/connect", method = RequestMethod.GET)
 	public String connect(ModelMap modelMap,
 			HttpServletRequest request, HttpServletResponse response) {
@@ -62,27 +68,35 @@ public class GoogleController {
 
 		if (accessToken != null) {
 			
-			BaseUser user = userService.getUserByGoogleAccessToken(accessToken.getToken());
+			BaseUser currentUser = (BaseUser) request.getSession().getAttribute("currentUser");
+			request.getSession().removeAttribute("currentUser");
+			
+			if(currentUser != null) {
+				userService.registerGoogleAccount(currentUser, accessToken.getToken());
+				return "redirect:/account-settings";
+			} else {
 				
-			if (user == null) {
-				user = new BaseUser();
-				userService.registerGoogleAccount(user, accessToken.getToken());
+				BaseUser user = userService.getUserByGoogleAccessToken(accessToken.getToken());
+					
+				if (user == null) {
+					user = new BaseUser();
+					userService.registerGoogleAccount(user, accessToken.getToken());
+				}
+				
+				// Login user
+				
+				SocialMediaAuthenticationToken authToken = new SocialMediaAuthenticationToken(
+						user, user.getId(), user.getGoogleId(),
+						SocialMediaType.GOOGLE);
+				Authentication authentication = authenticationManager
+						.authenticate(authToken);
+				SecurityContext context = SecurityContextHolder.getContext();
+				context.setAuthentication(authentication);
+				request.getSession()
+						.setAttribute(
+								HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
+								context);
 			}
-			
-			// Login user
-			
-			SocialMediaAuthenticationToken authToken = new SocialMediaAuthenticationToken(
-					user, user.getId(), user.getGoogleId(),
-					SocialMediaType.GOOGLE);
-			Authentication authentication = authenticationManager
-					.authenticate(authToken);
-			SecurityContext context = SecurityContextHolder.getContext();
-			context.setAuthentication(authentication);
-			request.getSession()
-					.setAttribute(
-							HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
-							context);
-			
 		}
 
 		return "redirect:/";

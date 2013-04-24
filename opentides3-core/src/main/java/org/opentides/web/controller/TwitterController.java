@@ -44,10 +44,16 @@ public class TwitterController {
 	@Autowired
 	private UserService userService;
 
+	@RequestMapping(value = "/link", method = RequestMethod.GET)
+	public String link(HttpServletRequest request) {
+		request.getSession().setAttribute("currentUser", userService.getCurrentUser());
+		return "redirect:/twitter/connect";
+	}
+	
 	@RequestMapping(value = "/connect", method = RequestMethod.GET)
 	public String connect(ModelMap modelMap,
 			HttpServletRequest request, HttpServletResponse response) {
-
+		
 		OAuthService service = twitterServiceProvider.getOAuthService();
 		
 		Token requestToken = service.getRequestToken();
@@ -75,26 +81,35 @@ public class TwitterController {
 
 		if (accessToken != null) {
 			
-			BaseUser user = userService.getUserByTwitterAccessToken(TWITTER_APP_ID, TWITTER_CLIENT_SECRET, accessToken);
+			BaseUser currentUser = (BaseUser) request.getSession().getAttribute("currentUser");
+			request.getSession().removeAttribute("currentUser");
+			
+			if(currentUser != null) {
+				userService.registerTwitterAccount(currentUser, TWITTER_APP_ID, TWITTER_CLIENT_SECRET, accessToken);
+				return "redirect:/account-settings";
+			} else {
 				
-			if (user == null) {
-				user = new BaseUser();
-				userService.registerTwitterAccount(user, TWITTER_APP_ID, TWITTER_CLIENT_SECRET, accessToken);
+				BaseUser user = userService.getUserByTwitterAccessToken(TWITTER_APP_ID, TWITTER_CLIENT_SECRET, accessToken);
+					
+				if (user == null) {
+					user = new BaseUser();
+					userService.registerTwitterAccount(user, TWITTER_APP_ID, TWITTER_CLIENT_SECRET, accessToken);
+				}
+				
+				// Login user
+				
+				SocialMediaAuthenticationToken authToken = new SocialMediaAuthenticationToken(
+						user, user.getId(), user.getTwitterId(),
+						SocialMediaType.TWITTER);
+				Authentication authentication = authenticationManager
+						.authenticate(authToken);
+				SecurityContext context = SecurityContextHolder.getContext();
+				context.setAuthentication(authentication);
+				request.getSession()
+						.setAttribute(
+								HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
+								context);
 			}
-			
-			// Login user
-			
-			SocialMediaAuthenticationToken authToken = new SocialMediaAuthenticationToken(
-					user, user.getId(), user.getTwitterId(),
-					SocialMediaType.TWITTER);
-			Authentication authentication = authenticationManager
-					.authenticate(authToken);
-			SecurityContext context = SecurityContextHolder.getContext();
-			context.setAuthentication(authentication);
-			request.getSession()
-					.setAttribute(
-							HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
-							context);
 			
 		}
 

@@ -320,25 +320,23 @@ public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 		
 		FacebookTemplate facebookTemplate = new FacebookTemplate(facebookAccessToken);
 		FacebookProfile profile = facebookTemplate.userOperations().getUserProfile();
-
-		if(StringUtil.isEmpty(user.getFirstName()))
-			user.setFirstName(profile.getFirstName());
-		if(StringUtil.isEmpty(user.getLastName()))
-			user.setLastName(profile.getLastName());
-		if(StringUtil.isEmpty(user.getMiddleName()))
-			user.setMiddleName(profile.getMiddleName());
-		if(StringUtil.isEmpty(user.getEmailAddress()))
-			user.setEmailAddress(profile.getEmail());
+		
+		user.setFirstName(profile.getFirstName());
+		user.setLastName(profile.getLastName());
+		user.setMiddleName(profile.getMiddleName());
+		user.setEmailAddress(profile.getEmail());
 		
 		user.setFacebookId(profile.getId());
 		user.setFacebookAccessToken(facebookAccessToken);
-		
-		UserCredential credential = new UserCredential();
-		credential.setUsername(profile.getEmail());
-		credential.setPassword(new Date().toString());
-		user.setCredential(credential);
-		
-		registerUser(user, false);
+
+		if(user.getId() == null) {
+			UserCredential credential = new UserCredential();
+			credential.setUsername(profile.getEmail());
+			credential.setPassword(new Date().toString());
+			user.setCredential(credential);
+			registerUser(user, false);
+		} else
+			save(user);
 		
 	}
 
@@ -350,22 +348,21 @@ public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 		Google googleTemplate = new GoogleTemplate(googleAccessToken);
 		LegacyGoogleProfile profile = googleTemplate.userOperations().getUserProfile();
 		
-		if(StringUtil.isEmpty(user.getFirstName()))
-			user.setFirstName(profile.getFirstName());
-		if(StringUtil.isEmpty(user.getLastName()))
-			user.setLastName(profile.getLastName());
-		if(StringUtil.isEmpty(user.getEmailAddress()))
-			user.setEmailAddress(profile.getEmail());
+		user.setFirstName(profile.getFirstName());
+		user.setLastName(profile.getLastName());
+		user.setEmailAddress(profile.getEmail());
 		
 		user.setGoogleId(profile.getId());
 		user.setGoogleAccessToken(googleAccessToken);
 		
-		UserCredential credential = new UserCredential();
-		credential.setUsername(profile.getEmail());
-		credential.setPassword(new Date().toString());
-		user.setCredential(credential);
-		
-		registerUser(user, false);
+		if(user.getId() == null) {
+			UserCredential credential = new UserCredential();
+			credential.setUsername(profile.getEmail());
+			credential.setPassword(new Date().toString());
+			user.setCredential(credential);
+			registerUser(user, false);
+		} else
+			save(user);
 		
 	}
 
@@ -375,19 +372,20 @@ public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 		TwitterTemplate twitterTemplate = new TwitterTemplate(appId, clientSecret, token.getToken(), token.getSecret());
 		TwitterProfile profile = twitterTemplate.userOperations().getUserProfile();
 		
-		if(StringUtil.isEmpty(user.getFirstName()))
-			user.setFirstName(profile.getName());
+		user.setFirstName(profile.getName());
 		
 		user.setTwitterId(String.valueOf(profile.getId()));
 		user.setTwitterSecret(token.getSecret());
 		user.setGoogleAccessToken(token.getToken());
 		
-		UserCredential credential = new UserCredential();
-		credential.setUsername(profile.getScreenName());
-		credential.setPassword(new Date().toString());
-		user.setCredential(credential);
-		
-		registerUser(user, false);
+		if(user.getId() == null) {
+			UserCredential credential = new UserCredential();
+			credential.setUsername(profile.getScreenName());
+			credential.setPassword(new Date().toString());
+			user.setCredential(credential);
+			registerUser(user, false);
+		} else
+			save(user);
 		
 	}
 }
