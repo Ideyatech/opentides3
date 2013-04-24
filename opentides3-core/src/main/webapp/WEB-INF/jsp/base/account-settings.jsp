@@ -45,7 +45,17 @@
 
 	<div id="basic-info">
 		<h3><spring:message code="label.account-settings.basic-info"/></h3>
-		
+		<form:form commandName="user" method="POST" enctype="multipart/form-data" action="/account-settings/basic-info">
+			<div class="message-container"></div>
+			
+			<app:input path="credential.username" label="label.user.username" required="true"/>
+			<app:input path="firstName" label="label.user.first-name" required="true"/>
+			<app:input path="lastName" label="label.user.last-name" required="true"/>
+			<app:input path="emailAddress" label="label.user.email" required="true"/>
+			<br/>
+	    	<input type="submit" class="btn btn-success" data-submit="save" value="<spring:message code="label.account-settings.save-basic-info" />" />
+			
+		</form:form>
 	</div>
 
 	<div id="profile-picture" class="row-fluid">
@@ -122,7 +132,7 @@
 <app:footer>
 	<script type="text/javascript">
 		$(document).ready(function() {
-			
+			opentides3.jsonForm($('#basic-info form'));
 		})
 		.on("click", '.adjust-photo', opentides3.showAdjustPhoto)
 		.on("click", '.upload-photo', opentides3.showUploadPhoto);;

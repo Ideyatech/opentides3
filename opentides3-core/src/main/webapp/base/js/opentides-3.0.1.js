@@ -565,7 +565,7 @@ var opentides3 = (function() {
 
 					if ($(this).find(settings['results'] + ' table tr').length <= 1) {
 						// no search results, hide the table and message
-						results.find('table').hide();
+						//results.find('table').hide();
 					}
 
 					// bind to popstate event for history tracking
@@ -944,17 +944,15 @@ var opentides3 = (function() {
 			}
 
 		} else {
-			results.find('table').hide();
+			//results.find('table').hide();
 		}
 
 		// look for status bar
 		status.each(function(i, elem) {
 			if (json['results'].length == 0) {
-				html = "<div class='alert alert-warning'>"
-						+ opentides3.getMessage('no-results-found', elem)
-						+ "</div>";
+				html = opentides3.getMessage('no-results-found', elem);
 				$(elem).html(html);
-				results.find('table').hide();
+				//results.find('table').hide();
 			} else {
 				results.find('table').show();
 				html = "<span class='records'>"

@@ -21,7 +21,6 @@ import org.opentides.web.validator.CommentValidator;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
@@ -62,7 +61,6 @@ public abstract class BaseCommentController<T extends BaseEntity> {
 	@Autowired
 	protected CommentValidator commentValidator;
 	
-	@Transactional
 	@RequestMapping(method = RequestMethod.GET, value="/delete")
 	public @ResponseBody Map<String, Object>
 	deleteComment(HttpServletRequest request) {
@@ -78,14 +76,13 @@ public abstract class BaseCommentController<T extends BaseEntity> {
 		
 	}
 	
-	@Transactional
 	@RequestMapping(method = RequestMethod.POST, produces = "application/json")
-	public final @ResponseBody Map<String, Object>
-		sendComment(@Valid final Comment command, BindingResult result, final HttpServletRequest request) {
+	public @ResponseBody Map<String, Object>
+		sendComment(@Valid Comment command, BindingResult result, HttpServletRequest request) {
 		
 		Map<String, Object> model = new HashMap<String, Object>();
 		
-		final String commentableId = request.getParameter("commentableId");
+		String commentableId = request.getParameter("commentableId");
 		
 		if(result.hasGlobalErrors()) {
 			model.put("sent", false);

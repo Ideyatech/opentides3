@@ -43,6 +43,7 @@ import org.springframework.util.Assert;
  * @author allanctan
  *
  */
+@Transactional
 public class BaseCrudServiceImpl<T extends BaseEntity> extends
 		BaseServiceDefaultImpl implements BaseCrudService<T> {
 

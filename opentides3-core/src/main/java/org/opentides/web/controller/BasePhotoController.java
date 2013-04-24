@@ -29,10 +29,6 @@ import org.opentides.web.validator.PhotoValidator;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.support.TransactionCallbackWithoutResult;
-import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
@@ -77,15 +73,13 @@ public abstract class BasePhotoController<T extends BaseEntity> {
 	
 	protected Class<T> entityBeanType;
 	
-	private TransactionTemplate transactionTemplate;
-	
 	protected BaseCrudService<T> service;
 	
 	@ModelAttribute("command") 
 	protected abstract T getPhotoable(Long id);
 	
 	@RequestMapping(method = RequestMethod.GET)
-	public final String displayImage(ModelMap modelMap,
+	public String displayImage(ModelMap modelMap,
 			@ModelAttribute("command") T command,
 			@RequestParam(value="size", required=false) String size,
 			HttpServletRequest request, HttpServletResponse response) throws IOException{
@@ -175,23 +169,23 @@ public abstract class BasePhotoController<T extends BaseEntity> {
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value="/upload")
-	public final String displayUploadForm(){
+	public String displayUploadForm(){
 		return uploadPage;
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value="/adjust")
-	public final String displayAdjustForm(){
+	public String displayAdjustForm(){
 		return adjustPhoto;
 	}
 	
 	
 	@RequestMapping(method = RequestMethod.POST, value="/upload", produces = "application/json")
-	public final @ResponseBody Map<String, Object>
-		processUpload(@Valid @ModelAttribute("command") final T command,
-		BindingResult result, final HttpServletRequest request) {
+	public @ResponseBody Map<String, Object>
+		processUpload(@Valid @ModelAttribute("command") T command,
+		BindingResult result, HttpServletRequest request) {
 		
 		Map<String, Object> model = new HashMap<String, Object>();
-		final List<MessageResponse> messages = new ArrayList<MessageResponse>();
+		List<MessageResponse> messages = new ArrayList<MessageResponse>();
 		
 		if(result.hasErrors()) {
 			messages.addAll(CrudUtil.convertErrorMessage(result,
@@ -202,26 +196,20 @@ public abstract class BasePhotoController<T extends BaseEntity> {
 		
 		if (Photoable.class.isAssignableFrom(command.getClass())) { // ensure that the command implements Photoable.
 			
-			transactionTemplate.execute(new TransactionCallbackWithoutResult() {
-				@SuppressWarnings("unchecked")
-				protected void doInTransactionWithoutResult(TransactionStatus status) {
-
-					Photoable photoable = (Photoable) command;
-					FileInfo f = fileUploadService.upload(photoable.getPhoto(), new PhotoInfo());
-					
-					try {
-						ImageUtil.createPhotoThumbnails(f.getFullPath());
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-					
-					photoable.addPhoto((PhotoInfo) f);
-					
-					messages.addAll(CrudUtil.buildSuccessMessage(command, "upload-photo", request.getLocale(), messageSource));
-					
-					service.save((T) photoable);
-				}
-			});
+			Photoable photoable = (Photoable) command;
+			FileInfo f = fileUploadService.upload(photoable.getPhoto(), new PhotoInfo());
+			
+			try {
+				ImageUtil.createPhotoThumbnails(f.getFullPath());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+			photoable.addPhoto((PhotoInfo) f);
+			
+			messages.addAll(CrudUtil.buildSuccessMessage(command, "upload-photo", request.getLocale(), messageSource));
+			
+			service.save((T) photoable);
 			
 		} else {
 			System.out.println("Could not process upload : "
@@ -234,11 +222,11 @@ public abstract class BasePhotoController<T extends BaseEntity> {
 	}
 	
 	@RequestMapping(method = RequestMethod.POST, value="/adjust", produces = "application/json")
-	public final @ResponseBody Map<String, Object>
-		processAdjust(final HttpServletRequest request, @ModelAttribute("command") final T command) {
+	public @ResponseBody Map<String, Object>
+		processAdjust(HttpServletRequest request, @ModelAttribute("command") T command) {
 		
 		Map<String, Object> model = new HashMap<String, Object>();
-		final List<MessageResponse> messages = new ArrayList<MessageResponse>();
+		List<MessageResponse> messages = new ArrayList<MessageResponse>();
 		
 		if (Photoable.class.isAssignableFrom(command.getClass())) { // ensure that the command implements Photoable.
 			
@@ -307,10 +295,6 @@ public abstract class BasePhotoController<T extends BaseEntity> {
 				+ " is not associated with a service class [" + serviceBean
 				+ "]. Please check your configuration.");
 
-		// initialize transaction template.
-		PlatformTransactionManager txManager = (PlatformTransactionManager) beanFactory
-				.getBean("transactionManager");
-		this.transactionTemplate = new TransactionTemplate(txManager);
 	}
 	
 	@InitBinder

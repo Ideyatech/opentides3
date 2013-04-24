@@ -22,9 +22,7 @@
 </c:if>
 
 <c:if test="${(results.totalResults == 0)}">
-    <div class="alert alert-warning"> 
     <spring:message code="message.no-results-found"/>
-    </div>
 </c:if>
 <c:if test="${results.totalResults > 0}">
 		<span class="records">
