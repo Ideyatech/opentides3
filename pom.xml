@@ -8,10 +8,10 @@
 	<version>3.0.1-SNAPSHOT</version>
 	
 	<modules>
-	<module>opentides3-codegen</module>
 	<module>opentides3-common</module>
-	<module>opentides3-core</module>
 	<module>opentides3-template</module>
+	<module>opentides3-codegen</module>
+	<module>opentides3-core</module>
 	</modules>
 	
 </project>
