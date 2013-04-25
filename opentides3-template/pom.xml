@@ -21,4 +21,9 @@
 			</plugin>
 		</plugins>
 	</build>
+	<parent>
+		<groupId>org.opentides</groupId>
+		<artifactId>opentides3</artifactId>
+		<version>3.0.1-SNAPSHOT</version>
+	</parent>
 </project>
