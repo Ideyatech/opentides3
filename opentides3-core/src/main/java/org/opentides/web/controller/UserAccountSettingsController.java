@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.opentides.annotation.Valid;
 import org.opentides.bean.MessageResponse;
 import org.opentides.bean.user.BaseUser;
 import org.opentides.service.UserService;
@@ -48,10 +49,8 @@ public class UserAccountSettingsController {
 	}
 	
 	@RequestMapping(method = RequestMethod.POST, value="/basic-info", produces = "application/json")
-	public @ResponseBody Map<String, Object> updateBasicInfo(@ModelAttribute("user") BaseUser user,
-			ModelMap modelMap, BindingResult result, HttpServletRequest request) {
-		
-		System.out.println("You are editing basic info of user with ID : " + user.getId());
+	public @ResponseBody Map<String, Object> updateBasicInfo(@Valid @ModelAttribute("user") BaseUser user,
+			BindingResult result, HttpServletRequest request) {
 		
 		Map<String, Object> model = new HashMap<String, Object>();
 		List<MessageResponse> messages = new ArrayList<MessageResponse>();
@@ -62,6 +61,31 @@ public class UserAccountSettingsController {
 			model.put("messages", messages);
 			return model;
 		}
+		
+		userService.save(user);
+		messages.addAll(CrudUtil.buildSuccessMessage(user, "update", request.getLocale(), messageSource));
+
+		model.put("messages", messages);
+		return model;
+	}
+	
+	@RequestMapping(method = RequestMethod.POST, value="/change-password", produces = "application/json")
+	public @ResponseBody Map<String, Object> changePassword(@Valid @ModelAttribute("user") BaseUser user,
+			BindingResult result, HttpServletRequest request) {
+		
+		Map<String, Object> model = new HashMap<String, Object>();
+		List<MessageResponse> messages = new ArrayList<MessageResponse>();
+		
+		if(result.hasErrors()) {
+			messages.addAll(CrudUtil.convertErrorMessage(result,
+					request.getLocale(), messageSource));
+			model.put("messages", messages);
+			return model;
+		}
+		
+		user.getCredential().setPassword(
+				userService.encryptPassword(user.getCredential().getNewPassword())
+				);
 		
 		userService.save(user);
 		messages.addAll(CrudUtil.buildSuccessMessage(user, "update", request.getLocale(), messageSource));
