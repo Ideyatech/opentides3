@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.RandomStringUtils;
 import org.apache.log4j.Logger;
 import org.opentides.bean.user.BaseUser;
 import org.opentides.bean.user.SessionUser;
@@ -98,7 +99,7 @@ public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 	    } else
 	        return cleartext;
 	}
-
+	
 	/**
 	 * Ensures that admin user is created into the database. This method is
 	 * called by ApplicationStartupListener to ensure admin user is available
@@ -330,10 +331,7 @@ public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 		user.setFacebookAccessToken(facebookAccessToken);
 
 		if(user.getId() == null) {
-			UserCredential credential = new UserCredential();
-			credential.setUsername(profile.getEmail());
-			credential.setPassword(new Date().toString());
-			user.setCredential(credential);
+			user.setCredential(generateFakeCredentials());
 			registerUser(user, false);
 		} else
 			save(user);
@@ -356,10 +354,7 @@ public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 		user.setGoogleAccessToken(googleAccessToken);
 		
 		if(user.getId() == null) {
-			UserCredential credential = new UserCredential();
-			credential.setUsername(profile.getEmail());
-			credential.setPassword(new Date().toString());
-			user.setCredential(credential);
+			user.setCredential(generateFakeCredentials());
 			registerUser(user, false);
 		} else
 			save(user);
@@ -379,13 +374,28 @@ public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 		user.setGoogleAccessToken(token.getToken());
 		
 		if(user.getId() == null) {
-			UserCredential credential = new UserCredential();
-			credential.setUsername(profile.getScreenName());
-			credential.setPassword(new Date().toString());
-			user.setCredential(credential);
+			user.setCredential(generateFakeCredentials());
 			registerUser(user, false);
 		} else
 			save(user);
 		
+	}
+	
+	public UserCredential generateFakeCredentials(){
+
+		UserDao userDao = (UserDao) getDao();
+		UserCredential credential = new UserCredential();
+		
+		String username;
+		
+		do {
+			username = RandomStringUtils.randomAlphanumeric(10);
+		} while (userDao.loadByUsername(username) != null);
+		
+		credential.setUsername(username);
+		credential.setPassword(encryptPassword(RandomStringUtils.randomAlphanumeric(10)));
+		
+		
+		return credential;
 	}
 }

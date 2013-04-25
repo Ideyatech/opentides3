@@ -55,7 +55,7 @@
 				<app:input path="lastName" label="label.user.last-name" required="true"/>
 				<app:input path="emailAddress" label="label.user.email" required="true"/>
 				<br/>
-		    	<input type="submit" class="btn btn-success" data-submit="save" value="<spring:message code="label.account-settings.save-basic-info" />" />
+		    	<input type="submit" class="btn btn-info" data-submit="save" value="<spring:message code="label.account-settings.save-basic-info" />" />
 				
 			</form:form>
 		</div>
@@ -67,7 +67,7 @@
 				<app:input path="credential.newPassword" label="label.user.password" type="password" required="true" />
 				<app:input path="credential.confirmPassword" label="label.user.confirm-password" type="password" required="true" />
 				<br/>
-		    	<input type="submit" class="btn btn-success" data-submit="save" value="<spring:message code="label.account-settings.change-password"/>" />
+		    	<input type="submit" class="btn btn-info" data-submit="save" value="<spring:message code="label.account-settings.change-password"/>" />
 				
 			</form:form>
 		</div>
