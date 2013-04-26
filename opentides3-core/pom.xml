@@ -365,6 +365,7 @@
 
 	<build>
 		<finalName>Opentides</finalName>
+		
 		<plugins>
 			<plugin>
 				<artifactId>maven-eclipse-plugin</artifactId>
@@ -403,10 +404,10 @@
 			</plugin>
 			<plugin>
 				<groupId>org.apache.tomcat.maven</groupId>
-				<artifactId>tomcat7-maven-plugin</artifactId>
-				<version>2.0</version>
+				  <artifactId>tomcat7-maven-plugin</artifactId>
+				  <version>2.0</version>
 				<configuration>
-					<server>Opentides 3 Test Server</server>
+					<server>testserver</server>
 					<url>http://192.168.1.86:8282/manager/html</url>
 					<username>ideyatech</username>
 					<password>ideyatech</password>
