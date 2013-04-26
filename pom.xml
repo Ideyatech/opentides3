@@ -4,14 +4,36 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.opentides</groupId>
 	<artifactId>opentides3</artifactId>
-	<name>opentides3</name>
+	<name>Opentides 3 Parent</name>
 	<version>3.0.1-SNAPSHOT</version>
 	
+	<properties>
+		<java-version>1.7</java-version>
+	</properties>
+	
 	<modules>
-	<module>opentides3-common</module>
-	<module>opentides3-template</module>
-	<module>opentides3-codegen</module>
-	<module>opentides3-core</module>
+		<module>opentides3-common</module>
+		<module>opentides3-template</module>
+		<module>opentides3-codegen</module>
+		<module>opentides3-core</module>
 	</modules>
+	
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.0</version>
+				<configuration>
+					<source>${java-version}</source>
+					<target>${java-version}</target>
+					<generatedSourcesDirectory>${basedir}/src/main/java</generatedSourcesDirectory>
+					<compilerArgument>-Xlint:all</compilerArgument>
+					<showWarnings>true</showWarnings>
+					<showDeprecation>true</showDeprecation>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 	
 </project>
