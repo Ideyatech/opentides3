@@ -25,7 +25,7 @@ import com.ideyatech.example.bean.Ninja;
 
 /**
  * Sample Dao implemnetation
- * 
+ *  
  * @author allanctan
  * 
  */

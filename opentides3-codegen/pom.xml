@@ -3,9 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>codegen</artifactId>
 	<name>Opentides 3 Code Generation</name>
-	<properties>
-		<junit-version>4.8.2</junit-version>
-	</properties>
+	
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.velocity</groupId>
@@ -30,9 +28,8 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>${junit-version}</version>
-			<scope>test</scope>
 		</dependency>
+		
 	</dependencies>
 	
 	<parent>
@@ -40,5 +37,37 @@
 		<artifactId>opentides3</artifactId>
 		<version>3.0.1-SNAPSHOT</version>
 	</parent>
+	
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+         		<version>3.1</version>
+				<configuration>
+					<source>1.7</source>
+					<target>1.7</target>
+				</configuration>
+				<executions>
+					<execution>
+						<id>default-compile</id>
+						<configuration>
+							<compilerArgument>-proc:none</compilerArgument>
+			              	<source>1.7</source>
+			              	<target>1.7</target>
+		              	</configuration>
+					</execution>
+					<execution>
+						<id>default-test-compile</id>
+						<configuration>
+							<compilerArgument>-proc:none</compilerArgument>
+			              	<source>1.7</source>
+			              	<target>1.7</target>
+		              	</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 	
 </project>

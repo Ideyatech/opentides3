@@ -26,7 +26,7 @@ import org.opentides.bean.BaseEntity;
  */
 public class Skills extends BaseEntity {
 
-	private String skill;
+	private String skill; 
 	
 	private long score;
 }

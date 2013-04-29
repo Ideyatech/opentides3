@@ -27,8 +27,8 @@ import java.lang.annotation.Target;
 /**
  * Generates the BaseCrudController class 
  * based on open-tides framework
- * 
- * @author allanctan
+ *  
+ * @author allanctan 
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.SOURCE)

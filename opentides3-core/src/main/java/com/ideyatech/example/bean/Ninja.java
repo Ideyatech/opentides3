@@ -42,8 +42,8 @@ import com.fasterxml.jackson.annotation.JsonView;
 /**
  * This is the master class for testing all annotations
  * and code generation supported by opentides3.
- */
-@Entity
+ */ 
+@Entity  
 @Table(name="NINJA")
 @Auditable
 public class Ninja extends BaseEntity implements Photoable, Commentable, Taggable {

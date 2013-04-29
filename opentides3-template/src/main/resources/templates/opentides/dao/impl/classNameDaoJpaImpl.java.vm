@@ -6,7 +6,7 @@ package ${bean.package_}.dao.impl;
 import ${bean.modelPackage}.${bean.className};
 import ${bean.package_}.dao.${bean.className}Dao;
 import org.opentides.dao.impl.BaseEntityDaoJpaImpl;
-
+  
 
 /**
  * This is the dao implementation for ${bean.className}.

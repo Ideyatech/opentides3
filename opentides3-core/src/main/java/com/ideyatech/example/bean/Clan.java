@@ -44,7 +44,7 @@ public class Clan extends BaseEntity {
 	public final String getName() {
 		return name;
 	}
-
+ 
 	/**
 	 * @param name the name to set
 	 */

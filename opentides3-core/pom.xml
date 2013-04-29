@@ -15,7 +15,6 @@
 		<eclipselink-version>2.4.1</eclipselink-version>
 		<dom4j-version>1.6.1</dom4j-version>
 		<mysql-connector-java-version>5.1.21</mysql-connector-java-version>
-		<junit-version>4.8.2</junit-version>
 		<aspectj-version>1.7.1</aspectj-version>
 		<cglib-version>2.2.2</cglib-version>
 		<jackson-version>2.1.3</jackson-version>
@@ -364,13 +363,6 @@
 	<build>
 		<finalName>Opentides</finalName>
 		<plugins>
-            <plugin>
-               <groupId>org.apache.maven.plugins</groupId>
-			    <artifactId>maven-war-plugin</artifactId>
-			    <configuration>
-			        <attachClasses>true</attachClasses>
-			    </configuration>
-            </plugin>
 			<plugin>
 				<artifactId>maven-eclipse-plugin</artifactId>
 				<version>2.9</version>
@@ -397,10 +389,10 @@
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>tomcat-maven-plugin</artifactId>
 				<configuration>
-					<url>http://192.168.1.86:8282/manager/html/</url>
+					<url>http://localhost:8080/manager/html</url>
 					<path>/opentides3</path>
-					<username>ideyatech</username>
-					<password>ideyatech</password>
+					<username>ajalbaniel</username>
+					<password>ajalbaniel</password>
 				</configuration>
 			</plugin>
 		</plugins>

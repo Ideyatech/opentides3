@@ -46,5 +46,6 @@ public class AnnotationDefinition implements Definition {
 	public final void setParams(Map<String, Object> params) {
 		this.params = params;
 	}
+	
 		
 }

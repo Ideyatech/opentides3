@@ -13,7 +13,7 @@ import org.opentides.util.NamingUtil;
  *
  */
 public class BeanDefinition implements Definition {
-
+ 
 	private String className;
 	
 	private String modelName;
