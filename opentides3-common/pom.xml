@@ -4,6 +4,16 @@
 	<artifactId>common</artifactId>
 	<name>Common Libraries of Opentides 3</name>
 	
+	<dependencies>
+	
+		<!-- Test -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+		</dependency>
+		
+	</dependencies>
+	
 	<parent>
 		<groupId>org.opentides</groupId>
 		<artifactId>opentides3</artifactId>
