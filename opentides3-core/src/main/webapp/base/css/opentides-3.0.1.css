@@ -8,6 +8,10 @@ textarea {
 	resize: none;
 }
 
+.overflow-hidden {
+	overflow: hidden;
+}
+
 .uppercase {
 	text-transform: uppercase;
 }
@@ -20,13 +24,10 @@ textarea {
 	z-index:1151;
 }
 
-.notifications.center {
+.notifications {
 	z-index: 999999;
-	top: 50px;
-}
-
-.notifications.center > div {
-	width: 50%;
+	top: 40px !important;
+	right: 50px !important;
 }
 
 
@@ -327,6 +328,18 @@ input[type="search"], input[type="tel"], input[type="color"],
 
 .edit-action, .remove-action, .adjust-photo, .upload-photo {
 	cursor: pointer;
+}
+
+.table-wrapper-2.overflow-hidden .table-wrapper {
+	width: 200%;
+}
+
+.table-wrapper-2.overflow-hidden table {
+	width: 50%;
+}
+
+.table-wrapper-2:not(.overflow-hidden) table {
+	width: 100% !important;
 }
 
 /* CHECKBOXES */

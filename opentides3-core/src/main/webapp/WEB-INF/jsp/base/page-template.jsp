@@ -55,9 +55,9 @@
 		
 		<div class="clear"></div>
 		
-		<div style="overflow:hidden">
-			<div style="width:200%;">
-				<table id="%%%%-results" class="footable table-bordered table-striped table-hover table-condensed" style="width:50%;" data-page="${results.currPage}" >
+		<div class="table-wrapper-2 overflow-hidden">
+			<div class="table-wrapper">
+				<table id="%%%%-results" class="footable table-bordered table-striped table-hover table-condensed" data-page="${results.currPage}" >
 					<thead>
 						<tr class="table-header">
 							<!-- Define headers here -->

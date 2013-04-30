@@ -7,6 +7,7 @@ import java.util.List;
 import org.opentides.bean.Tag;
 import org.opentides.dao.TagDao;
 import org.opentides.service.TagService;
+import org.opentides.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,13 +34,14 @@ public class TagServiceImpl extends BaseCrudServiceImpl<Tag>
 			TagDao dao = (TagDao) getDao();
 			Tag existingTag = dao.loadByText(item);
 			
-			
-			if(existingTag != null) {
-				tags.add(existingTag);
-			} else {
-				Tag tag = new Tag();
-				tag.setTagText(item);
-				tags.add(tag);
+			if(!(StringUtil.isEmpty(item) || "".equals(item))) {
+				if(existingTag != null) {
+					tags.add(existingTag);
+				} else {
+					Tag tag = new Tag();
+					tag.setTagText(item);
+					tags.add(tag);
+				}
 			}
 			
 		}

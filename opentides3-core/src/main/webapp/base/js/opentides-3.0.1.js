@@ -144,12 +144,12 @@ var opentides3 = (function() {
     			
     			} else {
     				if(message.type == 'notification') {
-    					$('.center').notify({ message: message.message, type: 'success' }).show();
+    					$('.notifications').notify({ message: message.message, type: 'success' }).show();
     				} else {
     					if(container) {
     						container.find('.message-container').prepend("<div class='alert alert-" + message.type + "'>"+message.message+"</div>");
     					} else {
-    						$('.center').notify({ message: message.message, type: message.type }).show();
+    						$('.notifications').notify({ message: message.message, type: message.type }).show();
     					}
     				}
     			}
@@ -1112,5 +1112,35 @@ var opentides3 = (function() {
 		var downloadPath = $(this).data('download-path');
 		window.location.href = downloadPath;
 	});
-	
+
 })(jQuery);
+
+
+/**
+ * Override jQuery's addClass, toggleClass and removeClass
+ * methods to fire an event.
+ * 
+ * @author AJ
+ * 
+ * Note: Nevermind this, speed and performance harshly fell.
+ * 
+ */
+/*(function($){
+    var methods = ["addClass", "toggleClass", "removeClass"];
+    $.map(methods, function(method){
+        var originalMethod = $.fn[ method ];
+        $.fn[ method ] = function(){
+            var result = originalMethod.apply( this, arguments );
+            this.trigger(method);
+            return result;
+        };
+    });
+    
+    $(document).ready()
+    
+    // bind hacks on document ready
+    .on("removeClass", '.btn-group', function(e){
+		$(this).closest('.table-wrapper-2').toggleClass('overflow-hidden');
+	});
+    
+}(jQuery));*/
