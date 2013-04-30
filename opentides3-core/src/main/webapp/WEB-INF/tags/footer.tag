@@ -10,7 +10,7 @@
 		
 	</div>
 	
-	<div id="footer">
+	<div id="ft">
       <div class="container">
         <p class="muted credit">
         	<small>

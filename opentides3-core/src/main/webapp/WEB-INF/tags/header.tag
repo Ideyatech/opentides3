@@ -76,7 +76,7 @@
 			<!-- Do nothing -->
 		</c:when>
 		<c:when test="${pageType eq 'anonymous-page'}">
-			<div id="nav" class="navbar navbar-inverse">
+			<div id="hd" class="navbar navbar-inverse">
 				<div class="navbar-inner">
 					<div class="container">
 						<a class="brand" href="${home}">
@@ -141,6 +141,6 @@
 				</div>
 			</div>
 			
-			<div class="main container">
+			<div id="bd" class="container">
 		</c:otherwise>
 	</c:choose>
