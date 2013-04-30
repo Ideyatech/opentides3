@@ -4,18 +4,24 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="app" tagdir="/WEB-INF/tags"%>
 
-<app:header pageTitle="label.user" active="users"/>
+<app:header pageTitle="label.user" active="users">
+
+	<!-- REQUIRED FOR INTRO/TUTORIAL -->
+    <link rel="stylesheet" type="text/css" href="<c:url value='/css/introjs.css'/>" />
+	<script type="text/javascript" src="<c:url value='/js/intro.js'/>"></script>
+	
+</app:header>
 
 <div id="user-body">
 
-<ul class="breadcrumb">
+<ul class="breadcrumb" data-step="1" data-intro="You are at Home / User. This is where you can manage the users of your system.">
   <li><a href="${home}"><spring:message code="label.home"/></a> <span class="divider">/</span></li>
   <li><spring:message code="label.user"/></li>
 </ul>	
 
 <div id="search-body">
 
-	<div id="search-panel" class="span3">
+	<div id="search-panel" class="span3" data-step="2" data-intro="We've placed a search panel here. So it's easier for you to find users!">
 	
 		<div id="search-panel-inner" data-spy="affix" data-offset-top="60">
 			<div class="navbar">
@@ -42,20 +48,21 @@
 	<div id="results-panel" class="span9">
 	
 		<div id="message-panel" class="row-fluid">
-			<button id="user-add" class="btn btn-info add-action">
+			<button id="user-add" class="btn btn-info add-action" data-step="4" data-intro="Click here to add users.">
                	<i class="icon-plus-sign icon-white"></i>
                	<spring:message code="label.user.add" />
                </button>
             <div class="status" data-summary-message='
-            	<spring:message code="message.displaying-x-of-y" arguments="#start,#end,#total,records"/>
-            '>
+            	<spring:message code="message.displaying-x-of-y" arguments="#start,#end,#total,records"/>'
+            	data-step="6" data-intro="And finally, these are the details about your search. Goodluck!"
+            	>
             	<app:status results="${results}" />
             </div>
 	    </div>
 	    
 	    <div class="clear"></div>
 	    
-	    <div class="table-wrapper-2 overflow-hidden">
+	    <div class="table-wrapper-2 overflow-hidden" data-step="3" data-intro="This is where your search results will appear. Right now, there are no search filters so we are displaying all users.">
 			<div class="table-wrapper">
 	        	<table id="user-results" class="footable table-bordered table-striped table-hover table-condensed" data-page="${results.currPage}" >
 					<thead>
@@ -64,7 +71,7 @@
 		                	<th data-field-name="emailAddress"><spring:message code="label.user.email"/></th>
 		               		<th data-hide="phone" data-field-name="displayGroups"><spring:message code="label.user.groups"/></th>
 		               		<th data-hide="phone" data-field-name="credential.enabled"><spring:message code="label.user.active"/></th>
-		                	<th data-field-name="ot3-controls"></th>
+		                	<th data-field-name="ot3-controls" data-step="5" data-intro="You can also edit or delete a user by clicking the icons under this column.">Controls</th>
 		                </tr>
 	           		</thead>
 	           		<tbody>
@@ -134,6 +141,7 @@
   	$(document).ready(function() {
   		$("#user-body").RESTful();
 		$('body').tooltip({selector: '.edit-action, .remove-action'});
+		introJs().start();
 	});
   </script>
 </app:footer>
