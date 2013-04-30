@@ -77,9 +77,12 @@ public class NinjaCrudController extends BaseCrudController<Ninja> {
 	
 	@Override
 	protected void preUpdate(Ninja command) {
-		
 		command.setTags(tagService.createTags(command.getCsTags().split(",")));
-		
+	}
+	
+	@Override
+	protected void preCreate(Ninja command) {
+		command.setTags(tagService.createTags(command.getCsTags().split(",")));
 	}
 
 }

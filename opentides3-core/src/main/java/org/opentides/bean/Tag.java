@@ -11,7 +11,7 @@ public class Tag extends BaseEntity {
 	
 	private static final long serialVersionUID = 7593186662964727295L;
 
-	@Column(name = "TAG_TEXT", length = 2000, unique=true)
+	@Column(name = "TAG_TEXT", unique=true)
 	private String tagText;
 
 	public String getTagText() {

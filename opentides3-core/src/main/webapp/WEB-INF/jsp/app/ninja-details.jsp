@@ -24,7 +24,7 @@
 		<img class="img-polaroid" src="${home}/ninja/photo?id=${ninja.id}"/>
 	</div>
 	<div class="span10">
-		<h1>${ninja.completeName}</h1>	
+		<h2>${ninja.completeName}</h2>	
 	</div>
 </div>
 
@@ -52,7 +52,7 @@
 	<tr>
 		<td><spring:message code="label.ninja.tags"/></td>
 		<td><c:forEach items="${ninja.tags}" var="tag">
-			<span class="label label-info">${tag.text}</span>
+			<span class="label label-info">${tag.tagText}</span>
 		</c:forEach></td>
 	</tr>
 	<tr>
