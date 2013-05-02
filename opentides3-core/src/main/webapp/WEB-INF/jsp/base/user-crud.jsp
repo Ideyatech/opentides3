@@ -7,21 +7,27 @@
 <app:header pageTitle="label.user" active="users">
 
 	<!-- REQUIRED FOR INTRO/TUTORIAL -->
-    <link rel="stylesheet" type="text/css" href="<c:url value='/css/introjs.css'/>" />
-	<script type="text/javascript" src="<c:url value='/js/intro.js'/>"></script>
+    <link rel="stylesheet" type="text/css" href="<c:url value='/css/bootstro.min.css'/>" />
+	<script type="text/javascript" src="<c:url value='/js/bootstro.min.js'/>"></script>
 	
 </app:header>
 
 <div id="user-body">
 
-<ul class="breadcrumb" data-step="1" data-intro="You are at Home / User. This is where you can manage the users of your system.">
+<ul class="breadcrumb bootstro" 
+	data-bootstro-title="Breadcrumb Navigation"
+	data-bootstro-content="You are at Home / User. This is where you can manage the users of your system."
+	data-bootstro-step="0" data-bootstro-placement="bottom" >
   <li><a href="${home}"><spring:message code="label.home"/></a> <span class="divider">/</span></li>
   <li><spring:message code="label.user"/></li>
 </ul>	
 
 <div id="search-body">
 
-	<div id="search-panel" class="span3" data-step="2" data-intro="We've placed a search panel here. So it's easier for you to find users!">
+	<div id="search-panel" class="span3 bootstro"
+		data-bootstro-title="Search Panel"
+		data-bootstro-content="We've placed a search panel here. So it's easier for you to find users!"
+		data-bootstro-step="1" data-bootstro-placement="right">
 	
 		<div id="search-panel-inner" data-spy="affix" data-offset-top="60">
 			<div class="navbar">
@@ -48,13 +54,19 @@
 	<div id="results-panel" class="span9">
 	
 		<div id="message-panel" class="row-fluid">
-			<button id="user-add" class="btn btn-info add-action" data-step="4" data-intro="Click here to add users.">
+			<button id="user-add" class="btn btn-info add-action bootstro"
+				data-bootstro-title="Add Button"
+				data-bootstro-content="To add more users to your system, click here."
+				data-bootstro-step="4" data-bootstro-placement="left"
+				>
                	<i class="icon-plus-sign icon-white"></i>
                	<spring:message code="label.user.add" />
                </button>
-            <div class="status" data-summary-message='
+            <div class="status bootstro" data-summary-message='
             	<spring:message code="message.displaying-x-of-y" arguments="#start,#end,#total,records"/>'
-            	data-step="6" data-intro="And finally, these are the details about your search. Goodluck!"
+            		data-bootstro-title="Search Details"
+					data-bootstro-content="Details about your search will be displayed in this area."
+					data-bootstro-step="3" data-bootstro-placement="bottom"
             	>
             	<app:status results="${results}" />
             </div>
@@ -62,7 +74,10 @@
 	    
 	    <div class="clear"></div>
 	    
-	    <div class="table-wrapper-2 overflow-hidden" data-step="3" data-intro="This is where your search results will appear. Right now, there are no search filters so we are displaying all users.">
+	    <div class="table-wrapper-2 overflow-hidden bootstro"
+		    data-bootstro-title="Results Panel"
+			data-bootstro-content="This is where your search results will appear. Right now, there are no search filters so we are displaying all users."
+			data-bootstro-step="2" data-bootstro-placement="bottom">
 			<div class="table-wrapper">
 	        	<table id="user-results" class="footable table-bordered table-striped table-hover table-condensed" data-page="${results.currPage}" >
 					<thead>
@@ -71,7 +86,10 @@
 		                	<th data-field-name="emailAddress"><spring:message code="label.user.email"/></th>
 		               		<th data-hide="phone" data-field-name="displayGroups"><spring:message code="label.user.groups"/></th>
 		               		<th data-hide="phone" data-field-name="credential.enabled"><spring:message code="label.user.active"/></th>
-		                	<th data-field-name="ot3-controls" data-step="5" data-intro="You can also edit or delete a user by clicking the icons under this column.">Controls</th>
+		                	<th class="bootstro" data-field-name="ot3-controls"
+		                		data-bootstro-title="Controls Column"
+								data-bootstro-content="You can edit or delete a user by clicking the icons under this column."
+								data-bootstro-step="5" data-bootstro-placement="left">Controls</th>
 		                </tr>
 	           		</thead>
 	           		<tbody>
@@ -141,7 +159,7 @@
   	$(document).ready(function() {
   		$("#user-body").RESTful();
 		$('body').tooltip({selector: '.edit-action, .remove-action'});
-		introJs().start();
+		bootstro.start();
 	});
   </script>
 </app:footer>
