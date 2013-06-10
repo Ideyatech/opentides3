@@ -7,7 +7,8 @@
 
 <div class="modal-body">
 
-	<h4><spring:message code="label.user-registration" /></h4>
+	<h4><spring:message code="label.user-registration" />
+		<button type="button" class="close" data-dismiss="modal">&times;</button></h4>
 	<hr/>
 
 	<form:form commandName="baseUser" action="${home}/register" method="POST" cssClass="form-horizontal" >
