@@ -120,6 +120,7 @@ var opentides3 = (function() {
 		 * 
 		 */
         displayMessage: function(json, container) {
+        	
         	if(container) {
         		//remove messages already displayed in the container
     			container.find('.control-group').each(function(){
@@ -131,14 +132,14 @@ var opentides3 = (function() {
         	
         	// display the message
     		$.each(json['messages'], function(i, message) {
-    			
+
     			if (message.fieldName) {
     				
-    				var element = container.find("#" + message.fieldName);
+    				var element = container.find('*[id="'+message.fieldName+'"]');
+    				console.log(element);
         			element.closest('.control-group').addClass(message.type);
         			element.after("<span class='help-inline'><small>" + message.message + "</small></span>");
         			
-
         			//TODO: Insert scrolling to message.elementClass code 
         			//      here in case error message is not visible.
     			

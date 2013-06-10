@@ -182,7 +182,6 @@
 	
 </div>
 
-	
 <div class="adjust-photo-modal modal hide fade" data-width="760" tabindex="-1"></div>
 <div class="upload-photo-modal modal hide fade" data-width="760" tabindex="-2"></div>
 	
