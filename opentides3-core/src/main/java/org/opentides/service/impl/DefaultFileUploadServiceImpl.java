@@ -59,7 +59,7 @@ public class DefaultFileUploadServiceImpl implements FileUploadService {
 		}
 
 		File uploadFile = new File(filePath);
-		fileInfo.setFullPath(uploadFile.getAbsolutePath());
+		fileInfo.setFullPath(filePath);
 		
 		try {
 			FileUtil.copyMultipartFile(file, uploadFile);

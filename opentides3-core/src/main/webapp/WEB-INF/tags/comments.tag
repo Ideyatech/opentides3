@@ -46,7 +46,7 @@
 				</blockquote>
 				
 				<c:forEach items="${comment.files}" var="file">
-					<button data-download-path="${file.fullPath}" class="btn btn-link btn-small download">Download attachment</button>
+					<a href="file://<c:url value="${file.fullPath}" />" target="_blank">Download attachment</a>
 				</c:forEach>
 				
 				<button class="btn btn-link btn-small remove-comment"><spring:message code="label.remove-comment"/></button>
