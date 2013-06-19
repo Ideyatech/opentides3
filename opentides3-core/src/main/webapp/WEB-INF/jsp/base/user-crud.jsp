@@ -159,7 +159,7 @@
   	$(document).ready(function() {
   		$("#user-body").RESTful();
 		$('body').tooltip({selector: '.edit-action, .remove-action'});
-		bootstro.start();
+		//bootstro.start();
 	});
   </script>
 </app:footer>

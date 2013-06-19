@@ -26,7 +26,7 @@
 	</form:label>
 	
 	<div class="controls">
-		<form:hidden path="${path}" required="${required ? 'required' : ''}" cssClass="${cssClass} tokenizer" cssStyle="width: 220px;" />
+		<form:hidden path="${path}" cssClass="${cssClass} tokenizer" cssStyle="width: 220px;" />
 		<p class="help-block"><small><spring:message code="message.tokenizer-help"/></small></p>
 	</div>
 	

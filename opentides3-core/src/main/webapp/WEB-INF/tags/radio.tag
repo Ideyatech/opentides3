@@ -24,6 +24,5 @@
 	
 	<div class="controls">
 		<form:radiobuttons path="${path}" itemLabel="${itemLabel}" itemValue="${itemValue}" items="${items}"/>
-	
 	</div>
 </div>

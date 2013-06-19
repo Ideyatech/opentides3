@@ -29,10 +29,10 @@
 				<hr/>
 				
 				<div class="control-group">
-					<input class="input-block-level" type="text" name="j_username" placeholder="Username" autofocus="autofocus" required>
+					<input class="input-block-level" type="text" name="j_username" placeholder="Username" autofocus="autofocus">
 				</div>
 				<div class="control-group">
-					<input class="input-block-level" type="password" name="j_password" placeholder="Password" required>
+					<input class="input-block-level" type="password" name="j_password" placeholder="Password">
 				</div>
 				
 				<div class="control-group">

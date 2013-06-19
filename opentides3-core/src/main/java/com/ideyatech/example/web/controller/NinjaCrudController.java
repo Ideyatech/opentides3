@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.opentides.bean.SystemCodes;
 import org.opentides.service.TagService;
 import org.opentides.web.controller.BaseCrudController;
+import org.opentides.web.validator.NinjaValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -56,6 +57,11 @@ public class NinjaCrudController extends BaseCrudController<Ninja> {
 		genderList.add(new SystemCodes("GENDER","FEMALE","Female"));
 		genderList.add(new SystemCodes("OTHER","OTHER","Other"));
 		return genderList;
+	}
+
+	@Autowired
+	public void setValidator(NinjaValidator ninjaValidator) {
+		this.formValidator = ninjaValidator;
 	}
 		
 	@ModelAttribute("statusList")

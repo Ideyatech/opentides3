@@ -56,7 +56,7 @@ public class Ninja extends BaseEntity implements Photoable, Commentable, Taggabl
 	@Validation({"required", "maxLength=128"})
 	@Column(name = "FIRST_NAME", nullable=false)
 	@JsonView(Views.FormView.class)
-	@TextField(label="Nama-e", isSearchCriteria=true)
+	@TextField(label="Name", isSearchCriteria=true)
 	private String firstName;
 
 	// TextField
@@ -150,6 +150,7 @@ public class Ninja extends BaseEntity implements Photoable, Commentable, Taggabl
 	
 	// Radiobutton
 	// Searchable
+	@Validation({"required"})
 	@JsonView(Views.FormView.class)
 	private String gender;
 	

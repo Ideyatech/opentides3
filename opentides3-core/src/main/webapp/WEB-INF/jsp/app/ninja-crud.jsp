@@ -160,7 +160,7 @@
 				<div class="message-container"></div>
 				<app:input label="label.ninja.firstName" path="firstName" required="true"/>
 				<app:input label="label.ninja.lastName" path="lastName" required="true" />
-				<app:input label="label.ninja.email" path="email" type="email" />
+				<app:input label="label.ninja.email" path="email" />
 				<app:input label="label.ninja.age" path="age" />
 				<app:input label="label.ninja.score" path="score" />
 				<app:tokenizer label="label.ninja.tags" path="csTags" />

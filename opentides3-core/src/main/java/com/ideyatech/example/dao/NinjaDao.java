@@ -19,6 +19,7 @@
 package com.ideyatech.example.dao;
 
 import org.opentides.dao.BaseEntityDao;
+import org.springframework.stereotype.Repository;
 
 import com.ideyatech.example.bean.Ninja;
 
@@ -29,6 +30,7 @@ import com.ideyatech.example.bean.Ninja;
  * @author allanctan
  * 
  */
+@Repository(value="ninjaDao")
 public interface NinjaDao extends BaseEntityDao<Ninja, Long> {
 
 }

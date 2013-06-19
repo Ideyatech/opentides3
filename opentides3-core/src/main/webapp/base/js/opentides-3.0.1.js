@@ -119,9 +119,8 @@ var opentides3 = (function() {
 		 * Displays the message response received from the server side.
 		 * 
 		 */
-        displayMessage: function(json, container) {
-        	
-        	if(container) {
+        displayMessage: function(json, container, noClean) {
+        	if(container && !noClean) {
         		//remove messages already displayed in the container
     			container.find('.control-group').each(function(){
     				$(this).removeClass('warning info success error');
@@ -129,16 +128,14 @@ var opentides3 = (function() {
     			});
     			container.find('.alert').remove();
         	}
-        	
         	// display the message
     		$.each(json['messages'], function(i, message) {
 
     			if (message.fieldName) {
     				
-    				var element = container.find('*[id="'+message.fieldName+'"]');
-    				console.log(element);
+    				var element = container.find('*[name="'+message.fieldName+'"]:last');
         			element.closest('.control-group').addClass(message.type);
-        			element.after("<span class='help-inline'><small>" + message.message + "</small></span>");
+        			element.closest('div').append("<span class='help-inline'><small>" + message.message + "</small></span>");
         			
         			//TODO: Insert scrolling to message.elementClass code 
         			//      here in case error message is not visible.
@@ -368,8 +365,10 @@ var opentides3 = (function() {
 						opentides3.displayMessage({ messages : [ {
 								type : "error",
 								message : result.message,
-							}]}, form);
-						
+								fieldName : result.fieldName,
+								code: result.code,
+								objectName: result.objectName
+							}]}, form, (i!=0));
 						if(errorCallback) { errorCallback(data); };
 	
 					} else {

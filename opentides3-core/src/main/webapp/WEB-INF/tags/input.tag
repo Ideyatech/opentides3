@@ -47,8 +47,7 @@
 		
 			<form:input path="${path}"
 			
-				required="${required}"
-				type="${empty type ?'text': type }"			
+				type="${empty type ? 'text': type }"
 				placeholder="${placeholder}"
 				cssClass="${cssClass}"
 				

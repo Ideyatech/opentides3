@@ -64,7 +64,7 @@
 		action="${action}?commentableId=${commentableId}">
 		<div class="control-group">
 			<textarea id="text" name="text" class="input-block-level"
-				placeholder="<spring:message code="label.write-comment"/>" required></textarea>
+				placeholder="<spring:message code="label.write-comment"/>"></textarea>
 		</div>
 		<div class="form-actions">
 		

@@ -27,7 +27,7 @@
 	
 	<div class="controls">
 		
-		<form:select path="${path}" required="${required ? 'required' : ''}" multiple="${multiple}" cssClass="${cssClass}" style="${select2 ? 'width: 220px;':''}">
+		<form:select path="${path}" multiple="${multiple}" cssClass="${cssClass}" style="${select2 ? 'width: 220px;':''}">
 			<c:if test="${select2 and not multiple}">
 				<option></option>
 			</c:if>

@@ -58,11 +58,13 @@ public class UserValidator implements Validator {
 
 		ValidationUtils.rejectIfEmptyOrWhitespace(e, "emailAddress", 
 				"error.required", new Object[]{"Email Address"},"Email address is required.");
-		if (!ValidatorUtil.isEmail(user.getEmailAddress())) {
-			e.rejectValue("emailAddress", "error.invalid-email-address",new Object[]{user.getEmailAddress()},"Email Address is invalid.");
-		}
-		if (isDuplicateEmail(user)) {
-			e.reject("error.duplicate-field", new Object[]{user.getEmailAddress(),"email"}, "Email address already exists.");
+		if(!StringUtil.isEmpty(user.getEmailAddress())){
+			if (!ValidatorUtil.isEmail(user.getEmailAddress())) {
+				e.rejectValue("emailAddress", "error.invalid-email-address",new Object[]{user.getEmailAddress()},"Email Address is invalid.");
+			}
+			if (isDuplicateEmail(user)) {
+				e.reject("error.duplicate-field", new Object[]{user.getEmailAddress(),"email"}, "Email address already exists.");
+			}			
 		}
 
 		if (user.getIsNew()) {
