@@ -18,6 +18,8 @@
  */
 package org.opentides.web.controller;
 
+import java.util.List;
+
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -26,6 +28,7 @@ import org.opentides.bean.SystemCodes;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
@@ -40,6 +43,11 @@ public class SystemCodesCrudController extends BaseCrudController<SystemCodes> {
 	@PostConstruct
 	public void init() {
 		singlePage = "/base/system-codes-crud";
+	}
+	
+	@ModelAttribute("categoryList")
+	public List<SystemCodes> categoryList() {
+		return systemCodesService.getAllCategories();
 	}
 	
 	@Override

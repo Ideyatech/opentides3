@@ -1,10 +1,8 @@
 <%--
-	- tokenizer.tag
-	- Generates form tokenizer element
+	- combobox.tag
+	- Generates form combo box element using select2 plugin
 	
-	This is especially convenient in the tagging usecase
-	where the user can quickly enter a number of tags by
-	separating them with a comma or a space.
+	- Comboboxes are similar to selects but the user can add new entries. Awesome huh?
 	
 --%>
 
@@ -14,6 +12,7 @@
 <%@ attribute name="path" required="true" type="java.lang.String" %>
 <%@ attribute name="label" required="true" type="java.lang.String" %>
 <%@ attribute name="cssClass" required="false" type="java.lang.String" %>
+<%@ attribute name="items" required="false" type="java.util.Collection" %>
 <%@ attribute name="required" required="false" type="java.lang.Boolean" %>
 
 <div class="control-group">
@@ -26,17 +25,21 @@
 	</form:label>
 	
 	<div class="controls">
-		<form:hidden path="${path}" cssClass="${cssClass} tokenizer" cssStyle="width: 220px;" />
-		<p class="help-block"><small><spring:message code="message.tokenizer-help"/></small></p>
+		<form:hidden path="${path}" cssClass="${cssClass} combobox" cssStyle="width: 220px;" />
+		<p class="help-block"><small><spring:message code="message.combobox-help"/></small></p>
 	</div>
-	
 </div>
 
 <script type="text/javascript">
+
 	$(document).ready(function() {
-		$('#${path}.tokenizer').select2({
-            tags: [],
-            tokenSeparators: [",", " "]
+		$('#${path}.combobox').select2({
+			maximumSelectionSize: 1,
+			tags: [
+				<c:forEach items="${items}" var="item">
+					"${item.category}",
+				</c:forEach>
+			]
 		});
 	});
 </script>

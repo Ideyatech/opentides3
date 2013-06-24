@@ -27,8 +27,11 @@
 	
 	<div class="controls">
 		
-		<form:select path="${path}" multiple="${multiple}" cssClass="${cssClass}" style="${select2 ? 'width: 220px;':''}">
+		<form:select path="${path}" multiple="${multiple}" cssClass="${cssClass} ${select2 ? 'select2':''}" style="${select2 ? 'width: 220px;':''}">
 			<c:if test="${select2 and not multiple}">
+				<option></option>
+			</c:if>
+			<c:if test="${not required}">
 				<option></option>
 			</c:if>
 			<c:if test="${not empty items}">
@@ -42,7 +45,7 @@
 <c:if test="${select2}">
 	<script type="text/javascript">
 		$(document).ready(function() {
-			$('#${path}').select2({
+			$('#${path}.select2').select2({
 				placeholder: '<spring:message code="label.select-one"/>'
 			});
 		});

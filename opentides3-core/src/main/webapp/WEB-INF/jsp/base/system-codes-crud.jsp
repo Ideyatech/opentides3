@@ -29,7 +29,7 @@
 			</div>
 			<div class="search-form collapse">
 				<form:form modelAttribute="searchCommand" id="system-codes-search" >
-					<app:select path="category" label="label.system-codes.category" cssClass="input-block-level"/>
+					<app:select path="category" items="${categoryList}" itemLabel="category" itemValue="category" label="label.system-codes.category" cssClass="input-block-level" />
 					<app:input path="key" label="label.system-codes.key" cssClass="input-block-level"/>
 					<app:input path="value" label="label.system-codes.value" cssClass="input-block-level"/>
 					<hr/>
@@ -117,7 +117,7 @@
 		<form:form modelAttribute="formCommand" id="system-codes-form">
 			<div class="modal-body">
 				<div class="message-container"></div>
-				<app:input path="category" label="label.system-codes.category" />
+				<app:combobox path="category" label="label.system-codes.category" items="${categoryList}"/>
 				<app:input path="key" label="label.system-codes.key" />
 				<app:input path="value" label="label.system-codes.value" />
 			</div>
