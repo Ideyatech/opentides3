@@ -369,7 +369,7 @@ var opentides3 = (function() {
 								code: result.code,
 								objectName: result.objectName
 							}]}, form, (i!=0));
-						if(errorCallback) { errorCallback(data); };
+						if(errorCallback && i==0) { errorCallback(data); };
 	
 					} else {
 						opentides3.displayMessage({ messages : [ {

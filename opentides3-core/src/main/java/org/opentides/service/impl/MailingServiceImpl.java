@@ -22,6 +22,7 @@ import org.apache.log4j.Logger;
 import org.apache.velocity.app.VelocityEngine;
 import org.opentides.service.MailingService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 
@@ -33,10 +34,14 @@ public class MailingServiceImpl implements MailingService {
 	@Autowired
 	private VelocityEngine velocityEngine;
 	
-	private String adminEmail = "admin@ideyatech.com";
-	private String adminPassword = "1d3yat3ch";
-	private String host = "smtp.gmail.com";
-	private String port = "587";
+	@Value("#{applicationSettings['mail.server.username']}")
+	private String adminEmail;
+	@Value("#{applicationSettings['mail.server.password']}")
+	private String adminPassword;
+	@Value("#{applicationSettings['mail.server.domain']}")
+	private String host;
+	@Value("#{applicationSettings['mail.server.port']}")
+	private String port;
 	
 	@Override
 	public void sendEmail(String[] toEmail, String subject, String template,

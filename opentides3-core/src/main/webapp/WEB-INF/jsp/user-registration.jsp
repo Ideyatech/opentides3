@@ -22,7 +22,7 @@
 		<app:input path="credential.confirmPassword" label="label.user.confirm-password" type="password"/>
 		<div class="control-group">
 			<div class="controls">
-				<input type="submit" class="btn btn-info btn-large" value="Create account"/>
+				<input type="button" id="create-account" class="btn btn-info btn-large" value="Create account"/>
 			</div>
 		</div>
 		
@@ -34,10 +34,17 @@
 </div>
 
 <script type="text/javascript">
-
+	
+	$(document).ready().on('click', '#create-account', function(){
+		$('.form-signup form').modal('loading');
+		$('.form-signup form').submit();
+	});
+	
 	opentides3.jsonForm($('.form-signup form'), function(data){
 		$('.signup-email').text(data.email);
 		$('.form-signup').modal('hide');
 		$('.verify-signup').modal();
+	}, function(){
+		$('.form-signup form').modal('loading');
 	});
 </script>
