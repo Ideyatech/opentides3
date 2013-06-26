@@ -64,7 +64,6 @@
 							<th data-class="expand" data-field-name="value"><spring:message code="label.system-codes.value" /></th>
 							<th data-hide="phone" data-field-name="key"><spring:message code="label.system-codes.key" /></th>
 							<th data-field-name="category"><spring:message code="label.system-codes.category" /></th>
-							<th data-hide="phone" data-field-name="numberValue"><spring:message code="label.system-codes.number-value" /></th>
 							<th data-field-name="ot3-controls"></th>
 						</tr>
 					</thead>
@@ -74,7 +73,6 @@
 								<td>{{value}}</td>
 								<td>{{key}}</td>
 								<td>{{category}}</td>
-								<td>{{numberValue}}</td>
 								<td>
 									<i class='icon-pencil edit-action' data-id='{{id}}' data-title="<spring:message code="label.edit" />"></i>
 									<i class='icon-trash remove-action' data-id='{{id}}' data-title="<spring:message code="label.delete" />"></i>
@@ -86,7 +84,6 @@
 								<td><c:out value="${record.value}" /></td>
 								<td><c:out value="${record.key}" /></td>
 								<td><c:out value="${record.category}" /></td>
-								<td><c:out value="${record.numberValue}" /></td>
 								<td>
 									<i class='icon-pencil edit-action' data-id='${record.id}' data-title="<spring:message code="label.edit" />"></i>
 									<i class='icon-trash remove-action' data-id='${record.id}' data-title="<spring:message code="label.delete" />"></i>

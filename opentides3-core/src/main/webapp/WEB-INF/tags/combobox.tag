@@ -2,8 +2,7 @@
 	- combobox.tag
 	- Generates form combo box element using select2 plugin
 	
-	- Comboboxes are similar to selects but the user can add new entries. Awesome huh?
-	
+	- Comboboxes are similar to selects but the user can add new entries. Awesome.
 --%>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
@@ -33,13 +32,12 @@
 <script type="text/javascript">
 
 	$(document).ready(function() {
+		
+		$.extend(comboBoxTags, {'${path}' : [<c:forEach items="${items}" var="item">"${item.category}",</c:forEach>]});
+		
 		$('#${path}.combobox').select2({
 			maximumSelectionSize: 1,
-			tags: [
-				<c:forEach items="${items}" var="item">
-					"${item.category}",
-				</c:forEach>
-			]
+			tags: comboBoxTags['${path}']
 		});
 	});
 </script>

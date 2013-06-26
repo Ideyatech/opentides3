@@ -1056,10 +1056,19 @@ var opentides3 = (function() {
 		}
 		
 		// Refresh javascript/jquery form plugins here (if necessary)
-		$('.tokenizer').select2({
+		$('input[type="hidden"].tokenizer').select2({
             tags: [],
             tokenSeparators: [",", " "]
 		});
+		
+		$('input[type="hidden"].combobox').each(function(){
+			$(this).select2({
+	            tags: comboBoxTags[$(this).attr('id')],
+				maximumSelectionSize: 1
+			});
+		});
+		// End of refreshing of javascript/jquery plugins
+		
 	};
 
 	/**
@@ -1110,6 +1119,13 @@ var opentides3 = (function() {
 
 })(jQuery);
 
+/**
+ * Universal variable for holding comboBox tags
+ * 
+ * @author AJ
+ *
+ */
+var comboBoxTags = {};
 
 /**
  * Override jQuery's addClass, toggleClass and removeClass

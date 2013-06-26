@@ -31,7 +31,7 @@
 			<c:if test="${select2 and not multiple}">
 				<option></option>
 			</c:if>
-			<c:if test="${not required}">
+			<c:if test="${not required and not select2 }">
 				<option></option>
 			</c:if>
 			<c:if test="${not empty items}">

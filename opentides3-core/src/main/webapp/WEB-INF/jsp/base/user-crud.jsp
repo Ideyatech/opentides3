@@ -24,10 +24,7 @@
 
 <div id="search-body">
 
-	<div id="search-panel" class="span3 bootstro"
-		data-bootstro-title="Search Panel"
-		data-bootstro-content="We've placed a search panel here. So it's easier for you to find users!"
-		data-bootstro-step="1" data-bootstro-placement="right">
+	<div id="search-panel" class="span3">
 	
 		<div id="search-panel-inner" data-spy="affix" data-offset-top="60">
 			<div class="navbar">
@@ -43,7 +40,7 @@
 				<form:form modelAttribute="searchCommand" id="user-search">
 				    <app:input path="firstName" label="label.user.first-name" cssClass="input-block-level"/>
 				    <app:input path="lastName" label="label.user.last-name" cssClass="input-block-level"/>
-				    <hr />
+				    <hr/>
 					<input type="submit" class="btn btn-info btn-block" data-submit="search" value="<spring:message code="label.search"/>">
 					<button type="button" class="btn btn-link btn-block" data-submit="clear"><spring:message code="label.clear" /></button>		
 				</form:form>

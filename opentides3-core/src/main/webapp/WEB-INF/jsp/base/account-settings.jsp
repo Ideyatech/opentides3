@@ -50,7 +50,6 @@
 			<form:form commandName="user" method="POST" enctype="multipart/form-data" action="/account-settings/basic-info">
 				<div class="message-container"></div>
 				
-				<app:input path="credential.username" label="label.user.username" required="true" />
 				<app:input path="firstName" label="label.user.first-name" required="true"/>
 				<app:input path="lastName" label="label.user.last-name" required="true"/>
 				<app:input path="emailAddress" label="label.user.email" required="true"/>

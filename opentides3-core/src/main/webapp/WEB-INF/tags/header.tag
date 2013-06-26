@@ -121,15 +121,23 @@
 									</a>
 								</li>
 								<li class="${active eq 'ninja' ? 'active' : ''}">
-									<a href="${home}/ninja/">
+									<a href="${home}/ninja/"> 
 										<spring:message code="label.ninja"/>
 									</a>
 								</li>
-								<li class="${active eq 'account-settings' ? 'active' : ''}">
+							</ul>
+						</div>
+						<div class="btn-group pull-right">
+							<a class="btn dropdown-toggle btn-inverse" data-toggle="dropdown" href="#">
+								${currentUser.user.username} <span class="caret"></span>
+							</a>
+							<ul class="dropdown-menu">
+								<li class="${active eq 'ninja' ? 'active' : ''}">
 									<a href="${home}/account-settings/">
 										<spring:message code="label.account-settings"/>
 									</a>
 								</li>
+								<li class="divider"></li>
 								<li>
 									<a href='${home}/logout'>
 										<spring:message code="label.logout"/>
