@@ -203,6 +203,7 @@ var opentides3 = (function() {
 			// appropriately.
 			var index = 0;
 			var source = "__p+='";
+			
 			text.replace(matcher, function(match, evaluate, interpolate,
 					escape, offset) {
 				source += text.slice(index, offset).replace(escaper,
@@ -1120,7 +1121,7 @@ var opentides3 = (function() {
 })(jQuery);
 
 /**
- * Universal variable for holding comboBox tags
+ * Universal variable for holding comboBox tags.
  * 
  * @author AJ
  *

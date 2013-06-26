@@ -90,8 +90,20 @@
 		                </tr>
 	           		</thead>
 	           		<tbody>
+	           			<script type="text/template" class="template">
+	                		<tr id="user-row-{{id}}" data-id="{{id}}">
+								<td>{{completeName}}</td>
+								<td>{{emailAddress}}</td>
+								<td>{{displayGroups}}</td>
+								<td>{{credential.enabled}}</td>
+								<td>
+									<i class='icon-pencil edit-action' data-id='{{id}}' data-title="<spring:message code="label.edit" />"></i>
+									<i class='icon-trash remove-action' data-id='{{id}}' data-title="<spring:message code="label.delete" />"></i>
+								</td>
+							</tr>
+						</script>
 		            	<c:forEach items="${results.results}" var="record" varStatus="status">
-			            	<tr data-id="${record.id}">            
+			            	<tr id="user-row-${record.id}" data-id="${record.id}">            
 			                	<td><c:out value="${record.completeName}" /></td>
 			                	<td><c:out value="${record.emailAddress}" /></td>
 			                	<td><c:out value="${record.displayGroups}" /></td>
