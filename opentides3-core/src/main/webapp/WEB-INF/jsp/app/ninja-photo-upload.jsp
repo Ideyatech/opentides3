@@ -42,7 +42,7 @@
 		<input type="button" class="btn btn-link switch-modal"
 			data-url="${home}/ninja/photo/adjust?id=${command.id}"
 			value="<spring:message code="photo.edit-thumbnail" />" />
-		<input type="submit" value="<spring:message code="photo.change-photo" />" class="btn btn-success" />
+		<input type="button" id="start-upload" value="<spring:message code="photo.change-photo" />" class="btn btn-success" />
 	</div>
 	
 </form:form>
@@ -60,5 +60,10 @@
 
 	opentides3.jsonForm($('#ninja-upload-photo'), function(){
 		$('#ninja-upload-photo').find('.switch-modal').click();
+	});
+	
+	$(document).ready().on('click', '#start-upload', function(){
+		$('#ninja-upload-photo').modal('loading');
+		$('#ninja-upload-photo').submit();
 	});
 </script>
