@@ -254,9 +254,6 @@ public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 		if (!StringUtil.isEmpty(credential.getNewPassword()))
 			credential.setPassword( encryptPassword(credential.getNewPassword()) );
 		baseUser.setCredential(credential);
-		
-		//set authorities
-		baseUser.addGroup(userGroupService.load(1L));
 
 		save(baseUser);
 		

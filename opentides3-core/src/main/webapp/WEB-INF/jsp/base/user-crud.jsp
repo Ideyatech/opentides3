@@ -146,7 +146,7 @@
 				<app:input path="credential.newPassword" label="label.user.password" type="password" />
 				<app:input path="credential.confirmPassword" label="label.user.confirm-password" type="password" />
 				<app:select label="label.user.groups" path="groups" multiple="true"
-					items="${userGroupsList}" itemLabel="name" itemValue="id" select2="true"/>
+					items="${userGroupsList}" itemLabel="name" itemValue="id" select2="true" required="true"/>
 				<app:checkbox label="label.user.active" path="credential.enabled"/>
 				<br/>
 			</div>

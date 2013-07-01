@@ -112,7 +112,7 @@ public abstract class BaseCrudController<T extends BaseEntity> {
 	 * @throws Exception
 	 */
 	@InitBinder
-	protected final void initBinder(WebDataBinder binder) throws Exception {
+	protected void initBinder(WebDataBinder binder) throws Exception {
 		if ((formValidator != null) && (binder.getTarget() != null)
 				&& formValidator.supports(binder.getTarget().getClass()))
 			binder.setValidator(formValidator);

@@ -52,6 +52,10 @@ public class UserValidator implements Validator {
 
 		ValidationUtils.rejectIfEmptyOrWhitespace(e, "credential.username", 
 				"error.required", new Object[]{"Username"},"Username is required.");
+		
+		ValidationUtils.rejectIfEmptyOrWhitespace(e, "groups", 
+				"error.required.at-least-one", new Object[]{"Groups"},"At least one Usergroup is required.");
+		
 		if (isDuplicateUsername(user)) {
 			e.reject("error.duplicate-field", new Object[]{user.getCredential().getUsername(), "username"}, "User name already exists.");
 		}

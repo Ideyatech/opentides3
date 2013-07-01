@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.opentides.annotation.Valid;
 import org.opentides.bean.MessageResponse;
 import org.opentides.bean.user.BaseUser;
+import org.opentides.service.UserGroupService;
 import org.opentides.service.UserService;
 import org.opentides.util.CrudUtil;
 import org.opentides.web.validator.UserValidator;
@@ -41,12 +42,16 @@ public class UserRegistrationController {
 	protected UserService userService;
 	
 	@Autowired
+	protected UserGroupService userGroupService;
+	
+	@Autowired
 	private UserValidator userValidator;
 	
 	@RequestMapping(method = RequestMethod.GET)
 	public String viewForm(ModelMap modelMap, HttpServletRequest request) {
 		
 		BaseUser baseUser = new BaseUser();
+		baseUser.addGroup(userGroupService.load(1L));
 		modelMap.addAttribute("baseUser", baseUser);
 		return "user-registration"; 
 
