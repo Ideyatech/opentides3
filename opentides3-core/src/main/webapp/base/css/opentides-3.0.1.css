@@ -324,6 +324,25 @@ input[type="search"], input[type="tel"], input[type="color"],
 	margin-bottom: 0;
 }
 
+/*
+   ADD/UPDATE HEADERS
+   This is a hack to fix Add/Update legends on page views
+*/
+
+.component legend.ot3-add,
+.component legend.ot3-update {
+	display: none;
+}
+
+.component legend:not(.ot3-add){
+	display: block;
+}
+
+.component legend.ot3-add.hide,
+.component legend.ot3-update.hide {
+	display: none;
+}
+
 /* RESULT TABLE */
 
 .edit-action, .remove-action, .adjust-photo, .upload-photo {
