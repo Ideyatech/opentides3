@@ -945,7 +945,7 @@ var opentides3 = (function() {
 			}
 
 		} else {
-			//results.find('table').hide();
+			results.find('table tbody tr').remove();
 		}
 
 		// look for status bar
