@@ -17,7 +17,7 @@
 	<ul class="media-list">
 	
 	<script type="text/template" class="template">
-		<li class="media" data-id="{{id}}">
+		<li class="media comment" data-id="{{id}}">
 			<a class="pull-left" style="margin-right: 20px;">
 				<img class="img-circle" src="${home}/user/photo?id={{authorId}}&size=s"/>
 			</a>
@@ -110,7 +110,7 @@
 	}).on("click", '.remove-comment', function(){
 
 		var commentId = $(this).closest('.comment').data('id');
-		var url = '${home}${action}/delete?commentId=' + commentId; 
+		var url = '${home}${action}/delete?commentableId=${commentableId}&commentId=' + commentId; 
 			
 		bootbox.dialog('<spring:message code="label.comment.confirm-remove" />',
 				[{"label" : '<spring:message code="label.remove-comment"/>',

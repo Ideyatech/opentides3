@@ -67,13 +67,19 @@ public abstract class BaseCommentController<T extends BaseEntity> {
 
 		Map<String, Object> model = new HashMap<String, Object>();
 		
+		String commentableId = request.getParameter("commentableId");
 		String commentId = request.getParameter("commentId");
 		
-		commentService.delete(commentId);
+		Commentable commentable = (Commentable) service.load(commentableId);
+		Comment comment = (Comment) commentService.load(commentId);
+		
+		commentable.getComments().remove(comment);
+		
+		service.save((T) commentable);
 		
 		model.put("deleted", true);
-		return model;
 		
+		return model;
 	}
 	
 	@RequestMapping(method = RequestMethod.POST, produces = "application/json")

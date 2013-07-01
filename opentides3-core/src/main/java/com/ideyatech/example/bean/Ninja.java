@@ -489,7 +489,7 @@ public class Ninja extends BaseEntity implements Photoable, Commentable, Taggabl
 	
 	// Commentable requirements
 	
-	@OneToMany(cascade=CascadeType.PERSIST, fetch = FetchType.LAZY)
+	@OneToMany(cascade=CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinTable(name = "NINJA_COMMENT", 
 			joinColumns = { @JoinColumn(name = "NINJA_ID", referencedColumnName = "ID") }, 
 			inverseJoinColumns = @JoinColumn(name = "COMMENT_ID")

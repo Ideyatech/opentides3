@@ -125,14 +125,24 @@
 										<spring:message code="label.ninja"/>
 									</a>
 								</li>
+								<li class="${active eq 'account-settings' ? 'active' : ''} hidden-desktop">
+									<a href="${home}/account-settings/"> 
+										<spring:message code="label.account-settings"/>
+									</a>
+								</li>
+								<li class="hidden-desktop">
+									<a href="${home}/logout"> 
+										<spring:message code="label.logout"/>
+									</a>
+								</li>
 							</ul>
 						</div>
-						<div class="btn-group pull-right">
+						<div class="btn-group pull-right hidden-tablet hidden-phone">
 							<a class="btn dropdown-toggle btn-inverse" data-toggle="dropdown" href="#">
 								${currentUser.user.username} <span class="caret"></span>
 							</a>
 							<ul class="dropdown-menu">
-								<li class="${active eq 'ninja' ? 'active' : ''}">
+								<li class="${active eq 'account-settings' ? 'active' : ''}">
 									<a href="${home}/account-settings/">
 										<spring:message code="label.account-settings"/>
 									</a>
