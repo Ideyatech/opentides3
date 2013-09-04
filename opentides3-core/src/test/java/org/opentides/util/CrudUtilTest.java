@@ -106,8 +106,8 @@ public class CrudUtilTest {
 		oldUser.setFavorites(oldFaves);
 		newUser.setFavorites(newFaves);
 		
-		String expected = "<p class='change-message'>Changed User Criteria with the following: added Favorites <span class='field-values-added'>[valuenew]</span> " +
-				"and removed Favorites <span class='field-values-removed'>[valueold]</span> </p>";
+		String expected = "<p class='change-message'>Changed User Criteria with the following: added Favorites <span class='field-values-added'>[keynew:valuenew]</span> " +
+				"and removed Favorites <span class='field-values-removed'>[keyold:valueold]</span> </p>";
 		Assert.assertEquals(expected,
 				CrudUtil.buildUpdateMessage(oldUser, newUser));
 	}

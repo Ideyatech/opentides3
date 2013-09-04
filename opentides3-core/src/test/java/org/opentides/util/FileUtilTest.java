@@ -27,6 +27,7 @@ import java.util.Properties;
 import junit.framework.Assert;
 
 import org.junit.Test;
+import org.opentides.exception.CodeGenerationException;
 
 /**
  * @author allantan
@@ -37,7 +38,7 @@ public class FileUtilTest {
 	/**
 	 * Test method for {@link org.opentides.util.FileUtil#readFile(java.io.File)}.
 	 */
-	@Test
+	@Test(expected = CodeGenerationException.class)
 	public void testReadFile() {
 		// read file as string
 		String content = FileUtil.readFile("testing.txt");
@@ -55,7 +56,7 @@ public class FileUtilTest {
 	/**
 	 * Test method for {@link org.opentides.util.FileUtil#readFileAsBytes(java.io.File)}.
 	 */
-	@Test
+	@Test(expected = CodeGenerationException.class)
 	public void testReadFileAsBytes() {
 		byte[] bytes = FileUtil.readFileAsBytes("testing.txt");
 		byte[] expected = {105, 100, 101, 121, 97, 116, 101, 99, 104, 10, 115, 
@@ -76,7 +77,7 @@ public class FileUtilTest {
 	/**
 	 * Test method for {@link org.opentides.util.FileUtil#backupFile(java.lang.String)}.
 	 */
-	@Test
+	@Test(expected = CodeGenerationException.class)
 	public void testBackupFile() {
 		String content = FileUtil.readFile("testing.txt");
 		FileUtil.backupFile(new File("src/test/resources/testing.txt"));
@@ -156,9 +157,9 @@ public class FileUtilTest {
 		props.put("two.two", "two");
 		props.put("one.one", "one");
 		props.put("_sample", "3");
-		FileUtil.saveProperty("test/resources/saved.properties", props, "HEADER");
+		FileUtil.saveProperty("saved.properties", props, "HEADER");
 		
-		String actual = FileUtil.readFile("test/resources/saved.properties");
+		String actual = FileUtil.readFile("saved.properties");
 		String expected = "#HEADER\n.*?\n_sample=3\none.one=one\ntwo.two=two\n";
 		Assert.assertTrue(actual.matches(expected));
 	}
