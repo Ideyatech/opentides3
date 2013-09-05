@@ -159,7 +159,7 @@ public class AuditLogDaoImpl implements AuditLogDao {
 	 * @param message
 	 * @param entity
 	 */
-	public static void logEvent(String shortMessage, String message, BaseEntity entity) { 		
+	public static void logEvent(String message, BaseEntity entity) { 		
 		Long userId = entity.getAuditUserId();
 		String officeName = entity.getAuditOfficeName();
 		String username = entity.getAuditUsername();
@@ -178,7 +178,7 @@ public class AuditLogDaoImpl implements AuditLogDao {
 		try { 
 		     em.getTransaction().begin();
 		     AuditLog record = 
-	            new AuditLog(shortMessage,
+	            new AuditLog(
 	            			message, 
 	            			entity.getId(), 
 	            			entity.getClass(), 

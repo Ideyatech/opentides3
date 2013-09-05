@@ -2,6 +2,7 @@
 <persistence xmlns="http://java.sun.com/xml/ns/persistence"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
+<!-- 
 	<persistence-unit name="opentidesPU"
 		transaction-type="RESOURCE_LOCAL">
 		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
@@ -9,12 +10,40 @@
 		<properties>
 			<property name="eclipselink.target-database"
 				value="org.eclipse.persistence.platform.database.MySQLPlatform" />
+-->				
 			<!-- value="drop-and-create-tables" to build a new database on each run; 
 				value="create-tables" creates new tables if needed; value="none" makes no 
 				changes to the database -->
+<!-- 
 			<property name="eclipselink.ddl-generation" value="create-or-extend-tables" />
 			<property name="eclipselink.ddl-generation.output-mode" value="database" />
 			<property name="eclipselink.weaving" value="static" />
 		</properties>
 	</persistence-unit>
+-->
+
+	<persistence-unit name="opentidesPU" transaction-type="RESOURCE_LOCAL">
+		<provider>org.hibernate.ejb.HibernatePersistence</provider>
+		<properties>
+			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect" />
+			<property name="hibernate.c3p0.min_size" value="5" />
+			<property name="hibernate.c3p0.max_size" value="20" />
+			<property name="hibernate.c3p0.timeout" value="1800" />
+			<property name="hibernate.c3p0.max_statements" value="50" />
+			<property name="hibernate.hbm2ddl.auto" value="update" />
+			<property name="hibernate.show_sql" value="true" />
+			<property name="hibernate.ejb.autodetection" value="class" />
+			<property name="hibernate.ejb.interceptor"
+				value="org.opentides.persistence.interceptor.AuditLogInterceptor" />
+				
+			<!-- Enable second level cache via eh-cache -->
+			<property name="hibernate.cache.provider_class" value="org.hibernate.cache.EhCacheProvider"/>
+			<property name="hibernate.cache.use_second_level_cache" value="true" />
+			<property name="hibernate.cache.use_query_cache" value="true" />				
+			<property name="hibernate.cache.region.factory_class" 
+				value="org.hibernate.cache.ehcache.EhCacheRegionFactory"/>
+			<property name="net.sf.ehcache.configurationResourceName" value="/app/cache/ehcache.xml" />
+		</properties>
+	</persistence-unit>
+	
 </persistence>

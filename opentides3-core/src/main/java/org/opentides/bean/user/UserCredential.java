@@ -25,7 +25,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import org.eclipse.persistence.annotations.Cache;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.opentides.annotation.Auditable;
 import org.opentides.annotation.PrimaryField;
 import org.opentides.bean.BaseEntity;
@@ -36,10 +37,9 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 
 @Entity
-@Cache
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name="USERS")
 @Auditable
-
 public class UserCredential extends BaseEntity {
 	private static final long serialVersionUID = -8078097647300665926L;
 	

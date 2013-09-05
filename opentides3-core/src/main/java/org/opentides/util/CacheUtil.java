@@ -121,8 +121,7 @@ public class CacheUtil {
             		try {
             			auditableFields = (List<AuditableField>) method.invoke(obj);
 					} catch (Exception e) {
-						_log.warn("Unable to execute annotated method @AuditableFields of " +
-								obj.getClass().getSimpleName(), e);
+						_log.warn("Cannot find annotated method @AuditableFields of " + obj.getClass().getSimpleName());
 					}
 					break;
             	//}

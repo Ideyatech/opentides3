@@ -40,6 +40,7 @@ public class MapDBFactoryBean extends MapFactoryBean {
 	/* (non-Javadoc)
 	 * @see org.springframework.beans.factory.config.MapFactoryBean#createInstance()
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	protected Map<String, String> createInstance() {
 		Map<String, String> map = super.createInstance();

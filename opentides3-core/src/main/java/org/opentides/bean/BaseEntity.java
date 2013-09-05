@@ -80,6 +80,12 @@ public abstract class BaseEntity implements Serializable {
     private Date updateDate;
     
     /**
+     * Creator of this object.
+     */
+    @Column(name = "CREATEDBY")
+    private String createdBy;
+    
+    /**
      * Random id generated used for session mapping.
      * This id is used to avoid security hacks when user attempts
      * to alter the reference id from the web page.
@@ -118,12 +124,6 @@ public abstract class BaseEntity implements Serializable {
 	 */
 	@Transient
 	private transient String auditMessage;
-	
-	/**
-	 * Storage for keeping short audit log message.
-	 */
-	@Transient
-	private transient String shortMessage;
 
 	/**
      * Temporary variable for order direction (e.g. ASC or DESC).
@@ -218,6 +218,20 @@ public abstract class BaseEntity implements Serializable {
         this.updateDate = updateDate;
     }
 
+	/**
+	 * @return the createdBy
+	 */
+	public final String getCreatedBy() {
+		return createdBy;
+	}
+
+	/**
+	 * @param createdBy the createdBy to set
+	 */
+	public final void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}   
+	
     /**
 	 * @return the secureId
 	 */
@@ -390,24 +404,6 @@ public abstract class BaseEntity implements Serializable {
 		return null;
 	} 
 	
-	/**
-	 * Getter method for shortMessage.
-	 *
-	 * @return the shortMessage
-	 */
-	public String getShortMessage() {
-		return shortMessage;
-	}
-
-	/**
-	 * Setter method for shortMessage.
-	 *
-	 * @param shortMessage the shortMessage to set
-	 */
-	public void setShortMessage(String shortMessage) {
-		this.shortMessage = shortMessage;
-	}
-
     /**
      * Getter method of order flow.
      * 
@@ -467,5 +463,6 @@ public abstract class BaseEntity implements Serializable {
 	 */
 	public final void setDisableProtection(Boolean disableProtection) {
 		this.disableProtection = disableProtection;
-	}    
+	} 
+		
 }

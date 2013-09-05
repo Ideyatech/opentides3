@@ -81,18 +81,19 @@ public class DatabaseUtil {
         try { 
         	if (emf == null || !emf.isOpen()) {
             	Properties propertiesMap = XMLPersistenceUtil.getProperties("META-INF/persistence.xml", persistenceUnitName);        	
-            	if (StringUtil.isEmpty(jndiName)) {
+//            	if (StringUtil.isEmpty(jndiName)) {
     	            propertiesMap.put("javax.persistence.jdbc.driver", driverClassName);
             		propertiesMap.put("javax.persistence.jdbc.url", url);
             		propertiesMap.put("javax.persistence.jdbc.user", username);
             		propertiesMap.put("javax.persistence.jdbc.password", password);
-            	} else {
-            		propertiesMap.put("hibernate.connection.datasource", jndiName);        	
-            		propertiesMap.put("eclipselink.session.customizer", 
-            				"org.opentides.persistence.config.JPAEclipseLinkSessionCustomizer");
-            		propertiesMap.put("javax.persistence.nonJtaDataSource", jndiName);
-               	}
-            	emf = Persistence.createEntityManagerFactory(persistenceUnitName, propertiesMap);		
+//           	} else {
+//            		propertiesMap.put("hibernate.connection.datasource", jndiName);
+// For Eclipselink only
+//            		propertiesMap.put("eclipselink.session.customizer", 
+//            				"org.opentides.persistence.config.JPAEclipseLinkSessionCustomizer");
+//            		propertiesMap.put("javax.persistence.nonJtaDataSource", jndiName);
+//               	}
+            	emf = Persistence.createEntityManagerFactory(persistenceUnitName, propertiesMap);
         	}
         	entityManager = emf.createEntityManager();        	
         } catch (Throwable ex) {

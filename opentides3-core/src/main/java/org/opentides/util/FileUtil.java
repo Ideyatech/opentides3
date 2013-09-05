@@ -195,7 +195,8 @@ public class FileUtil {
 			throw new CodeGenerationException(msg, ioe);
 		} finally {
 			try {
-				inStream.close();
+				if (inStream != null)
+					inStream.close();
 			} catch (IOException e) {
 				// do nothing
 			}

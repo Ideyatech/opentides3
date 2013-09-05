@@ -11,6 +11,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -18,7 +19,6 @@ import javax.persistence.TemporalType;
 
 import org.opentides.annotation.Auditable;
 import org.opentides.annotation.PrimaryField;
-//import org.opentides.annotation.Secure;
 import org.opentides.annotation.field.CheckBox;
 import org.opentides.annotation.field.DatePicker;
 import org.opentides.annotation.field.DisplayOnly;
@@ -38,6 +38,7 @@ import org.opentides.web.json.Views;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.annotation.JsonView;
+//import org.opentides.annotation.Secure;
 
 /**
  * This is the master class for testing all annotations
@@ -118,9 +119,9 @@ public class Ninja extends BaseEntity implements Photoable, Commentable, Taggabl
 	private Boolean active;
 	
 	// 
-	private Clan mainClan;
+	private transient Clan mainClan;
 	
-	private Set<Clan> subClans;
+	private transient Set<Clan> subClans;
 	
 	// Dropdown
 	// Validation: required
@@ -146,6 +147,14 @@ public class Ninja extends BaseEntity implements Photoable, Commentable, Taggabl
 	// Label: Specified
 	// Validation: none
 	@JsonView(Views.FormView.class)
+	@ManyToMany(fetch=FetchType.LAZY, cascade={CascadeType.MERGE, CascadeType.REFRESH})
+	@JoinTable(name="NINJA_SKILLS",
+	joinColumns = { 
+			@JoinColumn(name="NINJA_ID", referencedColumnName="ID") 
+	},
+	inverseJoinColumns = {
+			@JoinColumn(name="SKILLS_ID")
+	})
 	private Set<SystemCodes> skillSet;
 	
 	// Radiobutton

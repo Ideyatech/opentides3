@@ -33,6 +33,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
+import org.opentides.bean.user.BaseUser;
 import org.opentides.persistence.listener.AuditLogListener;
 
 /**
@@ -101,13 +102,7 @@ public class AuditLog implements Serializable {
     @Lob
     @Column(name = "MESSAGE", nullable = false, updatable = false)
     private String message;
-    
-    /**
-     * Shorter message for display as summary.
-     */
-    @Column(name = "SHORT_MESSAGE", nullable = false, updatable = false, length=255)
-    private String shortMessage;
-    
+        
     /**
      * User who performed the change.
      */
@@ -134,6 +129,13 @@ public class AuditLog implements Serializable {
     @Transient
     private transient Object object;
     	
+    /**
+     * Temporary reference to used who made the change.
+     * Used by AuditLogListener when loading audit log object.
+     */
+    @Transient
+    private transient BaseUser user;
+
     @Transient
 	private transient Date startDate;
 	
@@ -169,37 +171,6 @@ public class AuditLog implements Serializable {
             final String userDisplayName,
             final String ownerOffice) {
         this.message = message;
-        this.entityId = entityId;
-        this.entityClass = entityClass;
-        this.reference = reference;
-        this.userId = userId;
-        this.setCreateDate(new Date());
-        this.setUserDisplayName(userDisplayName);
-        this.setOwnerOffice(ownerOffice);
-    }
-    
-    /**
-     * 
-     * @param ShortMessage
-     * @param message
-     * @param entityId
-     * @param entityClass
-     * @param reference
-     * @param userId
-     * @param owner
-     * @param ownerOffice
-     */
-    @SuppressWarnings("rawtypes")
-	public AuditLog(final String ShortMessage,
-    		final String message, 
-            final Long entityId, 
-            final Class entityClass,
-            final String reference,
-            final Long userId,
-            final String userDisplayName,
-            final String ownerOffice){
-    	this.shortMessage = ShortMessage;
-    	this.message = message;
         this.entityId = entityId;
         this.entityClass = entityClass;
         this.reference = reference;
@@ -338,24 +309,6 @@ public class AuditLog implements Serializable {
 	}
 
 	/**
-	 * Getter method for ShortMessage.
-	 *
-	 * @return the ShortMessage
-	 */
-	public final String getShortMessage() {
-		return shortMessage;
-	}
-
-	/**
-	 * Setter method for ShortMessage.
-	 *
-	 * @param ShortMessage the ShortMessage to set
-	 */
-	public final void setShortMessage(String ShortMessage) {
-		this.shortMessage = ShortMessage;
-	}
-
-	/**
 	 * Getter method for userId.
 	 *
 	 * @return the userId
@@ -422,6 +375,20 @@ public class AuditLog implements Serializable {
 	 */
 	public final void setObject(Object object) {
 		this.object = object;
+	}
+
+	/**
+	 * @return the user
+	 */
+	public final BaseUser getUser() {
+		return user;
+	}
+
+	/**
+	 * @param user the user to set
+	 */
+	public final void setUser(BaseUser user) {
+		this.user = user;
 	}
 
 	/**

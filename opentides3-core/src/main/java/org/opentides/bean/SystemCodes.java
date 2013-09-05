@@ -21,8 +21,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import org.eclipse.persistence.annotations.Cache;
-import org.eclipse.persistence.annotations.CacheType;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.opentides.annotation.Auditable;
 import org.opentides.annotation.GenerateCrudController;
 import org.opentides.annotation.GenerateDao;
@@ -41,10 +41,9 @@ import com.fasterxml.jackson.annotation.JsonView;
 @GenerateDao
 @Entity
 @Table(name = "SYSTEM_CODES")
-@Cache(type = CacheType.SOFT, size = 64000)
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Auditable(label="System Codes")
 public class SystemCodes extends BaseEntity implements Serializable {
-
 
 	private static final long serialVersionUID = -4142599915292096152L;
 	private static final int CATEGORY_LIST_LENGTH = 52;

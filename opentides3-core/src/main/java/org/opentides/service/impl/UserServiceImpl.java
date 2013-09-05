@@ -116,7 +116,7 @@ public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 			BaseUser user = new BaseUser();
 			UserCredential cred = new UserCredential();
 			cred.setUsername("admin");
-			cred.setPassword("96cae35ce8a9b0244178bf28e4966c2ce1b8385723a96a6b838858cdd6ca0a1e");
+			cred.setPassword("8da85e7b5655eb756475071f0f5d6c018cd26949950a06f084c441e0e9bdc484");
 			cred.setEnabled(true);
 			cred.setUser(user);
 			user.setCredential(cred);
@@ -163,7 +163,7 @@ public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 				user.setAuditUsername(username);
 				user.setSkipAudit(false);
 				String message = completeName + " has logged-in";
-				AuditLogDaoImpl.logEvent(message, message, user);
+				AuditLogDaoImpl.logEvent(message, user);
 			}
 		}
 	}
@@ -188,7 +188,7 @@ public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 			user.setAuditUserId(user.getId());
 			user.setAuditUsername(username);
 			String message = completeName + " has logged-out.";
-			AuditLogDaoImpl.logEvent(message, message, user);
+			AuditLogDaoImpl.logEvent(message, user);
 		}
 	}
 

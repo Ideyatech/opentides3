@@ -20,15 +20,39 @@ package org.opentides.persistence.listener;
 
 import java.util.Date;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PostLoad;
 import javax.persistence.PrePersist;
 
 import org.apache.log4j.Logger;
 import org.opentides.bean.AuditLog;
+import org.opentides.bean.user.BaseUser;
+import org.opentides.util.DatabaseUtil;
 
 public class AuditLogListener {
 
 	private static Logger _log = Logger.getLogger(AuditLogListener.class);
 	
+	private static boolean autoLoadObjects = true;
+
+	@SuppressWarnings("unchecked")
+	@PostLoad
+	public void loadObject(AuditLog log) {
+		if (!autoLoadObjects) return;
+		EntityManager em = null;
+		try {
+			em = DatabaseUtil.getEntityManager();
+			Object object = em.find(log.getEntityClass(), log.getEntityId());
+			log.setObject(object);
+            BaseUser user = (BaseUser)DatabaseUtil.getEntityManager().find(BaseUser.class, log.getUserId());
+            log.setUser(user.cloneUserProfile());
+		} catch (Throwable e) {
+			_log.error(e, e);
+		} finally {
+			if (em!=null) em.close();
+		}
+	}
+
 	@PrePersist
 	public void setDates(AuditLog entity) {
 		try {
@@ -44,4 +68,10 @@ public class AuditLogListener {
 		}
 	}
 
+	/**
+	 * @param autoLoadObjects the autoLoadObjects to set
+	 */
+	public void setAutoLoadObjects(boolean autoLoadObjects) {
+		AuditLogListener.autoLoadObjects = autoLoadObjects;
+	}
 }

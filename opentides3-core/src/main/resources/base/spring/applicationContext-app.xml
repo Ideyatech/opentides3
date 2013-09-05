@@ -20,7 +20,7 @@
 		<property name="persistenceUnitName" value="opentidesPU" />
 		<property name="jpaVendorAdapter">
 			<bean
-				class="org.springframework.orm.jpa.vendor.EclipseLinkJpaVendorAdapter">
+				class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
 				<property name="showSql" value="${jpa.show_sql}" />
 				<property name="generateDdl" value="${jpa.generate_ddl}" />
 			</bean>
@@ -90,7 +90,7 @@
 	
 	<!-- Multipart Resolver -->
     <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
-        <property name="maxUploadSize" value="10485760"/>
+        <property name="maxUploadSize" value="${fileupload.max_size}"/>
     </bean>
     
     <!-- Velocity Engine -->
