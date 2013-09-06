@@ -6,3 +6,6 @@
 **/.springBeans
 .idea/*
 *.iml
+velocity.log*
+.project
+.settings/**
