@@ -114,7 +114,7 @@ public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 			BaseUser user = new BaseUser();
 			UserCredential cred = new UserCredential();
 			cred.setUsername("admin");
-			cred.setPassword("8da85e7b5655eb756475071f0f5d6c018cd26949950a06f084c441e0e9bdc484");
+			cred.setPassword(encryptPassword("ideyatech"));
 			cred.setEnabled(true);
 			cred.setUser(user);
 			user.setCredential(cred);
