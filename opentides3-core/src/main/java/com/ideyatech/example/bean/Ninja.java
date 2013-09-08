@@ -46,7 +46,7 @@ import com.fasterxml.jackson.annotation.JsonView;
  */ 
 @Entity  
 @Table(name="NINJA")
-@Auditable
+@Auditable(excludeFields="skillSet")
 public class Ninja extends BaseEntity implements Photoable, Commentable, Taggable {
 	
 	private static final long serialVersionUID = -4142599915292096152L;
@@ -443,7 +443,7 @@ public class Ninja extends BaseEntity implements Photoable, Commentable, Taggabl
 	}
 	
 	@JsonView(Views.SearchView.class)
-	@PrimaryField(label="Complete Name")
+	@PrimaryField(label="Name")
 	public final String getCompleteName() {
 		String name = "";
 		if (!StringUtil.isEmpty(getFirstName())) {

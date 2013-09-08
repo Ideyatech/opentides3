@@ -24,7 +24,6 @@ import org.opentides.bean.FileInfo;
 import org.opentides.dao.FileInfoDao;
 import org.opentides.service.FileInfoService;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 
 /**
@@ -35,7 +34,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class FileInfoServiceImpl extends BaseCrudServiceImpl<FileInfo>
                 implements FileInfoService {
         
-        @Transactional(readOnly=true)
         public List<FileInfo> getFileInfoByFullPath(String path) {
                 List<FileInfo> list = ((FileInfoDao)getDao()).findFileInfoByFullPath(path);
                 if (list == null || list.size() < 1)

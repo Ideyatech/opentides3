@@ -24,14 +24,15 @@ import org.opentides.bean.FileInfo;
 
 /**
  * @author allantan
- *
+ * 
  */
 public interface FileInfoService extends BaseCrudService<FileInfo> {
 
-        /**
-         * get FileInfo by Full Path
-         * @param path
-         * @return
-         */
-        public List<FileInfo> getFileInfoByFullPath(String path) ;
+	/**
+	 * get FileInfo by Full Path
+	 * 
+	 * @param path
+	 * @return
+	 */
+	public List<FileInfo> getFileInfoByFullPath(String path);
 }

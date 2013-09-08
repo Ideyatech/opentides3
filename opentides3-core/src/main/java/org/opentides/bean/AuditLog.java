@@ -116,13 +116,6 @@ public class AuditLog implements Serializable {
     private String userDisplayName;
     
     /**
-     * Office that owns this object.
-     * In most cases, this is office of the owner.
-     */
-    @Column(name = "USER_OFFICE")
-    private String ownerOffice;
-
-    /**
      * Temporary reference to object being tracked.
      * Used by AuditLogListener when loading audit log object.
      */
@@ -160,7 +153,6 @@ public class AuditLog implements Serializable {
      * @param reference reference for group query.
      * @param userId user id of who made the change.
      * @param owner username of who made the change.
-     * @param ownerOffice group of user who made the change.
      */
     @SuppressWarnings({ "rawtypes" })
     public AuditLog(final String message, 
@@ -168,8 +160,7 @@ public class AuditLog implements Serializable {
             final Class entityClass,
             final String reference,
             final Long userId,
-            final String userDisplayName,
-            final String ownerOffice) {
+            final String userDisplayName) {
         this.message = message;
         this.entityId = entityId;
         this.entityClass = entityClass;
@@ -177,7 +168,6 @@ public class AuditLog implements Serializable {
         this.userId = userId;
         this.setCreateDate(new Date());
         this.setUserDisplayName(userDisplayName);
-        this.setOwnerOffice(ownerOffice);
     }
 
 	/**
@@ -339,24 +329,6 @@ public class AuditLog implements Serializable {
 	 */
 	public final void setUserDisplayName(String userDisplayName) {
 		this.userDisplayName = userDisplayName;
-	}
-
-	/**
-	 * Getter method for ownerOffice.
-	 *
-	 * @return the ownerOffice
-	 */
-	public final String getOwnerOffice() {
-		return ownerOffice;
-	}
-
-	/**
-	 * Setter method for ownerOffice.
-	 *
-	 * @param ownerOffice the ownerOffice to set
-	 */
-	public final void setOwnerOffice(String ownerOffice) {
-		this.ownerOffice = ownerOffice;
 	}
 
 	/**

@@ -105,14 +105,7 @@ public abstract class BaseEntity implements Serializable {
      */
     @Transient
     private transient String auditUsername;
-    
-    /**
-     * Office of the user who created, updated or deleted the entity.
-     * Used by AuditLog. 
-     */
-    @Transient
-    private transient String auditOfficeName;
-    
+        
     /**
      * Indicator whether to skip audit log or not.
      */
@@ -283,28 +276,6 @@ public abstract class BaseEntity implements Serializable {
     }
 
     /**
-     * Getter method of office name.
-     * It is recommended that office is referenced in SystemCodes 
-     * under category 'OFFICE'.
-     * 
-     * @return the auditOfficeName
-     */
-    public final String getAuditOfficeName() {
-        return this.auditOfficeName;
-    }
-
-    /**
-     * Setter method of office name.
-     * It is recommended that office is referenced in SystemCodes 
-     * under category 'OFFICE'.
-     *
-     * @param auditOfficeName the auditOfficeName to set
-     */
-    public final void setAuditOfficeName(final String auditOfficeName) {
-        this.auditOfficeName = auditOfficeName;
-    }
-
-    /**
      * Sets the userId based on Acegi Context
      */
     public final void setUserId() {
@@ -312,7 +283,6 @@ public abstract class BaseEntity implements Serializable {
             final SessionUser user = SecurityUtil.getSessionUser();
             if (user!=null) {
 	            this.auditUserId = user.getId();
-	            this.auditOfficeName = user.getOffice();
 	            this.auditUsername = user.getUsername();
             }        	
         }

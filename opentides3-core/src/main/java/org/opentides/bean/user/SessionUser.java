@@ -43,8 +43,6 @@ public class SessionUser extends User {
 	private final Map<String, Object> profile = new HashMap<String, Object>();
 
 	private Long id;
-	
-	private String office;
 
 	public SessionUser(UserDetails user) {
 		super(user.getUsername(), user.getPassword(), user.isEnabled(), user.isAccountNonExpired(), 
@@ -98,7 +96,11 @@ public class SessionUser extends User {
 	 * Adds profile settings to the session user.
 	 */
 	public void addProfile(String key, Object value) {
-		profile.put(key, value);		
+		if ("ID".equals(key)) {
+			this.id = new Long(""+value);			
+		} else {
+			profile.put(key, value);			
+		}
 	}
 
 	/**
@@ -106,27 +108,6 @@ public class SessionUser extends User {
 	 */
 	public final Long getId() {
 		return id;
-	}
-
-	/**
-	 * @param id the id to set
-	 */
-	public final void setId(Long id) {
-		this.id = id;
-	}
-
-	/**
-	 * @return the office
-	 */
-	public final String getOffice() {
-		return office;
-	}
-
-	/**
-	 * @param office the office to set
-	 */
-	public final void setOffice(String office) {
-		this.office = office;
 	}
 	
 }

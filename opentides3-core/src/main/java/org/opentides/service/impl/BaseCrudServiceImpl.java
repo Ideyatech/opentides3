@@ -34,7 +34,6 @@ import org.opentides.util.StringUtil;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 /**
@@ -43,7 +42,6 @@ import org.springframework.util.Assert;
  * @author allanctan
  *
  */
-@Transactional
 public class BaseCrudServiceImpl<T extends BaseEntity> extends
 		BaseServiceDefaultImpl implements BaseCrudService<T> {
 
@@ -171,7 +169,8 @@ public class BaseCrudServiceImpl<T extends BaseEntity> extends
 
 	/**
 	 * {@inheritDoc}
-	 */		@Override
+	 */		
+	@Override
 	public final long countByExample(T example) {
 		return dao.countByExample(example);
 	}
@@ -272,7 +271,6 @@ public class BaseCrudServiceImpl<T extends BaseEntity> extends
 	 * {@inheritDoc}
 	 */	
 	@Override
-	@Transactional
 	public void save(T entity, boolean bypassSecurity) {
 		if (!bypassSecurity) {
 			if (entity.getIsNew())
@@ -295,7 +293,6 @@ public class BaseCrudServiceImpl<T extends BaseEntity> extends
 	 * {@inheritDoc}
 	 */	
 	@Override
-	@Transactional
 	public void delete(String sid, boolean bypassSecurity) {
 		if (!bypassSecurity)
 			checkAccess("DELETE");
@@ -323,7 +320,6 @@ public class BaseCrudServiceImpl<T extends BaseEntity> extends
 	 * {@inheritDoc}
 	 */
 	@Override
-	@Transactional
 	public void delete(Long id, boolean bypassSecurity) {
 		if (!bypassSecurity)
 			checkAccess("DELETE");

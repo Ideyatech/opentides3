@@ -19,8 +19,8 @@ import org.opentides.bean.MessageResponse;
 import org.opentides.bean.PhotoInfo;
 import org.opentides.bean.impl.Photoable;
 import org.opentides.service.BaseCrudService;
+import org.opentides.service.FileUploadService;
 import org.opentides.service.PhotoInfoService;
-import org.opentides.service.impl.DefaultFileUploadServiceImpl;
 import org.opentides.util.CrudUtil;
 import org.opentides.util.ImageUtil;
 import org.opentides.util.NamingUtil;
@@ -28,6 +28,7 @@ import org.opentides.util.StringUtil;
 import org.opentides.web.validator.PhotoValidator;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.Assert;
@@ -60,7 +61,8 @@ public abstract class BasePhotoController<T extends BaseEntity> {
 	protected PhotoValidator photoValidator;
 	
 	@Autowired
-	protected DefaultFileUploadServiceImpl fileUploadService;
+	@Qualifier("defaultFileUploadService")
+	protected FileUploadService fileUploadService;
 	
 	protected String uploadPage = "";
 	protected String adjustPhoto = "";

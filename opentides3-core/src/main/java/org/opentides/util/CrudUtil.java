@@ -33,6 +33,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
+import org.hibernate.LazyInitializationException;
 import org.opentides.annotation.Auditable;
 import org.opentides.bean.AuditableField;
 import org.opentides.bean.BaseEntity;
@@ -110,40 +111,63 @@ public class CrudUtil {
     	// loop through the fields list
 		List<AuditableField> auditableFields = CacheUtil.getAuditable(oldObject);
 		int count = 0;
+		
+		// scenarios
+		// 1 - collection vs null -> Enter collection
+		// 2 - collection vs collection -> Enter collection
+		// 3 - object vs null -> Enter object
+		// 4 - object vs object -> Enter object
+		// 5 - collection vs object -> Invalid or convert collection to object. 
+		
 		for (AuditableField property:auditableFields) {
 			Object oldValue = retrieveNullableObjectValue(oldObject, property.getFieldName());
-			Object newValue = retrieveNullableObjectValue(newObject, property.getFieldName());
+			Object newValue = retrieveNullableObjectValue(newObject, property.getFieldName());			
 			oldValue = normalizeValue(oldValue);
 			newValue = normalizeValue(newValue);
-			if (!oldValue.equals(newValue)) {
-				if (count > 0) 
-					message.append("and ");
-
-				if (Collection.class.isAssignableFrom(oldValue.getClass()) &&
-					Collection.class.isAssignableFrom(newValue.getClass()) ) {
-					List addedList = new ArrayList();
-					addedList.addAll((List) newValue);
-					addedList.removeAll((List) oldValue);
-					List removedList = new ArrayList();
-					removedList.addAll((List) oldValue);
-					removedList.removeAll((List) newValue);	
-					if (!addedList.isEmpty()) {
-						message.append("added ")
-								.append(property.getTitle())
-								.append(" <span class='field-values-added'>")
-								.append(addedList)
-								.append("</span> ");
-					} 					
-					if (!removedList.isEmpty()) {
-						if (!addedList.isEmpty()) 
-							message.append("and ");
-						message.append("removed ")
-								.append(property.getTitle())
-								.append(" <span class='field-values-removed'>")
-								.append(removedList)				
-								.append("</span> ");
-					} 
-				} else {
+			
+			if (oldValue.getClass() != newValue.getClass()) {
+				_log.warn("Unable to compare ["+property.getFieldName()+"] for audit logging due to difference in datatype. " +
+						"oldValue is ["+oldValue.getClass()+"] and newValue is ["+newValue.getClass()+"]");
+				continue;
+			}
+			
+			if (Collection.class.isAssignableFrom(oldValue.getClass()) &&
+					Collection.class.isAssignableFrom(newValue.getClass())) {
+				if ( ((Collection) oldValue).isEmpty() &&
+					 ((Collection) newValue).isEmpty() ) {
+					continue;
+				}				
+				List addedList = new ArrayList();
+				addedList.addAll((List) newValue);
+				addedList.removeAll((List) oldValue);
+				List removedList = new ArrayList();
+				removedList.addAll((List) oldValue);
+				removedList.removeAll((List) newValue);	
+				if (!addedList.isEmpty() || !removedList.isEmpty()) {
+					if (count > 0) 
+						message.append("and ");					
+				}
+				if (!addedList.isEmpty()) {
+					message.append("added ")
+							.append(property.getTitle())
+							.append(" <span class='field-values-added'>")
+							.append(addedList)
+							.append("</span> ");
+				} 					
+				if (!removedList.isEmpty()) {
+					if (!addedList.isEmpty()) 
+						message.append("and ");
+					message.append("removed ")
+							.append(property.getTitle())
+							.append(" <span class='field-values-removed'>")
+							.append(removedList)				
+							.append("</span> ");
+					count++;
+				}				
+			} else {
+				if (!oldValue.equals(newValue)) {
+					if (count > 0) 
+						message.append("and ");
 					if (StringUtil.isEmpty(newValue.toString())) {
 						message.append(property.getTitle())
 							   .append(" <span class='field-value-removed'>")
@@ -161,8 +185,8 @@ public class CrudUtil {
 							.append(newValue.toString())
 							.append("</span> ");						
 					}
+					count++;
 				}				
-				count++;
 			}
 		}
 		message.append("</p>");
@@ -199,7 +223,7 @@ public class CrudUtil {
     	Object value = retrieveNullableObjectValue(obj, pf.getFieldName());
         if (value!=null && !StringUtil.isEmpty(value.toString())) 
     		message
-    		.append(" ")
+    		.append(" with ")
     		.append(pf.getTitle())
     		.append(":<span class='primary-field'>")
     		.append(value.toString())
@@ -217,6 +241,17 @@ public class CrudUtil {
     	// convert date into string
     	if (obj == null)
     		return "";
+    	// if object is empty collection, convert to empty string?    	
+    	if (obj instanceof Collection) { 
+    		try {
+	    		if ( ((Collection<?>) obj).isEmpty() )
+	        		return "";
+    		} catch (LazyInitializationException lie) {
+    			//TODO: Need to check if this is safe
+    			return "";
+    		}
+    	}
+    	
     	if (obj instanceof Date) {
     		if (DateUtil.hasTime((Date) obj)) {
     			return DateUtil.dateToString((Date) obj, "EEE, dd MMM yyyy HH:mm:ss z");
@@ -617,4 +652,16 @@ public class CrudUtil {
 		messages.add(message);
 		return messages;
 	}
+	
+	/**
+	 * Helper method to check if the object is a type of 
+	 * collection or map.
+	 * 
+	 * @param ob
+	 * @return
+	 */
+	public static boolean isCollection(Object ob) {
+		return ob instanceof Collection || ob instanceof Map;
+	}
+
 }

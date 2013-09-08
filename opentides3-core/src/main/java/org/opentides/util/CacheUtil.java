@@ -31,13 +31,13 @@ import javax.persistence.Transient;
 
 import org.apache.log4j.Logger;
 import org.opentides.annotation.Auditable;
-//import org.opentides.annotation.AuditableFields;
 import org.opentides.annotation.FormBind;
 import org.opentides.annotation.FormBind.Load;
 import org.opentides.annotation.PrimaryField;
 import org.opentides.annotation.SearchableFields;
 import org.opentides.bean.AuditableField;
 import org.opentides.bean.BaseEntity;
+//import org.opentides.annotation.AuditableFields;
 
 /**
  * Helper class to keep a cache of reusable attributes.
@@ -48,6 +48,8 @@ import org.opentides.bean.BaseEntity;
 public class CacheUtil {
 	
     private static Logger _log = Logger.getLogger(CacheUtil.class);
+    
+    private static final List<String> excludeFields = new ArrayList<String>();
 
 	public static final Map<Class<?>, List<AuditableField>> auditable  = new ConcurrentHashMap<Class<?>, List<AuditableField> >();
 	
@@ -63,6 +65,11 @@ public class CacheUtil {
 	
 	private static final Map<Class<?>, Method> formBindUpdateMethods = new ConcurrentHashMap<Class<?>, Method>();
 
+	static {
+		excludeFields.add("createDate");
+		excludeFields.add("updateDate");
+		excludeFields.add("createdBy");
+	}
 	/**
 	 * Helper method to retrieve a readable name for a given class.
 	 * This method tries to access static method named readableName and returns its value if exist.
@@ -108,41 +115,27 @@ public class CacheUtil {
 	 * @param obj
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
 	public static List<AuditableField> getAuditable(BaseEntity obj) {
 		Class<?> clazz = obj.getClass();
 		List<AuditableField> ret = auditable.get(clazz);
 		if (ret == null) {
 			List<AuditableField> auditableFields = new ArrayList<AuditableField>();
-			// check if there is method marked as AuditableField
-            final List<Method> methods = CrudUtil.getAllMethods(clazz, true);// do not include parentFields
-            for (Method method:methods) {
-            	//if (method.isAnnotationPresent(AuditableFields.class)) {
-            		try {
-            			auditableFields = (List<AuditableField>) method.invoke(obj);
-					} catch (Exception e) {
-						_log.warn("Cannot find annotated method @AuditableFields of " + obj.getClass().getSimpleName());
-					}
-					break;
-            	//}
-            }
-			if (auditableFields.isEmpty()) {
-				// no annotated method, use auto-detection
-		        Auditable annotation = clazz.getAnnotation(Auditable.class);
-		        if (annotation!=null) {
-		            final List<Field> fields = CrudUtil.getAllFields(clazz, annotation.includeParentFields());
-		            List<String> exclude = Arrays.asList(annotation.excludeFields());
-		            for (Field field : fields) {        	
-		            	if ( (!Modifier.isTransient(field.getModifiers())) &&
-		            		 (!Modifier.isVolatile(field.getModifiers())) &&
-		            		 (!Modifier.isStatic(field.getModifiers())) &&            		 
-		            		 (!field.isAnnotationPresent(Transient.class)) &&
-		            		 (!exclude.contains(field.getName())) ) {            		
-		                    auditableFields.add(new AuditableField(field.getName()));
-		                }
-		            }
-		        }				
-			}
+			// no annotated method, use auto-detection
+	        Auditable annotation = clazz.getAnnotation(Auditable.class);
+	        if (annotation!=null) {
+	            final List<Field> fields = CrudUtil.getAllFields(clazz, annotation.includeParentFields());
+	            List<String> exclude = Arrays.asList(annotation.excludeFields());
+	            for (Field field : fields) {
+	            	if ( (!Modifier.isTransient(field.getModifiers())) &&
+	            		 (!Modifier.isVolatile(field.getModifiers())) &&
+	            		 (!Modifier.isStatic(field.getModifiers())) &&            		 
+	            		 (!field.isAnnotationPresent(Transient.class)) &&
+	            		 (!exclude.contains(field.getName())) &&
+	            		 (!excludeFields.contains(field.getName())) ) {
+	                    auditableFields.add(new AuditableField(field.getName()));
+	                }
+	            }
+	        }				
 	        if (_log.isDebugEnabled()) {	        	
 		        _log.debug(clazz.getSimpleName()+" contains the following auditable fields");
 		        for (AuditableField audit:auditableFields) {

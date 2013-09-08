@@ -14,12 +14,13 @@ import org.opentides.bean.FileInfo;
 import org.opentides.bean.impl.Commentable;
 import org.opentides.service.BaseCrudService;
 import org.opentides.service.CommentService;
+import org.opentides.service.FileUploadService;
 import org.opentides.service.UserService;
-import org.opentides.service.impl.DefaultFileUploadServiceImpl;
 import org.opentides.util.NamingUtil;
 import org.opentides.web.validator.CommentValidator;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
 import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
@@ -39,13 +40,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 public abstract class BaseCommentController<T extends BaseEntity> {
 	
+	protected Class<T> entityBeanType;
+
 	protected BaseCrudService<T> service;
 	
 	@Autowired
 	protected CommentService commentService;
 	
 	@Autowired
-	protected DefaultFileUploadServiceImpl fileUploadService;
+	@Qualifier(value="defaultFileUploadService")
+	protected FileUploadService fileUploadService;
 	
 	@Autowired
 	protected UserService userService;
@@ -56,8 +60,6 @@ public abstract class BaseCommentController<T extends BaseEntity> {
 	@Autowired
 	protected MessageSource messageSource;
 	
-	protected Class<T> entityBeanType;
-
 	@Autowired
 	protected CommentValidator commentValidator;
 	

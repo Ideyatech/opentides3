@@ -32,8 +32,26 @@
 	</bean>
 
 	<!-- Aspect Oriented and Annotation Transaction Declaration -->
-	<tx:annotation-driven transaction-manager="transactionManager" />
+	
+	<tx:annotation-driven transaction-manager="transactionManager" order="9"/>
+	
+	<tx:advice id="txAdvice">
+		<tx:attributes>
+			<tx:method name="get*" read-only="true" />
+			<tx:method name="find*" read-only="true" />
+			<tx:method name="load*" read-only="true" />
+			<tx:method name="count*" read-only="true" />
+			<tx:method name="*" />
+		</tx:attributes>
+	</tx:advice>
 
+	<aop:config>
+		<aop:pointcut id="openTidesServicePointCut"
+			expression="execution(* org.opentides.service.impl.*ServiceImpl.*(..))" />
+		<aop:advisor pointcut-ref="openTidesServicePointCut"
+			advice-ref="txAdvice" order="10"/>
+	</aop:config>
+	
 	<!-- Property file containing custom JPQL queries -->
 	<bean id="jpqlProperties"
 		class="org.springframework.beans.factory.config.PropertiesFactoryBean">

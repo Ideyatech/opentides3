@@ -33,7 +33,6 @@ import org.opentides.bean.user.UserGroup;
 import org.opentides.dao.UserGroupDao;
 import org.opentides.service.UserGroupService;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service("userGroupService")
 public class UserGroupServiceImpl extends BaseCrudServiceImpl<UserGroup>
@@ -85,13 +84,11 @@ public class UserGroupServiceImpl extends BaseCrudServiceImpl<UserGroup>
 	/**
 	 * Removes the UserAuthority from the database.
 	 */
-	@Transactional
 	public boolean removeUserAuthority(UserAuthority role) {
 		return ((UserGroupDao)dao).removeUserAuthority(role);
 	}
 
 	@Override
-	@Transactional
 	public boolean setupAdminGroup() {
 		boolean exist = false;
 		if (getDao().countAll() > 0) {

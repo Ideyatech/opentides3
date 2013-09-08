@@ -22,7 +22,8 @@ import org.opentides.util.NamingUtil;
 
 /**
  * AuditableField contains definition of fields used for audit logging. Classes
- * that implemented Auditable are required to implement getAuditableFields which
+ * that implemented Auditable are required to implement get
+ which
  * returns list of AuditableField. Only fields defined with AuditableField are
  * tracked for audit logging.
  * 

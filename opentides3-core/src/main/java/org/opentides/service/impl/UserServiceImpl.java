@@ -56,7 +56,6 @@ import org.springframework.social.google.api.legacyprofile.LegacyGoogleProfile;
 import org.springframework.social.twitter.api.TwitterProfile;
 import org.springframework.social.twitter.api.impl.TwitterTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service(value="userService")
 public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
@@ -104,7 +103,6 @@ public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 	 * Ensures that admin user is created into the database. This method is
 	 * called by ApplicationStartupListener to ensure admin user is available
 	 */
-	@Transactional
 	public boolean setupAdminUser() {
 		boolean exist = false;
 		// let's check if there are users in the database
@@ -127,7 +125,7 @@ public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 			user.addGroup(userGroup);
 			userDao.saveEntityModel(user);
 			
-			_log.info("New installation detected, inserted admin/ideyatech user to database.");
+			_log.info("New installation detected, inserted admin/opentides user to database.");
 		}
 		return !exist;
 	}
@@ -136,7 +134,6 @@ public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 	 * Updates last login of the user from a login event. Also logs the event in
 	 * history log.
 	 */
-	@Transactional
 	public void updateLogin(
 			AuthenticationSuccessEvent authenticationSuccessEvent) {
 		UserDao userDao = (UserDao) getDao();
@@ -242,7 +239,6 @@ public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 		}
 	}
 
-	@Transactional
 	@Override
 	public void registerUser(BaseUser baseUser, boolean sendEmail) {
 		
@@ -311,7 +307,6 @@ public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 	}
 	
 	@Override
-	@Transactional
 	public void registerFacebookAccount(BaseUser user,
 			String facebookAccessToken) {
 		
@@ -335,7 +330,6 @@ public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 	}
 
 	@Override
-	@Transactional
 	public void registerGoogleAccount(BaseUser user,
 			String googleAccessToken) {
 		
@@ -358,7 +352,6 @@ public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 	}
 
 	@Override
-	@Transactional
 	public void registerTwitterAccount(BaseUser user, String appId, String clientSecret, Token token) {
 		TwitterTemplate twitterTemplate = new TwitterTemplate(appId, clientSecret, token.getToken(), token.getSecret());
 		TwitterProfile profile = twitterTemplate.userOperations().getUserProfile();

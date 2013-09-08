@@ -19,7 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
  * @author AJ
  *
  */
-@Service
+@Service(value="defaultFileUploadService")
 public class DefaultFileUploadServiceImpl implements FileUploadService {
 
 	private String uploadPath = (new StringBuilder()).append(File.separator)

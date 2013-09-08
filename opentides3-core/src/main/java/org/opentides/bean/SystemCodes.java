@@ -61,7 +61,7 @@ public class SystemCodes extends BaseEntity implements Serializable {
 	@Column(name="CATEGORY_", nullable=false)
 	private String category;
 
-	@JsonView(Views.SearchView.class)
+	@JsonView(Views.FormView.class)
 	@Column(name="NUMBER_VALUE")
 	private Long numberValue;
 	
