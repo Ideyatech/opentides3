@@ -69,6 +69,7 @@ public class CacheUtil {
 		excludeFields.add("createDate");
 		excludeFields.add("updateDate");
 		excludeFields.add("createdBy");
+		excludeFields.add("version");
 	}
 	/**
 	 * Helper method to retrieve a readable name for a given class.

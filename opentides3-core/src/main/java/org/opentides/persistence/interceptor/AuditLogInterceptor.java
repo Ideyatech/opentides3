@@ -22,10 +22,12 @@ specific language governing permissions and limitations
 under the License.    
 */
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -34,9 +36,12 @@ import javax.persistence.EntityManager;
 import org.apache.log4j.Logger;
 import org.hibernate.CallbackException;
 import org.hibernate.EmptyInterceptor;
+import org.hibernate.collection.internal.PersistentSet;
 import org.hibernate.type.Type;
+import org.opentides.bean.AuditableField;
 import org.opentides.bean.BaseEntity;
 import org.opentides.dao.impl.AuditLogDaoImpl;
+import org.opentides.util.CacheUtil;
 import org.opentides.util.CrudUtil;
 import org.opentides.util.DatabaseUtil;
 import org.opentides.util.StringUtil;
@@ -102,6 +107,28 @@ public class AuditLogInterceptor extends EmptyInterceptor {
 		        	// Use the id and class to get the pre-update state from the database
             		em = DatabaseUtil.getEntityManager();
 		        	BaseEntity old = (BaseEntity) em.find(entity.getClass(), auditable.getId());
+		        	/*List<AuditableField> auditableFields = CacheUtil.getAuditable(old);
+		        	if(propertyNames != null) {
+		        		for(int i = 0; i < previousState.length; i++) {
+		        			Object prevObj = previousState[i];
+		        			Object currObj = currentState[i];
+		        			if(prevObj == null && currObj == null) {
+		        				continue;
+		        			}
+		        			if(prevObj == null && currObj != null && Collection.class.isAssignableFrom(currObj.getClass())) {
+		        				continue;
+		        			}
+		        			if(prevObj != null && Collection.class.isAssignableFrom(prevObj.getClass())) {
+		        				String propName = propertyNames[i];
+		        				if(auditableFields.contains(new AuditableField(propName))) {
+		        					if(!prevObj.equals(currObj)) {
+		        						CrudUtil.retrieveNullableObjectValue(old, propName);
+		        					}
+		        				}
+		        			}
+		        		}
+		        	}*/
+		        	
 		        	if (old == null)
 		        		return false; // old object is not yet persisted?
 		        	synchronized(oldies) {
@@ -184,5 +211,12 @@ public class AuditLogInterceptor extends EmptyInterceptor {
 	            oldies.clear();
     		}
         } 
-    }    
+    }
+	
+	@Override
+	public void onCollectionUpdate(Object collection, Serializable key)
+			throws CallbackException {
+		_log.debug("");
+	}
+	
 }

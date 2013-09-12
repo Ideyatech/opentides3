@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.opentides.bean.Tag;
 import org.opentides.dao.TagDao;
 import org.opentides.service.TagService;
@@ -19,6 +20,9 @@ import org.springframework.stereotype.Service;
 @Service(value="tagService")
 public class TagServiceImpl extends BaseCrudServiceImpl<Tag>
                 implements TagService {
+	
+	private static Logger _log = Logger.getLogger(TagServiceImpl.class);
+	
 	@Autowired
 	public void setTagDao(TagDao tagDao) {
 		this.dao = tagDao;
@@ -36,11 +40,14 @@ public class TagServiceImpl extends BaseCrudServiceImpl<Tag>
 			
 			if(!(StringUtil.isEmpty(item) || "".equals(item))) {
 				if(existingTag != null) {
+					_log.debug("Saving existing TAG: " + existingTag.getTagText());
 					tags.add(existingTag);
 				} else {
 					Tag tag = new Tag();
 					tag.setTagText(item);
+					save(tag);
 					tags.add(tag);
+					_log.debug("Creating new TAG: " + tag.getTagText());
 				}
 			}
 			

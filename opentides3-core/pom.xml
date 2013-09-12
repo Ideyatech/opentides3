@@ -3,7 +3,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>core</artifactId>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 	<name>Opentides 3 Core</name>
 
 	<properties>
@@ -392,7 +392,7 @@
 				<artifactId>tomcat-maven-plugin</artifactId>
 				<configuration>
 					<url>http://localhost:8080/manager/html/</url>
-					<path>/opentides3</path>
+					<path>/opentides</path>
 					<username>ideyatech</username>
 					<password>ideyatech</password>
 				</configuration>

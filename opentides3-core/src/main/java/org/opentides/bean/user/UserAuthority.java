@@ -33,7 +33,7 @@ import org.opentides.bean.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-@AttributeOverride(name = "ID", column = @Column(insertable = false, updatable = false))
+@AttributeOverride(name = "id", column = @Column(insertable = false, updatable = false))
 @Table(name = "USER_AUTHORITY")
 @Auditable
 public class UserAuthority extends BaseEntity {

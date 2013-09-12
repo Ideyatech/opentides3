@@ -38,6 +38,7 @@ import org.opentides.annotation.field.DropDown;
 import org.opentides.annotation.field.RadioButton;
 import org.opentides.bean.AnnotationDefinition;
 import org.opentides.bean.BaseEntity;
+import org.opentides.bean.FieldDefinition;
 import org.opentides.bean.SystemCodes;
 
 /**
@@ -148,5 +149,17 @@ public final class AnnotationUtil {
 		AnnotationDefinition annotationDefn = new AnnotationDefinition(te.toString());
 		annotationDefn.setParams(params);
 		return annotationDefn;
+	}
+	
+	public static void buildListDefinition(FieldDefinition field, 
+			AnnotationDefinition annotation) {
+		Map<String, Object> params = annotation.getParams();
+		if (params.get("category") != null && 
+			!StringUtil.isEmpty(params.get("category").toString())) {
+			field.setCategory(params.get("category").toString());
+		} else if(params.get("options") != null && 
+			!StringUtil.isEmpty(params.get("options").toString()) ){
+			field.setOptions(params.get("options").toString().split(","));			
+		}
 	}
 }

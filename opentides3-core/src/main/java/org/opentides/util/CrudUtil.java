@@ -120,12 +120,14 @@ public class CrudUtil {
 		// 5 - collection vs object -> Invalid or convert collection to object. 
 		
 		for (AuditableField property:auditableFields) {
+			_log.debug("Building update message for field " + property.getFieldName());
 			Object oldValue = retrieveNullableObjectValue(oldObject, property.getFieldName());
 			Object newValue = retrieveNullableObjectValue(newObject, property.getFieldName());			
 			oldValue = normalizeValue(oldValue);
 			newValue = normalizeValue(newValue);
 			
 			if (oldValue.getClass() != newValue.getClass()) {
+				_log.debug("Old object: " + oldValue);
 				_log.warn("Unable to compare ["+property.getFieldName()+"] for audit logging due to difference in datatype. " +
 						"oldValue is ["+oldValue.getClass()+"] and newValue is ["+newValue.getClass()+"]");
 				continue;
@@ -135,14 +137,21 @@ public class CrudUtil {
 					Collection.class.isAssignableFrom(newValue.getClass())) {
 				if ( ((Collection) oldValue).isEmpty() &&
 					 ((Collection) newValue).isEmpty() ) {
+					_log.debug("Old and New values are empty");
 					continue;
-				}				
-				List addedList = new ArrayList();
-				addedList.addAll((List) newValue);
-				addedList.removeAll((List) oldValue);
-				List removedList = new ArrayList();
-				removedList.addAll((List) oldValue);
-				removedList.removeAll((List) newValue);	
+				}	
+				_log.debug("Old and New values are not empty");
+				List addedList = new ArrayList((Collection)newValue);
+				//Collection addedCollection = (Collection)newValue;
+				//addedCollection.removeAll((Collection)oldValue);
+				//addedList.addAll(new ArrayList((Collection)newValue));
+				addedList.removeAll(new ArrayList((Collection) oldValue));
+				
+				List removedList = new ArrayList((Collection)oldValue);
+				//removedList.addAll((List) oldValue);
+				removedList.removeAll(new ArrayList((Collection)newValue));
+				//Collection removedCollection = (Collection)oldValue;
+				//removedCollection.remove((Collection)newValue);
 				if (!addedList.isEmpty() || !removedList.isEmpty()) {
 					if (count > 0) 
 						message.append("and ");					

@@ -374,7 +374,9 @@ public class BaseEntityDaoJpaImpl<T extends BaseEntity,ID extends Serializable>
 	@Override
 	public final void saveEntityModel(final T obj) {
 		// if class is auditable, we need to ensure userId is present
+		_log.debug("Saving object " + obj.getClass());
 		setAuditUserId(obj);
+		_log.debug("User ID is " + obj.getAuditUserId());
 		if (obj.isNew())
 			getEntityManager().persist(obj);
 		else {
