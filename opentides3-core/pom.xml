@@ -282,7 +282,6 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>${junit-version}</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -356,8 +355,6 @@
 			<groupId>imageutil</groupId>
 			<artifactId>imageutil</artifactId>
 			<version>1.0</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/ImageUtil.jar</systemPath>
 		</dependency>
 
 	</dependencies>
@@ -396,6 +393,7 @@
 					<username>ideyatech</username>
 					<password>ideyatech</password>
 				</configuration>
+				<version>1.1</version>
 			</plugin>
 		</plugins>
 	</build>
