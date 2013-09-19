@@ -518,17 +518,12 @@ public class Ninja extends BaseEntity implements Commentable, Taggable, Photoabl
 	// End of Commentable requirements 
 	
 	// Taggable requirements
-	
 	@OneToMany(cascade=CascadeType.PERSIST, fetch = FetchType.LAZY)
 	@JoinTable(name = "NINJA_TAG", 
 			joinColumns = { @JoinColumn(name = "NINJA_ID", referencedColumnName = "ID") }, 
 			inverseJoinColumns = @JoinColumn(name = "TAG_ID")
 	)
 	private List<Tag> tags;
-
-	@Column(name="CS_TAGS")
-	@JsonView(Views.FormView.class)
-	private String csTags;
 
 	@Override
 	public List<Tag> getTags() {
@@ -539,18 +534,155 @@ public class Ninja extends BaseEntity implements Commentable, Taggable, Photoabl
 	public void setTags(List<Tag> tags) {
 		this.tags = tags;
 	}
-	
-	@Override
-	public String getCsTags() {
-		return csTags;
-	}
-	
-	@Override
-	public void setCsTags(String csTags) {
-		this.csTags = csTags;
-	}
-	
-	
 	// End of Taggable requirements 
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((active == null) ? 0 : active.hashCode());
+		result = prime * result + ((age == null) ? 0 : age.hashCode());
+		result = prime * result
+				+ ((attachment == null) ? 0 : attachment.hashCode());
+		result = prime * result + ((avatar == null) ? 0 : avatar.hashCode());
+		result = prime * result
+				+ ((comments == null) ? 0 : comments.hashCode());
+		result = prime * result
+				+ ((description == null) ? 0 : description.hashCode());
+		result = prime * result + ((email == null) ? 0 : email.hashCode());
+		result = prime * result
+				+ ((firstName == null) ? 0 : firstName.hashCode());
+		result = prime * result + ((gender == null) ? 0 : gender.hashCode());
+		result = prime * result
+				+ ((joinDate == null) ? 0 : joinDate.hashCode());
+		result = prime * result
+				+ ((lastName == null) ? 0 : lastName.hashCode());
+		result = prime * result
+				+ ((nextFight == null) ? 0 : nextFight.hashCode());
+		result = prime * result + ((partner == null) ? 0 : partner.hashCode());
+		result = prime * result + ((photos == null) ? 0 : photos.hashCode());
+		result = prime * result + ((score == null) ? 0 : score.hashCode());
+		result = prime * result
+				+ ((secretCode == null) ? 0 : secretCode.hashCode());
+		result = prime * result
+				+ ((sellingPrice == null) ? 0 : sellingPrice.hashCode());
+		result = prime * result
+				+ ((skillSet == null) ? 0 : skillSet.hashCode());
+		result = prime * result + ((status == null) ? 0 : status.hashCode());
+		result = prime * result + ((tags == null) ? 0 : tags.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Ninja other = (Ninja) obj;
+		if (active == null) {
+			if (other.active != null)
+				return false;
+		} else if (!active.equals(other.active))
+			return false;
+		if (age == null) {
+			if (other.age != null)
+				return false;
+		} else if (!age.equals(other.age))
+			return false;
+		if (attachment == null) {
+			if (other.attachment != null)
+				return false;
+		} else if (!attachment.equals(other.attachment))
+			return false;
+		if (avatar == null) {
+			if (other.avatar != null)
+				return false;
+		} else if (!avatar.equals(other.avatar))
+			return false;
+		if (comments == null) {
+			if (other.comments != null)
+				return false;
+		} else if (!comments.equals(other.comments))
+			return false;
+		if (description == null) {
+			if (other.description != null)
+				return false;
+		} else if (!description.equals(other.description))
+			return false;
+		if (email == null) {
+			if (other.email != null)
+				return false;
+		} else if (!email.equals(other.email))
+			return false;
+		if (firstName == null) {
+			if (other.firstName != null)
+				return false;
+		} else if (!firstName.equals(other.firstName))
+			return false;
+		if (gender == null) {
+			if (other.gender != null)
+				return false;
+		} else if (!gender.equals(other.gender))
+			return false;
+		if (joinDate == null) {
+			if (other.joinDate != null)
+				return false;
+		} else if (!joinDate.equals(other.joinDate))
+			return false;
+		if (lastName == null) {
+			if (other.lastName != null)
+				return false;
+		} else if (!lastName.equals(other.lastName))
+			return false;
+		if (nextFight == null) {
+			if (other.nextFight != null)
+				return false;
+		} else if (!nextFight.equals(other.nextFight))
+			return false;
+		if (partner == null) {
+			if (other.partner != null)
+				return false;
+		} else if (!partner.equals(other.partner))
+			return false;
+		if (photos == null) {
+			if (other.photos != null)
+				return false;
+		} else if (!photos.equals(other.photos))
+			return false;
+		if (score == null) {
+			if (other.score != null)
+				return false;
+		} else if (!score.equals(other.score))
+			return false;
+		if (secretCode == null) {
+			if (other.secretCode != null)
+				return false;
+		} else if (!secretCode.equals(other.secretCode))
+			return false;
+		if (sellingPrice == null) {
+			if (other.sellingPrice != null)
+				return false;
+		} else if (!sellingPrice.equals(other.sellingPrice))
+			return false;
+		if (skillSet == null) {
+			if (other.skillSet != null)
+				return false;
+		} else if (!skillSet.equals(other.skillSet))
+			return false;
+		if (status == null) {
+			if (other.status != null)
+				return false;
+		} else if (!status.equals(other.status))
+			return false;
+		if (tags == null) {
+			if (other.tags != null)
+				return false;
+		} else if (!tags.equals(other.tags))
+			return false;
+		return true;
+	}
 	
 }
