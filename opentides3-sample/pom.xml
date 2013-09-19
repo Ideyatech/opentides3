@@ -6,6 +6,10 @@
   <packaging>war</packaging>
   <name>Opentides 3 Sample</name>
   <description>Sample web application using Opentides</description>
+  
+  <properties>
+  	<mysql-connector-java-version>5.1.21</mysql-connector-java-version>
+  </properties>
  
   <dependencies>
 	<dependency>
