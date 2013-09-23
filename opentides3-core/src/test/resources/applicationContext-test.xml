@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd                 
+						http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd                 
+						http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+						http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd">
+
+	
+	<bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<property name="basename" value="messages"></property>
+	</bean>
+	
+	<bean class="org.mockito.Mockito" id="systemCodesService" name="systemCodesService" factory-method="mock" >
+		<constructor-arg value="org.opentides.service.SystemCodesService" name="classToMock">
+		</constructor-arg>
+	</bean>
+	
+	<bean class="org.mockito.Mockito" id="ninjaService" name="ninjaService" factory-method="mock" >
+		<constructor-arg value="com.ideyatech.service.NinjaService" name="classToMock">
+		</constructor-arg>
+	</bean>
+	
+	<bean class="org.mockito.Mockito" id="transactionManager" name="transactionManager" factory-method="mock" >
+		<constructor-arg value="org.springframework.transaction.PlatformTransactionManager" name="classToMock">
+		</constructor-arg>
+	</bean>
+	
+	<bean class="org.opentides.web.controller.NinjaCrudController" id="ninjaCrudController"/>
+	
+	<util:properties id="applicationSettings" location="classpath:application-settings-test.properties" />
+	
+</beans>

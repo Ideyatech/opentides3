@@ -346,7 +346,7 @@ public abstract class BaseCrudController<T extends BaseEntity> {
 		} else {
 			command = formBackingObject(request, response);
 			uiModel.addAttribute("update", "ot3-update hide");
-			uiModel.addAttribute("update", "ot3-add");
+			uiModel.addAttribute("add", "ot3-add");
 			uiModel.addAttribute("method", "post");
 		}
 		uiModel.addAttribute("formCommand", command);

@@ -49,7 +49,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 @Auditable
 public class Ninja extends BaseEntity implements Commentable, Taggable, Photoable {
 	
-	private static final long serialVersionUID = -4142599915292096152L;
+private static final long serialVersionUID = -4142599915292096152L;
 	
 	// Label: specified
 	// Validation: required
