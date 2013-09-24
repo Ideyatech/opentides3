@@ -18,16 +18,33 @@
  */
 package org.opentides.bean.converter;
 
-import org.opentides.bean.BaseEntity;
-import org.springframework.core.convert.converter.Converter;
+import static org.junit.Assert.*;
 
-/**
- * @author allantan
- *
- */
-public class BaseEntityToStringConverter<S extends BaseEntity> implements Converter<S, String> {
-	public String convert(S source) {
-		if(source.getId() == null) return null;
-        return (String) source.getId().toString();
-    }
+import org.junit.Before;
+import org.junit.Test;
+
+import com.ideyatech.bean.Ninja;
+
+public class BaseEntityToStringConverterTest {
+	
+	private BaseEntityToStringConverter<Ninja> converter;
+	
+	@Before
+	public void init() {
+		converter = new BaseEntityToStringConverter<>();
+	}
+	
+	@Test
+	public void testConvert() {
+		Ninja ninja = new Ninja();
+		ninja.setId(100l);
+		
+		String actual = converter.convert(ninja);
+		assertEquals("100", actual);
+		
+		ninja.setId(null);
+		actual = converter.convert(ninja);
+		assertNull(actual);
+	}
+
 }
