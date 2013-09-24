@@ -32,9 +32,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 
 /**
- * Base class for all controllers that wanted to support comments.
- * 
- * Remember: Command must implement Commentable
+ * Base class for all controllers that want to support comments. Command
+ * object should implement the {@link Commentable} interface.
  * 
  * @author AJ
  */
@@ -70,6 +69,7 @@ public abstract class BaseCommentController<T extends BaseEntity> {
 	 * @param request
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(method = RequestMethod.GET, value="/delete")
 	public @ResponseBody Map<String, Object>
 	deleteComment(HttpServletRequest request) {
@@ -105,6 +105,7 @@ public abstract class BaseCommentController<T extends BaseEntity> {
 	 * 			- text<br />
 	 * 			- timestamp<br />
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(method = RequestMethod.POST, produces = "application/json")
 	public @ResponseBody Map<String, Object>
 		sendComment(@Valid Comment command, BindingResult result, HttpServletRequest request) {
@@ -179,6 +180,11 @@ public abstract class BaseCommentController<T extends BaseEntity> {
 
 	}
 	
+	/**
+	 * Method that attaches the autowired comment validator to the binder
+	 * 
+	 * @param binder
+	 */
 	@InitBinder
 	protected void initBinder(WebDataBinder binder){
 		binder.setValidator(commentValidator);

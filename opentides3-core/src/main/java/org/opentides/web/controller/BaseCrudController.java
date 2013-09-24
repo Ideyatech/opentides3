@@ -131,11 +131,9 @@ public abstract class BaseCrudController<T extends BaseEntity> {
 	private TransactionTemplate transactionTemplate;
 
 	/**
-	 * Attaches the validator if available.
+	 * Method that attaches the autowired form validator to the binder
 	 * 
-	 * @param request
 	 * @param binder
-	 * @throws Exception
 	 */
 	@InitBinder
 	protected void initBinder(WebDataBinder binder) throws Exception {
@@ -283,8 +281,8 @@ public abstract class BaseCrudController<T extends BaseEntity> {
 	 * @param request
 	 * @param response
 	 * @return Map containing the following:<br />
-	 * 			{@value} command - the command object<br />
-	 * 			{@value} messages - list of MessageResponse
+	 * 			command - the command object<br />
+	 * 			messages - list of {@link MessageResponse }
 	 */
 	@RequestMapping(value = "{id}", method = { RequestMethod.PUT,
 			RequestMethod.POST }, produces = "application/json")

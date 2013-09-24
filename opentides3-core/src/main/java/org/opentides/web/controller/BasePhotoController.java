@@ -43,12 +43,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 
 /**
- * Base class for all controllers that wanted to support Photo functionalities.
+ * Base class for all controllers that want to support photo functionalities. Command
+ * object should implement the {@link Photoable} interface.
  * Refer to UserPhotoController for how to use.
- * 
- * Remember: Command must implement Photoable
- * 
- * As much as you do not understand the code below, so do I.
  * 
  * @author AJ
  */
@@ -77,6 +74,13 @@ public abstract class BasePhotoController<T extends BaseEntity> {
 	
 	protected BaseCrudService<T> service;
 	
+	/**
+	 * This method handlers loads the command object given the 
+	 * passed parameter {@code id}
+	 * 
+	 * @param id
+	 * @return the command object
+	 */
 	@ModelAttribute("command") 
 	protected abstract T getPhotoable(Long id);
 	
@@ -170,17 +174,41 @@ public abstract class BasePhotoController<T extends BaseEntity> {
 		
 	}
 	
+	/**
+	 * This displays the page for uploading a photo.
+	 * 
+	 * @return the upload page
+	 */
 	@RequestMapping(method = RequestMethod.GET, value="/upload")
 	public String displayUploadForm(){
 		return uploadPage;
 	}
 	
+	/**
+	 * This displays the form used to adjust the uploaded photo.
+	 * 
+	 * @return the from for adjusting a photo
+	 */
 	@RequestMapping(method = RequestMethod.GET, value="/adjust")
 	public String displayAdjustForm(){
 		return adjustPhoto;
 	}
 	
 	
+	/**
+	 * The method handler is responsible for processing the command object.
+	 * It saves the uploaded photo and creates the corresponsing thumbnails
+	 * of sizes L, M, S and XS. It also populates the {@link PhotoInfo }
+	 * of the uploaded photo.
+	 * 
+	 * @param command object the implements the {@link Photoable} interface
+	 * @param result
+	 * @param request
+	 * @return Map containing the following:<br />
+	 * 			messages - list of {@code MessageResponse }
+	 * 
+	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(method = RequestMethod.POST, value="/upload", produces = "application/json")
 	public @ResponseBody Map<String, Object>
 		processUpload(@Valid @ModelAttribute("command") T command,
@@ -223,6 +251,16 @@ public abstract class BasePhotoController<T extends BaseEntity> {
 		return model;
 	}
 	
+	/**
+	 * The method handler is responsible for processing the thumbnails of the adjusted 
+	 * command object.
+	 *  
+	 * @param request containing the parameters {@code x} coordinate, {@code y} coordinate, 
+	 * {@code x2} coordinate, {@code y2} coordinate and the {@code rw} resized width of the photo 
+	 * @param command object the implements the {@link Photoable} interface
+	y * @return Map containing the following:<br />
+	 * 			messages - list of {@code MessageResponse }
+	 */
 	@RequestMapping(method = RequestMethod.POST, value="/adjust", produces = "application/json")
 	public @ResponseBody Map<String, Object>
 		processAdjust(HttpServletRequest request, @ModelAttribute("command") T command) {
@@ -258,6 +296,12 @@ public abstract class BasePhotoController<T extends BaseEntity> {
 		return model;
 	}
 	
+	/**
+	 * This is a post construct that set ups the service for the
+	 * child service class.
+	 * 
+	 * @throws Exception
+	 */
 	@SuppressWarnings("unchecked")
 	@PostConstruct
 	public void afterPropertiesSet() throws Exception {
@@ -299,6 +343,11 @@ public abstract class BasePhotoController<T extends BaseEntity> {
 
 	}
 	
+	/**
+	 * Method that attaches the autowired photo validator to the binder
+	 * 
+	 * @param binder
+	 */
 	@InitBinder
 	protected void initBinder(WebDataBinder binder){
 		binder.setValidator(photoValidator);
