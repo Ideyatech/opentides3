@@ -68,6 +68,7 @@ public class DBEvolveManager {
 		if (version==null) {
 			// no version available yet, lets create one
 			version = new Sequence("DB_VERSION");
+			version.setValue(0l);
 			sequenceDao.saveEntityModel(version);
 			// initialize default admin user
 			userGroupService.setupAdminGroup();
