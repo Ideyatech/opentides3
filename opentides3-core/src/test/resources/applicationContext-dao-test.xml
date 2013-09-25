@@ -49,6 +49,27 @@
 		</property>
 	</bean>
 	
+	<!-- 
+		For testing AuthenticationDaoJdbcImpl using an actual MySQL database.
+		The configuration is the same as the one found in applicationContext-security.xml 
+	-->
+	<bean id="authenticationService"
+		class="org.opentides.persistence.user.AuthenticationDaoJdbcImpl">
+		<property name="dataSource">
+			<ref bean="dataSource" />
+		</property>
+		<property name="usersByUsernameQuery">
+			<value>SELECT username,password,enabled FROM USERS WHERE username=?
+			</value>
+		</property>
+		<property name="authoritiesByUsernameQuery">
+			<value>SELECT u.username,authority from USERS as u 
+					inner join USER_GROUP g on u.userid=g.user_id 
+					inner join USER_AUTHORITY a on g.group_id = a.usergroup_id
+					where u.username=?</value>
+		</property>
+	</bean>
+	
 	<context:annotation-config /> 
 	<context:component-scan base-package="com.ideyatech.dao.impl" />
 	
