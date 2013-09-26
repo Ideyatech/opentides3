@@ -16,18 +16,33 @@
    specific language governing permissions and limitations
    under the License.    
  */
-package org.opentides.bean.converter;
-
-import org.opentides.bean.BaseEntity;
-import org.springframework.core.convert.converter.Converter;
+package org.opentides.persistence.evolve;
 
 /**
- * @author allantan
+ * To be use by {@link DBEvolveManagerTest}
+ * @author gino
  *
  */
-public class BaseEntityToStringConverter<S extends BaseEntity> implements Converter<S, String> {
-	public String convert(S source) {
-		if(source.getId() == null) return null;
-        return (String) source.getId().toString();
-    }
+public class DBEvolve001 implements DBEvolve {
+
+	@Override
+	public int compareTo(DBEvolve o) {
+		return 1;
+	}
+
+	@Override
+	public void execute() {
+		
+	}
+
+	@Override
+	public String getDescription() {
+		return "DBEvolve version 1";
+	}
+
+	@Override
+	public int getVersion() {
+		return 1;
+	}
+
 }

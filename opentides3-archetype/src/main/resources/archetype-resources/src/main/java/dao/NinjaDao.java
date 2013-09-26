@@ -22,7 +22,7 @@
 package ${package}.dao;
 
 import org.opentides.dao.BaseEntityDao;
-import ${groupId}.bean.Ninja;
+import ${package}.bean.Ninja;
 import org.springframework.stereotype.Repository;
 
 
