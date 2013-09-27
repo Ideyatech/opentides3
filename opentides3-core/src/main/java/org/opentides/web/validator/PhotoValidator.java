@@ -20,7 +20,7 @@ package org.opentides.web.validator;
 
 import java.io.IOException;
 
-import org.opentides.bean.impl.Photoable;
+import org.opentides.bean.Photoable;
 import org.opentides.util.ImageUtil;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -66,7 +66,7 @@ public class PhotoValidator implements Validator {
 				if (photo.getSize() < 1024 * 1024 * 10) {
 
 					try {
-						if (!ImageUtil.isValidSize(photo.getInputStream())) {
+						if (!ImageUtil.isLargerThan(photo.getInputStream(), 200,200) ) {
 							errors.rejectValue("photo", "photo.invalid-image-size",
 									"Image size must be at least 200 x 200 pixels");
 						}

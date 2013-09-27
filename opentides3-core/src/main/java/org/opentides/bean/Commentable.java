@@ -1,8 +1,6 @@
-package org.opentides.bean.impl;
+package org.opentides.bean;
 
 import java.util.List;
-
-import org.opentides.bean.Comment;
 
 /**
  * 

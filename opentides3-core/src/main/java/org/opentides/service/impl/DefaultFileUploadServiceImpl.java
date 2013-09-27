@@ -28,8 +28,8 @@ public class DefaultFileUploadServiceImpl implements FileUploadService {
 	@Autowired
 	private FileInfoService fileInfoService;
 	
-	public FileInfo upload(MultipartFile file, FileInfo fileInfo) {
-
+	public FileInfo upload(MultipartFile file) {
+		FileInfo fileInfo = new FileInfo();
 		fileInfo.setFilename(file.getOriginalFilename());
 		fileInfo.setFileSize(Long.valueOf(file.getSize()));
 		fileInfo.setOriginalFileName(file.getOriginalFilename());

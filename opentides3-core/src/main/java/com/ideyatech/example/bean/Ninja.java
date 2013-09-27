@@ -27,12 +27,12 @@ import org.opentides.annotation.field.TextField;
 import org.opentides.annotation.field.Validation;
 import org.opentides.bean.BaseEntity;
 import org.opentides.bean.Comment;
-import org.opentides.bean.PhotoInfo;
+import org.opentides.bean.Commentable;
+import org.opentides.bean.ImageInfo;
+import org.opentides.bean.Photoable;
 import org.opentides.bean.SystemCodes;
 import org.opentides.bean.Tag;
-import org.opentides.bean.impl.Commentable;
-import org.opentides.bean.impl.Photoable;
-import org.opentides.bean.impl.Taggable;
+import org.opentides.bean.Taggable;
 import org.opentides.util.StringUtil;
 import org.opentides.web.json.Views;
 import org.springframework.web.multipart.MultipartFile;
@@ -46,7 +46,7 @@ import com.fasterxml.jackson.annotation.JsonView;
  */ 
 @Entity  
 @Table(name="NINJA")
-@Auditable(excludeFields="skillSet")
+@Auditable
 public class Ninja extends BaseEntity implements Photoable, Commentable, Taggable {
 	
 	private static final long serialVersionUID = -4142599915292096152L;
@@ -462,17 +462,12 @@ public class Ninja extends BaseEntity implements Photoable, Commentable, Taggabl
 			joinColumns = { @JoinColumn(name = "NINJA_ID", referencedColumnName = "ID") }, 
 			inverseJoinColumns = @JoinColumn(name = "PHOTO_ID")
 	)
-	private List<PhotoInfo> photos;
+	private List<ImageInfo> photos;
 	private transient MultipartFile photo;
 	
 	@Override
-	public List<PhotoInfo> getPhotos() {
+	public List<ImageInfo> getPhotos() {
 		return photos;
-	}
-	
-	@Override
-	public void setPhotos(List<PhotoInfo> photos) {
-		this.photos = photos;
 	}
 	
 	@Override
@@ -480,15 +475,18 @@ public class Ninja extends BaseEntity implements Photoable, Commentable, Taggabl
 		return photo;
 	}
 	
-	@Override
+	public void setPhotos(List<ImageInfo> photos) {
+		this.photos = photos;
+	}	
+	
 	public void setPhoto(MultipartFile photo) {
 		this.photo = photo;
 	}
 	
-	public void addPhoto(PhotoInfo photoInfo){
+	public void addPhoto(ImageInfo photoInfo){
 		synchronized (photoInfo) {
 			if (photos == null){
-				photos = new ArrayList<PhotoInfo>();
+				photos = new ArrayList<ImageInfo>();
 			}
 			photos.add(photoInfo);
 		}
@@ -540,12 +538,10 @@ public class Ninja extends BaseEntity implements Photoable, Commentable, Taggabl
 		this.tags = tags;
 	}
 	
-	@Override
 	public String getCsTags() {
 		return csTags;
 	}
 	
-	@Override
 	public void setCsTags(String csTags) {
 		this.csTags = csTags;
 	}

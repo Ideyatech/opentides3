@@ -18,12 +18,12 @@
  */
 package org.opentides.dao.impl;
 
-import org.opentides.bean.PhotoInfo;
-import org.opentides.dao.PhotoInfoDao;
+import org.opentides.bean.ImageInfo;
+import org.opentides.dao.ImageInfoDao;
 import org.springframework.stereotype.Repository;
 
-@Repository(value="photoInfoDao")
-public class PhotoInfoDaoJpaImpl extends BaseEntityDaoJpaImpl<PhotoInfo, Long> implements
-                PhotoInfoDao {
+@Repository(value="imageInfoDao")
+public class ImageInfoDaoJpaImpl extends BaseEntityDaoJpaImpl<ImageInfo, Long> implements
+                ImageInfoDao {
 
 }
