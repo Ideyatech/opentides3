@@ -11,7 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 /**
- * Photo implementation for BaseUser
+ * This is the controller class for {@link BaseUser} photo. It extends the
+ * {@link BasePhotoController} class. Mapped to {@code /user/photo}.
  * 
  * @author AJ
  */
@@ -19,8 +20,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller 
 public class UserPhotoController extends BasePhotoController<BaseUser> {
 
-	/*
-	 * Define the JSP page, may not be required for Photo implementation
+
+	/**
+	 * Defines the upload and adjust photo pages to {@code /base/user-photo-upload } and {@code /base/user-photo-adjust } respectively.
 	 */
 	@PostConstruct
 	public void init() {
@@ -28,8 +30,14 @@ public class UserPhotoController extends BasePhotoController<BaseUser> {
 		adjustPhoto = "/base/user-photo-adjust";
 	}
 	
-	/*
-	 * Define the command, must implement Photoable
+	
+	/* (non-Javadoc)
+	 * @see org.opentides.web.controller.BasePhotoController#getPhotoable(java.lang.Long)
+	 */
+	/**
+	 * Defines the command object using the parameter {@code id}.
+	 * 
+	 * @param id the id of the command object
 	 */
 	@Override
 	@ModelAttribute("command")
