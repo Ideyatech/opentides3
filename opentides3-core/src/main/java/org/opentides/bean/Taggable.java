@@ -1,8 +1,6 @@
-package org.opentides.bean.impl;
+package org.opentides.bean;
 
 import java.util.List;
-
-import org.opentides.bean.Tag;
 
 /**
  * 
@@ -12,6 +10,5 @@ import org.opentides.bean.Tag;
 public interface Taggable {
 	
 	public List<Tag> getTags();
-	public void setTags(List<Tag> tags);
-	
+	public void setTags(List<Tag> tags);	
 }

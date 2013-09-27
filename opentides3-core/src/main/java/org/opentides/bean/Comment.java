@@ -13,7 +13,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import org.opentides.bean.impl.Uploadable;
 import org.opentides.bean.user.BaseUser;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -31,6 +30,17 @@ public class Comment extends BaseEntity implements Uploadable {
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="AUTHOR_ID", nullable=false)
 	private BaseUser author;
+	
+	
+	@OneToMany(cascade=CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinTable(name = "COMMENT_FILE", 
+			joinColumns = { @JoinColumn(name = "COMMENT_ID", referencedColumnName = "ID") }, 
+			inverseJoinColumns = @JoinColumn(name = "FILE_ID")
+	)	
+	private List<FileInfo> files;
+	
+	private transient MultipartFile file;
+
 	
 	public String getText() {
 		return text;
@@ -55,22 +65,9 @@ public class Comment extends BaseEntity implements Uploadable {
 	
 	// Uploadable requirements
 	
-	@OneToMany(cascade=CascadeType.ALL, fetch = FetchType.LAZY)
-	@JoinTable(name = "COMMENT_FILE", 
-			joinColumns = { @JoinColumn(name = "COMMENT_ID", referencedColumnName = "ID") }, 
-			inverseJoinColumns = @JoinColumn(name = "FILE_ID")
-	)
-	private List<FileInfo> files;
-	private transient MultipartFile file;
-	
 	@Override
 	public List<FileInfo> getFiles() {
 		return files;
-	}
-	
-	@Override
-	public void setFiles(List<FileInfo> files) {
-		this.files = files;
 	}
 	
 	@Override
@@ -78,7 +75,10 @@ public class Comment extends BaseEntity implements Uploadable {
 		return file;
 	}
 	
-	@Override
+	public void setFiles(List<FileInfo> files) {
+		this.files = files;
+	}
+	
 	public void setFile(MultipartFile file) {
 		this.file = file;
 	}

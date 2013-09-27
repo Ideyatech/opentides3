@@ -96,10 +96,10 @@ public class StringUtilTest {
     
     @Test
     public final void testConvertToDouble() {
-        Assert.assertEquals(new Double(3.21), StringUtil.convertToDouble("3.21", 0));
-        Assert.assertEquals(new Double(-1.2d), StringUtil.convertToDouble("abc", -1.2));
-        Assert.assertEquals(new Double (0.0d), StringUtil.convertToDouble("0", -1));
-        Assert.assertEquals(new Double(32.1d), StringUtil.convertToDouble("032.1", -1));
+        Assert.assertEquals(3.21d, StringUtil.convertToDouble("3.21", 0),0);
+        Assert.assertEquals(-1.2d, StringUtil.convertToDouble("abc", -1.2),0);
+        Assert.assertEquals(0.0d, StringUtil.convertToDouble("0", -1),0);
+        Assert.assertEquals(32.1d, StringUtil.convertToDouble("032.1", -1),0);
     }
     
     @Test
