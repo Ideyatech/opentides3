@@ -47,7 +47,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 @Entity  
 @Table(name="NINJA")
 @Auditable
-public class Ninja extends BaseEntity implements Commentable, Taggable, Photoable {
+public class Ninja extends BaseEntity implements Commentable, Photoable, Taggable {
 	
 	private static final long serialVersionUID = -4142599915292096152L;
 	
@@ -175,6 +175,17 @@ public class Ninja extends BaseEntity implements Commentable, Taggable, Photoabl
 	
 	// file upload
 	private String attachment;
+	
+	@OneToMany(cascade = CascadeType.REMOVE)
+	@JoinTable(name="NINJA_TAGS",
+	joinColumns = { 
+			@JoinColumn(name="NINJA_ID", referencedColumnName="ID") 
+	},
+	inverseJoinColumns = {
+			@JoinColumn(name="TAG_ID")
+	})
+	@JsonView(Views.FormView.class)
+	private List<Tag> tags;
 
 	/**
 	 * @return the firstName
@@ -515,21 +526,6 @@ public class Ninja extends BaseEntity implements Commentable, Taggable, Photoabl
 		this.comments = comments;
 	}
 	
-	// End of Commentable requirements 
-	
-	// Taggable requirements
-	
-	@OneToMany(cascade=CascadeType.PERSIST, fetch = FetchType.LAZY)
-	@JoinTable(name = "NINJA_TAG", 
-			joinColumns = { @JoinColumn(name = "NINJA_ID", referencedColumnName = "ID") }, 
-			inverseJoinColumns = @JoinColumn(name = "TAG_ID")
-	)
-	private List<Tag> tags;
-
-	@Column(name="CS_TAGS")
-	@JsonView(Views.FormView.class)
-	private String csTags;
-
 	@Override
 	public List<Tag> getTags() {
 		return tags;
@@ -540,17 +536,6 @@ public class Ninja extends BaseEntity implements Commentable, Taggable, Photoabl
 		this.tags = tags;
 	}
 	
-	@Override
-	public String getCsTags() {
-		return csTags;
-	}
-	
-	@Override
-	public void setCsTags(String csTags) {
-		this.csTags = csTags;
-	}
-	
-	
-	// End of Taggable requirements 
+	// End of Commentable requirements 
 	
 }

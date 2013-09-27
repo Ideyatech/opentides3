@@ -14,7 +14,4 @@ public interface Taggable {
 	public List<Tag> getTags();
 	public void setTags(List<Tag> tags);
 	
-	public String getCsTags();
-	public void setCsTags(String csTags);
-
 }
