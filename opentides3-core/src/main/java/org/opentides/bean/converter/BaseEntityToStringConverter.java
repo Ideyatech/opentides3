@@ -27,6 +27,7 @@ import org.springframework.core.convert.converter.Converter;
  */
 public class BaseEntityToStringConverter<S extends BaseEntity> implements Converter<S, String> {
 	public String convert(S source) {
+		if(source.getId() == null) return null;
         return (String) source.getId().toString();
     }
 }

@@ -77,39 +77,63 @@ public abstract class BaseCrudController<T extends BaseEntity> {
 
 	private static Logger _log = Logger.getLogger(BaseCrudController.class);
 
+	/**
+	 * This is the page size for the search results table. This defaults to 20 results per table.
+	 */
 	@Value("#{applicationSettings.pageSize}")
 	protected Integer pageSize = 20;
 
+	/**
+	 * 
+	 */
 	@Value("#{applicationSettings.linksCount}")
 	protected Integer numLinks = 10;
 
+	/**
+	 * 
+	 */
 	@Autowired
 	protected MessageSource messageSource;
 
+	/**
+	 * 
+	 */
 	@Autowired
 	protected BeanFactory beanFactory;
 
+	/**
+	 * 
+	 */
 	@Autowired
 	protected SystemCodesService systemCodesService;
 
-	// contains the class type of the bean
+	/**
+	 * This attribute contains the class type of the bean.
+	 */
 	protected Class<T> entityBeanType;
 
+	/**
+	 * 
+	 */
 	protected BaseCrudService<T> service;
 
+	/**
+	 * 
+	 */
 	protected Validator formValidator;
 
+	/**
+	 * 
+	 */
 	protected String singlePage = "";
 
 	// single TransactionTemplate shared amongst all methods in this instance
 	private TransactionTemplate transactionTemplate;
 
 	/**
-	 * Attaches the validator if available.
+	 * Method that attaches the autowired form validator to the binder
 	 * 
-	 * @param request
 	 * @param binder
-	 * @throws Exception
 	 */
 	@InitBinder
 	protected void initBinder(WebDataBinder binder) throws Exception {
@@ -155,14 +179,17 @@ public abstract class BaseCrudController<T extends BaseEntity> {
 	}
 
 	/**
-	 * This is the method handler when user requests to search via json.
+	 * This is the method handler when user requests to search via JSON.
+	 * The JSON returned contains the attributes that are annotated with
+	 * {@link Views.SearchView}. The implemented <code>preSearch</code> and <code>postSearch</code>
+	 * of the child class will also be called accordingly.
 	 * 
 	 * @param command
 	 * @param bindingResult
 	 * @param uiModel
 	 * @param request
 	 * @param response
-	 * @return
+	 * @return <code>SearchResults</code> containing the results
 	 */
 	@RequestMapping(method = RequestMethod.GET, produces = "application/json")
 	@ResponseView(Views.SearchView.class)
@@ -179,7 +206,11 @@ public abstract class BaseCrudController<T extends BaseEntity> {
 	/**
 	 * This is the entry point of a CRUD page which loads the search page.
 	 * 
+	 * @param command
+	 * @param bindingResult
 	 * @param uiModel
+	 * @param request
+	 * @param response
 	 * @return
 	 */
 	@RequestMapping(method = RequestMethod.GET)
@@ -209,11 +240,19 @@ public abstract class BaseCrudController<T extends BaseEntity> {
 	}
 
 	/**
-	 * Saves the form.
+	 * 
+	 * This is the method handler that persists/create new data. The <code>command</code> object is
+	 * binded to the form with the name <code>formCommand</code> from the view. It returns
+	 * a map consisting of the command object and the success messages.
 	 * 
 	 * @param command
+	 * @param bindingResult
+	 * @param uiModel
 	 * @param request
-	 * @return
+	 * @param response
+	 * @return Map containing the following:<br />
+	 * 			command - the command object<br />
+	 * 			messages - list of MessageResponse
 	 */
 	@RequestMapping(method = RequestMethod.POST, produces = "application/json")
 	public final @ResponseBody
@@ -229,6 +268,22 @@ public abstract class BaseCrudController<T extends BaseEntity> {
 		return model;
 	}
 
+	/**
+	 * This is the method handler that updates persisted data. The <code>command</code> object is
+	 * binded to the form with the name <code>formCommand</code> from the view. The  
+	 * data is loaded from the database through the path variable <code>id</code>. It returns
+	 * a map consisting of the command object and the success messages.
+	 * 
+	 * @param command
+	 * @param id
+	 * @param bindingResult
+	 * @param uiModel
+	 * @param request
+	 * @param response
+	 * @return Map containing the following:<br />
+	 * 			command - the command object<br />
+	 * 			messages - list of {@link MessageResponse }
+	 */
 	@RequestMapping(value = "{id}", method = { RequestMethod.PUT,
 			RequestMethod.POST }, produces = "application/json")
 	public final @ResponseBody
@@ -246,6 +301,16 @@ public abstract class BaseCrudController<T extends BaseEntity> {
 		return model;
 	}
 
+	/**
+	 * This is the method handler that loads the entity using the path variable
+	 * <code>id</code>.
+	 * 
+	 * @param id
+	 * @param uiModel
+	 * @param request
+	 * @param response
+	 * @return command object
+	 */
 	@RequestMapping(value = "{id}", method = RequestMethod.GET, produces = "application/json")
 	@ResponseView(Views.FormView.class)
 	public final @ResponseBody
@@ -260,6 +325,13 @@ public abstract class BaseCrudController<T extends BaseEntity> {
 		return command;
 	}
 
+	/**
+	 * @param id
+	 * @param uiModel
+	 * @param request
+	 * @param response
+	 * @return
+	 */
 	@RequestMapping(value = "{id}", method = RequestMethod.GET)
 	public String getHtml(@PathVariable("id") Long id, Model uiModel,
 			HttpServletRequest request, HttpServletResponse response) {
@@ -272,7 +344,7 @@ public abstract class BaseCrudController<T extends BaseEntity> {
 		} else {
 			command = formBackingObject(request, response);
 			uiModel.addAttribute("update", "ot3-update hide");
-			uiModel.addAttribute("update", "ot3-add");
+			uiModel.addAttribute("add", "ot3-add");
 			uiModel.addAttribute("method", "post");
 		}
 		uiModel.addAttribute("formCommand", command);
@@ -285,6 +357,20 @@ public abstract class BaseCrudController<T extends BaseEntity> {
 		return singlePage;
 	}
 
+	/**
+	 * This is the method handler that deletes persisted data. It
+	 * deletes the data with the path variable <code>id</code> from the database.
+	 * 
+	 * @param id
+	 * @param command
+	 * @param bindingResult
+	 * @param uiModel
+	 * @param request
+	 * @param response
+	 * @return Map containing the following:<br />
+	 * 			{@value} command - the command object<br />
+	 * 			{@value} messages - list of MessageResponse
+	 */
 	@RequestMapping(value = "{id}", method = RequestMethod.DELETE, produces = "application/json")
 	public final @ResponseBody
 	Map<String, Object> delete(@PathVariable("id") Long id, T command,
@@ -314,7 +400,6 @@ public abstract class BaseCrudController<T extends BaseEntity> {
 	}
 
 	/**
-	 * Override this method to initialize values of new objects.
 	 * 
 	 * @param request
 	 * @param response
@@ -350,6 +435,13 @@ public abstract class BaseCrudController<T extends BaseEntity> {
 
 	}
 
+	/**
+	 * @param command
+	 * @param bindingResult
+	 * @param uiModel
+	 * @param request
+	 * @param response
+	 */
 	private final void createTx(final T command, final BindingResult bindingResult,
 			final Model uiModel, final HttpServletRequest request,
 			final HttpServletResponse response) {
@@ -367,13 +459,23 @@ public abstract class BaseCrudController<T extends BaseEntity> {
 	 * Override this method to perform pre-processing on new data being saved.
 	 * 
 	 * @param command
+	 * @param bindingResult
+	 * @param uiModel
+	 * @param request
+	 * @param response
 	 */
 	protected void preCreate(T command, BindingResult bindingResult,
 			Model uiModel, HttpServletRequest request,
 			HttpServletResponse response) {
 		preCreate(command);
 	}
-
+	
+	
+	/**
+	 * Override this method to perform pre-processing on new data being saved.
+	 * 
+	 * @param command
+	 */
 	protected void preCreate(T command) {
 	}
 
@@ -381,14 +483,22 @@ public abstract class BaseCrudController<T extends BaseEntity> {
 	 * Override this method to perform post-processing on new data being saved.
 	 * 
 	 * @param command
+	 * @param bindingResult
+	 * @param uiModel
+	 * @param request
+	 * @param response
 	 */
-
 	protected void postCreate(T command, BindingResult bindingResult,
 			Model uiModel, HttpServletRequest request,
 			HttpServletResponse response) {
 		postCreate(command);
 	}
 
+	/**
+	 * Override this method to perform post-processing on new data being saved.
+	 * 
+	 * @param command
+	 */
 	protected void postCreate(T command) {
 	}
 
@@ -424,6 +534,11 @@ public abstract class BaseCrudController<T extends BaseEntity> {
 		preUpdate(command);
 	}
 
+	/**
+	 * Override this method to perform pre-processing on data being updated.
+	 * 
+	 * @param command
+	 */
 	protected void preUpdate(T command) {
 	}
 
@@ -439,9 +554,21 @@ public abstract class BaseCrudController<T extends BaseEntity> {
 		postUpdate(command);
 	}
 
+	/**
+	 * Override this method to perform post-processing on data being updated.
+	 * 
+	 * @param command
+	 */
 	protected void postUpdate(T command) {
 	}
 
+	/**
+	 * @param id
+	 * @param bindingResult
+	 * @param uiModel
+	 * @param request
+	 * @param response
+	 */
 	private final void deleteTx(final Long id, final BindingResult bindingResult,
 			final Model uiModel, final HttpServletRequest request,
 			final HttpServletResponse response) {
@@ -465,6 +592,11 @@ public abstract class BaseCrudController<T extends BaseEntity> {
 		preDelete(id);
 	}
 
+	/**
+	 * Override this method to perform pre-processing on data being deleted.
+	 *  
+	 * @param id
+	 */
 	protected void preDelete(Long id) {
 	}
 
@@ -473,13 +605,17 @@ public abstract class BaseCrudController<T extends BaseEntity> {
 	 * 
 	 * @param command
 	 */
-
 	protected void postDelete(Long id, BindingResult bindingResult,
 			Model uiModel, HttpServletRequest request,
 			HttpServletResponse response) {
 		postDelete(id);
 	}
 
+	/**
+	 * Override this method to perform post-processing on data being deleted.
+	 * 
+	 * @param id
+	 */
 	protected void postDelete(Long id) {
 	}
 
@@ -496,6 +632,12 @@ public abstract class BaseCrudController<T extends BaseEntity> {
 		preSearch(command);
 	}
 
+	/**
+	 * Override this method to perform pre-processing on data search.
+	 * 
+	 * @param command
+	 * @return SearchResults
+	 */
 	protected void preSearch(T command) {
 	}
 
@@ -503,18 +645,30 @@ public abstract class BaseCrudController<T extends BaseEntity> {
 	 * Override this method to perform post-processing on data search.
 	 * 
 	 * @param command
+	 * @return SearchResults
 	 */
-
 	protected SearchResults<T> postSearch(T command, SearchResults<T> result,
 			BindingResult bindingResult, Model uiModel,
 			HttpServletRequest request, HttpServletResponse response) {
 		return postSearch(result);
 	}
 
+	/**
+	 * Override this method to perform post-processing on data search.
+	 * 
+	 * @param result
+	 * @return SearchResults
+	 */
 	protected SearchResults<T> postSearch(SearchResults<T> result) {
 		return result;
 	}
 
+	/**
+	 * This is a post construct that set ups the service and validator for the
+	 * child service class.
+	 * 
+	 * @throws Exception
+	 */
 	@SuppressWarnings("unchecked")
 	@PostConstruct
 	public void afterPropertiesSet() throws Exception {
@@ -557,6 +711,15 @@ public abstract class BaseCrudController<T extends BaseEntity> {
 		this.transactionTemplate = new TransactionTemplate(txManager);
 	}
 
+	/**
+	 * This is the method handler that performs search requests for a given command object.
+	 * It can start searching from a specific page given by the parameter <code>p</code>.
+	 * If no page is given, it defaults to the first page of the results.
+	 * 
+	 * @param command
+	 * @param request
+	 * @return SSearchResults
+	 */
 	protected final SearchResults<T> search(T command,
 			HttpServletRequest request) {
 		SearchResults<T> results = new SearchResults<T>(pageSize, numLinks);
@@ -591,7 +754,7 @@ public abstract class BaseCrudController<T extends BaseEntity> {
 	 * Performs record matching count, used for search.
 	 * 
 	 * @param command
-	 * @return
+	 * @return the count
 	 */
 	protected long countAction(T command) {
 		if (command == null) {

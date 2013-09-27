@@ -69,6 +69,7 @@ public class CacheUtil {
 		excludeFields.add("createDate");
 		excludeFields.add("updateDate");
 		excludeFields.add("createdBy");
+		excludeFields.add("version");
 	}
 	/**
 	 * Helper method to retrieve a readable name for a given class.
@@ -192,6 +193,9 @@ public class CacheUtil {
             	pf = new AuditableField("","");
             primaryField.put(obj.getClass(), pf);
             ret = primaryField.get(obj.getClass());
+            if(_log.isDebugEnabled()) {
+            	_log.debug("Primary Field is " + ret.getTitle() + ":" + ret.getFieldName());
+            }
 		}
 		return ret;				
 	}

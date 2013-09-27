@@ -24,8 +24,8 @@ import org.opentides.bean.user.BaseUser;
 import org.opentides.bean.user.UserCredential;
 import org.opentides.exception.CodeGenerationException;
 
+import com.ideyatech.bean.Ninja;
 import com.ideyatech.bean.UserCriteria;
-import com.ideyatech.example.bean.Ninja;
 
 /**
  * @author allanctan
@@ -36,7 +36,7 @@ public class CrudUtilTest {
 	@Test
 	public void testBuildCreateMessage() throws ParseException {
 		SystemCodes sc = new SystemCodes("category","key","value");
-		String expected = "<p class='add-message'>Added new System Codes Value:<span class='primary-field'>value</span> " +
+		String expected = "<p class='add-message'>Added new System Codes with Value:<span class='primary-field'>value</span> " +
 				"with the following: Key=<span class='field-value'>key</span> and Category=<span class='field-value'>category</span> </p>";
 		Assert.assertEquals(expected,
 				CrudUtil.buildCreateMessage(sc));
@@ -44,9 +44,8 @@ public class CrudUtilTest {
 		// added date formatting
 		sc.setCreateDate(new Date());		
 		String cDate = DateUtil.dateToString(sc.getCreateDate(), "EEE, dd MMM yyyy HH:mm:ss z");
-		String expected2 = "<p class='add-message'>Added new System Codes Value:<span class='primary-field'>value</span> " +
+		String expected2 = "<p class='add-message'>Added new System Codes with Value:<span class='primary-field'>value</span> " +
 				"with the following: " +
-				"Create Date=<span class='field-value'>"+cDate+"</span> and "+
 				"Key=<span class='field-value'>key</span> and Category=<span class='field-value'>category</span> </p>";
 		Assert.assertEquals(expected2,
 				CrudUtil.buildCreateMessage(sc));
@@ -55,9 +54,8 @@ public class CrudUtilTest {
 		Date date = DateUtil.stringToDate("03/12/2013", "MM/dd/yyyy");
 		SystemCodes sc3 = new SystemCodes("category","key","value");
 		sc3.setCreateDate(date);		
-		String expected3 = "<p class='add-message'>Added new System Codes Value:<span class='primary-field'>value</span> " +
+		String expected3 = "<p class='add-message'>Added new System Codes with Value:<span class='primary-field'>value</span> " +
 				"with the following: " +
-				"Create Date=<span class='field-value'>Tue, 12 Mar 2013</span> and "+
 				"Key=<span class='field-value'>key</span> and Category=<span class='field-value'>category</span> </p>";
 		Assert.assertEquals(expected3,
 				CrudUtil.buildCreateMessage(sc3));
@@ -70,13 +68,13 @@ public class CrudUtilTest {
 		SystemCodes newsc = new SystemCodes("categorynew","keynew","value");
 		SystemCodes samesc = new SystemCodes("categoryold","keyold","value");	
 		SystemCodes emptysc = new SystemCodes("categorynew","keynew","");
-		String expected = "<p class='change-message'>Changed System Codes Value:<span class='primary-field'>value</span> " +
+		String expected = "<p class='change-message'>Changed System Codes with Value:<span class='primary-field'>value</span> " +
 				"with the following: Key from <span class='field-value-from'>keyold</span> to <span class='field-value-to'>keynew</span> " +
 				"and Category from <span class='field-value-from'>categoryold</span> " +
 				"to <span class='field-value-to'>categorynew</span> </p>";
 		Assert.assertEquals(expected,
 				CrudUtil.buildUpdateMessage(oldsc, newsc));
-		String expected2 = "<p class='change-message'>Changed System Codes Value:<span class='primary-field'>value</span> " +
+		String expected2 = "<p class='change-message'>Changed System Codes with Value:<span class='primary-field'>value</span> " +
 				"with the following: Value <span class='field-value-removed'>value</span> is removed </p>";		
 		Assert.assertEquals(expected2,
 				CrudUtil.buildUpdateMessage(newsc, emptysc));
@@ -129,7 +127,7 @@ public class CrudUtilTest {
 		sametc.setFirstName("Samurai");
 		sametc.setLastName("Ken");
 		
-		String expected = "<p class='change-message'>Changed Ninja Complete Name:<span class='primary-field'>Samurai Ken</span> with the following: " +
+		String expected = "<p class='change-message'>Changed Ninja with Name:<span class='primary-field'>Samurai Ken</span> with the following: " +
 				"Status from <span class='field-value-from'>keyold:old</span> to <span class='field-value-to'>keynew:new</span> </p>";
 		Assert.assertEquals(expected,
 				CrudUtil.buildUpdateMessage(oldtc, newtc));
@@ -140,7 +138,7 @@ public class CrudUtilTest {
 	@Test
 	public void testBuildDeleteMessage() {
 		SystemCodes oldsc = new SystemCodes("categoryold","keyold","old");
-		String expected = "<p class='delete-message'>Deleted System Codes Value:<span class='primary-field'>old</span></p>";
+		String expected = "<p class='delete-message'>Deleted System Codes with Value:<span class='primary-field'>old</span></p>";
 		Assert.assertEquals(expected,
 				CrudUtil.buildDeleteMessage(oldsc));
 		

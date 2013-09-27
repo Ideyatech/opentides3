@@ -63,7 +63,7 @@
 		<div class="clear"></div>
 		
 		<div class="table-wrapper-2 overflow-hidden">
-			<div class="table-wrapper">
+			<div class="table-wrapper">	
 				<table id="ninja-results" class="footable table-bordered table-striped table-hover table-condensed" data-page="${results.currPage}" >
 					<thead>
 						<tr class="table-header">
@@ -193,6 +193,8 @@
 			$("#ninja-body").RESTful();
 			
 			$('body').tooltip({selector: '.edit-action, .remove-action'});
+			
+			$('.footable').footable();
 		})
 		.on("click", '.adjust-photo', opentides3.showAdjustPhoto)
 		.on("click", '.upload-photo', opentides3.showUploadPhoto);

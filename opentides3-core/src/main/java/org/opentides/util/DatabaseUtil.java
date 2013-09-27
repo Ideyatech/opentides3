@@ -79,7 +79,7 @@ public class DatabaseUtil {
      */
     private static void initialize() {
         try { 
-        	if (emf == null || !emf.isOpen()) {
+//        	if (emf == null || !emf.isOpen()) {
             	Properties propertiesMap = XMLPersistenceUtil.getProperties("META-INF/persistence.xml", persistenceUnitName);        	
 //            	if (StringUtil.isEmpty(jndiName)) {
     	            propertiesMap.put("javax.persistence.jdbc.driver", driverClassName);
@@ -94,7 +94,7 @@ public class DatabaseUtil {
 //            		propertiesMap.put("javax.persistence.nonJtaDataSource", jndiName);
 //               	}
             	emf = Persistence.createEntityManagerFactory(persistenceUnitName, propertiesMap);
-        	}
+//        	}
         	entityManager = emf.createEntityManager();        	
         } catch (Throwable ex) {
             // Make sure you log the exception, as it might be swallowed

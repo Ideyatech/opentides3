@@ -9,3 +9,4 @@
 velocity.log*
 .project
 .settings/**
+**/rebel.xml*

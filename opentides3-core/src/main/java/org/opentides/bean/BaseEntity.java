@@ -30,6 +30,7 @@ import javax.persistence.MappedSuperclass;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
+import javax.persistence.Version;
 
 import org.apache.log4j.Logger;
 import org.opentides.bean.user.SessionUser;
@@ -84,6 +85,10 @@ public abstract class BaseEntity implements Serializable {
      */
     @Column(name = "CREATEDBY")
     private String createdBy;
+    
+    @Version
+    @Column(name = "VERSION")
+    private Long version;
     
     /**
      * Random id generated used for session mapping.
@@ -274,8 +279,23 @@ public abstract class BaseEntity implements Serializable {
     public final void setAuditUsername(final String auditUsername) {
         this.auditUsername = auditUsername;
     }
+    
 
-    /**
+	/**
+	 * @return the version
+	 */
+	public Long getVersion() {
+		return version;
+	}
+
+	/**
+	 * @param version the version to set
+	 */
+	public void setVersion(Long version) {
+		this.version = version;
+	}
+
+	/**
      * Sets the userId based on Acegi Context
      */
     public final void setUserId() {

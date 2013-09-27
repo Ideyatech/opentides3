@@ -102,6 +102,7 @@ public class AuditLogInterceptor extends EmptyInterceptor {
 		        	// Use the id and class to get the pre-update state from the database
             		em = DatabaseUtil.getEntityManager();
 		        	BaseEntity old = (BaseEntity) em.find(entity.getClass(), auditable.getId());
+		        	
 		        	if (old == null)
 		        		return false; // old object is not yet persisted?
 		        	synchronized(oldies) {
@@ -184,5 +185,12 @@ public class AuditLogInterceptor extends EmptyInterceptor {
 	            oldies.clear();
     		}
         } 
-    }    
+    }
+	
+	@Override
+	public void onCollectionUpdate(Object collection, Serializable key)
+			throws CallbackException {
+		_log.debug("This is a test to determine if a collection is updated");
+	}
+	
 }
