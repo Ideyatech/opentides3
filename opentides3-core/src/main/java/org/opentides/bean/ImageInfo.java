@@ -25,7 +25,7 @@ public class ImageInfo extends BaseEntity {
 	@Column(name = "FILE_SIZE", nullable = false)
 	private Long fileSize;
 
-	@Column(name = "key")
+	@Column(name = "KEY_")
 	private String key;
 
 	public ImageInfo() {

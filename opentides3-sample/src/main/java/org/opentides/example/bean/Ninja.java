@@ -35,10 +35,12 @@ import org.opentides.bean.Tag;
 import org.opentides.bean.Taggable;
 import org.opentides.util.StringUtil;
 import org.opentides.web.json.Views;
+import org.opentides.web.json.serializer.TagsSerializer;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.annotation.JsonView;
 //import org.opentides.annotation.Secure;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 /**
  * This is the master class for testing all annotations
@@ -47,15 +49,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 @Entity  
 @Table(name="NINJA")
 @Auditable
-<<<<<<< HEAD
 public class Ninja extends BaseEntity implements Commentable, Photoable, Taggable {
-=======
-<<<<<<< HEAD:opentides3-core/src/main/java/com/ideyatech/example/bean/Ninja.java
-public class Ninja extends BaseEntity implements Photoable, Commentable, Taggable {
-=======
-public class Ninja extends BaseEntity implements Commentable, Taggable, Photoable {
->>>>>>> 96427fea2785a1adc7675a749bdf99e9551c975d:opentides3-sample/src/main/java/org/opentides/example/bean/Ninja.java
->>>>>>> fa4fd293aeb4fbbfe304b9bcb1ccd92ae0883f40
 	
 	private static final long serialVersionUID = -4142599915292096152L;
 	
@@ -475,13 +469,13 @@ public class Ninja extends BaseEntity implements Commentable, Taggable, Photoabl
 	}
 	
 	// Photoable requirements
-	
 	@OneToMany(cascade=CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinTable(name = "NINJA_PHOTO", 
 			joinColumns = { @JoinColumn(name = "NINJA_ID", referencedColumnName = "ID") }, 
 			inverseJoinColumns = @JoinColumn(name = "PHOTO_ID")
 	)
 	private List<ImageInfo> photos;
+	
 	private transient MultipartFile photo;
 	
 	@Override
@@ -532,6 +526,7 @@ public class Ninja extends BaseEntity implements Commentable, Taggable, Photoabl
 		this.comments = comments;
 	}
 	
+	@JsonSerialize(using = TagsSerializer.class)
 	@Override
 	public List<Tag> getTags() {
 		return tags;
@@ -541,20 +536,5 @@ public class Ninja extends BaseEntity implements Commentable, Taggable, Photoabl
 	public void setTags(List<Tag> tags) {
 		this.tags = tags;
 	}
-	
-<<<<<<< HEAD
-	// End of Commentable requirements 
-=======
-	public String getCsTags() {
-		return csTags;
-	}
-	
-	public void setCsTags(String csTags) {
-		this.csTags = csTags;
-	}
-	
-	
-	// End of Taggable requirements 
->>>>>>> fa4fd293aeb4fbbfe304b9bcb1ccd92ae0883f40
 	
 }
