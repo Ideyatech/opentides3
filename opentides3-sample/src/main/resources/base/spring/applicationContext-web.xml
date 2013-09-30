@@ -48,11 +48,6 @@
 				<bean class="org.opentides.bean.converter.StringArrayToListOfTagsConverter"/>
 			</set>
 		</property>
-		<property name="formatters">
-			<set>
-				<ref bean="tagsFormatter"/>
-			</set>
-		</property>
 	</bean>
 
 	<!-- Handles HTTP GET requests for /resources/** by efficiently serving 

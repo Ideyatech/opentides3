@@ -24,8 +24,8 @@
 
 	<persistence-unit name="ninjaPU" transaction-type="RESOURCE_LOCAL">
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
-		<jar-file>/WEB-INF/lib/core-3.0.1-SNAPSHOT.jar</jar-file>
-		<!-- <class>org.opentides.bean.AuditLog</class>
+		<!-- <jar-file>/WEB-INF/lib/core-3.0.1-SNAPSHOT.jar</jar-file> -->
+		<class>org.opentides.bean.AuditLog</class>
 		<class>org.opentides.bean.BaseEntity</class>
 		<class>org.opentides.bean.Comment</class>
 		<class>org.opentides.bean.FileInfo</class>
@@ -37,7 +37,7 @@
 		<class>org.opentides.bean.user.PasswordReset</class>
 		<class>org.opentides.bean.user.UserAuthority</class>
 		<class>org.opentides.bean.user.UserCredential</class>
-		<class>org.opentides.bean.user.UserGroup</class> -->
+		<class>org.opentides.bean.user.UserGroup</class>
 		<properties>
 			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect" />
 			<property name="hibernate.hbm2ddl.auto" value="update" />
