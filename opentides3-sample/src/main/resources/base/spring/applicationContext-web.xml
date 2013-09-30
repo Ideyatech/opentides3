@@ -46,7 +46,6 @@
 				<ref bean="stringToBaseEntityConverter" />
 				<ref bean="stringToSystemCodesConverter" />
 				<bean class="org.opentides.bean.converter.StringArrayToListOfTagsConverter"/>
-				<bean class="org.opentides.bean.converter.ListOfTagsToCommaSeparatedStringConverter"/>
 			</set>
 		</property>
 		<property name="formatters">
