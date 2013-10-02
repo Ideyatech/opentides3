@@ -27,7 +27,13 @@ public class ImageInfo extends BaseEntity {
 
 	@Column(name = "KEY_")
 	private String key;
-
+	
+	/**
+	 * To determine if it is the primary image
+	 */
+	@Column(name = "IS_PRIMARY")
+	private boolean isPrimary;
+	
 	public ImageInfo() {
 		super();
 	}
@@ -92,5 +98,20 @@ public class ImageInfo extends BaseEntity {
 	 */
 	public final void setKey(String key) {
 		this.key = key;
-	}	
+	}
+	
+	/**
+	 * @return the isPrimary
+	 */
+	public boolean getIsPrimary() {
+		return isPrimary;
+	}
+
+	/**
+	 * @param isPrimary the isPrimary to set
+	 */
+	public void setIsPrimary(boolean isPrimary) {
+		this.isPrimary = isPrimary;
+	}
+
 }

@@ -36,6 +36,7 @@ import org.opentides.bean.Taggable;
 import org.opentides.util.StringUtil;
 import org.opentides.web.json.Views;
 import org.opentides.web.json.serializer.TagsSerializer;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.annotation.JsonView;
@@ -471,8 +472,9 @@ public class Ninja extends BaseEntity implements Commentable, Photoable, Taggabl
 	// Photoable requirements
 	@OneToMany(cascade=CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinTable(name = "NINJA_PHOTO", 
-			joinColumns = { @JoinColumn(name = "NINJA_ID", referencedColumnName = "ID") }, 
-			inverseJoinColumns = @JoinColumn(name = "PHOTO_ID")
+			joinColumns = { @JoinColumn(name = "NINJA_ID", referencedColumnName = "ID")}, 
+			inverseJoinColumns = {
+						@JoinColumn(name = "PHOTO_ID")}
 	)
 	private List<ImageInfo> photos;
 	
@@ -481,6 +483,18 @@ public class Ninja extends BaseEntity implements Commentable, Photoable, Taggabl
 	@Override
 	public List<ImageInfo> getPhotos() {
 		return photos;
+	}
+	
+	@Override
+	public ImageInfo getPrimaryPhoto() {
+		if(!CollectionUtils.isEmpty(this.photos)) {
+			for(ImageInfo imageInfo : this.photos) {
+				if(imageInfo.getIsPrimary()) {
+					return imageInfo;
+				}
+			}
+		}
+		return null;
 	}
 	
 	@Override

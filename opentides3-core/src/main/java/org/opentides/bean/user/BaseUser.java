@@ -641,6 +641,11 @@ public class BaseUser extends BaseEntity implements Photoable {
 		return photo;
 	}
 	
+	@Override
+	public ImageInfo getPrimaryPhoto() {
+		return null;
+	}
+	
 	public void setPhotos(List<ImageInfo> photos) {
 		this.photos = photos;
 	}

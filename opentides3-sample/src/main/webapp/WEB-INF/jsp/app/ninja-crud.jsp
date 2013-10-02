@@ -103,6 +103,9 @@
 								<td>
 									<i class='icon-pencil edit-action' data-id='{{id}}' data-title="<spring:message code="label.edit" />"></i>
 									<i class='icon-trash remove-action' data-id='{{id}}' data-title="<spring:message code="label.delete" />"></i>
+									<a data-url="${home}/image/upload?imageId={{primaryPhoto.id}}&className=Ninja&classId={{id}}" class="upload-photo">
+										<i class="icon-upload"></i> <spring:message code="photo.change-photo" />
+									</a>
 								</td>
 							</tr>
 						</script>
@@ -114,14 +117,7 @@
 									</a>
 								</td>
 								<td>
-									<div class="btn-group">
-									  <img class="img-polaroid" src="${home}/ninja/photo?id=${record.id}&size=xs"/>
-									  <a class="btn dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></a>
-									  <ul class="dropdown-menu">
-									    <li><a data-url="${home}/ninja/photo/upload?id=${record.id}" class="upload-photo"><i class="icon-upload"></i> <spring:message code="photo.change-photo" /></a></li>
-									    <li><a data-url="${home}/ninja/photo/adjust?id=${record.id}" class="adjust-photo"><i class="icon-edit"></i> <spring:message code="photo.edit-thumbnail" /></a></li>
-									  </ul>
-									</div>
+								  <img class="img-polaroid" src="${home}/image/${record.primaryPhoto.id}?c=32"/>
 								</td>
 			                	<td><c:out value="${record.email}" /></td>
 			                	<td><c:out value="${record.age}" /></td>
@@ -131,6 +127,9 @@
 								<td>
 									<i class='icon-pencil edit-action' data-id='${record.id}' data-title="<spring:message code="label.edit" />"></i>
 									<i class='icon-trash remove-action' data-id='${record.id}' data-title="<spring:message code="label.delete" />"></i>
+									<a data-url="${home}/image/upload?imageId=${record.primaryPhoto.id}&className=Ninja&classId=${record.id}" class="upload-photo">
+										<i class="icon-upload"></i>
+									</a>
 								</td>
 							</tr>
 						</c:forEach>
@@ -184,7 +183,6 @@
 
 <div class="adjust-photo-modal modal hide fade" data-width="760" tabindex="-1"></div>
 <div class="upload-photo-modal modal hide fade" data-width="760" tabindex="-2"></div>
-	
 </div>
 
 <app:footer>
@@ -194,7 +192,7 @@
 			
 			$('body').tooltip({selector: '.edit-action, .remove-action'});
 			
-			$('.footable').footable();
+			//$('.footable').footable();
 		})
 		.on("click", '.adjust-photo', opentides3.showAdjustPhoto)
 		.on("click", '.upload-photo', opentides3.showUploadPhoto);

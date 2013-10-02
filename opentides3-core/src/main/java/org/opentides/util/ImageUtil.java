@@ -30,11 +30,14 @@ import javax.imageio.ImageIO;
 
 import org.apache.log4j.Logger;
 
-/*
+/**
  * Static helper functions for image manipulation.
  * 
  * ImageUtil.java
- * @author allanctan, ajalbaniel
+ * 
+ * @author allanctan
+ * @author ajalbaniel
+ * @author gino
  * 
  * Created on Apr 12, 2011 9:13:36 PM
  */
@@ -66,7 +69,7 @@ public class ImageUtil {
 			File oFile = new File(fullPath);
 			if (file.exists())
 				return FileUtil.readFileAsBytes(file);
-			else if (!StringUtil.isEmpty(command) && oFile.exists()) {
+			else if (oFile.exists()) {
 				// file doesn't exist yet, needs pre-processing				
 				Image img = ImageLoader.fromFile(oFile);
 				Image rez = ImageUtil.transformImage(img, command);				
@@ -78,6 +81,71 @@ public class ImageUtil {
 			_log.error("Failed to load image.", e);
 			return null;
 		}
+	}
+	
+	/**
+	 * Crop the current image. Set parameter replaceOriginal to true to replace the original image.
+	 *  
+	 * @param fullPath the full path of the original image
+	 * @param newWidth 
+	 * @param newHeight
+	 * @param fromX
+	 * @param fromY
+	 * @param replaceOriginal
+	 * @throws IOException
+	 */
+	public static void cropImage(String fullPath, int newWidth, int newHeight,
+			int fromX, int fromY, boolean replaceOriginal) throws IOException {
+		
+		String command = "" + newWidth + "x" + newHeight + "-c@" + fromX + "x" + fromY;
+		if(_log.isDebugEnabled()) 
+			_log.debug("Crop image using command " + command);
+		
+		File file = new File(fullPath);
+		if(replaceOriginal) {
+			Image currentImage = ImageLoader.fromFile(file);
+			Image transformedImage = transformImage(currentImage, command);
+			transformedImage.writeToFile(new File(fullPath));
+			replaceCachedImages(fullPath);
+		} else {
+			loadImage(fullPath, command);
+		}
+	}
+	
+	/**
+	 * Replace all cached images related to the image in the full path
+	 * 
+	 * @param fullPath
+	 * @throws IOException 
+	 */
+	private static void replaceCachedImages(String fullPath) throws IOException {
+		File file = new File(fullPath);
+		Image currentImage = ImageLoader.fromFile(file);
+		int idx = file.getName().lastIndexOf(".");
+		String filename = file.getName().substring(0, idx);
+		
+		File directory = file.getParentFile();
+		for(File fileEntry : directory.listFiles()) {
+			if (fileEntry.isFile() && fileEntry.getName().contains(filename)
+					&& !fullPath.equals(fileEntry.getPath())) {
+				String filePath = fileEntry.getPath();
+				int dotIdx = filePath.lastIndexOf(".");
+				int underscoreIdx = filePath.lastIndexOf("_");
+				String command = filePath.substring(underscoreIdx + 1, dotIdx);
+				if(isCommandForResizing(command)) {
+					Image transformedImage = transformImage(currentImage, command);
+					transformedImage.writeToFile(fileEntry);
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Return a 1x1 png image
+	 * @return
+	 */
+	public static byte[] getDefaultImage() {
+		return DEFAULT_IMAGE;
 	}
 	
 	/**
@@ -124,16 +192,17 @@ public class ImageUtil {
 	/**
 	 * Transforms the image by resizing or cropping the image.
 	 * Command can be any of the following:
-	 * 32      - resizes the width to 32px and keeps aspect ratio
-	 * x50     - resizes the height to 50px and keep aspect ratio
-	 * 32x50   - converts the image to max of 32px width or 5px height depending 
+	 * <ul>
+	 * <li> 32      - resizes the width to 32px and keeps aspect ratio
+	 * <li> x50     - resizes the height to 50px and keep aspect ratio
+	 * <li> 32x50   - converts the image to max of 32px width or 5px height depending 
 	 *           which produces the larger image
-	 * 32-c    - crops the image to 32 x 32 pixels from the center
-	 * 32x50-c - crops the image to 32 x 50 pixels from the center
-	 * 32x50-c@100x100 - crops the image to 32 x 50 pixels starting at location 100x100
-	 * 
-	 * @param img
-	 * @param command
+	 * <li> 32-c    - crops the image to 32 x 32 pixels from the center
+	 * <li> 32x50-c - crops the image to 32 x 50 pixels from the center
+	 * <li> 32x50-c@100x100 - crops the image to 32 x 50 pixels starting at location 100x100
+	 * </ul>
+	 * @param img the image to transform
+	 * @param command 
 	 */
 	public static final Image transformImage(Image img, String command) {
 		if (StringUtil.isEmpty(command) || img == null)
@@ -209,6 +278,17 @@ public class ImageUtil {
 		if (command.matches("((\\d+)|(\\d+x\\d+))-c(\\@\\d+x\\d+)?")) // for cropping image
 			return true; 
 		return false;		
+	}
+	
+	/**
+	 * Helper method to check if command is for resizing image
+	 * @param command
+	 * @return
+	 */
+	private static final boolean isCommandForResizing(String command) {
+		if (command.matches("(\\d+)|(\\d*x\\d+)") ) // for resizing image
+			return true;
+		return false;
 	}
 	
 }
