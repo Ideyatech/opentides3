@@ -2,7 +2,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
-<%@ taglib prefix="app" uri="http://www.ideyatech.com/tides"%>
+<%@ taglib prefix="tides" uri="http://www.ideyatech.com/tides"%>
+<%@ taglib prefix="app" tagdir="/WEB-INF/tags"%>
 
 <app:header pageTitle="label.account-settings" active="account-settings">
 
@@ -50,9 +51,9 @@
 			<form:form commandName="user" method="POST" enctype="multipart/form-data" action="/account-settings/basic-info">
 				<div class="message-container"></div>
 				
-				<app:input path="firstName" label="label.user.first-name" required="true"/>
-				<app:input path="lastName" label="label.user.last-name" required="true"/>
-				<app:input path="emailAddress" label="label.user.email" required="true"/>
+				<tides:input path="firstName" label="label.user.first-name" required="true"/>
+				<tides:input path="lastName" label="label.user.last-name" required="true"/>
+				<tides:input path="emailAddress" label="label.user.email" required="true"/>
 				<br/>
 		    	<input type="submit" class="btn btn-info" data-submit="save" value="<spring:message code="label.account-settings.save-basic-info" />" />
 				
@@ -63,8 +64,8 @@
 			<h3><spring:message code="label.account-settings.change-password"/></h3>
 			<form:form commandName="user" method="POST" enctype="multipart/form-data" action="/account-settings/change-password">
 				<div class="message-container"></div>
-				<app:input path="credential.newPassword" label="label.user.password" type="password" required="true" />
-				<app:input path="credential.confirmPassword" label="label.user.confirm-password" type="password" required="true" />
+				<tides:input path="credential.newPassword" label="label.user.password" type="password" required="true" />
+				<tides:input path="credential.confirmPassword" label="label.user.confirm-password" type="password" required="true" />
 				<br/>
 		    	<input type="submit" class="btn btn-info" data-submit="save" value="<spring:message code="label.account-settings.change-password"/>" />
 				
@@ -147,7 +148,7 @@
 
 </div>
 
-<app:footer>
+<tides:footer>
 	<script type="text/javascript">
 		$(document).ready(function() {
 			opentides3.jsonForm($('#basic-info form'));
@@ -156,4 +157,4 @@
 		.on("click", '.adjust-photo', opentides3.showAdjustPhoto)
 		.on("click", '.upload-photo', opentides3.showUploadPhoto);;
 	</script>
-</app:footer>
+</tides:footer>

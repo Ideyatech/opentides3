@@ -3,7 +3,8 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
-<%@ taglib prefix="app" uri="http://www.ideyatech.com/tides"%>
+<%@ taglib prefix="tides" uri="http://www.ideyatech.com/tides"%>
+<%@ taglib prefix="app" tagdir="/WEB-INF/tags"%>
 
 <app:header pageTitle="label.login" pageType="anonymous-page" />
 
@@ -84,7 +85,7 @@
 </div>
 
 
-<app:footer>
+<tides:footer>
 
 	<script type="text/javascript">
 		$(document).ready(function() {
@@ -105,4 +106,4 @@
 		});
 	</script>
 	
-</app:footer>
+</tides:footer>

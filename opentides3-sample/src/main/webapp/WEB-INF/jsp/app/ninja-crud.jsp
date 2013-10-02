@@ -2,7 +2,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
-<%@ taglib prefix="app" uri="http://www.ideyatech.com/tides"%>
+<%@ taglib prefix="tides" uri="http://www.ideyatech.com/tides"%>
+<%@ taglib prefix="app" tagdir="/WEB-INF/tags"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <app:header pageTitle="label.ninja" active="ninja">
@@ -36,8 +37,8 @@
 			</div>
 			<div class="search-form collapse">
 				<form:form modelAttribute="searchCommand" id="ninja-search" >
-				    <app:input path="firstName" label="label.ninja.firstName" cssClass="input-block-level"/>
-				    <app:input path="lastName" label="label.ninja.lastName" cssClass="input-block-level"/>
+				    <tides:input path="firstName" label="label.ninja.firstName" cssClass="input-block-level"/>
+				    <tides:input path="lastName" label="label.ninja.lastName" cssClass="input-block-level"/>
 					<hr/>
 					<input type="submit" class="btn btn-info btn-block" data-submit="search" value="<spring:message code="label.search"/>">
 					<button type="button" class="btn btn-link btn-block" data-submit="clear"><spring:message code="label.clear" /></button>
@@ -56,7 +57,7 @@
 			<div class="status" data-display-pagelinks="false" data-display-summary="true" data-summary-message='
 				<spring:message code="message.displaying-x-of-y" arguments="#start,#end,#total,records"/>
 			'>
-				<app:status results="${results}" />
+				<tides:status results="${results}" />
 			</div>
 		</div>
 		
@@ -139,7 +140,7 @@
 		</div>
 
 		<div class="paging clearfix">
-			<app:paging results="${results}"/>
+			<tides:paging results="${results}"/>
 		</div>
 	</div>
 	
@@ -157,17 +158,17 @@
 		<form:form modelAttribute="formCommand" id="ninja-form" cssClass="form-horizontal">
 			<div class="modal-body" style="overflow-x: hidden !important">
 				<div class="message-container"></div>
-				<app:input label="label.ninja.firstName" path="firstName" required="true"/>
-				<app:input label="label.ninja.lastName" path="lastName" required="true" />
-				<app:input label="label.ninja.email" path="email" />
-				<app:input label="label.ninja.age" path="age" />
-				<app:input label="label.ninja.score" path="score" />
-				<app:tokenizer label="label.ninja.tags" path="tags" />
-				<app:input label="label.ninja.joinDate" path="joinDate" datepicker="true" appendIcon="icon-calendar"/>
-				<app:radio label="label.ninja.gender" path="gender" items="${genderList}" itemLabel="value" itemValue="key" required="true"/>
-				<app:select label="label.ninja.status" path="status" items="${statusList}" itemLabel="value" itemValue="key" select2="true" />
-				<app:select label="label.ninja.skills" path="skillSet" items="${skillsList}" itemLabel="value" itemValue="key" multiple="true" select2="true" />
-				<app:checkbox label="label.ninja.active" path="active"/>
+				<tides:input label="label.ninja.firstName" path="firstName" required="true"/>
+				<tides:input label="label.ninja.lastName" path="lastName" required="true" />
+				<tides:input label="label.ninja.email" path="email" />
+				<tides:input label="label.ninja.age" path="age" />
+				<tides:input label="label.ninja.score" path="score" />
+				<tides:tokenizer label="label.ninja.tags" path="tags" />
+				<tides:input label="label.ninja.joinDate" path="joinDate" datepicker="true" appendIcon="icon-calendar"/>
+				<tides:radio label="label.ninja.gender" path="gender" items="${genderList}" itemLabel="value" itemValue="key" required="true"/>
+				<tides:select label="label.ninja.status" path="status" items="${statusList}" itemLabel="value" itemValue="key" select2="true" />
+				<tides:select label="label.ninja.skills" path="skillSet" items="${skillsList}" itemLabel="value" itemValue="key" multiple="true" select2="true" />
+				<tides:checkbox label="label.ninja.active" path="active"/>
 				<br/>
 			</div>
 			<div class="modal-footer">
@@ -185,7 +186,7 @@
 <div class="upload-photo-modal modal hide fade" data-width="760" tabindex="-2"></div>
 </div>
 
-<app:footer>
+<tides:footer>
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$("#ninja-body").RESTful();
@@ -197,4 +198,4 @@
 		.on("click", '.adjust-photo', opentides3.showAdjustPhoto)
 		.on("click", '.upload-photo', opentides3.showUploadPhoto);
 	</script>
-</app:footer>
+</tides:footer>

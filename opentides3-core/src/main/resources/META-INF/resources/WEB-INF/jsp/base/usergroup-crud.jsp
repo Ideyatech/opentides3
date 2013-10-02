@@ -3,7 +3,8 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
-<%@ taglib prefix="app" uri="http://www.ideyatech.com/tides"%>
+<%@ taglib prefix="tides" uri="http://www.ideyatech.com/tides"%>
+<%@ taglib prefix="app" tagdir="/WEB-INF/tags"%>
 
 <app:header pageTitle="label.usergroup" active="usergroups" >
 	<link rel="stylesheet" type="text/css" href="<c:url value='/css/jquery.treeview.css'/>" />
@@ -29,7 +30,7 @@
 				<div class="status" data-display-pagelinks="false" data-display-summary="true" data-summary-message='
 					<spring:message code="message.displaying-x-of-y" arguments="#start,#end,#total,records"/>
 				'>
-					<app:status results="${results}" />
+					<tides:status results="${results}" />
 				</div>
 			</div>
 			
@@ -76,7 +77,7 @@
 			</div>
 	
 			<div class="paging clearfix">
-				<app:paging results="${results}"/>
+				<tides:paging results="${results}"/>
 			</div>
 		</div>
 		
@@ -93,8 +94,8 @@
 			<form:form modelAttribute="formCommand" id="usergroup-form">
 				<div class="message-container"></div>
 				<div>
-					<app:input path="name" label="label.usergroup.name" required="true"/>
-					<app:input path="description" label="label.usergroup.description"/>
+					<tides:input path="name" label="label.usergroup.name" required="true"/>
+					<tides:input path="description" label="label.usergroup.description"/>
 					<div class="control-group">
 						<form:label path="authorityNames" cssClass="control-label"><spring:message code="label.usergroup.actions"/></form:label>
 						<div class="controls">
@@ -142,7 +143,7 @@
 
 </div>
 
-<app:footer>
+<tides:footer>
 	<script type="text/javascript">
 		$(document).ready(function() {
 
@@ -191,4 +192,4 @@
 			
 		});
 	</script>
-</app:footer>
+</tides:footer>

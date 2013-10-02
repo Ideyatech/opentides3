@@ -2,7 +2,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
-<%@ taglib prefix="app" uri="http://www.ideyatech.com/tides"%>
+<%@ taglib prefix="tides" uri="http://www.ideyatech.com/tides"%>
+<%@ taglib prefix="app" tagdir="/WEB-INF/tags"%>
 
 <app:header pageTitle="label.user" active="users">
 
@@ -38,8 +39,8 @@
 			</div>
 			<div class="search-form collapse">
 				<form:form modelAttribute="searchCommand" id="user-search">
-				    <app:input path="firstName" label="label.user.first-name" cssClass="input-block-level"/>
-				    <app:input path="lastName" label="label.user.last-name" cssClass="input-block-level"/>
+				    <tides:input path="firstName" label="label.user.first-name" cssClass="input-block-level"/>
+				    <tides:input path="lastName" label="label.user.last-name" cssClass="input-block-level"/>
 				    <hr/>
 					<input type="submit" class="btn btn-info btn-block" data-submit="search" value="<spring:message code="label.search"/>">
 					<button type="button" class="btn btn-link btn-block" data-submit="clear"><spring:message code="label.clear" /></button>		
@@ -65,7 +66,7 @@
 					data-bootstro-content="Details about your search will be displayed in this area."
 					data-bootstro-step="3" data-bootstro-placement="bottom"
             	>
-            	<app:status results="${results}" />
+            	<tides:status results="${results}" />
             </div>
 	    </div>
 	    
@@ -120,7 +121,7 @@
 		</div>
 		
 		<div class="paging clearfix">
-			<app:paging results="${results}"/>
+			<tides:paging results="${results}"/>
 		</div>
 	</div>
 
@@ -139,15 +140,15 @@
 		<form:form modelAttribute="formCommand" id="user-form" >
 			<div class="modal-body">
 				<div class="message-container"></div>
-				<app:input path="credential.username" label="label.user.username" required="true"/>
-				<app:input path="firstName" label="label.user.first-name" required="true"/>
-				<app:input path="lastName" label="label.user.last-name" required="true"/>
-				<app:input path="emailAddress" label="label.user.email" required="true"/>
-				<app:input path="credential.newPassword" label="label.user.password" type="password" />
-				<app:input path="credential.confirmPassword" label="label.user.confirm-password" type="password" />
-				<app:select label="label.user.groups" path="groups" multiple="true"
+				<tides:input path="credential.username" label="label.user.username" required="true"/>
+				<tides:input path="firstName" label="label.user.first-name" required="true"/>
+				<tides:input path="lastName" label="label.user.last-name" required="true"/>
+				<tides:input path="emailAddress" label="label.user.email" required="true"/>
+				<tides:input path="credential.newPassword" label="label.user.password" type="password" />
+				<tides:input path="credential.confirmPassword" label="label.user.confirm-password" type="password" />
+				<tides:select label="label.user.groups" path="groups" multiple="true"
 					items="${userGroupsList}" itemLabel="name" itemValue="id" select2="true" required="true"/>
-				<app:checkbox label="label.user.active" path="credential.enabled"/>
+				<tides:checkbox label="label.user.active" path="credential.enabled"/>
 				<br/>
 			</div>
 		 	<div class="modal-footer">
@@ -163,7 +164,7 @@
 
 </div>
 
-<app:footer>
+<tides:footer>
   <script type="text/javascript">
   	$(document).ready(function() {
   		$("#user-body").RESTful();
@@ -171,4 +172,4 @@
 		//bootstro.start();
 	});
   </script>
-</app:footer>
+</tides:footer>
