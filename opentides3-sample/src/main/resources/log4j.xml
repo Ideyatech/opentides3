@@ -35,6 +35,10 @@
 	<logger name="org.springframework.web">
 		<level value="debug" />
 	</logger>
+	
+	<logger name="org.springframework.core">
+		<level value="debug" />
+	</logger>
 
 	<logger name="org.springframework.orm.jpa.JpaTransactionManager">
 		<level value="debug" />
@@ -43,7 +47,7 @@
 
 	<!-- Root Logger -->
 	<root>
-		<priority value="info" />
+		<priority value="debug" />
 		<appender-ref ref="console" />
 	</root>
 	

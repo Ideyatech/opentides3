@@ -20,7 +20,7 @@ package org.opentides.web.validator;
 
 import java.io.IOException;
 
-import org.opentides.bean.impl.Photoable;
+import org.opentides.bean.AjaxUpload;
 import org.opentides.util.ImageUtil;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -42,14 +42,14 @@ public class PhotoValidator implements Validator {
 	 * @see org.springframework.validation.Validator#supports(java.lang.Class)
 	 */
 	public boolean supports(Class<?> clazz) {
-		return Photoable.class.isAssignableFrom(clazz);
+		return AjaxUpload.class.isAssignableFrom(clazz);
 	}
 
 	@Override
 	public void validate(Object obj, Errors errors) {
 
-		Photoable photoable = (Photoable) obj;
-		MultipartFile photo = photoable.getPhoto();
+		AjaxUpload ajaxUpload = (AjaxUpload) obj;
+		MultipartFile photo = ajaxUpload.getAttachment();
 
 		if (photo != null && !photo.isEmpty()) {
 
@@ -66,7 +66,7 @@ public class PhotoValidator implements Validator {
 				if (photo.getSize() < 1024 * 1024 * 10) {
 
 					try {
-						if (!ImageUtil.isValidSize(photo.getInputStream())) {
+						if (!ImageUtil.isLargerThan(photo.getInputStream(), 200,200) ) {
 							errors.rejectValue("photo", "photo.invalid-image-size",
 									"Image size must be at least 200 x 200 pixels");
 						}

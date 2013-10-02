@@ -6,19 +6,6 @@
 	 <short-name>tides</short-name>
 	 <uri>http://www.ideyatech.com/tides</uri>
 	 <tag-file>
-	    <name>header</name>
-	    <path>/META-INF/tags/header.tag</path>
-	    <attribute>
-	    	<name>pageTitle</name>
-	    </attribute>
-	    <attribute>
-	    	<name>active</name>
-	    </attribute>
-	    <attribute>
-	    	<name>pageType</name>
-	    </attribute>
-	 </tag-file>
-	 <tag-file>
 	    <name>checkbox</name>
 	    <path>/META-INF/tags/checkbox.tag</path>
 	    <attribute>

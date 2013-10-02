@@ -2,6 +2,7 @@ package org.opentides.service.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -54,6 +55,11 @@ public class TagServiceImpl extends BaseCrudServiceImpl<Tag>
 		}
 		
 		return tags;
+	}
+	
+	@Override
+	public void saveAllTags(Collection<Tag> tags) {
+		getDao().saveAllEntityModel(tags);
 	}
         
 }
