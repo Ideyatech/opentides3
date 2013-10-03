@@ -230,7 +230,7 @@ public class ImageController {
 	 * @param isPrimary if the image is the primary photo of the entity
 	 * @param result contains any validation errors
 	 * @param request
-	 * @return JSON format of a map containing the list of MessageResponse objects. 
+	 * @return JSON format of a map containing the list of MessageResponse objects and the id of the ImageInfo. 
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@RequestMapping(method = RequestMethod.POST, value="/upload/{photoableClassName}/{photoableClassId}", produces = "application/json")
@@ -283,6 +283,7 @@ public class ImageController {
 		
 		messages.addAll(CrudUtil.buildSuccessMessage(imageInfo, "upload-photo", request.getLocale(), messageSource));
 		model.put("messages", messages);
+		model.put("imageId", imageInfo.getId());
 		return model;
 	}
 

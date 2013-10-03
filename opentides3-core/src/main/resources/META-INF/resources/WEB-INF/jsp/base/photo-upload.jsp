@@ -39,11 +39,15 @@
 	</div>
 
 	<div class="modal-footer">
-		<input type="button" class="btn btn-link switch-modal"
+		<input type="button" class="btn btn-link switch-modal" id="switchToAdjust"
 			data-url="${home}/image/adjust?imageId=${imageId}&className=${className}&classId=${classId}"
 			value="<spring:message code="photo.edit-thumbnail" />" />
 		<input type="button" id="start-upload" value="<spring:message code="photo.change-photo" />" class="btn btn-success" />
 	</div>
+	
+	<script type="text/template" class="adjust-data-url">
+		${home}/image/adjust?imageId={{imageId}}&className=${className}&classId=${classId}
+	</script>
 	
 </form:form>
 
@@ -58,7 +62,10 @@
 	   $('#photo-path').val($(this).val());
 	});
 
-	opentides3.jsonForm($('#upload-photo'), function(){
+	opentides3.jsonForm($('#upload-photo'), function(data){
+		//$('#upload-photo').find('.switch-modal').click();
+		var newDataUrl = opentides3.template($('script.adjust-data-url').html(), data);
+		$('#switchToAdjust').data('url', newDataUrl);
 		$('#upload-photo').find('.switch-modal').click();
 	});
 	
