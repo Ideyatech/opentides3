@@ -29,7 +29,7 @@
 		<class>org.opentides.bean.BaseEntity</class>
 		<class>org.opentides.bean.Comment</class>
 		<class>org.opentides.bean.FileInfo</class>
-		<class>org.opentides.bean.PhotoInfo</class>
+		<class>org.opentides.bean.ImageInfo</class>
 		<class>org.opentides.bean.Sequence</class>
 		<class>org.opentides.bean.SystemCodes</class>
 		<class>org.opentides.bean.Tag</class>

@@ -12,14 +12,10 @@ import org.opentides.example.service.NinjaService;
 import org.opentides.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-
-
-@RequestMapping("/tutorial")
 @Controller
 public class TutorialController {
 
@@ -30,7 +26,41 @@ public class TutorialController {
 	@Autowired
 	private NinjaService ninjaService;
 	
+	@RequestMapping(method = RequestMethod.GET, value="/start")
+	public String gettingStarted(ModelMap map){
 
+		return "app/tutorial-getting-started";
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value="/project-details")
+	public String projectDetails(ModelMap map){
+
+		return "app/tutorial-project-details";
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value="/creating-entities")
+	public String creatingEntities(ModelMap map){
+
+		return "app/tutorial-creating-entities";
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value="/dao-and-service")
+	public String daoAndService(ModelMap map){
+
+		return "app/tutorial-dao-and-service";
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value="/crud-controller")
+	public String crudController(ModelMap map){
+
+		return "app/tutorial-crud-controller";
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value="/crud-view")
+	public String crudView(ModelMap map){
+
+		return "app/tutorial-crud-view";
+	}
 	
 	@RequestMapping(method = RequestMethod.GET, value="/tags")
 	public String tagsTutorial(ModelMap map){
@@ -45,12 +75,12 @@ public class TutorialController {
 		return "app/tutorial-tags";
 	}
 	
-	@RequestMapping(method = RequestMethod.GET, value="/java-classes")
-	public String javaTutorial(ModelMap map){
-		
-		
-		
-		return "app/tutorial-java-classes";
+	
+	
+	@RequestMapping(method = RequestMethod.GET, value="/defining-attributes")
+	public String definingAttributes(ModelMap map){
+
+		return "app/tutorial-defining-attributes";
 	}
 	
 	private TutorialModel modelAttribute(){

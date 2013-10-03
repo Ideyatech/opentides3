@@ -16,7 +16,8 @@
 
 <ul class="breadcrumb">
   <li><a href="${home}"><spring:message code="label.home"/></a> <span class="divider">/</span></li>
-  <li><spring:message code="label.tutorial"/></li>
+  <li><a href="${home}/start">Getting Started</a> <span class="divider">/</span></li>
+  <li>Form Tags</li>
 </ul>
 
 <div class="row-fluid">
@@ -46,7 +47,7 @@
 	
 	<!-- CONTENT -->
 	<div class="span10">
-		<h1><i class="icon-book"></i> Guide to using Opentides 3 tags</h1>
+		<h1><i class="icon-book"></i> An overview to the form tags</h1>
 		
 		<h3 id="textBox"><spring:message code="label.tutorial.textBox"/></h3>
 		<p>Displays a combination of a text field and a label. Used inside a form</p>
@@ -54,7 +55,7 @@
 		<div class="tutorial-body">
 			<form:form modelAttribute="formCommand" id="ninja-form" cssClass="form-horizontal">
 				<div class="example">
-					<span class="code code-black"></span>
+					<app:input path="attribute" label="label.tutorial.firstName"/>
 				</div>
 				<div class="highlight">
 					<h4>Usage</h4>
@@ -372,11 +373,15 @@
 		<h1><i class="icon-tags"></i> <spring:message code="label.tutorial.pageTags"/></h1>
 
 		<h3 id="header"><spring:message code="label.tutorial.header"/></h3>
-		<p>Adds the default Open Tides 3 header to the page. </p><br/><br/>
+		<p>Adds the default Opentides 3 header to the page. </p><br/><br/>
 		<div class="tutorial-body">
 			<div class="highlight">
 				<h4>Usage</h4>
-				<span class="code code-red">&lt;app:header pageTitle="label.tutorial" active="tutorial"/&gt;</span>
+				<span class="code code-red">
+					&lt;app:header pageTitle="label.tutorial" active="tutorial"&gt;<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;//css & javascript imports here<br/>
+					&lt;/app:header&gt;
+				</span>
 				<h4>Parameters</h4>
 				<table>
 					<tr>
@@ -398,6 +403,10 @@
 			</div>
 		</div>
 		
+		<div class="alert alert-info">
+			<strong>Heads up!</strong> By practice, all css, javascript and jquery imports are written within this tag.
+		</div>
+		
 		<hr/>
 		
 		<h3 id="footer"><spring:message code="label.tutorial.footer"/></h3>
@@ -407,7 +416,7 @@
 				<h4>Usage</h4>
 				<span class="code code-red">
 					&lt;app:footer&gt;<br/>
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//javascript code here<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;//javascript code here<br/>
 					&lt;/app:footer&gt;
 				</span>
 			</div>
@@ -490,7 +499,14 @@
 			</div>
 		</div>
 
-
+		<ul class="pager">
+			<li class="previous">
+				<a href="${home}/start">&larr; Previous (Getting Started)</a>
+			</li>
+			<li class="next">
+				<a href="${home}/java-classes">Next (Basic classes) &rarr;</a>
+			</li>
+		</ul>
 	</div>
 </div>
 

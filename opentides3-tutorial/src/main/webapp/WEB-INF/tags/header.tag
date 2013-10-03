@@ -109,14 +109,24 @@
 										<spring:message code="label.home"/>
 									</a>
 								</li>
+								<li class="${active eq 'getting-started' ? 'active' : ''}">
+									<a href="${home}/start"> 
+										<spring:message code="label.tutorial.gettingStarted"/>
+									</a>
+								</li>
 								<li class="${active eq 'tags' ? 'active' : ''}">
-									<a href="${home}/tutorial/tags"> 
+									<a href="${home}/tags"> 
 										<spring:message code="label.tutorial.tags"/>
 									</a>
 								</li>
 								<li class="${active eq 'java-classes' ? 'active' : ''}">
-									<a href="${home}/tutorial/java-classes"> 
+									<a href="${home}/java-classes"> 
 										<spring:message code="label.tutorial.javaClasses"/>
+									</a>
+								</li>
+								<li class="${active eq 'java-attributes' ? 'active' : ''}">
+									<a href="${home}/java-attributes"> 
+										<spring:message code="label.tutorial.javaAttributes"/>
 									</a>
 								</li>
 								<li class="${active eq 'account-settings' ? 'active' : ''} hidden-desktop">

@@ -4,12 +4,11 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.opentides.annotation.Auditable;
 import org.opentides.bean.BaseEntity;
 import org.opentides.bean.Comment;
 import org.opentides.bean.SystemCodes;
 import org.opentides.bean.Tag;
-import org.opentides.bean.impl.Commentable;
+import org.opentides.bean.Commentable;
 
 public class TutorialModel extends BaseEntity implements Commentable{
 

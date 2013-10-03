@@ -14,28 +14,14 @@
 
 <app:header pageTitle="label.tutorial" active="java-classes">
 	<script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js"></script>
-	<style>
-		code.prettyprint{
-			background-color: #fff;
-			border: 0;
-			padding: 0;
-		}
-		
-		code.prettyprint span.kwd{
-			font-weight: bold;
-		}
-	</style>
 </app:header>
 
 <ul class="breadcrumb">
-  <li>
-  	<a href="${home}"><spring:message code="label.home"/></a> 
-  	<span class="divider">/</span>
-  </li>
-  <li>
-  	<spring:message code="label.tutorial"/>
-  </li>
-  
+  <li><a href="${home}"><spring:message code="label.home"/></a> <span class="divider">/</span></li>
+  <li><a href="${home}/start">Getting Started</a> <span class="divider">/</span></li>
+  <li><a href="${home}/creating-entities">Creating Entities</a> <span class="divider">/</span></li>
+  <li><a href="${home}/defining-attributes">Defining Attributes</a> <span class="divider">/</span></li>
+  <li>DAO's and Services</li>
 </ul>
 
 <div class="row-fluid">
@@ -43,9 +29,8 @@
 	<div class="span2">
 		<div data-spy="affix" data-offset-top="60" class="affix-top" style="top: 55px;">
 			<ul class="nav nav-list side-nav">
-				<li class="nav-header">Classes & Interface</li>
-				<li class="active"><a id="scroll-baseEntity">BaseEntity</a></li>
-				<li><a id="scroll-baseEntityDao">BaseEntityDao</a></li>
+				<li class="nav-header">Navigation</li>
+				<li class="active"><a id="scroll-baseEntityDao">BaseEntityDao</a></li>
 				<li><a id="scroll-baseEntityDaoJpaImpl">BaseEntityDaoJpaImpl</a></li>
 				<li><a id="scroll-baseCrudService">BaseCrudService</a></li>
 				<li><a id="scroll-baseCrudServiceImpl">BaseCrudServiceImpl</a></li>
@@ -55,41 +40,16 @@
 	
 	<!-- CONTENT -->
 	<div class="span10">
-		<h1><i class="icon-book"></i> Guide in using Open Tides 3</h1>
+		<h1><i class="icon-book"></i> DAO's and Services</h1>
+		<p>The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog</p>
 		
-		<h3 id="baseEntity">Base Entity (Class)</h3>
-		<p>This is the base class for all entity objects (model) of open-tides. This class contains all the basic attributes such as
-		id, createDate, updateDate etc. Every bean within Open Tides that would be persisted should extend this class.</p>
-		<div class="tutorial-body">
-			<div class="example">
-				<code class="prettyprint">
-					@Entity<br/>
-					@Table(name="NINJA")<br/>
-					@Auditable<br/>
-					public class Ninja extends BaseEntity{
-					<br/><br/>
-					}
-				</code>
-			</div>
-			<div class="highlight">
-				<h4>Usage</h4>
-				<ol>
-					<li>Create a class and extend the class <code>BaseEntity</code> from <code>org.opentides.bean</code></li>
-					<li>Annotate the whole class with <code>@Entity</code> from <code>javax.persistence</code> if you plan to save an instance of your model into the database</li>
-					<li>Specify the name of the table by adding the <code>@Table(name="YOURNAME")</code> from <code>javax.persistence</code></li>
-					<li>Make it auditable by adding <code>@Auditable</code> from <code>org.opentides.annotation</code> at the class level</li>
-				</ol>
-			</div>
-		</div>
-		
-		<hr/>
 		
 		<h3 id="baseEntityDao">Base Entity Dao (Interface)</h3>
 		<p>An interface that contains the basic CRUD functionalities. These functions are to be implemented by the implementing class.</p>
 		<div class="tutorial-body">
 			<div class="example">
 				<code class="prettyprint">
-					public interface NinjaDao extends BaseEntityDao&lt;Ninja, Long&gt; {
+					public interface PatientDao extends BaseEntityDao&lt;Patient, Long&gt; {
 					<br/><br/>
 					}
 				</code>
@@ -97,8 +57,8 @@
 			<div class="highlight">
 				<h4>Usage</h4>
 				<ol>
-					<li>Create a interface and extend the class <code>BaseEntityDaoJpaImpl</code> from <code>org.opentides.dao</code></li>
-					<li>Inside the <code>&lt;BaseEntity, Serializable&gt;</code>, supply your bean from earlier for the BaseEntity and <code>Long</code> as the Serializeable value</li>
+					<li>Create an interface under the package <span class="code-emphasize">org.tutorial.tatiana.dao</span> and extend the class <code>BaseEntityDaoJpaImpl</code> from <code>org.opentides.dao</code></li>
+					<li>Inside the <code>&lt;BaseEntity, Serializable&gt;</code>, supply <span class="code-emphasize">Patient</span> for the BaseEntity and <span class="code-emphasize">Long</span> as the Serializeable value</li>
 				</ol>
 			</div>
 		</div>
@@ -114,8 +74,8 @@
 		<div class="tutorial-body">
 			<div class="example">
 				<code class="prettyprint">
-					@Repository(value="ninjaDao")<br/>
-					public class NinjaDaoJpaImpl extends BaseEntityDaoJpaImpl&lt;Ninja, Long&gt; implements NinjaDao {
+					@Repository(value="patientDao")<br/>
+					public class PatientDaoJpaImpl extends BaseEntityDaoJpaImpl&lt;Patient, Long&gt; implements PatientDao {
 					<br/><br/>
 					}
 				</code>
@@ -123,10 +83,10 @@
 			<div class="highlight">
 				<h4>Usage</h4>
 				<ol>
-					<li>Create a class and extend <code>BaseEntityDaoJpaImpl</code> from <code>org.opentides.dao.impl</code></li>
-					<li>Inside the <code>&lt;BaseEntity, Serializable&gt;</code>, supply your bean from earlier for the BaseEntity and <code>Long</code> as the Serializeable value</li>
-					<li>Implement your earlier DAO interface</li>
-					<li>Annotate the whole class with <code>@Repository</code> then add a <code>value</code> equivalent to the name of your earlier dao
+					<li>Create a class under the package <span class="code-emphasize">org.tutorial.tatiana.dao.impl</span> and extend <code>BaseEntityDaoJpaImpl</code> from <code>org.opentides.dao.impl</code></li>
+					<li>Inside the <code>&lt;BaseEntity, Serializable&gt;</code>, supply <span class="code-emphasize">Patient</span> as the BaseEntity and <span class="code-emphasize">Long</span> as the Serializeable value</li>
+					<li>Implement <span class="code-emphasize">PatientDao</span></li>
+					<li>Annotate the whole class with <code>@Repository</code> then add a value of <span class="code-emphasize">patientDao</span></li>
 				</ol>
 			</div>
 		</div>
@@ -138,7 +98,7 @@
 		<div class="tutorial-body">
 			<div class="example">
 				<code class="prettyprint">
-					public interface NinjaService extends BaseCrudService&lt;Ninja&gt; {
+					public interface PatientService extends BaseCrudService&lt;Patient&gt; {
 					<br/><br/>
 					}
 				</code>
@@ -146,8 +106,8 @@
 			<div class="highlight">
 				<h4>Usage</h4>
 				<ol>
-					<li>Create an interface and extend the <code>BaseCrudService</code> from <code>org.opentides.service</code></li>
-					<li>Inside the <code>&ltBaseEntity&gt</code>, specify your earlier bean</li>
+					<li>Create an interface under the package <span class="code-emphasize">org.tutorial.tatiana.service</span> and extend the <code>BaseCrudService</code> from <code>org.opentides.service</code></li>
+					<li>Inside <code>&ltBaseEntity&gt</code>, specify your <span class="code-emphasize">Patient</span> bean</li>
 				</ol>
 			</div>
 		</div>
@@ -159,9 +119,8 @@
 		<div class="tutorial-body">
 			<div class="example">
 				<code class="prettyprint">
-					@Service("ninjaService")<br/>
-					@CrudSecure<br/>
-					public class NinjaServiceImpl extends BaseCrudServiceImpl&lt;Ninja&gt; implements NinjaService {
+					@Service("patientService")<br/>
+					public class PatientServiceImpl extends BaseCrudServiceImpl&lt;Patient&gt; implements PatientService {
 					<br/><br/>
 					}
 				</code>
@@ -169,15 +128,50 @@
 			<div class="highlight">
 				<h4>Usage</h4>
 				<ol>
-					<li>Create a class and extend <code>BaseCrudServiceImpl</code> from <code>org.opentides.service.impl</code></li>
-					<li>Inside the <code>&lt;BaseEntity&gt;</code>, specify your earlier bean</li>
-					<li>Implement your earlier service interface</li>
-					<li>Annotate the class with <code>@CrudSecure</code> from <code>org.opentides.annotation</code> and <code>@Service</code> from <code>org.springframework.stereotype</code>. Give <code>@Service</code> a value equivalent to the name of your interface</li>
+					<li>Create a class under the package <span class="code-emphasize">org.tutorial.tatiana.service.impl</span> and extend <code>BaseCrudServiceImpl</code> from <code>org.opentides.service.impl</code></li>
+					<li>Inside <code>&lt;BaseEntity&gt;</code>, specify <span class="code-emphasize">Patient</span></li>
+					<li>Implement <span class="code-emphasize">PatientService</span></li>
+					<li>Annotate the class with <code>@Service</code> from <code>org.springframework.stereotype</code>. Give <code>@Service</code> a value of <span class="code-emphasize">patientService</span></li>
 				</ol>
 			</div>
 		</div>
 		
+		<ul class="pager">
+			<li class="previous">
+				<a href="${home}/defining-attributes">&larr; Previous (Defining Attributes)</a>
+			</li>
+			<li class="next">
+				<a href="${home}/defining-attributes">Next (Defining Attributes) &rarr;</a>
+			</li>
+		</ul>
+		
 		<hr/>
+		
+		<h1><i class="icon-pause"></i> Wait, what did just happen?</h1>
+		<p>
+			Basically, you've just implemented all the CRUD functionalities here in the back end. It includes the following: 
+		</p>	
+		<ul>
+			<li>Creating a new Patient item</li>
+			<li>Viewing a list of patients</li>
+			<li>Updating a patient's information</li>
+			<li>Deleting a patient from the list</li>
+			<li>Searching for a patient</li>
+		</ul>
+			
+		<p>
+			All we need now is the front end side to make it work! 
+			In the next chapter, we'll create the CRUD page for our Patient class and a controller that will handle all our request.
+		</p>
+		<!-- pager -->
+		<ul class="pager">
+			<li class="previous">
+				<a href="${home}/defining-attributes">&larr; Previous (Defining Attributes)</a>
+			</li>
+			<li class="next">
+				<a href="${home}/crud-controller">Next (CRUD Controller) &rarr;</a>
+			</li>
+		</ul>
 	</div>
 </div>
 
