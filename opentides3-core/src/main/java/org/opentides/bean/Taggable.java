@@ -3,7 +3,8 @@ package org.opentides.bean;
 import java.util.List;
 
 /**
- * 
+ * Interface for entities that can be added with tags.
+ *  
  * @author AJ
  */
 public interface Taggable {
@@ -16,7 +17,7 @@ public interface Taggable {
 	public List<Tag> getTags();
 	
 	/**
-	 * Set the tags for the entity
+	 * Set the tags of the entity
 	 * 
 	 * @param tags the List of tags to set
 	 */

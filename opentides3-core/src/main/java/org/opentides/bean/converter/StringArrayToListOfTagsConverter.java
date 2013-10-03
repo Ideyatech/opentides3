@@ -12,7 +12,8 @@ import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.core.convert.converter.ConditionalGenericConverter;
 
 /**
- * Converts a comma separated String to a list of {@link Tag} objects
+ * Converts a comma separated String to a list of {@link Tag} objects.
+ * 
  * @author gino
  *
  */

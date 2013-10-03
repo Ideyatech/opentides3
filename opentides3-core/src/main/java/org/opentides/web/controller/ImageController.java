@@ -80,6 +80,16 @@ public class ImageController {
 	@Value("#{applicationSettings.imageAdjustPage}")
 	protected String adjustPhoto = "";	
 
+	/**
+	 * 
+	 * @param modelMap
+	 * @param id
+	 * @param c
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
 	@RequestMapping(value = "{id}", method = RequestMethod.GET, produces = "image/png")
 	public String load(
 			ModelMap modelMap,
@@ -112,7 +122,7 @@ public class ImageController {
 	}
 	
 	/**
-	 * Display the upload form
+	 * Display the upload form.
 	 * 
 	 * @param modelMap
 	 * @param id the ID of the current {@link ImageInfo} object
@@ -132,7 +142,7 @@ public class ImageController {
 	}
 	
 	/**
-	 * Display the image adjust form
+	 * Display the image adjust form.
 	 * 
 	 * @param id the ID of the current {@link ImageInfo} object
 	 * @param classId the ID of the entity holding the image
@@ -197,7 +207,22 @@ public class ImageController {
 	}
 	
 	/**
-	 * Process image upload. This requires the {@link Photoable} entity that will contain the image. 
+	 * Process image upload. 
+	 * 
+	 * <p>To be able to use this a {@link Photoable} entity needs to have its own {@link BaseCrudService} 
+	 * implementation. This method will try to search for the BaseCrudService of the entity using its
+	 * class name by convention. When found, it will load the entity and then add the image to it.
+	 * </p>
+	 * 
+	 * <p>
+	 * Setting the isPrimary to true will change the primary photo of the entity.
+	 * </p>
+	 * 
+	 * <p>
+	 * This will return a map containing the list of MessageResponse objects. The MessageResponse will
+	 * contain error messages if there are validation problems or upload problems. Otherwise it
+	 * will just return a success message.
+	 * </p>
 	 * 
 	 * @param image
 	 * @param photoableClassName the class name of the Photoable entity. 
@@ -205,7 +230,7 @@ public class ImageController {
 	 * @param isPrimary if the image is the primary photo of the entity
 	 * @param result contains any validation errors
 	 * @param request
-	 * @return 
+	 * @return JSON format of a map containing the list of MessageResponse objects. 
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@RequestMapping(method = RequestMethod.POST, value="/upload/{photoableClassName}/{photoableClassId}", produces = "application/json")

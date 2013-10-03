@@ -8,7 +8,13 @@ import org.opentides.web.json.Views;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
-
+/**
+ * Entity representing a Tag.
+ * 
+ * @author AJ
+ * @author gino
+ *
+ */
 @Entity
 @Table(name = "TAG")
 public class Tag extends BaseEntity {
@@ -23,6 +29,9 @@ public class Tag extends BaseEntity {
 		this.tagText = tagText;
 	}
 
+	/**
+	 * The actual tag
+	 */
 	@JsonView(Views.FormView.class)
 	@Column(name = "TAG_TEXT")
 	private String tagText;

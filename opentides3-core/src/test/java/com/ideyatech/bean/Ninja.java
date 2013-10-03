@@ -501,7 +501,7 @@ private static final long serialVersionUID = -4142599915292096152L;
 	
 	@OneToMany(cascade=CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinTable(name = "NINJA_COMMENT", 
-			joinColumns = { @JoinColumn(name = "NINJA_ID", referencedColumnName = "ID"), @JoinColumn(name = "NINJA_ID", referencedColumnName = "ID") }, 
+			joinColumns = { @JoinColumn(name = "NINJA_ID", referencedColumnName = "ID") }, 
 			inverseJoinColumns = @JoinColumn(name = "COMMENT_ID")
 	)
 	private List<Comment> comments;
