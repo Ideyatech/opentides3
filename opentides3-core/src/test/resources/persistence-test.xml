@@ -6,7 +6,8 @@
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
 		<class>com.ideyatech.bean.Ninja</class>
 		<class>org.opentides.bean.Tag</class>
-		<class>org.opentides.bean.PhotoInfo</class>
+		<class>org.opentides.bean.ImageInfo</class>
+		<class>org.opentides.bean.FileInfo</class>
 		<class>org.opentides.bean.Comment</class>
 		<class>org.opentides.bean.SystemCodes</class>
 		<class>org.opentides.bean.user.BaseUser</class>

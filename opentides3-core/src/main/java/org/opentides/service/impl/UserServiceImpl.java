@@ -224,6 +224,36 @@ public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 			}
 		}
 	}
+	
+	@Override
+	public boolean isUserLockedOut(String username, long maxAttempts, long lockOutTime) {
+		UserDao userDao = (UserDao) getDao();
+		BaseUser user = userDao.loadByUsername(username);
+		if(user.getFailedLoginCount() != null && user.getFailedLoginCount() >= maxAttempts) {
+			long elapsedTime = System.currentTimeMillis() - user.getLastFailedLoginMillis();
+			if(elapsedTime < 1000 * lockOutTime) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	@Override
+	public void unlockUser(String username) {
+		UserDao userDao = (UserDao) getDao();
+		BaseUser user = userDao.loadByUsername(username);
+		user.resetFailedLoginCount();
+		userDao.saveEntityModel(user);
+	}
+	
+	@Override
+	public void updateFailedLogin(String username, long timestamp) {
+		UserDao userDao = (UserDao) getDao();
+		BaseUser user = userDao.loadByUsername(username);
+		user.incrementFailedLoginCount();
+		user.setLastFailedLoginMillis(timestamp);
+		userDao.saveEntityModel(user);
+	}
 
 	public BaseUser getCurrentUser() {
 		try {

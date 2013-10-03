@@ -118,6 +118,10 @@ public class BaseUser extends BaseEntity implements Photoable {
 	@JsonView(Views.DisplayView.class)
 	private Long failedLoginCount;
 	
+	@Column(name="LAST_FAILED_LOGIN_DATE")
+	@JsonView(Views.DisplayView.class)
+	private Long lastFailedLoginMillis;
+	
 	@Column(name="FACEBOOK_ID")
 	private String facebookId;
 	
@@ -575,6 +579,37 @@ public class BaseUser extends BaseEntity implements Photoable {
 		this.failedLoginCount = failedLoginCount;
 	}
 	
+	/**
+	 * Increment login count by 1
+	 */
+	public void incrementFailedLoginCount() {
+		if(this.failedLoginCount == null) {
+			this.failedLoginCount = 0l;
+		}
+		this.failedLoginCount ++;
+	}
+	
+	/**
+	 * Set failedLoginCount to 0
+	 */
+	public void resetFailedLoginCount() {
+		this.failedLoginCount = 0l;
+	}
+	
+	/**
+	 * @return the lastFailedLoginMillis
+	 */
+	public Long getLastFailedLoginMillis() {
+		return lastFailedLoginMillis;
+	}
+
+	/**
+	 * @param lastFailedLoginMillis the lastFailedLoginMillis to set
+	 */
+	public void setLastFailedLoginMillis(Long lastFailedLoginMillis) {
+		this.lastFailedLoginMillis = lastFailedLoginMillis;
+	}
+
 	public String getFacebookId() {
 		return facebookId;
 	}

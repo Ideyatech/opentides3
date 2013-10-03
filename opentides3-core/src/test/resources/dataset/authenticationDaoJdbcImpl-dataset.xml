@@ -19,6 +19,7 @@
 			VERSION="5"
 			EMAIL="admin@opentides.com"
 			FIRSTNAME="Administrator"
+			FAILED_LOGIN_COUNT="0"
 	/>
 	
 	<USERS 	ID="1" 
@@ -28,7 +29,26 @@
 			USERID="1" 
 	/>
 	
+	<USER_PROFILE
+			ID="2"
+			VERSION="6"
+			EMAIL="locked-user@opentides.com"
+			FIRSTNAME="Locked User"
+			FAILED_LOGIN_COUNT="4"
+	/>
+	
+	<USERS 	ID="2" 
+			VERSION="0" 
+			PASSWORD="f895803aa6c5e10d81a40c73a46f4069977fa6c73b7968845556e98d90f28ff6"
+			USERNAME="lockeduser"
+			USERID="2"
+	/>
+	
 	<USER_GROUP USER_ID="1"
+				GROUP_ID="1"
+	/>
+	
+	<USER_GROUP USER_ID="2"
 				GROUP_ID="1"
 	/>
 	

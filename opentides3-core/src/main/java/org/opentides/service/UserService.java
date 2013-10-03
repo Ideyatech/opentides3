@@ -67,6 +67,32 @@ public interface UserService extends BaseCrudService<BaseUser> {
 	  */
 	 public void forceLogout(String username);
 	 
+	 /**
+	  * Check if the user with the specified username is locked out.
+	  *  
+	  * @param username
+	  * @param maxAttempts
+	  * @param lockOutTime
+	  * 
+	  * @return
+	  */
+	 public boolean isUserLockedOut(String username, long maxAttempts, long lockOutTime);
+	 
+	 /**
+	  * Update the details of the user when login failed. <p>This should increment the failed
+	  * login count and update the last failed login timestamp </p>
+	  * 
+	  * @param username
+	  * @param timestamp
+	  */
+	 public void updateFailedLogin(String username, long timestamp);
+	 
+	 /**
+	  * 
+	  * @param username
+	  */
+	 public void unlockUser(String username);
+	 
 	 public BaseUser getCurrentUser();
 
 	 public void registerUser(BaseUser baseUser, boolean sendEmail);
