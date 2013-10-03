@@ -49,6 +49,7 @@ import org.opentides.bean.ImageInfo;
 import org.opentides.bean.Photoable;
 import org.opentides.util.StringUtil;
 import org.opentides.web.json.Views;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.annotation.JsonView;
@@ -118,7 +119,7 @@ public class BaseUser extends BaseEntity implements Photoable {
 	@JsonView(Views.DisplayView.class)
 	private Long failedLoginCount;
 	
-	@Column(name="LAST_FAILED_LOGIN_DATE")
+	@Column(name="LAST_FAILED_LOGIN_MILLIS")
 	@JsonView(Views.DisplayView.class)
 	private Long lastFailedLoginMillis;
 	
@@ -252,6 +253,12 @@ public class BaseUser extends BaseEntity implements Photoable {
 		return name;
 	}
 	
+	/**
+	 * Checks if this user has the given permission.
+	 * 
+	 * @param permission the permission to check
+	 * @return true if user has the given permission, false otherwise
+	 */
 	public boolean hasPermission(String permission) {
 		for (UserGroup group : groups) {
 			for (UserAuthority userRole : group.getAuthorities()) {
@@ -263,6 +270,10 @@ public class BaseUser extends BaseEntity implements Photoable {
 		return false;
 	}
 	
+	/**
+	 * Get all authorities of the user
+	 * @return a list of {@link UserAuthority} objects
+	 */
 	public List<UserAuthority> getAuthorities() {
 		List<UserAuthority> permissions = new ArrayList<UserAuthority>();
 		for (UserGroup group : groups) {
@@ -678,6 +689,13 @@ public class BaseUser extends BaseEntity implements Photoable {
 	
 	@Override
 	public ImageInfo getPrimaryPhoto() {
+		if(!CollectionUtils.isEmpty(this.photos)) {
+			for(ImageInfo imageInfo : this.photos) {
+				if(imageInfo.getIsPrimary()) {
+					return imageInfo;
+				}
+			}
+		}
 		return null;
 	}
 	

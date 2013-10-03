@@ -39,11 +39,24 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 /**
  * This class is responsible in retrieving the user information.
- * TODO: Rewrite this to use JPA EntityManager... if at all, possible.
+ * 
+ * <p>This retrieves the User from the database and then create the {@link UserDetails} object.</p>
+ * 
+ * <p>
+ * By default this will track the number of failed attempts and the last time when it happened. After
+ * 5 failed login the user will be locked out for 60 seconds. The maximum number of attempts and locked out
+ * time can be set in the security XML file where this class has been configured 
+ * (see {@link AuthenticationDaoJdbcImpl#setLockoutSeconds(long)} and {@link AuthenticationDaoJdbcImpl#setMaxAttempts(long)}). 
+ * You can also disable the tracking of failed login attempts by setting enableUserLockCheck through
+ * {@link AuthenticationDaoJdbcImpl#setEnableUserLockCheck(boolean)} 
+ * </p>
+ * 
  * @author allantan
  *
  */
 public class AuthenticationDaoJdbcImpl extends JdbcDaoImpl implements ApplicationListener<ApplicationEvent> {
+	
+	//TODO: Rewrite this to use JPA EntityManager... if at all, possible.
 	
 	@Autowired
 	private UserService userService;
