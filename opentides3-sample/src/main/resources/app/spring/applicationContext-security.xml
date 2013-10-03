@@ -24,9 +24,9 @@
 		access-decision-manager-ref="httpRequestAccessDecisionManager">
 		<sec:intercept-url pattern="/"  access="permitAll"/>
 
-		<sec:form-login login-page="/"
+		<sec:form-login login-page="/login"
 			default-target-url="/"
-			authentication-failure-url="/?login_error=authentication-failed" login-processing-url="/login"/>
+			authentication-failure-url="/login?login_error=authentication-failed" login-processing-url="/login"/>
 
 		<sec:logout logout-url="/logout" logout-success-url="/" />
 		<sec:intercept-url pattern="/**" access="isAuthenticated()" />
