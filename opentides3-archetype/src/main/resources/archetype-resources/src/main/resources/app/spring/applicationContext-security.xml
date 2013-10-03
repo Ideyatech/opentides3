@@ -25,7 +25,7 @@
 
 	<sec:http auto-config='false' use-expressions="true"
 		access-decision-manager-ref="httpRequestAccessDecisionManager">
-		<sec:intercept-url pattern="/"  access="permitAll"/>
+		<sec:intercept-url pattern="/login"  access="permitAll"/>
 
 		<sec:form-login login-page="/login"
 			default-target-url="/login"
