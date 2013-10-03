@@ -35,9 +35,11 @@ import org.opentides.bean.BaseEntity;
 import org.opentides.bean.MessageResponse;
 import org.opentides.bean.MessageResponse.Type;
 import org.opentides.bean.SearchResults;
+import org.opentides.bean.Taggable;
 import org.opentides.exception.DataAccessException;
 import org.opentides.service.BaseCrudService;
 import org.opentides.service.SystemCodesService;
+import org.opentides.service.TagService;
 import org.opentides.util.CacheUtil;
 import org.opentides.util.CrudUtil;
 import org.opentides.util.NamingUtil;
@@ -106,6 +108,12 @@ public abstract class BaseCrudController<T extends BaseEntity> {
 	 */
 	@Autowired
 	protected SystemCodesService systemCodesService;
+	
+	/**
+	 * 
+	 */
+	@Autowired
+	protected TagService tagService;
 
 	/**
 	 * This attribute contains the class type of the bean.
@@ -447,12 +455,26 @@ public abstract class BaseCrudController<T extends BaseEntity> {
 			final HttpServletResponse response) {
 		transactionTemplate.execute(new TransactionCallbackWithoutResult() {
 			protected void doInTransactionWithoutResult(TransactionStatus status) {
+				processTaggableEntities(command);
 				preCreate(command, bindingResult, uiModel, request, response);
 				service.save(command);
 				postCreate(command, bindingResult, uiModel, request, response);
 			}
 		});
 		
+	}
+	
+	/**
+	 * Check if entity is an instance of {@link Taggable}. If so, save the tags.
+	 * @param command
+	 */
+	private void processTaggableEntities(T command) {
+		if (Taggable.class.isAssignableFrom(command.getClass())) {
+			Taggable taggable = (Taggable)command;
+			if(taggable.getTags() != null && !taggable.getTags().isEmpty()) {
+				tagService.saveAllTags(taggable.getTags());
+			}
+		}
 	}
 
 	/**
@@ -516,6 +538,7 @@ public abstract class BaseCrudController<T extends BaseEntity> {
 			final HttpServletResponse response) {
 		transactionTemplate.execute(new TransactionCallbackWithoutResult() {
 			protected void doInTransactionWithoutResult(TransactionStatus status) {
+				processTaggableEntities(command);
 				preUpdate(command, bindingResult, uiModel, request, response);
 				service.save(command);
 				postUpdate(command, bindingResult, uiModel, request, response);

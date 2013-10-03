@@ -45,8 +45,8 @@ import org.opentides.annotation.Auditable;
 import org.opentides.annotation.PrimaryField;
 import org.opentides.annotation.SearchableFields;
 import org.opentides.bean.BaseEntity;
-import org.opentides.bean.PhotoInfo;
-import org.opentides.bean.impl.Photoable;
+import org.opentides.bean.ImageInfo;
+import org.opentides.bean.Photoable;
 import org.opentides.util.StringUtil;
 import org.opentides.web.json.Views;
 import org.springframework.web.multipart.MultipartFile;
@@ -138,6 +138,18 @@ public class BaseUser extends BaseEntity implements Photoable {
 	
 	@Column(name="TWITTER_SECRET")
 	private String twitterSecret;
+
+	// Photoable requirements
+	
+	@OneToMany(cascade=CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinTable(name = "USER_PHOTO", 
+			joinColumns = { @JoinColumn(name = "USER_ID", referencedColumnName = "ID") }, 
+			inverseJoinColumns = @JoinColumn(name = "PHOTO_ID")
+	)
+	private List<ImageInfo> photos;
+	
+	@Transient
+	private transient MultipartFile photo;
 
 	public BaseUser() {
 		super();
@@ -618,27 +630,10 @@ public class BaseUser extends BaseEntity implements Photoable {
 	public void setTwitterSecret(String twitterSecret) {
 		this.twitterSecret = twitterSecret;
 	}
-	
-	// Photoable requirements
-	
-	@OneToMany(cascade=CascadeType.ALL, fetch = FetchType.LAZY)
-	@JoinTable(name = "USER_PHOTO", 
-			joinColumns = { @JoinColumn(name = "USER_ID", referencedColumnName = "ID") }, 
-			inverseJoinColumns = @JoinColumn(name = "PHOTO_ID")
-	)
-	private List<PhotoInfo> photos;
-	
-	@Transient
-	private transient MultipartFile photo;
-	
+		
 	@Override
-	public List<PhotoInfo> getPhotos() {
+	public List<ImageInfo> getPhotos() {
 		return photos;
-	}
-	
-	@Override
-	public void setPhotos(List<PhotoInfo> photos) {
-		this.photos = photos;
 	}
 	
 	@Override
@@ -647,14 +642,22 @@ public class BaseUser extends BaseEntity implements Photoable {
 	}
 	
 	@Override
+	public ImageInfo getPrimaryPhoto() {
+		return null;
+	}
+	
+	public void setPhotos(List<ImageInfo> photos) {
+		this.photos = photos;
+	}
+	
 	public void setPhoto(MultipartFile photo) {
 		this.photo = photo;
 	}
 	
-	public void addPhoto(PhotoInfo photoInfo){
+	public void addPhoto(ImageInfo photoInfo){
 		synchronized (photoInfo) {
 			if (photos == null){
-				photos = new ArrayList<PhotoInfo>();
+				photos = new ArrayList<ImageInfo>();
 			}
 			photos.add(photoInfo);
 		}

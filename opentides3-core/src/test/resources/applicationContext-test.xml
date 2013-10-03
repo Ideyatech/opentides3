@@ -18,6 +18,11 @@
 		</constructor-arg>
 	</bean>
 	
+	<bean class="org.mockito.Mockito" id="tagService" name="tagService" factory-method="mock" >
+		<constructor-arg value="org.opentides.service.TagService" name="classToMock">
+		</constructor-arg>
+	</bean>
+	
 	<bean class="org.mockito.Mockito" id="ninjaService" name="ninjaService" factory-method="mock" >
 		<constructor-arg value="com.ideyatech.service.NinjaService" name="classToMock">
 		</constructor-arg>

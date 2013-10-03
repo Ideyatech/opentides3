@@ -29,7 +29,7 @@
 		<class>org.opentides.bean.BaseEntity</class>
 		<class>org.opentides.bean.Comment</class>
 		<class>org.opentides.bean.FileInfo</class>
-		<class>org.opentides.bean.PhotoInfo</class>
+		<class>org.opentides.bean.ImageInfo</class>
 		<class>org.opentides.bean.Sequence</class>
 		<class>org.opentides.bean.SystemCodes</class>
 		<class>org.opentides.bean.Tag</class>
@@ -40,10 +40,6 @@
 		<class>org.opentides.bean.user.UserGroup</class>
 		<properties>
 			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect" />
-			<property name="hibernate.c3p0.min_size" value="5" />
-			<property name="hibernate.c3p0.max_size" value="20" />
-			<property name="hibernate.c3p0.timeout" value="1800" />
-			<property name="hibernate.c3p0.max_statements" value="50" />
 			<property name="hibernate.hbm2ddl.auto" value="update" />
 			<property name="hibernate.show_sql" value="true" />
 			<property name="hibernate.ejb.autodetection" value="class" />

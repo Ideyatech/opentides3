@@ -10,6 +10,6 @@ import org.springframework.web.multipart.MultipartFile;
  */
 public interface FileUploadService {
 	
-	public FileInfo upload(MultipartFile multipartFile, FileInfo fileInfo);
+	public FileInfo upload(MultipartFile multipartFile);
 	
 }

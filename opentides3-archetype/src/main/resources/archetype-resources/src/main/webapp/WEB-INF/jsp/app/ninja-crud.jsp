@@ -166,7 +166,7 @@
 				<app:input label="label.ninja.email" path="email" />
 				<app:input label="label.ninja.age" path="age" />
 				<app:input label="label.ninja.score" path="score" />
-				<app:tokenizer label="label.ninja.tags" path="csTags" />
+				<app:tokenizer label="label.ninja.tags" path="tags" />
 				<app:input label="label.ninja.joinDate" path="joinDate" datepicker="true" appendIcon="icon-calendar"/>
 				<app:radio label="label.ninja.gender" path="gender" items="${symbol_dollar}{genderList}" itemLabel="value" itemValue="key" required="true"/>
 				<app:select label="label.ninja.status" path="status" items="${symbol_dollar}{statusList}" itemLabel="value" itemValue="key" select2="true" />

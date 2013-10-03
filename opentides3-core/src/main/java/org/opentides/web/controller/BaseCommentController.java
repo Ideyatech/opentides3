@@ -10,8 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.opentides.annotation.Valid;
 import org.opentides.bean.BaseEntity;
 import org.opentides.bean.Comment;
+import org.opentides.bean.Commentable;
 import org.opentides.bean.FileInfo;
-import org.opentides.bean.impl.Commentable;
 import org.opentides.service.BaseCrudService;
 import org.opentides.service.CommentService;
 import org.opentides.service.FileUploadService;
@@ -120,8 +120,8 @@ public abstract class BaseCommentController<T extends BaseEntity> {
 		}
 		
 		if(command.getFile() != null && !command.getFile().isEmpty()) {
-			FileInfo attachment = fileUploadService.upload(command.getFile(), new FileInfo());
-			command.addFile(attachment);
+//			FileInfo attachment = fileUploadService.upload(command.getFile(), new FileInfo());
+//			command.addFile(attachment);
 		}
 
 		command.setAuthor(userService.getCurrentUser());

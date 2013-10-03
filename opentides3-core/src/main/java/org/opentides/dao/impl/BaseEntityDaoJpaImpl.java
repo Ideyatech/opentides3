@@ -377,7 +377,7 @@ public class BaseEntityDaoJpaImpl<T extends BaseEntity,ID extends Serializable>
 		_log.debug("Saving object " + obj.getClass());
 		setAuditUserId(obj);
 		_log.debug("User ID is " + obj.getAuditUserId());
-		if (obj.isNew())
+		if (obj.isNew()) 
 			getEntityManager().persist(obj);
 		else {
 			getEntityManager().merge(obj);
