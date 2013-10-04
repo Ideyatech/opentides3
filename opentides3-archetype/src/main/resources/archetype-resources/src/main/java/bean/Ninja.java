@@ -499,6 +499,18 @@ private static final long serialVersionUID = -4142599915292096152L;
 		}
 	}
 	
+	@Override
+	public ImageInfo getPrimaryPhoto() {
+		if(!CollectionUtils.isEmpty(this.photos)) {
+			for(ImageInfo imageInfo : this.photos) {
+				if(imageInfo.getIsPrimary()) {
+					return imageInfo;
+				}
+			}
+		}
+		return null;
+	}
+	
 	// End of Photoable requirements
 	
 	// Commentable requirements
