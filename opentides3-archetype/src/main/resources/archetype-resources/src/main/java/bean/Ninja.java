@@ -20,8 +20,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.gino.sample.bean.Clan;
-import org.gino.sample.bean.Ninja;
+import ${package}.bean.Clan;
+import ${package}.bean.Ninja;
 import org.opentides.annotation.Auditable;
 import org.opentides.annotation.PrimaryField;
 import org.opentides.annotation.field.CheckBox;
