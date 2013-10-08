@@ -6,8 +6,9 @@
 <%@ taglib prefix="app" tagdir="/WEB-INF/tags"%>
 
 <form:form id="upload-photo" commandName="command" enctype="multipart/form-data"
-		method="POST" action="${home}/image/upload/${className}/${classId}">
-	
+		method="POST" action="${home}/image/upload/">
+	<input type="hidden" name="photoableClassName" value="${className}"/>
+	<input type="hidden" name="photoableClassId" value="${classId}"/>
 	<div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal"
 			aria-hidden="true">&times;</button>
