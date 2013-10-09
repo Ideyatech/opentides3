@@ -1,6 +1,5 @@
 <%--
-	- tutorial-getting-started.jsp
-	- Displays a tutorial for creating a new project with Open Tides 3
+	- Displays a tutorial for using the tags of opentides 3
 	-
 	- @author - ONZ
 --%>
@@ -12,23 +11,11 @@
 <%@ taglib prefix="app" tagdir="/WEB-INF/tags"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<app:header pageTitle="label.tutorial" active="getting-started">
-	<style>
-		code.prettyprint{
-			background-color: #fff;
-			border: 0;
-			padding: 0;
-		}
-		
-		code.prettyprint span.kwd{
-			font-weight: bold;
-		}
-	</style>
-</app:header>
+<app:header pageTitle="label.tutorial" active="tags"/>
 
 <ul class="breadcrumb">
-  <li><a href="${home}"><spring:message code="label.home"/></a> <span class="divider">/</span></li>
-  <li><spring:message code="label.tutorial.gettingStarted"/></li>
+	<li><a href="${home}/overview">Overview</a><span class="divider">/</span></li>
+	<li>Getting Started</li>
 </ul>
 
 <div class="row-fluid">
@@ -36,114 +23,98 @@
 	<div class="span2">
 		<div data-spy="affix" data-offset-top="60" class="affix-top" style="top: 55px;">
 			<ul class="nav nav-list side-nav">
-				<li class="nav-header">Getting Started</li>
-				<li class="active"><a id="scroll-mavenArchetype">Installing Archetype</a></li>
-				<li><a id="scroll-newProject">Creating a New Project</a></li>
-				<li><a id="scroll-runningOnServer">Running on Server</a></li>
-				<li><a id="scroll-dbConfig">Database Configuration</a></li>
+				<li class="nav-header">Project Overview</li>
+				<li class="active"><a id="scroll-hello">Hello Tatiana!</a></li>
+				<li><a id="scroll-functionalities">What can she do?</a></li>
+				<li><a id="scroll-components">Meet the objects</a></li>
 			</ul>
 		</div>
 	</div>
 	
 	<!-- CONTENT -->
 	<div class="span10">
-		<h1><i class="icon-book"></i> Creating your new project</h1>
-		
-		<h3 id="mavenArchetype">Installing the maven archetype for Opentides 3</h3>
-		
+		<h1><i class="icon-book"></i> Getting Started</h1>
 		<p>
-			Before we begin with our project, we must first install the maven archetype for Opentides 3 into your local repository.
-			This maven archetype will later on be used for future creation of a project.
+			So, you decided to use <span class="code-emphasize">Opentides 3</span>. Good for you! Don't worry, installing it into your machine would be a piece of cake. *wink*
+			
 		</p>
-		<h4>Steps</h4>
-		<ol>
-			<li>Open the <span class="code-emphasize">opentides3</span> project from your <span class="code-emphasize">Package Explorer</span>. Then right click on <span class="code-emphasize">opentides3-archetype</span></li>
-			<li>Select <span class="code-emphasize">Run As</span> then <span class="code-emphasize	">Run Configurations</span></li>
-			<li>Under the <span class="code-emphasize">Maven Build</span>, create a new configuration</li>
-			<li>Add a value to the <span class="code-emphasize">Base Directory</span> by pressing the <span class="code-emphasize">Browse Workspace</span> button</li>
-			<li>Locate the <span class="code-emphasize">Opentides3</span> project and open the drop menu. Select <span class="code-emphasize">opentides3-archetype</span>. Press <span class="code-emphasize">Ok</span></li>
-			<li>Specify the <span class="code-emphasize">Goals</span> as <span class="code-emphasize">install</span></li>
-			<li><span class="code-emphasize">Apply</span> then <span class="code-emphasize">Run</span></li>
-		</ol>
-		<div class="alert alert-info">
-			<strong>Heads up!</strong> Installing the maven archetype is only a one time process. You don't need to repeat this step for every project you will make.
-		</div>
 		
-		<hr/>
-		
-		<h3 id="newProject">Creating a new project</h3>
-		<p>To create our sample project, simply import the existing maven archetype that have been previously installed into your local machine.</p>
-		<h4>Steps</h4>
-		<ol>
-			<li>Press <span class="code-emphasize">alt+shift+n</span> then select <span class="code-emphasize">Maven Project</span> on the following window.</li>
-			<li>Make sure that the <span class="code-emphasize">Catalog</span> is set into <span class="code-emphasize">Default Local</span></li>
-			<li>Press <span class="code-emphasize">next</span>. On the following, tick on the checkbox that states <span class="code-emphasize">include snapshot</span></li>
-			<li>Select the project with a <span class="code-emphasize">Group Id</span> of <span class="code-emphasize">org.opentides</span>. Press <span class="code-emphasize">next</span></li>
-			<li>Enter <span class="code-emphasize">org.tutorial</span> on the <span class="code-emphasize">Group Id</span> and <span class="code-emphasize">tatiana</span> on the <span class="code-emphasize">Artifact Id</span>.
-			<li>As for the <span class="code-emphasize">Package</span>, specify <span class="code-emphasize">org.tutorial.tatiana</span> then press <span class="code-emphasize">Finish</span></li>
-		</ol>
-		
-		<hr/>
-		
-		<h3 id="runningOnServer">Adding the project on a Tomcat server</h3>
-		<p>We have to add Tatiana to your local server first!</p>
-		<h4>Steps</h4>
-		<ol>
-			<li>Right click on the <span class="code-emphasize">Servers</span> section of your IDE and select <span class="code-emphasize">New</span> then choose <span class="code-emphasize">Server</span></li>
-			<li>On the following window, select a version which you have currently installed</li>
-			<li>Specify your <span class="code-emphasize">Server Name</span> then press <span class="code-emphasize">Next</span></li>
-			<li>Select <span class="code-emphasize">tatiana</span> then press <span class="code-emphasize">Add</span>. Then <span class="code-emphasize">Finish</span></li>
-			<li>
-				Double click your newly defined server. Under the <span class="code-emphasize">Timeouts</span> section, change the <span class="code-emphasize">Start (in seconds)</span> into <span class="code-emphasize">3000</span> 
-				and the <span class="code-emphasize">Stop (in seconds)</span> into <span class="code-emphasize">600</span> Then save.
-			</li>
-			<li>Open the <span class="code-emphasize">server.xml</span> file. This is found inside your newly defined server in the <span class="code-emphasize">Servers</span> folder on the <span class="code-emphasize">Package Explorer</span></li>
-			<li>Scroll down to the bottom, you will see something like this <code>&lt;Context docBase="tatiana" path="/opentides" reloadable="true" source="org.eclipse.jst.jee.server:tatiana"/&gt;</code></li>
-			<li>Replace the <code>path</code> with your specified root directory. In our case it would be <span class="code-emphasize">tatiana</span>. This will appear on the URL as <span class="code-emphasize">localhost:8080/tatiana</span></li>
-		
-		</ol>
-		
-		<hr/>
-		
-		<h3 id="dbConfig">Database Configuration</h3>
-		<p>In this section, we configure all the files that are related for a database connection.</p>
-		<div class="alert alert-info">
-			<strong>Wait!</strong> This section assumes that you already have a schema and a user in your database. Your user should be given all the privileges
-		</div>
-		<ol>
-			<li>Open the file <span class="code-emphasize">web.xml</span> within your project. It is located at <span class="code-emphasize">src->main->webapp->WEB-INF</span></li>
-			<li>Scroll down until you see the <code>&lt;res-ref-name&gt;</code>. Change it's value into <code>jdbc/yourschema</code></li>
-			<li>Open the file <span class="code-emphasize">localhost.properties</span>. This is located at <span class="code-emphasize">src/main/resources</span> in the <span class="code-emphasize">Package Explorer</span> of our project</li>
-			<li>Scroll down until you see the <code>#For Database connection</code></li>
-			<li>Change the necessary values for the properties <code>database.url</code>, <code>database.username</code>, <code>database.password</code> and <code>database.jndi</code></li>
-			<li>Lastly, open another file called <span class="code-emphasize">context.xml</span>. This is located at <span class="code-emphasize">Servers->YourDefinedServerName</span> in the <span class="code-emphasize">Package Explorer</span></li>
-			<li>
-				Scroll down until the bottom. Before the <code>&lt;/Context&gt;</code> tag, paste the following code:<br/>
-				<code class="prettyprint">
-					&lt;Resource auth="Container" driverClassName="com.mysql.jdbc.Driver"<br/>
-						&nbsp;&nbsp;&nbsp;&nbsp;maxActive="100" maxIdle="30000" maxWait="10000" name="jdbc/opentides3"<br/>
-						&nbsp;&nbsp;&nbsp;&nbsp;password="password" type="javax.sql.DataSource"<br/>
-	  					&nbsp;&nbsp;&nbsp;&nbsp;url="jdbc:mysql://localhost:3306/opentides3?autoReconnect=true" <br/>
-						&nbsp;&nbsp;&nbsp;&nbsp;username="Opentides"/&gt;
-				</code>
-			</li>
-			<li>Change the necessary values for the properties <code>name</code>, <code>password</code>, <code>url</code> and <code>username</code></li>
-		</ol>
-		
-		<hr/>
-		
-		<h3 id="dbConfig">Lets do this!</h3>
+		<h3 id="hello">Requirements</h3>
 		<p>
-			If everything went according to plan, just start your server and access 
-			<span class="code-emphasize">http://localhost:8080/tatiana</span> in your browser. Login with 
-			<span class="code-emphasize">admin</span> as username and <span class="code-emphasize">ideyatech</span> as password.
+			With great power comes great responsibility. Of course, there are some requirements that you should have before obtaining the <span class="code-emphasize">"power"</span> <i class="icon-bolt"></i>
 		</p>
-		<ul class="pager">
-			<li class="next">
-				<a href="${home}/creating-entities">Next (Creating Entities) &rarr;</a>
-			</li>
+		<ul>
+			<li><a href="https://jdk7.java.net/" target="_blank">Java 7</a></li>
+			<li><a href="http://tomcat.apache.org/download-70.cgi" target="_blank">Tomcat 7</a></li>
+			<li><a href="http://dev.mysql.com/downloads/mysql/5.5.html" target="_blank">MySql 5.5</a></li>
+			<li>IDE - We highly prefer using <a href="http://spring.io/tools/sts/all" target="_blank">Spring Tool Suite</a></li>
+			<li><a href="https://github.com/" target="_blank">GIT</a> account</li>
 		</ul>
 		
+		<hr/>
+		
+		<h3>Installation</h3>
+		<p>
+			Actually, we're really not installing <span class="code-emphasize">Opentides 3</span> into your machine, we're just cloning the original project
+			from <span class="code-emphasize">GitHub <i class="icon-github"></i>.</span> Sorry <i class="icon-meh"></i>
+		</p>
+		<h4>Steps</h4>
+		<ol>
+			<li>Change your perspective into <span class="code-emphasize">Git Repository Exploring</span>.</li>
+			<li>Choose <span class="code-emphasize">Clone a Git Repository</span></li>
+			<li>Select <span class='code-emphasize'>URI</span> in the pop-up window.</li>
+			<li>Specify <span class="code-emphasize">https://github.com/Ideyatech/opentides3.git</span> as the URI. Host would be <span class="code-emphasize">github.com</span> and repository path would be <span class="code-emphasize">/Ideyatech/opentides3.git</span>.</li>
+			<li>In the authentication section, input the username and password of your <span class="code-emphasize">git</span> account. Then tick the checkbox <span class="code-emphasize">Store in secure store</span>. Then click next</li>
+			<li>In the next window, check the box besides <span class="code-emphasize">master</span> then press next.</li>
+			<li>Specify the destination in which <span class="code-emphasize">Opentides 3</span> will be cloned. Check the box besides <span class="code-emphasize">Import all Existing Project</li> then finish.</li>
+		</ol>
+		
+		<hr/>
+		
+		<h3>imageutil.lib</h3>
+		<p>Opentides 3 depends on imageutil.lib which is still not on any public maven repository. So we need to install it first in our local repository.</p>
+		<h4>Steps</h4>
+		<ol>
+			<li>Right click the <span class="code-emphasize">Opentides 3</span> project in your package explorer.</li>
+			<li>Select <span class="code-emphasize">Run As..</span> then <span class="code-emphasize">Run Configuration</span></li>
+			<li>In the following window, create a new <span class="code-emphasize">Maven</span> configuration.
+			<li>Specify the <span class="code-emphasize">Base Directory</span> by pressing <span class="code-emphasize">Browse Workspace</span> and selecting <span class="code-emphasize">Opentides 3</span>.</li>
+			<li>
+				Set the goal as: <span class="code-emphasize">install:install-file -Dfile=<em>ImageUtilLocation</em> -DgroupId=imageutil -DartifactId=imageutil -Dversion=1.0 -Dpackaging=jar</span>. Change the <em>ImageUtilLocation</em> with the location of your imageutil.lib.
+				This is found in the directory where you installed <span class="code-emphasize">Opentides 3</span>. <span class="code-emphasize">opentides3->opentides3-core->src->main->webapp->WEB-INF->lib</span> 
+			</li>
+			<li><span class="code-emphasize">Apply</span> then <span class="code-emphasize">Run</span></li>
+		</ol>
+		
+		<hr/>
+		
+		<h3>Maven Install</h3>
+		<h4>Steps</h4>
+		<ol>
+			<li>Right click on the project <span class="code-emphasize">Opentides 3</span> in the package explorer.</li>
+			<li>Select <span class="code-emphasize">Run As..</span> then <span class="code-emphasize">Run Configuration</span></li>
+			<li>In the following window, create a new <span class="code-emphasize">Maven</span> configuration.
+			<li>Specify the <span class="code-emphasize">Base Directory</span> by pressing <span class="code-emphasize">Browse Workspace</span> and selecting <span class="code-emphasize">Opentides 3</span>.</li>
+			<li>Set the goal as <span class="code-emphasize">clean install</span>.</li>
+			<li><span class="code-emphasize">Apply</span> then <span class="code-emphasize">Run</span></li>
+		</ol>
+		
+		<hr/>
+		
+		<h2><i class="icon-trophy"></i> There you go!</h2>
+		<p>
+			If everything went according to plan, you should have successfully cloned <span class="code-emphasize">Opentides 3</span> from Git into your local machine. 
+			In the next chapter, we will create a sample project out of <span class="code-emphasize">Opentides 3</span> and run it. See ya!
+		</p>
+		
+		<ul class="pager">
+			<li class="previous">
+				<a href="${home}/overview">&larr; Previous (Overview)</a>
+			</li>
+			<li class="next">
+				<a href="${home}/creating-project">Next (Creating a new project) &rarr;</a>
+			</li>
+		</ul>
 	</div>
 </div>
 
@@ -162,7 +133,7 @@
 		function scrollToView(destinationID){
 			$('html, body').animate({
 				scrollTop: $("#"+destinationID).offset().top-45
-			}, 1500);
+			}, 600);
 		}
 	</script>
 </app:footer>

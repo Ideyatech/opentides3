@@ -1,7 +1,4 @@
 <%--
-	- crud.jsp
-	- Displays a tutorial for using the tags of opentides 3
-	-
 	- @author - ONZ
 --%>
 
@@ -17,10 +14,13 @@
 </app:header>
 
 <ul class="breadcrumb">
-  <li><a href="${home}"><spring:message code="label.home"/></a> <span class="divider">/</span></li>
-  <li><a href="${home}/start">Getting Started</a> <span class="divider">/</span></li>
-  <li><a href="${home}/start">Getting Started</a> <span class="divider">/</span></li>
-  <li>Creating Entities</li>
+	<li><a href="${home}/overview">Overview</a><span class="divider">/</span></li>
+	<li><a href="${home}/getting-started">Getting Started</a><span class="divider">/</span></li>
+	<li><a href="${home}/creating-project">Creating Project</a><span class="divider">/</span></li>
+	<li><a href="${home}/customize">Customization</a><span class="divider">/</span></li>
+	<li><a href="${home}/entities-and-attributes">Entities & Attributes</a><span class="divider">/</span></li>
+	<li><a href="${home}/dao-and-service">DAO's & Services</a><span class="divider">/</span></li>
+	<li>CRUD Controller</li>
 </ul>
 
 <div class="row-fluid">
@@ -39,9 +39,7 @@
 	<!-- CONTENT -->
 	<div class="span10">
 		<h1><i class="icon-book"></i> CRUD Controller</h1>
-		<p>In this chapter, we create the controller that will handle all of our CRUD requests.</p>
-		
-		<h3 id="baseCrudController">BaseCrudController</h3>
+		<h3 id="basecrudcontroller">BaseCrudController</h3>
 		<p>This controller is responsible for all the CRUD functionalities therefore less coding for us.</p>
 		<div class="tutorial-body">
 			<div class="example">
@@ -120,13 +118,18 @@
 		
 		<hr/>
 		
+		<h2><i class="icon-coffee"></i> Up next!</h2>
+		<p>
+			In the next chapter, we will create the supporting JSP page that will complete our whole CRUD process.
+		</p>
+		
 		<!-- pager -->
 		<ul class="pager">
 			<li class="previous">
 				<a href="${home}/dao-and-service">&larr; Previous (DAO's and Service's)</a>
 			</li>
 			<li class="next">
-				<a href="${home}/dao-and-service">Next (DAO's and Services) &rarr;</a>
+				<a href="${home}/crud-view">Next (CRUD View) &rarr;</a>
 			</li>
 		</ul>
 		
@@ -148,7 +151,7 @@
 		function scrollToView(destinationID){
 			$('html, body').animate({
 				scrollTop: $("#"+destinationID).offset().top-45
-			}, 1500);
+			}, 600);
 		}
 	</script>
 </app:footer>

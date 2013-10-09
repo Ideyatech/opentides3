@@ -1,7 +1,4 @@
 <%--
-	- tutorial-creating-entities.jsp
-	- Displays a tutorial for using the tags of opentides 3
-	-
 	- @author - ONZ
 --%>
 
@@ -17,10 +14,11 @@
 </app:header>
 
 <ul class="breadcrumb">
-  <li><a href="${home}"><spring:message code="label.home"/></a> <span class="divider">/</span></li>
-  <li><a href="${home}/start">Getting Started</a> <span class="divider">/</span></li>
-  <li><a href="${home}/start">Creating Entities</a> <span class="divider">/</span></li>
-  <li>Defining Attributes</li>
+	<li><a href="${home}/overview">Overview</a><span class="divider">/</span></li>
+	<li><a href="${home}/getting-started">Getting Started</a><span class="divider">/</span></li>
+	<li><a href="${home}/creating-project">Creating Project</a><span class="divider">/</span></li>
+	<li><a href="${home}/customize">Customization</a><span class="divider">/</span></li>
+	<li>Entities & Attributes</li>
 </ul>
 
 <div class="row-fluid">
@@ -28,21 +26,56 @@
 	<div class="span2">
 		<div data-spy="affix" data-offset-top="60" class="affix-top" style="top: 55px;">
 			<ul class="nav nav-list side-nav">
-				<li class="nav-header">Navigation</li>
-				<li class="active"><a id="scroll-systemCodes">System Codes</a></li>
-				<li><a id="scroll-definingAttributes">Defining Attributes</a></li>
+				<li class="nav-header">Creating Entities</li>
+				<li class="active"><a id="scroll-patient">Patient.java</a></li>
+				<li><a id="scroll-systemcodes">SystemCodes</a></li>
+				<li><a id="scroll-attributes">Patient Attributes</a></li>
 			</ul>
 		</div>
 	</div>
 	
 	<!-- CONTENT -->
 	<div class="span10">
-		<h1><i class="icon-book"></i> Defining Attributes</h1>
-		<p>Defining attributes in Opentides 3 doesn't vary it all from our normal coding practice. However, there are a few steps to be followed.</p>
+		<h1><i class="icon-book"></i> Creating Entities & Defining Attributes</h1>
+		<p>In this chapter, we create all the required classes for Tatiana and define it's basic attributes.</p>
 		
-		<h3 id="systemCodes">SystemCodes</h3>
+		<h3 id="patient">Patient</h3>
 		<p>
-			Before we proceed, we must first understand the SystemCodes class. SystemCodes are commonly the values of a drop down menu. The usual use for them would be for the male and female gender.
+			As discussed in the previous chapter, this object will be the main focus of our web app. Before we proceed
+			in making the Patient class, let me introduce you to the <span class="code-emphasize">BaseEntity</span> class.
+		</p>
+		<h4 id="">Base Entity</h4>
+		<p>
+			This is the base class for all entity objects (model) within Opentides. This class contains all the basic attributes such as
+			id, createDate, updateDate etc. Every bean within Opentides that would be persisted should extend this class.
+		</p>
+		<div class="tutorial-body">
+			<div class="example">
+				<code class="prettyprint">
+					@Entity<br/>
+					@Table(name="PATIENT")<br/>
+					@Auditable<br/>
+					public class Patient extends BaseEntity{
+					<br/><br/>
+					}
+				</code>
+			</div>
+		</div>
+		<p>Knowing this, we now create our <span class="code-emphasize">Patient</span> class</p>
+		<h4>Steps</h4>
+		<ol>
+			<li>Create the <span class="code-emphasize">Patient</span> class under the package <span class="code-emphasize">org.tutorial.tatiana.bean</span> and extend <code>BaseEntity</code> from <code>org.opentides.bean</code>.</li>
+			<li>Annotate the whole class with <code>@Entity</code> from <code>javax.persistence</code>. <code>@Entity</code> allows you to save an instance of your model into the database.</li>
+			<li>Specify the name of the table by adding the <code>@Table(name="PATIENT")</code> from <code>javax.persistence</code>.</li>
+			<li>Make it auditable by adding <code>@Auditable</code> from <code>org.opentides.annotation</code>.</li>
+		</ol>
+		
+		<hr/>
+		
+		<h3 id="systemcodes">SystemCodes</h3>
+		<p>
+			Before we start defining our attributes, we must first understand the SystemCodes class. 
+			SystemCodes are commonly the values of a drop down menu. The common use for them would be for the male and female gender.
 		</p>
 		<h4>How to create a SystemCode</h4>
 		<ol>
@@ -61,7 +94,7 @@
 		
 		<h4>Usage</h4>
 		<p>
-			Defining a SystemCode into your class would be fairly easy.
+			Defining a SystemCode into your class would be a piece of cake <i class="icon-thumbs-up-alt"></i>
 		</p>
 		<div class="example">
 			<code class="prettyprint">
@@ -82,7 +115,7 @@
 		
 		<hr/>
 		
-		<h3 id="definingAttributes">Defining class attributes</h3>
+		<h3 id="attributes">Defining Patient Attributes</h3>
 		<p>
 			Now that we've learned how to use the <span class="code-emphasize">SystemCodes</span> class, its time to define our attributes!
 		</p>
@@ -107,15 +140,15 @@
 			</code>
 		</div>
 		
-		<p><i class="icon-info-sign"></i> For more information about hibernate annotations, please refer to this <a href="http://tadtech.blogspot.com/2007/09/hibernate-association-mappings-in.html" target="_blank">link</a></p>
+		<p><i class="icon-rocket"></i> For more information about Hibernate annotations, please refer to this <a href="http://tadtech.blogspot.com/2007/09/hibernate-association-mappings-in.html" target="_blank">link</a></p>
 
 		<div class="alert alert-info">
-			<strong>Heads up!</strong> We use <strong>java.util.date</strong> when working with dates.
+			<strong>Heads up!</strong> We use <strong>java.Util.date</strong> when working with dates.
 		</div>
 		
 		<hr/>
 		
-		<h2><i class="icon-pushpin"></i> Exercise</h2>
+		<h2><i class="icon-code"></i> Exercise</h2>
 		<p>
 			Define attributes into our <span class="code-emphasize">Patient</span>. Some attributes may be the following:
 			<ul>
@@ -127,20 +160,20 @@
 				<li>Mobile no.</li>
 				<li>Landline no.</li>
 			</ul>
+			
+			As an additional task, create a system code for the <span class="code-emphasize">GENDER</span> category for both male and female.<br/><br/>
 			In the next chapter, we will create our DAO's and services. They will be  magical so be sure to pay close attention!
 		</p>
 		
 		<!-- pager -->
 		<ul class="pager">
 			<li class="previous">
-				<a href="${home}/creating-entities">&larr; Previous (Creating Entities)</a>
+				<a href="${home}/customize">&larr; Previous (Customization)</a>
 			</li>
 			<li class="next">
 				<a href="${home}/dao-and-service">Next (DAO's and Services) &rarr;</a>
 			</li>
 		</ul>
-		
-		
 	</div>
 </div>
 
@@ -159,7 +192,7 @@
 		function scrollToView(destinationID){
 			$('html, body').animate({
 				scrollTop: $("#"+destinationID).offset().top-45
-			}, 1500);
+			}, 600);
 		}
 	</script>
 </app:footer>

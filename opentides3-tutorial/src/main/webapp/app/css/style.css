@@ -119,4 +119,10 @@ code.prettyprint span.kwd{
 	font-weight: bold;
 }
 
+
+a.show-modal{
+	cursor: pointer;
+}
+
+
 /*  */

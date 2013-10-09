@@ -16,9 +16,13 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+/**
+ * A spring controller in charge for the whole tutorial module. 
+ * @author Ronielson
+ *
+ */
 @Controller
 public class TutorialController {
-
 	
 	@Autowired
 	private UserService userService;
@@ -26,22 +30,34 @@ public class TutorialController {
 	@Autowired
 	private NinjaService ninjaService;
 	
-	@RequestMapping(method = RequestMethod.GET, value="/start")
-	public String gettingStarted(ModelMap map){
+	@RequestMapping(method = RequestMethod.GET, value="/overview")
+	public String overview(ModelMap map){
 
+		return "app/tutorial-overview";
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value="/getting-started")
+	public String gettingStarted(ModelMap map){
+		
 		return "app/tutorial-getting-started";
 	}
 	
-	@RequestMapping(method = RequestMethod.GET, value="/project-details")
-	public String projectDetails(ModelMap map){
+	@RequestMapping(method = RequestMethod.GET, value="/creating-project")
+	public String creatingProject(ModelMap map){
 
-		return "app/tutorial-project-details";
+		return "app/tutorial-creating-project";
 	}
 	
-	@RequestMapping(method = RequestMethod.GET, value="/creating-entities")
-	public String creatingEntities(ModelMap map){
+	@RequestMapping(method = RequestMethod.GET, value="/customize")
+	public String customize(ModelMap map){
 
-		return "app/tutorial-creating-entities";
+		return "app/tutorial-customize";
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value="/entities-and-attributes")
+	public String entitiesAndAttributes(ModelMap map){
+
+		return "app/tutorial-entities-and-attributes";
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value="/dao-and-service")
@@ -62,6 +78,12 @@ public class TutorialController {
 		return "app/tutorial-crud-view";
 	}
 	
+	@RequestMapping(method = RequestMethod.GET, value="/validation")
+	public String validation(ModelMap map){
+
+		return "app/tutorial-validation";
+	}
+	
 	@RequestMapping(method = RequestMethod.GET, value="/tags")
 	public String tagsTutorial(ModelMap map){
 		
@@ -75,13 +97,15 @@ public class TutorialController {
 		return "app/tutorial-tags";
 	}
 	
-	
-	
-	@RequestMapping(method = RequestMethod.GET, value="/defining-attributes")
-	public String definingAttributes(ModelMap map){
-
-		return "app/tutorial-defining-attributes";
+	@RequestMapping(method = RequestMethod.GET, value="/interfaces")
+	public String tidesInterfaces(ModelMap map){
+		map.addAttribute("formCommand", modelAttribute());
+		return "app/tutorial-interfaces";
 	}
+	
+	
+	
+	
 	
 	private TutorialModel modelAttribute(){
 		return new TutorialModel();

@@ -66,7 +66,7 @@
 					</thead>
 					<tbody>
 						<script type="text/template" class="template">
-	                		<tr data-id="{{id}}">
+	                		<tr id="%%%%%%-row-{{id}}" data-id="{{id}}">
 								<!-- Define template here -->
 								<td>
 									<i class='icon-pencil edit-action' data-id='{{id}}' data-title="<spring:message code="label.edit" />"></i>
@@ -125,6 +125,7 @@
 <app:footer>
 	<script type="text/javascript">
 		$(document).ready(function() {
+			
 			$('body').tooltip({selector: '.edit-action, .remove-action'});
 		});
 	</script>

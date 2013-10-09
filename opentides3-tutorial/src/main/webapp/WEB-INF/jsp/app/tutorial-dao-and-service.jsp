@@ -17,11 +17,12 @@
 </app:header>
 
 <ul class="breadcrumb">
-  <li><a href="${home}"><spring:message code="label.home"/></a> <span class="divider">/</span></li>
-  <li><a href="${home}/start">Getting Started</a> <span class="divider">/</span></li>
-  <li><a href="${home}/creating-entities">Creating Entities</a> <span class="divider">/</span></li>
-  <li><a href="${home}/defining-attributes">Defining Attributes</a> <span class="divider">/</span></li>
-  <li>DAO's and Services</li>
+	<li><a href="${home}/overview">Overview</a><span class="divider">/</span></li>
+	<li><a href="${home}/getting-started">Getting Started</a><span class="divider">/</span></li>
+	<li><a href="${home}/creating-project">Creating Project</a><span class="divider">/</span></li>
+	<li><a href="${home}/customize">Customization</a><span class="divider">/</span></li>
+	<li><a href="${home}/entities-and-attributes">Entities & Attributes</a><span class="divider">/</span></li>
+	<li>DAO & Services</li>
 </ul>
 
 <div class="row-fluid">
@@ -136,18 +137,9 @@
 			</div>
 		</div>
 		
-		<ul class="pager">
-			<li class="previous">
-				<a href="${home}/defining-attributes">&larr; Previous (Defining Attributes)</a>
-			</li>
-			<li class="next">
-				<a href="${home}/defining-attributes">Next (Defining Attributes) &rarr;</a>
-			</li>
-		</ul>
-		
 		<hr/>
 		
-		<h1><i class="icon-pause"></i> Wait, what did just happen?</h1>
+		<h2><i class="icon-puzzle-piece"></i> Wait, what did just happen?</h2>
 		<p>
 			Basically, you've just implemented all the CRUD functionalities here in the back end. It includes the following: 
 		</p>	
@@ -166,7 +158,7 @@
 		<!-- pager -->
 		<ul class="pager">
 			<li class="previous">
-				<a href="${home}/defining-attributes">&larr; Previous (Defining Attributes)</a>
+				<a href="${home}/entities-and-attributes">&larr; Previous (Entities & Attributes)</a>
 			</li>
 			<li class="next">
 				<a href="${home}/crud-controller">Next (CRUD Controller) &rarr;</a>
@@ -190,7 +182,7 @@
 		function scrollToView(destinationID){
 			$('html, body').animate({
 				scrollTop: $("#"+destinationID).offset().top-45
-			}, 1500);
+			}, 600);
 		}
 		
 		$('.show-tooltip').tooltip();

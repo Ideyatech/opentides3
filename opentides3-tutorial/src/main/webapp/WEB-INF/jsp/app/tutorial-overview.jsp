@@ -15,9 +15,7 @@
 <app:header pageTitle="label.tutorial" active="tags"/>
 
 <ul class="breadcrumb">
-  <li><a href="${home}"><spring:message code="label.home"/></a> <span class="divider">/</span></li>
-  <li><a href="${home}/start">Getting Started</a> <span class="divider">/</span></li>
-  <li>Project Overview</li>
+  <li>Overview</li>
 </ul>
 
 <div class="row-fluid">
@@ -25,11 +23,10 @@
 	<div class="span2">
 		<div data-spy="affix" data-offset-top="60" class="affix-top" style="top: 55px;">
 			<ul class="nav nav-list side-nav">
-				<li class="nav-header">Getting to know</li>
+				<li class="nav-header">Project Overview</li>
 				<li class="active"><a id="scroll-hello">Hello Tatiana!</a></li>
 				<li><a id="scroll-functionalities">What can she do?</a></li>
 				<li><a id="scroll-components">Meet the objects</a></li>
-				<li><a id="scroll-diagram">Class Diagram</a></li>
 			</ul>
 		</div>
 	</div>
@@ -37,12 +34,11 @@
 	<!-- CONTENT -->
 	<div class="span10">
 		<h1><i class="icon-book"></i> Get to know Tatiana</h1>
-		<p>In this section, you will learn the basic specification of our project <span class="code-emphasize">Tatiana</span>.</p>
-		<hr/>
 		
 		<h3 id="hello">Hello Tatiana!</h3>
 		<p>
-			Tatiana is a simple web app that will help small time dental clinics to manage all their records and keep track of their patient's upcoming appointments.
+			Tatiana is a simple web app that we will create while learning how to use <span class="code-emphasize">Opentides 3.</span> 
+			By the end of this tutorial we would have her up and running in our local machine.
 		</p>
 		
 		<hr/>
@@ -51,30 +47,27 @@
 		<p>Tatiana will be simple, fast and clean. It can do the following: </p>
 		<ul>
 			<li>Provide a list of all existing patients.</li>
-			<li>Create and manage a patient records</li>
-			<li>Users are required to login to access the records</li>
-			<li>Provide a list of all treatments that the clinic does</li>
-			<li>Create and manage treatments</li>
-			<li>Adding of an appointment record to a patient</li>
+			<li>Create and manage a patient record</li>
+			<li>Login</li>
 		</ul>
-		
+		<p>Basically, <span class="code-emphasize">Tatiana</span> will demonstrate the core features of <span class="code-emphasize">Opentides 3</span> which is CRUD.</p>
+
 		<hr/>
 		
-		<h3 id="components">Meet the objects!</h3>
+		<h3 id="components">Meet the object!</h3>
 		<ul>
-			<li>Dentist - He is the user of the whole application. He has his own login credentials.</li>
-			<li>Patient - This object will be the primary star of our application.</li>
-			<li>Treatment - This will represent the treatments present in the clinic such as tooth extraction, cleaning etc etc</li>
-			<li>Appointment - This is the record that will be added to a patient. It would contain the treatment and other details</li>
+			<li>Patient</li>
 		</ul>
+		<p>We will only cover the CRUD page for the patient class. However, the project may be continued into something bigger such as adding treatments to a patient and appointments as well.</p>
 		<hr/>
+		
+		<h2><i class="icon-lightbulb"></i> Up next!</h2>
+		<p>In the next chapter, we will create a new project under <span class="code-emphasize">Opentides 3</span>. We will also configure our server and database and then run the project!</p>
+		
 		
 		<ul class="pager">
-			<li class="previous">
-				<a href="${home}/start">&larr; Previous (Getting Started)</a>
-			</li>
 			<li class="next">
-				<a href="${home}/java-classes">Next (Basic classes) &rarr;</a>
+				<a href="${home}/getting-started">Next (Getting Started) &rarr;</a>
 			</li>
 		</ul>
 	</div>
@@ -95,7 +88,7 @@
 		function scrollToView(destinationID){
 			$('html, body').animate({
 				scrollTop: $("#"+destinationID).offset().top-45
-			}, 1500);
+			}, 600);
 		}
 	</script>
 </app:footer>
