@@ -33,7 +33,7 @@ public class ConfirmPasswordResetValidator implements Validator {
 	/* (non-Javadoc)
 	 * @see org.springframework.validation.Validator#supports(java.lang.Class)
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	public boolean supports(Class clazz) {
 		return PasswordReset.class.isAssignableFrom(clazz);		
 	}
