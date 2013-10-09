@@ -51,6 +51,7 @@ public class UserDAOIntegrationTest extends BaseDaoTest {
     	group2 = userGroupDAO.loadEntityModel(982l);
     }
 	
+    @Ignore
 	@Test
 	@Transactional
 	public void testAddUser() {

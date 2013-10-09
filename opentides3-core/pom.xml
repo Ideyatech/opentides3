@@ -417,7 +417,7 @@
 					<excludes>
 						<!-- Exclude integration test -->
 						<exclude>**/BaseDaoTest.java</exclude>
-						<exclude>**/*IntegrationTest.java</exclude>
+						<!-- <exclude>**/*IntegrationTest.java</exclude> -->
 					</excludes>
 				</configuration>
 			</plugin>
