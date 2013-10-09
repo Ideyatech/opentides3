@@ -410,13 +410,15 @@ public class FileUtil {
 		try {
 			Properties sortedProperties = new SortedProperties(properties);
 			File f = new File(filename);
+			_log.info("Storing file to: " + f.getAbsolutePath());
 			out = new FileOutputStream(f);
 			sortedProperties.store(out, header);
 		} catch (Exception e) {
 			_log.error(e,e);
 		} finally {
 			try {
-				out.close();
+				if(out != null)
+					out.close();
 			} catch (IOException e) { }
 		}
 	}
