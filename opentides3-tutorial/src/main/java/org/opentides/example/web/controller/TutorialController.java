@@ -97,11 +97,23 @@ public class TutorialController {
 		return "app/tutorial-tags";
 	}
 	
+	@RequestMapping(method = RequestMethod.GET, value="/review")
+	public String review(ModelMap map){
+		return "app/tutorial-review";
+	}
+	
 	@RequestMapping(method = RequestMethod.GET, value="/interfaces")
 	public String tidesInterfaces(ModelMap map){
 		map.addAttribute("formCommand", modelAttribute());
 		return "app/tutorial-interfaces";
 	}
+	
+	@RequestMapping(method = RequestMethod.GET, value="/dbevolve")
+	public String dbEvolve(ModelMap map){
+		return "app/tutorial-dbevolve";
+	}
+	
+	
 	
 	
 	

@@ -1,7 +1,4 @@
 <%--
-	- tutorial-tags.jsp
-	- Displays a tutorial for using the tags of opentides 3
-	-
 	- @author - ONZ
 --%>
 
@@ -15,9 +12,7 @@
 <app:header pageTitle="label.tutorial" active="tags"/>
 
 <ul class="breadcrumb">
-  <li><a href="${home}"><spring:message code="label.home"/></a> <span class="divider">/</span></li>
-  <li><a href="${home}/start">Getting Started</a> <span class="divider">/</span></li>
-  <li>Form Tags</li>
+	ALTER ME
 </ul>
 
 <div class="row-fluid">
@@ -34,20 +29,13 @@
 				<li><a id="scroll-checkBox"><spring:message code="label.tutorial.checkBox"/></a></li>
 				<li><a id="scroll-radioButton"><spring:message code="label.tutorial.radioButton"/></a></li>
 				<li><a id="scroll-tokenizer"><spring:message code="label.tutorial.tokenizer"/></a></li>
-				<li class="nav-header"><spring:message code="label.tutorial.pageTags"/></li>
-				<li><a id="scroll-header"><spring:message code="label.tutorial.header"/></a></li>
-				<li><a id="scroll-footer"><spring:message code="label.tutorial.footer"/></a></li>
-				<li class="nav-header"><spring:message code="label.tutorial.otherTags"/></li>
-				<li><a id="scroll-pagination"><spring:message code="label.tutorial.pagination"/></a></li>
-				<li><a id="scroll-status"><spring:message code="label.tutorial.status"/></a></li>
-				<li><a id="scroll-comment"><spring:message code="label.tutorial.comments"/></a></li>
 			</ul>
 		</div>
 	</div>
 	
 	<!-- CONTENT -->
 	<div class="span10">
-		<h1><i class="icon-book"></i> An overview to the form tags</h1>
+		<h1><i class="icon-book"></i> Form Tags</h1>
 		
 		<h3 id="textBox"><spring:message code="label.tutorial.textBox"/></h3>
 		<p>Displays a combination of a text field and a label. Used inside a form</p>
@@ -368,137 +356,16 @@
 			</form:form>
 		</div>
 		
-		<hr/>
+		<h2><i class="icon-dashboard"></i> Information Overload!</h2>
+		<p>Wait are you tired? You shouldn't be. You still have an exercise to do!</p>
+		<p>Base from what you have learned right now, implement the following into our patient form</p>
+		<ul>
+			<li>Radiobutton tag for gender</li>
+			<li>Datepicker tag for birthday</li>
+			<li>Select tag for City</li>
+		</ul>
+		<p>Meanwhile, feel free to explore the tags for yourself. Ciao!</p>
 		
-		<h1><i class="icon-tags"></i> <spring:message code="label.tutorial.pageTags"/></h1>
-
-		<h3 id="header"><spring:message code="label.tutorial.header"/></h3>
-		<p>Adds the default Opentides 3 header to the page. </p><br/><br/>
-		<div class="tutorial-body">
-			<div class="highlight">
-				<h4>Usage</h4>
-				<span class="code code-red">
-					&lt;app:header pageTitle="label.tutorial" active="tutorial"&gt;<br/>
-					&nbsp;&nbsp;&nbsp;&nbsp;//css & javascript imports here<br/>
-					&lt;/app:header&gt;
-				</span>
-				<h4>Parameters</h4>
-				<table>
-					<tr>
-						<td class="wider"><span class="code code-teal">pageTitle</span></td>
-						<td>The title of the page that would be displayed. Content must be in the *.message.properties file</td>
-					<tr/>
-					<tr>
-						<td class="wider"><span class="code code-teal">active</span></td>
-						<td>Sets the specified tab to be seen as selected.</td>
-					</tr>
-					<tr>
-						<td class="wider"><span class="code code-teal">pageType</span></td>
-						<td>
-							Open Tides 3 currently supports 3 page types. 
-							The default page, <span class="code code-red">modal-page</span> and <span class="code code-red">anonymous-page</span>
-						</td>
-					</tr>
-				</table>
-			</div>
-		</div>
-		
-		<div class="alert alert-info">
-			<strong>Heads up!</strong> By practice, all css, javascript and jquery imports are written within this tag.
-		</div>
-		
-		<hr/>
-		
-		<h3 id="footer"><spring:message code="label.tutorial.footer"/></h3>
-		<p>Adds the default Open Tides 3 footer to the page. All javascript codes are written inside this tag.</p><br/><br/>
-		<div class="tutorial-body">
-			<div class="highlight">
-				<h4>Usage</h4>
-				<span class="code code-red">
-					&lt;app:footer&gt;<br/>
-					&nbsp;&nbsp;&nbsp;&nbsp;//javascript code here<br/>
-					&lt;/app:footer&gt;
-				</span>
-			</div>
-		</div>
-		
-		<hr/>
-		
-		<h1><i class="icon-tags"></i> Other tags</h1>
-
-		<h3 id="pagination">Pagination</h3>
-		<p>Displays a text area to be used for multiple string value.</p>
-		<div class="tutorial-body">
-			<div class="example">
-				<app:paging results="${results}"/>
-			</div>
-			<div class="highlight">
-				<h4>Usage</h4>
-				<span class="code cod-red">&lt;app:paging results="&#36;{results}" /&gt;</span>
-				<h4>Parameters</h4>
-				<table>
-					<tr>
-						<td class="wider"><span class="code code-teal">results</span></td>
-						<td>Specify the result set of the list to have pagination.</td>
-					</tr>
-				</table>
-			</div>
-		</div>
-		
-		<hr/>
-		
-		<h3 id="status"><spring:message code="label.tutorial.status"/></h3>
-		<p>Displays a block of text that contains a quick overview of the query executed in the page.</p>
-		<div class="tutorial-body">
-			<div class="example">
-				<app:status results="${results}"/>
-			</div>
-			<div class="highlight">
-				<h4>Usage</h4>
-				<span class="code code-red">&lt;app:paging results="&#36;{results}" /&gt;</span>
-				<h4>Parameters</h4>
-				<table>
-					<tr>
-						<td class="wider"><span class="code code-teal">results</span></td>
-						<td>Specify the result set of the list to have information given.</td>
-					</tr>
-					<tr>
-						<td class="wider"><span class="code code-teal">resultLabel</span></td>
-						<td>Name referring to the results. Used as "Displaying X of Y <strong>Cars</strong>" <small>(not yet implemented)</small></td>
-					</tr>
-				</table>
-			</div>
-		</div>
-		
-		<hr/>
-		
-		<h3 id="comment"><spring:message code="label.tutorial.comments"/></h3>
-		<p>Displays a block of text that contains a quick overview of the query executed in the page.</p>
-		<div class="tutorial-body">
-			<div class="example">
-				<app:comments commentList="${tutorialModel.comments}" action="/" commentableId="${tutorialModel.id}"/>
-			</div>
-			<div class="highlight">
-				<h4>Usage</h4>
-				<span class="code code-red">&lt;app:comments commentList="&#36;{tutorialModel.comments}" action="/" commentableId="&#36;{tutorialModel.id}" /&gt;</span>
-				<h4>Parameters</h4>
-				<table>
-					<tr>
-						<td class="wider"><span class="code code-teal">action</span></td>
-						<td>The url for the comment controller of the specified bean</td>
-					</tr>
-					<tr>
-						<td class="wider"><span class="code code-teal">commentList</span></td>
-						<td>A list of comments from the current bean</td>
-					</tr>
-					<tr>
-						<td class="wider"><span class="code code-teal">commentableId</span></td>
-						<td>ID of the bean that would have a comment</td>
-					</tr>
-				</table>
-			</div>
-		</div>
-
 		<ul class="pager">
 			<li class="previous">
 				<a href="${home}/start">&larr; Previous (Getting Started)</a>
@@ -525,7 +392,7 @@
 		function scrollToView(destinationID){
 			$('html, body').animate({
 				scrollTop: $("#"+destinationID).offset().top-45
-			}, 1500);
+			}, 600);
 		}
 	</script>
 </app:footer>
