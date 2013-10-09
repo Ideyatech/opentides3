@@ -25,6 +25,7 @@ import org.opentides.service.ImageInfoService;
 import org.opentides.util.CrudUtil;
 import org.opentides.util.ImageUtil;
 import org.opentides.util.NamingUtil;
+import org.opentides.util.StringUtil;
 import org.opentides.web.validator.PhotoValidator;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -209,14 +210,11 @@ public class ImageController {
 	/**
 	 * Process image upload. 
 	 * 
-	 * <p>To be able to use this a {@link Photoable} entity needs to have its own {@link BaseCrudService} 
-	 * implementation. This method will try to search for the BaseCrudService of the entity using its
-	 * class name by convention. When found, it will load the entity and then add the image to it.
-	 * </p>
-	 * 
 	 * <p>
-	 * Setting the isPrimary to true will change the primary photo of the entity.
-	 * </p>
+	 * This method can automatically attach the image to an entity if the parameters photoableClassName
+	 * and id were provided. The photoable class needs to have a service class implementing {@link BaseCrudService}
+	 * since it will search via convention the required service. 
+	 * <p>
 	 * 
 	 * <p>
 	 * This will return a map containing the list of MessageResponse objects. The MessageResponse will
@@ -233,25 +231,29 @@ public class ImageController {
 	 * @return JSON format of a map containing the list of MessageResponse objects and the id of the ImageInfo. 
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	@RequestMapping(method = RequestMethod.POST, value="/upload/{photoableClassName}/{photoableClassId}", produces = "application/json")
+	@RequestMapping(method = RequestMethod.POST, value="/upload", produces = "application/json")
 	public @ResponseBody Map<String, Object>
 		processUpload(@Valid @ModelAttribute("image") AjaxUpload image,
-			@PathVariable("photoableClassName") String photoableClassName, 
-			@PathVariable("photoableClassId") Long id,
+			@RequestParam(value = "photoableClassName", required = false) String photoableClassName, 
+			@RequestParam(value = "photoableClassId", required = false) Long id,
 			@RequestParam(value = "isPrimary", required = false) boolean isPrimary,
 			BindingResult result, HttpServletRequest request) {
 		
-		String attributeName = NamingUtil.toAttributeName(photoableClassName);
-		String serviceBean = attributeName + "Service";
-		
-		BaseCrudService service = (BaseCrudService) beanFactory.getBean(serviceBean);
-		Assert.notNull(service, "Entity " + attributeName
-				+ " is not associated with a service class [" + serviceBean
-				+ "]. Please check your configuration.");
-		
-		BaseEntity entity = service.load(id);
-		Assert.notNull(entity, "No " + photoableClassName + " object found for the given ID [" + id + "]");
-		Assert.isAssignable(Photoable.class, entity.getClass(), "Object is not Photoable");
+		BaseEntity entity = null;
+		BaseCrudService service = null;
+		if(!StringUtil.isEmpty(photoableClassName) && id != null) {
+			String attributeName = NamingUtil.toAttributeName(photoableClassName);
+			String serviceBean = attributeName + "Service";
+			
+			service = (BaseCrudService) beanFactory.getBean(serviceBean);
+			Assert.notNull(service, "Entity " + attributeName
+					+ " is not associated with a service class [" + serviceBean
+					+ "]. Please check your configuration.");
+			
+			entity = service.load(id);
+			Assert.notNull(entity, "No " + photoableClassName + " object found for the given ID [" + id + "]");
+			Assert.isAssignable(Photoable.class, entity.getClass(), "Object is not Photoable");
+		}
 		
 		Map<String, Object> model = new HashMap<String, Object>();
 		List<MessageResponse> messages = new ArrayList<MessageResponse>();
@@ -268,18 +270,20 @@ public class ImageController {
 		imageInfo.setIsPrimary(isPrimary);
 		imageInfoService.save(imageInfo);
 		
-		//Attach to entity
-		Photoable photoable = (Photoable)entity;
-		if(isPrimary) {
-			if(photoable.getPhotos() != null) {
-				for(ImageInfo io : photoable.getPhotos()) {
-					io.setIsPrimary(false);
-					imageInfoService.save(io);
+		if(entity != null) {
+			//Attach to entity
+			Photoable photoable = (Photoable)entity;
+			if(isPrimary) {
+				if(photoable.getPhotos() != null) {
+					for(ImageInfo io : photoable.getPhotos()) {
+						io.setIsPrimary(false);
+						imageInfoService.save(io);
+					}
 				}
 			}
+			photoable.addPhoto(imageInfo);
+			service.save(entity);
 		}
-		photoable.addPhoto(imageInfo);
-		service.save(entity);
 		
 		messages.addAll(CrudUtil.buildSuccessMessage(imageInfo, "upload-photo", request.getLocale(), messageSource));
 		model.put("messages", messages);
