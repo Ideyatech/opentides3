@@ -103,9 +103,7 @@ public class BaseEntityDAOJpaImplIntegrationTest extends AbstractJUnit4SpringCon
 			protected void doInTransactionWithoutResult(TransactionStatus status) {
 				
 				ninjaDAO.saveEntityModel(ninja);
-				
-				//Find the ninja. Initially there are 3. So Id should be 4..
-				Ninja searchedNinja = ninjaDAO.loadEntityModel(4l);
+				Ninja searchedNinja = ninjaDAO.loadEntityModel(ninja.getId());
 				assertNotNull(searchedNinja);
 				assertEquals(ninja, searchedNinja);
 				
@@ -114,7 +112,7 @@ public class BaseEntityDAOJpaImplIntegrationTest extends AbstractJUnit4SpringCon
 				ninjaDAO.saveEntityModel(ninja);
 				
 				//ID should not be changed
-				assertEquals(new Long(4l), searchedNinja.getId());
+				assertEquals(new Long(ninja.getId()), searchedNinja.getId());
 				assertEquals("email@email.com", searchedNinja.getEmail());
 				
 				// Select all Ninja
@@ -122,7 +120,7 @@ public class BaseEntityDAOJpaImplIntegrationTest extends AbstractJUnit4SpringCon
 				assertEquals(4, ninjas.size());
 				
 				//Delete ninja
-				ninjaDAO.deleteEntityModel(4l);
+				ninjaDAO.deleteEntityModel(ninja.getId());
 				
 				// Select all Ninja again...
 				List<Ninja> newNinjas = ninjaDAO.findAll();

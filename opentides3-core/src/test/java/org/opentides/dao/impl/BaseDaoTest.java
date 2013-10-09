@@ -66,7 +66,7 @@ public class BaseDaoTest extends AbstractJUnit4SpringContextTests {
 			config.setProperty(DatabaseConfig.PROPERTY_DATATYPE_FACTORY, new MySqlDataTypeFactory());
 			LOGGER.debug("Dataset Path: " + datasetPath);
 			IDataSet dataSet = new FlatXmlDataSet(new FileInputStream(datasetFile));
-			DatabaseOperation.CLEAN_INSERT.execute(dbUnitCon, dataSet);
+			DatabaseOperation.REFRESH.execute(dbUnitCon, dataSet);
 		} else {
 			LOGGER.info("No initial dataset loaded");
 		}
