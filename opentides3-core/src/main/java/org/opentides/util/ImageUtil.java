@@ -87,28 +87,18 @@ public class ImageUtil {
 	 * Crop the current image. Set parameter replaceOriginal to true to replace the original image.
 	 *  
 	 * @param fullPath the full path of the original image
-	 * @param newWidth 
-	 * @param newHeight
-	 * @param fromX
-	 * @param fromY
+	 * @param command
 	 * @param replaceOriginal
 	 * @throws IOException
 	 */
-	public static void cropImage(String fullPath, int newWidth, int newHeight,
-			int fromX, int fromY, boolean replaceOriginal) throws IOException {
+	public static void cropImage(String fullPath, String command, boolean replaceOriginal) throws IOException {
 		
-		String command = "" + newWidth + "x" + newHeight + "-c@" + fromX + "x" + fromY;
 		if(_log.isDebugEnabled()) 
 			_log.debug("Crop image using command " + command);
 		
-		File file = new File(fullPath);
+		loadImage(fullPath, command);
 		if(replaceOriginal) {
-			Image currentImage = ImageLoader.fromFile(file);
-			Image transformedImage = transformImage(currentImage, command);
-			transformedImage.writeToFile(new File(fullPath));
 			replaceCachedImages(fullPath);
-		} else {
-			loadImage(fullPath, command);
 		}
 	}
 	
@@ -133,8 +123,9 @@ public class ImageUtil {
 				int underscoreIdx = filePath.lastIndexOf("_");
 				String command = filePath.substring(underscoreIdx + 1, dotIdx);
 				if(isCommandForResizing(command)) {
-					Image transformedImage = transformImage(currentImage, command);
-					transformedImage.writeToFile(fileEntry);
+					if(_log.isDebugEnabled())
+						_log.debug("Removing file: " + filePath);
+					fileEntry.delete();
 				}
 			}
 		}
@@ -233,6 +224,8 @@ public class ImageUtil {
 			// no location, use center for cropping
 			if (l < 0) l = (oWidth / 2) - (w / 2);
 			if (t < 0) t = (oHeight / 2) - (h / 2);
+			if(_log.isDebugEnabled())
+				_log.debug("Cropping using these parameters, l: " + l + ", t: " + t + "w: " + w + ", h: " + h );
 			return img.crop(l, t, l+w, t+h);
 		} else {
 			// we are resizing the image, format expected is WxH
@@ -289,6 +282,20 @@ public class ImageUtil {
 		if (command.matches("(\\d+)|(\\d*x\\d+)") ) // for resizing image
 			return true;
 		return false;
+	}
+	
+	/**
+	 * Create command for cropping image
+	 * @param newWidth
+	 * @param newHeight
+	 * @param fromX
+	 * @param fromY
+	 * @return
+	 */
+	public static String createCropCommand(Integer newWidth, Integer newHeight,
+			Integer fromX, Integer fromY) {
+		String command = "" + newWidth + "x" + newHeight + "-c@" + fromX + "x" + fromY;
+		return command;
 	}
 	
 }

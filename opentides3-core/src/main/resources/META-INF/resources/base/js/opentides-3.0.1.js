@@ -341,7 +341,6 @@ var opentides3 = (function() {
 						setSelect: [0, 0, 200, 200],
 						allowSelect: false,
 						minSize: [ 200, 200 ],
-						aspectRatio: 1,
 						onChange: function(c){
 							$('#x').val(c.x);
 						    $('#y').val(c.y);

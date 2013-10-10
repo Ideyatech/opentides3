@@ -106,7 +106,7 @@ public class ImageController {
 			if(info == null) {
 				barray = ImageUtil.getDefaultImage();
 			} else {
-				barray = ImageUtil.loadImage(info.getFullPath(), c);
+				barray = ImageUtil.loadImage(getImagePath(info), c);
 			}
 			if (barray != null) {
 				response.setContentType("image/png");
@@ -120,6 +120,19 @@ public class ImageController {
 			outputStream.close();
 		}		
 		return null;		
+	}
+	
+	/**
+	 * Get the correct image path. 
+	 * @param imageInfo
+	 * @return
+	 */
+	private String getImagePath(ImageInfo imageInfo) {
+		if(!StringUtil.isEmpty(imageInfo.getCommand())) {
+			int idx = imageInfo.getFullPath().lastIndexOf(".");
+			return imageInfo.getFullPath().substring(0, idx) + "_" + imageInfo.getCommand() +".png";
+		}
+		return imageInfo.getFullPath();
 	}
 	
 	/**
@@ -193,7 +206,12 @@ public class ImageController {
 		
 		ImageInfo currentImage = imageInfoService.load(id);
 		try {
-			ImageUtil.cropImage(currentImage.getFullPath(), newWidth, newHeight, topLeftX, topLeftY, replaceOriginal);
+			String command = ImageUtil.createCropCommand(newWidth, newHeight, topLeftX, topLeftY);
+			ImageUtil.cropImage(getImagePath(currentImage), command, replaceOriginal);
+			String newCommand = (!StringUtil.isEmpty(currentImage.getCommand()) ? currentImage.getCommand() + "_" : "" )
+					+ command;
+			currentImage.setCommand(newCommand);
+			imageInfoService.save(currentImage);
 			messages.addAll(CrudUtil.buildSuccessMessage(currentImage, "upload-photo", request.getLocale(), messageSource));
 		} catch (IOException e) {
 			_log.error("Error encountered while cropping Image.", e);
