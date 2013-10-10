@@ -23,6 +23,7 @@ import org.apache.commons.logging.LogFactory;
 import org.opentides.bean.user.SessionUser;
 import org.opentides.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.dao.DataAccessException;
@@ -64,16 +65,20 @@ public class AuthenticationDaoJdbcImpl extends JdbcDaoImpl implements Applicatio
 	/**
 	 * Flag to determine if user locking will be enabled. By default set to true
 	 */
+	@Value("${enableUserLockCheck}")
 	private boolean enableUserLockCheck = true;
 	
 	/**
 	 * The lockout seconds for locked users
 	 */
+	@Value("${lockoutSeconds}")
 	private long lockoutSeconds = 60;
+	
 	
 	/**
 	 * The max attempts
 	 */
+	@Value("${maxAttempts}")
 	private long maxAttempts = 5;
 
 	private static Log _log = LogFactory.getLog(AuthenticationDaoJdbcImpl.class);
