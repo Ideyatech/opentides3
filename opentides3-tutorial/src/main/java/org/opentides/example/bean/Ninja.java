@@ -31,7 +31,7 @@ import org.opentides.bean.ImageInfo;
 import org.opentides.bean.SystemCodes;
 import org.opentides.bean.Tag;
 import org.opentides.bean.Commentable;
-import org.opentides.bean.Photoable;
+import org.opentides.bean.ImageUploadable;
 import org.opentides.bean.Taggable;
 import org.opentides.util.StringUtil;
 import org.opentides.web.json.Views;
@@ -47,7 +47,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 @Entity  
 @Table(name="NINJA")
 @Auditable
-public class Ninja extends BaseEntity implements Commentable, Taggable, Photoable {
+public class Ninja extends BaseEntity implements Commentable, Taggable, ImageUploadable {
 	
 	private static final long serialVersionUID = -4142599915292096152L;
 	
@@ -455,7 +455,7 @@ public class Ninja extends BaseEntity implements Commentable, Taggable, Photoabl
 		return name.trim();
 	}
 	
-	// Photoable requirements
+	// ImageUploadable requirements
 	
 	@OneToMany(cascade=CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinTable(name = "NINJA_PHOTO", 
@@ -485,7 +485,7 @@ public class Ninja extends BaseEntity implements Commentable, Taggable, Photoabl
 		}
 	}
 	
-	// End of Photoable requirements
+	// End of ImageUploadable requirements
 	
 	// Commentable requirements
 	

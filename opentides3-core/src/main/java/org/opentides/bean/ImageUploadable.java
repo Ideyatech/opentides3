@@ -17,7 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
  * @author AJ
  * @author gino
  */
-public interface Photoable {
+public interface ImageUploadable {
 
 	/**
 	 * Get all {@link ImageInfo} objects attached to the entity

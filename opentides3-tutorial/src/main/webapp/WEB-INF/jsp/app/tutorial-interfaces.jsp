@@ -28,7 +28,7 @@
 				<li class="nav-header">Interfaces</li>
 				<li class="active"><a id="scroll-taggable">Taggable</a></li>
 				<li><a id="scroll-messageProperties">Commentable</a></li>
-				<li><a id="scroll-homepage">Photoable</a></li>
+				<li><a id="scroll-homepage">ImageUploadable</a></li>
 			</ul>
 		</div>
 	</div>

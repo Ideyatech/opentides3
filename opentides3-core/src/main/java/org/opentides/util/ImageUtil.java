@@ -91,12 +91,21 @@ public class ImageUtil {
 	 * @param replaceOriginal
 	 * @throws IOException
 	 */
-	public static void cropImage(String fullPath, String command, boolean replaceOriginal) throws IOException {
-		
+	public static void cropImage(String fullPath, String command, int resizedWidth, boolean replaceOriginal) throws IOException {
 		if(_log.isDebugEnabled()) 
 			_log.debug("Crop image using command " + command);
 		
-		loadImage(fullPath, command);
+		File file = new File(fullPath);
+		Image image = ImageLoader.fromFile(file);
+		
+		if(image.getWidth() > resizedWidth) {
+			image = transformImage(image, "" + resizedWidth);
+		}
+		String processedPath = processPath(fullPath, command);
+		File newFile = new File(processedPath);
+		Image rez = ImageUtil.transformImage(image, command);				
+		rez.writeToFile(newFile);
+		
 		if(replaceOriginal) {
 			replaceCachedImages(fullPath);
 		}
@@ -110,7 +119,6 @@ public class ImageUtil {
 	 */
 	private static void replaceCachedImages(String fullPath) throws IOException {
 		File file = new File(fullPath);
-		Image currentImage = ImageLoader.fromFile(file);
 		int idx = file.getName().lastIndexOf(".");
 		String filename = file.getName().substring(0, idx);
 		
