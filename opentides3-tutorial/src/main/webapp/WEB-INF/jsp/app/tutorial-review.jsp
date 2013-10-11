@@ -9,7 +9,7 @@
 <%@ taglib prefix="app" tagdir="/WEB-INF/tags"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<app:header pageTitle="label.tutorial" active="tags"/>
+<app:header pageTitle="title.review" active="basics"/>
 
 <ul class="breadcrumb">
 	ALTER ME
@@ -17,16 +17,14 @@
 
 <div class="row-fluid">
 	<!-- NAVIGATION -->
-	<div class="span1">
-		
+	<div class="span2">
+		<img src="img/cat.jpg"/>
 	</div>
 	
 	<!-- CONTENT -->
-	<div class="span11">
+	<div class="span10">
 		<h1><i class="icon-trophy"></i> Congratulations!</h1>
 		<p class="lead">You have finished the tutorial. Job well done! *clap clap*</p>
-		<p>The quick brown fox jumps over the lazy dog.</p>
-		
 		
 		<h3><i class="icon-thumbs-up-alt"></i> Accomplishments</h3>
 		<p>Let's have a review of all the things that you have done and (hopefully) learned.</p>

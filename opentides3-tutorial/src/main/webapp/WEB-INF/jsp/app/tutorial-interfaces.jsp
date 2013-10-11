@@ -36,7 +36,7 @@
 	<!-- CONTENT -->
 	<div class="span10">
 		<h1><i class="icon-book"></i> Opentides 3 Interfaces</h1>
-		<p>
+		<p class="lead">
 			Opentides 3 provides various interfaces depending on our needs. These interfaces guide the developers (us)
 			in implementing various tasks.
 		</p>

@@ -12,7 +12,7 @@
 <%@ taglib prefix="app" tagdir="/WEB-INF/tags"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<app:header pageTitle="label.tutorial" active="tags"/>
+<app:header pageTitle="title.overview" active="setting-up"/>
 
 <ul class="breadcrumb">
   <li>Overview</li>
@@ -24,8 +24,7 @@
 		<div data-spy="affix" data-offset-top="60" class="affix-top" style="top: 55px;">
 			<ul class="nav nav-list side-nav">
 				<li class="nav-header">Project Overview</li>
-				<li class="active"><a id="scroll-hello">Hello Tatiana!</a></li>
-				<li><a id="scroll-functionalities">What can she do?</a></li>
+				<li class="active"><a id="scroll-functionalities">What can she do?</a></li>
 				<li><a id="scroll-components">Meet the objects</a></li>
 			</ul>
 		</div>
@@ -34,9 +33,7 @@
 	<!-- CONTENT -->
 	<div class="span10">
 		<h1><i class="icon-book"></i> Get to know Tatiana</h1>
-		
-		<h3 id="hello">Hello Tatiana!</h3>
-		<p>
+		<p class="lead">
 			Tatiana is a simple web app that we will create while learning how to use <span class="code-emphasize">Opentides 3.</span> 
 			By the end of this tutorial we would have her up and running in our local machine.
 		</p>

@@ -34,7 +34,7 @@
 	<!-- CONTENT -->
 	<div class="span10">
 		<h1><i class="icon-book"></i> Getting Started</h1>
-		<p>
+		<p class="lead">
 			So, you decided to use <span class="code-emphasize">Opentides 3</span>. Good for you! Don't worry, installing it into your machine would be a piece of cake. *wink*
 			
 		</p>

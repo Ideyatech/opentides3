@@ -113,11 +113,15 @@ public class TutorialController {
 		return "app/tutorial-dbevolve";
 	}
 	
+	@RequestMapping(method = RequestMethod.GET, value="/using-modals")
+	public String usingModals(ModelMap map){
+		return "app/tutorial-using-modals";
+	}
 	
-	
-	
-	
-	
+	@RequestMapping(method = RequestMethod.GET, value="/using-modals-2")
+	public String usingModals2(ModelMap map){
+		return "app/tutorial-using-modals-2";
+	}
 	
 	private TutorialModel modelAttribute(){
 		return new TutorialModel();

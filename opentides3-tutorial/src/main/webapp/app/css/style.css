@@ -62,6 +62,10 @@ span.code-emphasize {
 	color: #08c;
 }
 
+p.lead span.code-emphasize{
+	font-size: 20px;
+}
+
 span.code-gray {
 	font-family: Monaco,Menlo,Consolas,"Courier New",monospace;
 	font-size: 12px;
@@ -105,6 +109,10 @@ ul.side-nav li a {
 	cursor: pointer;
 }
 
+a.pointer{
+	cursor: pointer;
+}
+
 ul.side-nav li.nav-header{
 	background-color: #f1f1f1;
 }
@@ -120,9 +128,8 @@ code.prettyprint span.kwd{
 }
 
 
-a.show-modal{
-	cursor: pointer;
+.modal-container{
+	padding: 20px;	
 }
-
 
 /*  */

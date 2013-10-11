@@ -11,6 +11,13 @@
 						http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
 						http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd
 						http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd">
+						
+	<bean id="propertyConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location">
+			<value>classpath:core-localhost.properties</value>
+		</property>
+	</bean>
 
 	<bean id="entityManagerFactory"
 		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
@@ -120,6 +127,9 @@
 					inner join USER_AUTHORITY a on g.group_id = a.usergroup_id
 					where u.username=?</value>
 		</property>
+		<property name="enableUserLockCheck" value="true"/>
+		<property name="maxAttempts" value="2"/>
+		<property name="lockoutSeconds" value="30"/>
 	</bean>
 	
 	<!-- Class to test -->

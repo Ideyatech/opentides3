@@ -9,7 +9,7 @@
 <%@ taglib prefix="app" tagdir="/WEB-INF/tags"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<app:header pageTitle="label.tutorial" active="tags">
+<app:header pageTitle="title.entities-and-attributes" active="basics">
 	<script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js"></script>
 </app:header>
 
@@ -37,7 +37,7 @@
 	<!-- CONTENT -->
 	<div class="span10">
 		<h1><i class="icon-book"></i> Creating Entities & Defining Attributes</h1>
-		<p>In this chapter, we create all the required classes for Tatiana and define it's basic attributes.</p>
+		<p class="lead">In this chapter, we create all the required classes for Tatiana and define it's basic attributes.</p>
 		
 		<h3 id="patient">Patient</h3>
 		<p>
@@ -130,7 +130,7 @@
 		<h4>Example</h4>
 		<div class="example">
 			<code class="prettyprint">
-				@Column(name = "MIDDLE_NAME", nullable=false)<br/>
+				@Column(name = "LAST_NAME")<br/>
 				@JsonView(Views.SearchView.class)<br/>
 				private String lastName;<br/>
 				<br/>
@@ -159,7 +159,6 @@
 				<li>Birth Date</li>
 				<li>Mobile no.</li>
 				<li>Landline no.</li>
-				<li>City - SystemCOdes</li>
 			</ul>
 			
 			As an additional task, create a system code for the <span class="code-emphasize">GENDER</span> category for both male and female.<br/><br/>

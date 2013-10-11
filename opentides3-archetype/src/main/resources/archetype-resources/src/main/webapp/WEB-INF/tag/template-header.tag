@@ -32,10 +32,6 @@
     </c:choose>
     
     <link rel="shortcut icon" type="image/x-icon" href="<c:url value='${favicon}'/>" />
-    
-    <link rel="stylesheet" type="text/css" href="<c:url value='/css/style.css'/>" />
-    
-    <link rel="stylesheet" type="text/css" href="<c:url value='/css/bootstrap.min.css'/>" />
     <link rel="stylesheet" type="text/css" href="<c:url value='/css/bootstrap.min.css'/>" />
     <link rel="stylesheet" type="text/css" href="<c:url value='/css/bootstrap-responsive.min.css'/>" />
 	<link rel="stylesheet" type="text/css" href="<c:url value='/css/footable-0.1.css'/>" />
@@ -109,41 +105,30 @@
 										<spring:message code="label.home"/>
 									</a>
 								</li>
-								<li class="dropdown" class="${active eq 'setting-up' ? 'active' : ''}">
-									<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-										Setting Up
-										<b class="caret"></b>
+								<li class="${active eq 'users' ? 'active' : ''}">
+									<a href="${home}/organization/users/">
+										<spring:message code="label.user"/>
 									</a>
-									<ul class="dropdown-menu">
-										<li><a href="${home}/overview">Overview</a></li>
-										<li><a href="${home}/getting-started">Getting Started</a></li>
-										<li><a href="${home}/creating-project">Creating a New Project</a></li>
-									</ul>
 								</li>
-								<li class="dropdown" class="${active eq 'basics' ? 'active' : ''}">
-									<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-										Basics
-										<b class="caret"></b>
+								<li class="${active eq 'system-codes' ? 'active' : ''}">
+									<a href="${home}/system/system-codes/">
+										<spring:message code="label.system-codes"/>
 									</a>
-									<ul class="dropdown-menu">
-										<li><a href="${home}/customize">Customization</a></li>
-										<li><a href="${home}/entities-and-attributes">Entities & Attributes</a></li>
-										<li><a href="${home}/dao-and-service">DAO & Service</a></li>
-										<li><a href="${home}/crud-controller">CRUD Controller</a></li>
-										<li><a href="${home}/crud-view">CRUD View</a></li>
-										<li><a href="${home}/validation">Form Validation</a></li>
-										<li><a href="${home}/review">Review</a></li>
-									</ul>
 								</li>
-								<li class="dropdown" class="${active eq 'advanced' ? 'active' : ''}">
-									<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-										Advanced
-										<b class="caret"></b>
+								<li class="${active eq 'usergroups' ? 'active' : ''}">
+									<a href="${home}/organization/usergroups/">
+										<spring:message code="label.usergroup"/>
 									</a>
-									<ul class="dropdown-menu">
-										<li><a>Item 1</a></li>
-										<li><a>Item 2</a></li>
-									</ul>
+								</li>
+								<li class="${active eq 'account-settings' ? 'active' : ''} hidden-desktop">
+									<a href="${home}/account-settings/"> 
+										<spring:message code="label.account-settings"/>
+									</a>
+								</li>
+								<li class="hidden-desktop">
+									<a href="${home}/logout"> 
+										<spring:message code="label.logout"/>
+									</a>
 								</li>
 							</ul>
 						</div>

@@ -9,7 +9,7 @@
 <%@ taglib prefix="app" tagdir="/WEB-INF/tags"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<app:header pageTitle="label.tutorial" active="tags">
+<app:header pageTitle="title.validation" active="basics">
 	<script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js"></script>
 </app:header>
 
@@ -109,13 +109,13 @@
 		<h2><i class="icon-rocket"></i> We're all set!</h2>
 		<p>Let's try out our new validation!</p>
 		<img src="img/tides-login.png" width="800px" class="img-rounded"/>
-		<p>In the next chapter, we will discuss the all the form tags and other tags under Opentides 3.</p>		
+		
 		<ul class="pager">
 			<li class="previous">
 				<a href="${home}/crud-view">&larr; Previous (CRUD Pages)</a>
 			</li>
 			<li class="next">
-				<a href="${home}/form-tags">Next (Form Tags) &rarr;</a>
+				<a href="${home}/review">Next &rarr;</a>
 			</li>
 		</ul>
 		

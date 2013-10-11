@@ -46,7 +46,7 @@ import org.opentides.annotation.PrimaryField;
 import org.opentides.annotation.SearchableFields;
 import org.opentides.bean.BaseEntity;
 import org.opentides.bean.ImageInfo;
-import org.opentides.bean.Photoable;
+import org.opentides.bean.ImageUploadable;
 import org.opentides.util.StringUtil;
 import org.opentides.web.json.Views;
 import org.springframework.util.CollectionUtils;
@@ -58,7 +58,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "USER_PROFILE")
 @Auditable
-public class BaseUser extends BaseEntity implements Photoable {
+public class BaseUser extends BaseEntity implements ImageUploadable {
 
 	private static final long serialVersionUID = 7634675501487373408L;
 	
@@ -144,7 +144,7 @@ public class BaseUser extends BaseEntity implements Photoable {
 	@Column(name="TWITTER_SECRET")
 	private String twitterSecret;
 
-	// Photoable requirements
+	// ImageUploadable requirements
 	
 	@OneToMany(cascade=CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinTable(name = "USER_PHOTO", 
@@ -716,6 +716,6 @@ public class BaseUser extends BaseEntity implements Photoable {
 		}
 	}
 	
-	// End of Photoable requirements
+	// End of ImageUploadable requirements
 	
 }

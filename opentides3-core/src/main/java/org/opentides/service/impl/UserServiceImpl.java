@@ -230,7 +230,8 @@ public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 		UserDao userDao = (UserDao) getDao();
 		BaseUser user = userDao.loadByUsername(username);
 		if(user.getFailedLoginCount() != null && user.getFailedLoginCount() >= maxAttempts) {
-			long elapsedTime = System.currentTimeMillis() - user.getLastFailedLoginMillis();
+			long elapsedTime = System.currentTimeMillis() - 
+					(user.getLastFailedLoginMillis() == null ? 0 : user.getLastFailedLoginMillis());
 			if(elapsedTime < 1000 * lockOutTime) {
 				return true;
 			}

@@ -34,6 +34,9 @@ public class ImageInfo extends BaseEntity {
 	@Column(name = "IS_PRIMARY")
 	private boolean isPrimary;
 	
+	@Column(name = "COMMAND")
+	private String command;
+	
 	public ImageInfo() {
 		super();
 	}
@@ -114,4 +117,18 @@ public class ImageInfo extends BaseEntity {
 		this.isPrimary = isPrimary;
 	}
 
+	/**
+	 * @return the command
+	 */
+	public String getCommand() {
+		return command;
+	}
+
+	/**
+	 * @param command the command to set
+	 */
+	public void setCommand(String command) {
+		this.command = command;
+	}
+	
 }
