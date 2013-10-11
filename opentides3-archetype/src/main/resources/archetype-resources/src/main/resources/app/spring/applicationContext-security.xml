@@ -29,7 +29,7 @@
 
 		<sec:form-login login-page="/login"
 			default-target-url="/login"
-			authentication-failure-url="/login?login_error=authentication-failed" login-processing-url="/login"/>
+			authentication-failure-url="/login?login_error=authentication-failed" />
 
 		<sec:logout logout-url="/logout" logout-success-url="/" />
 		<sec:intercept-url pattern="/**" access="isAuthenticated()" />

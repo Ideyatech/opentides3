@@ -41,6 +41,7 @@ import org.opentides.bean.Taggable;
 import org.opentides.util.StringUtil;
 import org.opentides.web.json.Views;
 import org.opentides.web.json.serializer.TagsSerializer;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.annotation.JsonView;
