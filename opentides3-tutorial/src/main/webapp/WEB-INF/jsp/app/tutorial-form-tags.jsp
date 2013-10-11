@@ -9,10 +9,11 @@
 <%@ taglib prefix="app" tagdir="/WEB-INF/tags"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<app:header pageTitle="label.tutorial" active="tags"/>
+<app:header pageTitle="title.form-tags" active="advanced"/>
 
 <ul class="breadcrumb">
-	ALTER ME
+	<li>Advanced <span class="divider">/</span></li>
+	<li>Form Tags</li>
 </ul>
 
 <div class="row-fluid">

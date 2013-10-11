@@ -14,7 +14,7 @@
 <app:header pageTitle="label.tutorial" active="tags"/>
 
 <ul class="breadcrumb">
-	<li><a href="${home}/overview">Overview</a><span class="divider">/</span></li>
+	<li>Setting Up<span class="divider">/</span></li>
 	<li>Getting Started</li>
 </ul>
 

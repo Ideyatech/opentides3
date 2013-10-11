@@ -14,10 +14,7 @@
 </app:header>
 
 <ul class="breadcrumb">
-	<li><a href="${home}/overview">Overview</a><span class="divider">/</span></li>
-	<li><a href="${home}/getting-started">Getting Started</a><span class="divider">/</span></li>
-	<li><a href="${home}/creating-project">Creating Project</a><span class="divider">/</span></li>
-	<li><a href="${home}/customize">Customization</a><span class="divider">/</span></li>
+	<li>Basics<span class="divider">/</span></li>
 	<li>Entities & Attributes</li>
 </ul>
 

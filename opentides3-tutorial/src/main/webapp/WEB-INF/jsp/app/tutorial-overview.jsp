@@ -15,7 +15,8 @@
 <app:header pageTitle="title.overview" active="setting-up"/>
 
 <ul class="breadcrumb">
-  <li>Overview</li>
+	<li>Setting Up<span class="divider">/</span></li>
+	<li>Overview</li>
 </ul>
 
 <div class="row-fluid">

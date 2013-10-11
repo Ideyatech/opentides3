@@ -12,7 +12,8 @@
 <app:header pageTitle="title.review" active="basics"/>
 
 <ul class="breadcrumb">
-	ALTER ME
+	<li>Basics<span class="divider">/</span></li>
+	<li>Review</li>
 </ul>
 
 <div class="row-fluid">

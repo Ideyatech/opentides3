@@ -14,14 +14,7 @@
 </app:header>
 
 <ul class="breadcrumb">
-	<li><a href="${home}/overview">Overview</a><span class="divider">/</span></li>
-	<li><a href="${home}/getting-started">Getting Started</a><span class="divider">/</span></li>
-	<li><a href="${home}/creating-project">Creating Project</a><span class="divider">/</span></li>
-	<li><a href="${home}/customize">Customization</a><span class="divider">/</span></li>
-	<li><a href="${home}/entities-and-attributes">Entities & Attributes</a><span class="divider">/</span></li>
-	<li><a href="${home}/dao-and-service">DAO's & Services</a><span class="divider">/</span></li>
-	<li><a href="${home}/crud-controller">CRUD Controller</a><span class="divider">/</span></li>
-	<li><a href="${home}/crud-view">CRUD View</a><span class="divider">/</span></li>
+	<li>Basics<span class="divider">/</span></li>
 	<li>Form Validation</li>
 </ul>
 

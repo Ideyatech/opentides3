@@ -141,8 +141,11 @@
 										<b class="caret"></b>
 									</a>
 									<ul class="dropdown-menu">
-										<li><a>Item 1</a></li>
-										<li><a>Item 2</a></li>
+										<li><a href="${home}/dbevolve">DB Evolve</a></li>
+										<li><a href="${home}/interfaces">Interfaces</a></li>
+										<li class="divider"></li>
+										<li><a href="${home}/form-tags">Form Tags</a></li>
+										<li><a href="${home}/using-modals">Using Modal</a></li>
 									</ul>
 								</li>
 							</ul>
