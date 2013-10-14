@@ -49,7 +49,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
  */ 
 @Entity  
 @Table(name="NINJA")
-@Auditable
+@Auditable(excludeFields = {"tags"})
 public class Ninja extends BaseEntity implements Commentable, ImageUploadable, Taggable {
 	
 	private static final long serialVersionUID = -4142599915292096152L;

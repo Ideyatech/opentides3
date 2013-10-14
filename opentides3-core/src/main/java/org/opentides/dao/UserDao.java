@@ -38,4 +38,13 @@ public interface UserDao extends BaseEntityDao<BaseUser, Long> {
 	public BaseUser loadByEmailAddress(String emailAddress);
 	public List<BaseUser> findByUsergroupName(String userGroupName);
 	public void updateLastLogin(String username);
+	
+	/**
+	 *   
+	 * @param name
+	 * @param firstResult
+	 * @param maxResults
+	 * @return
+	 */
+	public List<BaseUser> findUsersLikeLastName(String name, int firstResult, int maxResults);
 }

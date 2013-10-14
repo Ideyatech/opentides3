@@ -41,6 +41,7 @@
     <link rel="stylesheet" type="text/css" href="<c:url value='/css/datepicker.css'/>" />
     <link rel="stylesheet" type="text/css" href="<c:url value='/css/bootstrap-modal.css'/>" />
     <link rel="stylesheet" type="text/css" href="<c:url value='/css/font-awesome.min.css'/>" />
+    <link rel="stylesheet" type="text/css" href="<c:url value='/css/style.css'/>" />
     
 	<script type="text/javascript" src="<c:url value='/js/jquery-1.9.0.min.js'/>"></script>	
 	<script type="text/javascript" src="<c:url value='/js/jquery.deserialize.js'/>"></script>	
@@ -118,6 +119,11 @@
 								<li class="${active eq 'usergroups' ? 'active' : ''}">
 									<a href="${home}/organization/usergroups/">
 										<spring:message code="label.usergroup"/>
+									</a>
+								</li>
+								<li class="${active eq 'audit-log' ? 'active' : ''}">
+									<a href="${home}/audit-log/">
+										<spring:message code="label.audit-log"/>
 									</a>
 								</li>
 								<li class="${active eq 'ninja' ? 'active' : ''}">

@@ -1,14 +1,15 @@
 package org.opentides.dao.impl;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.apache.log4j.Logger;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.opentides.bean.SystemCodes;
+import org.opentides.dao.SystemCodesDao;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 
@@ -26,6 +27,13 @@ public class AuditLogDAOIntegrationTest extends BaseDaoTest {
 	        sc.setValue(rs.getString("value_"));
 	        return sc;
 		}
+	}
+	
+	@Override
+	public void init() throws Exception {
+		jdbcTemplate.update("DELETE FROM SYSTEM_CODES WHERE KEY_ = 'HR'");
+		datasetPath = datasetBasePath + "SystemCodesDAOIntegrationTest.xml";
+		super.init();
 	}
 			
 	@Test
