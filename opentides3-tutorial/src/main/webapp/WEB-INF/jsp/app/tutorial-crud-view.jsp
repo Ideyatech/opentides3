@@ -9,18 +9,12 @@
 <%@ taglib prefix="app" tagdir="/WEB-INF/tags"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<app:header pageTitle="label.tutorial" active="tags">
+<app:header pageTitle="title.crud-view" active="basics">
 	<script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js"></script>
 </app:header>
 
 <ul class="breadcrumb">
-	<li><a href="${home}/overview">Overview</a><span class="divider">/</span></li>
-	<li><a href="${home}/getting-started">Getting Started</a><span class="divider">/</span></li>
-	<li><a href="${home}/creating-project">Creating Project</a><span class="divider">/</span></li>
-	<li><a href="${home}/customize">Customization</a><span class="divider">/</span></li>
-	<li><a href="${home}/entities-and-attributes">Entities & Attributes</a><span class="divider">/</span></li>
-	<li><a href="${home}/dao-and-service">DAO's & Services</a><span class="divider">/</span></li>
-	<li><a href="${home}/crud-controller">CRUD Controller</a><span class="divider">/</span></li>
+	<li>Basics<span class="divider">/</span></li>
 	<li>CRUD View</li>
 </ul>
 
@@ -42,7 +36,7 @@
 	<!-- CONTENT -->
 	<div class="span10">
 		<h1><i class="icon-book"></i> CRUD Pages</h1>
-		<p>
+		<p class="lead">
 			In this chapter, we create and discuss the components of a CRUD page in JSP and all of its requirements.
 		</p>
 		
@@ -52,7 +46,7 @@
 		<h4>Steps</h4>
 		<ol>
 			<li>Create the file <span class="code-emphasize">patient-crud.jsp</span> in <span class="code-emphasize">src->main->webapp->WEB-INF->jsp->app</span>.</li>
-			<li>Search for the file <span class="code-emphasize">page-template-crud.jsp</span> in the same location and copy all of its content into your <span class="code-emphasize">patient-crud.jsp</span></li>
+			<li>Search for the file <span class="code-emphasize">template-crud-page.jsp</span> in <span class="code-emphasize">src->main->webapp->WEB-INF->jsp->template</span> and copy all of its content into your <span class="code-emphasize">patient-crud.jsp</span></li>
 		</ol>
 		
 		<hr/>

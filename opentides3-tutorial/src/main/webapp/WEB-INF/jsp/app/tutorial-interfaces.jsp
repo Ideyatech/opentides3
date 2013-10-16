@@ -12,12 +12,13 @@
 <%@ taglib prefix="app" tagdir="/WEB-INF/tags"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<app:header pageTitle="label.tutorial" active="java-classes">
+<app:header pageTitle="title.interfaces" active="advanced">
 	<script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js"></script>
 </app:header>
 
 <ul class="breadcrumb">
-	ALTER BREADCRUMBS
+	<li>Advanced <span class="divider">/</span></li>
+	<li>Interfaces</li>
 </ul>
 
 <div class="row-fluid">
@@ -36,7 +37,7 @@
 	<!-- CONTENT -->
 	<div class="span10">
 		<h1><i class="icon-book"></i> Opentides 3 Interfaces</h1>
-		<p>
+		<p class="lead">
 			Opentides 3 provides various interfaces depending on our needs. These interfaces guide the developers (us)
 			in implementing various tasks.
 		</p>

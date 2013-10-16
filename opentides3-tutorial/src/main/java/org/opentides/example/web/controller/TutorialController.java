@@ -84,8 +84,8 @@ public class TutorialController {
 		return "app/tutorial-validation";
 	}
 	
-	@RequestMapping(method = RequestMethod.GET, value="/tags")
-	public String tagsTutorial(ModelMap map){
+	@RequestMapping(method = RequestMethod.GET, value="/form-tags")
+	public String formTags(ModelMap map){
 		
 		map.addAttribute("elementList", elementList());
 		map.addAttribute("tutorialModel", tutorialModel());
@@ -94,7 +94,7 @@ public class TutorialController {
 		map.addAttribute("brandList", brandList());
 		map.addAttribute("formCommand", modelAttribute());
 		
-		return "app/tutorial-tags";
+		return "app/tutorial-form-tags";
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value="/review")
@@ -113,11 +113,15 @@ public class TutorialController {
 		return "app/tutorial-dbevolve";
 	}
 	
+	@RequestMapping(method = RequestMethod.GET, value="/using-modals")
+	public String usingModals(ModelMap map){
+		return "app/tutorial-using-modals";
+	}
 	
-	
-	
-	
-	
+	@RequestMapping(method = RequestMethod.GET, value="/using-modals-2")
+	public String usingModals2(ModelMap map){
+		return "app/tutorial-using-modals-2";
+	}
 	
 	private TutorialModel modelAttribute(){
 		return new TutorialModel();

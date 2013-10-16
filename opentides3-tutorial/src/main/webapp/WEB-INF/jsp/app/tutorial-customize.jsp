@@ -1,7 +1,4 @@
 <%--
-	- tutorial.jsp
-	- Displays a tutorial for using the tags of opentides 3
-	-
 	- @author - ONZ
 --%>
 
@@ -12,14 +9,12 @@
 <%@ taglib prefix="app" tagdir="/WEB-INF/tags"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<app:header pageTitle="label.tutorial" active="java-classes">
+<app:header pageTitle="title.customize" active="basics">
 	<script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js"></script>
 </app:header>
 
 <ul class="breadcrumb">
-	<li><a href="${home}/overview">Overview</a><span class="divider">/</span></li>
-	<li><a href="${home}/getting-started">Getting Started</a><span class="divider">/</span></li>
-	<li><a href="${home}/creating-project">Creating Project</a><span class="divider">/</span></li>
+	<li>Basics<span class="divider">/</span></li>
 	<li>Customization</li>
 </ul>
 
@@ -41,7 +36,7 @@
 	<!-- CONTENT -->
 	<div class="span10">
 		<h1><i class="icon-book"></i> Customizing the project</h1>
-		<p>
+		<p class="lead">
 			In the previous chapter, we have imported <span class="code-emphasize">Opentides 3</span> and ran it into our machine. In this chapter,
 			we will customize it to make it our own project.
 		</p>
@@ -58,7 +53,7 @@
 				<span class="code-emphasize">src->main->webapp->WEB-INF->tags</span>.
 			</li>
 			<li>
-				Search for the <span class="code-emphasize">header.tag</span> and copy all of its content into our own <span class="code-emphasize">header.tag</span>
+				Search for the <span class="code-emphasize">template-header.tag</span> in <span class="code-emphasize">src->main->webapp->WEB-INF->tags</span> and copy all of its content into our own <span class="code-emphasize">header.tag</span>
 				Do not worry! We will only tackle the core part of the header tag to get our small application moving. The rest will be up to you!
 			</li>
 			<li>Look for the section where <code>&lt;div class="nav-collapse collapse"&gt;</code> is written. We will only focus on this part.</li>
@@ -97,14 +92,42 @@
 			This file will be the default container for all the texts, messages and labels that will be found in your app.
 			The purpose of this file is to handle internationalization when the need comes. This is also required in using Opentides 3.
 		</p>
-		<h4>Step</h4>
+		<h4>Usage</h4>
 		<ol>
 			<li>Create a new file under <span class="code-emphasize">src/main/resources->app->languages</span>. Name it as <span class="code-emphasize">tatiana.messages.properties</span>.</li>
+			<li>
+				Add your key and values:
+				<div class="example">
+					<code class="prettyprint">
+						label.tatiana.patient = Patient<br/>
+						label.patient.add = Add a new Patient<br/>
+						label.patient.firstName = First Name<br/>
+					</code>
+				</div>
+			</li>
+			<li>To use the values in your jsp page, write them as: <code>&lt;spring:message code="label.patient.firstName"/&gt;</code></li>
 		</ol>
-		
-		<div class="alert alert-info">
-			<strong>Remember!</strong> Every time you see a "label.something.something" it means that the actual message is inside the properties file. This task is very tedious and requires proper discipline.
-		</div>
+		<h4>Remember</h4>
+		<ul>
+			<li>Every time you see a "label.something.something" it means that the actual message is inside the properties file. This task is very tedious and requires proper discipline.</li>
+			<li>Careful there, they are case sensitive.</li>
+			<li>
+				There is no definite way of writing in the properties file but to be sure, let's just follow a convention like this:
+				<div class="example">
+					<code class="prettyprint">
+						#defining the patient class from the project tatiana<br/>
+						label.tatiana.patient = Patient<br/>
+						<br/>
+						#defining the firstName attribute of the patient class<br/>
+						label.patient.firstName = First Name<br/>
+						<br/>
+						#defining a random word<br/>
+						label.potato = Potato<br/>
+					</code>
+				</div>
+			</li>
+		</ul>
+		<i class="icon-location-arrow"></i> Learn more about spring messages <a href="http://docs.spring.io/spring/docs/1.1.5/taglib/tag/MessageTag.html" target="_blank">here</a>
 		
 		<hr/>
 		
@@ -112,7 +135,7 @@
 		<p>Let's create our own home page. Its easy!</p>
 		<ol>
 			<li>Create the file <span class="code-emphasize">home.jsp</span> in the <span class="code-emphasize">src->main->webapp->WEB-INF->jsp</span></li>
-			<li>Search for the file <span class="code-emphasize">page-template.jsp</span> in the same directory and copy its content.</li>
+			<li>Search for the file <span class="code-emphasize">template-page.jsp</span> in <span class="code-emphasize">src->main->webapp->WEB-INF->jsp->template</span> and copy its content.</li>
 			<li>Specify your <code>pageTitle</code> and the <code>active</code> tab in the <code>app:header</code></li>
 			<li>It is highly recommended to use the <code>breadcrumb</code> to tell the user about his location.</li>
 			<li>You may start writing your code under the <code>row-fluid</code> div.</li>
@@ -124,7 +147,7 @@
 		<p>Additional styling can easily be done in Opentides 3. We have provided a blank <span class="code-emphasize">style.css</span> file for your use.</p>
 		<h4>Usage</h4>
 		<ol>
-			<li>Open the file <span class="code-emphasize">style.css</span> in <span class="code-emphasize">src->main->webapp->app->css</span></li>
+			<li>Open the file <span class="code-emphasize">style.css</span> in <span class="code-emphasize">src->main->webapp->app->css</span>. If file is not found, create a new one.</li>
 			<li>Write your css codes there.</li>
 		</ol>
 		<div class="alert alert-info">
