@@ -63,8 +63,8 @@
 			<configuration>
 				<url>http://localhost:8080/manager/text</url>
 				<path>/opentides</path>
-				<username>user</username>
-				<password>password</password>
+				<username>root</username>
+				<password>id3yat3ch</password>
 			</configuration>
 			<dependencies>
 				<dependency>
