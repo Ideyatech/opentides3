@@ -52,7 +52,6 @@
 	</div>
 	
 	<div id="results-panel" class="span9">
-		
 		<div id="message-panel" class="row-fluid">
 			<button id="ninja-add" class="btn btn-info add-action">
 				<i class="icon-plus-sign icon-white"></i>
@@ -173,58 +172,7 @@
 				<tides:select label="label.ninja.status" path="status" items="${statusList}" itemLabel="value" itemValue="key" select2="true" />
 				<tides:select label="label.ninja.skills" path="skillSet" items="${skillsList}" itemLabel="value" itemValue="key" multiple="true" select2="true" />
 				<tides:checkbox label="label.ninja.active" path="active"/>
-				<div class="control-group">
-					<div id="photoIds" style="display: none;">
-						<script id="imageIdsForUpload" type="text/template">
-						<input type="hidden" name="photos" value="{{imageId}}"/>
-						</script>
-					</div>
-					<label class="control-label">Images</label>
-					<div class="controls">
-						<div class="fileupload-buttonbar">
-							<div class="fileupload-buttons">
-								<span class="fileinput-button">
-				                    <input type="file" name="attachments" multiple>
-				                </span>
-				                <span class="fileupload-loading"></span>
-			                </div>
-			                <div class="fileupload-progress fade" style="display:none">
-					            <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
-					            <div class="progress-extended">&nbsp;</div>
-					        </div>
-		                </div>
-		                <table role="presentation" class="table"><tbody class="files"></tbody></table>
-		                <script id="filesForUpload" type="text/template">
-    						<tr class="template-upload" >
-        						<td style="width: 40%">
-            						<p class="name">{{name}} ({{formattedFileSize}})</p>
-        						</td>
-        						<td style="width: 40%">
-                					<div class="progress progress-striped active">
-										<div class="progress-bar progress-bar-success" style="width:0%; height:18px; background: green"></div>
-									</div>
-        						</td>
-								<td style="width: 20%">
-									<button class="btn btn-warning cancel">
-                    					<i class="icon-remove"></i>
-                					</button>
-								</td>
-    						</tr>
-						</script>
-						<script id="filesForDownload" type="text/template">
-							<tr class="template-download" >
-        						<td style="width: 80%" colspan="2">
-            						<img class="img-polaroid" src="${home}/image/{{imageId}}?c=100"/>
-        						</td>
-								<td style="width: 20%">
-									<button class="btn btn-warning cancel">
-                    					<i class="icon-remove"></i>
-                					</button>
-								</td>
-    						</tr>
-						</script>
-					</div>
-				</div>
+				<tides:input-file label="Images" id="fileUpload"/>
 				<br/>
 			</div>
 			<div class="modal-footer">
@@ -244,62 +192,7 @@
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$("#ninja-body").RESTful();
-			
 			$('body').tooltip({selector: '.edit-action, .remove-action'});
-			
-			var formatFileSize = function (bytes) {
-	            if (typeof bytes !== 'number') {
-	                return '';
-	            }
-	            if (bytes >= 1000000000) {
-	                return (bytes / 1000000000).toFixed(2) + ' GB';
-	            }
-	            if (bytes >= 1000000) {
-	                return (bytes / 1000000).toFixed(2) + ' MB';
-	            }
-	            return (bytes / 1000).toFixed(2) + ' KB';
-	        }
-			$('#ninja-form').fileupload({
-				acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
-				dataType : 'json',
-				url : '${home}/image/upload',
-				paramName : 'attachment',
-			    progressall : function(e, data) {
-			    	
-			    },
-			    add: function (e, data) {
-			    	var file = null;
-		            $.each(data.files, function() {
-		            	this.formattedFileSize = formatFileSize(this.size);
-		            	file = opentides3.template($('script#filesForUpload').html(), this);
-			            $('.files').append(file);
-		            });
-		            data.context = $('.files tr:last');
-		            data.submit();
-		        },
-		        progress: function (e, data) {
-		        	var progress = Math.floor(data.loaded / data.total * 100);
-		        	if (data.context) {
-		        		data.context.find('.progress-bar').css('width', progress + '%');
-		        		data.context.find('.cancel').click(function(e) {
-	        				e.preventDefault();
-	        			});
-		        	}
-		        },
-		        done : function(e, data) {
-		        	var imageId = opentides3.template($('script#imageIdsForUpload').html(), data.result);
-		        	$('#photoIds').append(imageId);
-		        	if (data.context) {
-		        		var newRow = opentides3.template($('script#filesForDownload').html(), data.result);
-		        		data.context.replaceWith(newRow);
-		        		data.context.find('.cancel').click(function(e) {
-	        				e.preventDefault();
-	        				alert("REMOVED");
-	        			});
-		        	}
-		        }
-			});
-			
 		})
 		.on("click", '.adjust-photo', opentides3.showAdjustPhoto)
 		.on("click", '.upload-photo', opentides3.showUploadPhoto);
