@@ -1,7 +1,4 @@
 <%--
-	- tutorial-getting-started.jsp
-	- Displays a tutorial for creating a new project with Open Tides 3
-	-
 	- @author - ONZ
 --%>
 
@@ -12,12 +9,11 @@
 <%@ taglib prefix="app" tagdir="/WEB-INF/tags"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<app:header pageTitle="label.tutorial" active="getting-started">
+<app:header pageTitle="title.creating-project" active="setting-up">
 </app:header>
 
 <ul class="breadcrumb">
-	<li><a href="${home}/overview">Overview</a><span class="divider">/</span></li>
-	<li><a href="${home}/getting-started">Getting Started</a><span class="divider">/</span></li>
+	<li>Setting Up <span class="divider">/</span></li>
 	<li>Creating Project</li>
 </ul>
 
