@@ -37,17 +37,6 @@ import com.ideyatech.dao.NinjaDAO;
 
 /**
  * Integration test for BaseEntityDAOJpaImpl class using the sample Ninja class.
- * This test uses an actual MySQL database. To be able to run this successfully 
- * you will need the following configurations:
- * 
- *  <li>DB Server - localhost
- *  <li>Port	  - 3306
- *  <li>DB Name	  - opentidestest
- *  <li>Username  - opentides3
- *  <li>Password  - password
- *  
- *  Please check applicationContext-dao-test.xml for more information. 
- * 
  * 
  * @author gino
  *
@@ -130,6 +119,19 @@ public class BaseEntityDAOJpaImplIntegrationTest extends AbstractJUnit4SpringCon
 	}
 	
 	@Test
+	public void testSelectAllWithStartTotal() {
+		List<Ninja> ninjas = ninjaDAO.findAll(1, 2);
+		assertNotNull(ninjas);
+		assertEquals(2, ninjas.size());
+		
+		Ninja ninja1 = ninjas.get(0);
+		assertEquals(new Long(2), ninja1.getId());
+		
+		Ninja ninja2 = ninjas.get(1);
+		assertEquals(new Long(3), ninja2.getId());
+	}
+	
+	@Test
 	public void testFindByNamedQuery() {
 		final Ninja ninja = new Ninja();
 		ninja.setFirstName("Richard");
@@ -174,6 +176,58 @@ public class BaseEntityDAOJpaImplIntegrationTest extends AbstractJUnit4SpringCon
 				assertEquals("Sensei", ninja2.getFirstName());
 				assertEquals("Boss", ninja2.getLastName());
 				
+			}
+		});
+	}
+	
+	@Test
+	public void testFindByNamedQueryUsingObject() {
+		final Ninja ninja = new Ninja();
+		ninja.setFirstName("Richard");
+		ninja.setLastName("Buendia");
+		ninja.setGender("Male");
+		ninja.setEmail("richard@buendia.com");
+		
+		transactionTemplate.execute(new TransactionCallbackWithoutResult() {
+			@Override
+			protected void doInTransactionWithoutResult(TransactionStatus status) {
+				//We will use this for searching...
+				ninjaDAO.saveEntityModel(ninja);
+				String jpql = "jpql.ninja.findByNameObj";
+				List<Ninja> ninjas = ninjaDAO.findByNamedQuery(jpql, new Object[]{"Richard"});
+				
+				//I expect only 1 Richard..
+				assertEquals(1, ninjas.size());
+				Ninja result = ninjas.get(0);
+				assertEquals("Richard", result.getFirstName());
+				assertEquals("Buendia", result.getLastName());
+				assertEquals("Male", result.getGender());
+			}
+		});
+	}
+	
+	@Test
+	public void testFindByNamedQueryUsingObjectWithPaging() {
+		final Ninja ninja = new Ninja();
+		ninja.setFirstName("Sensei");
+		ninja.setLastName("Buendia");
+		ninja.setGender("Male");
+		ninja.setEmail("richard@buendia.com");
+		
+		transactionTemplate.execute(new TransactionCallbackWithoutResult() {
+			@Override
+			protected void doInTransactionWithoutResult(TransactionStatus status) {
+				//We will use this for searching...
+				ninjaDAO.saveEntityModel(ninja);
+				String jpql = "jpql.ninja.findByNameObj";
+				List<Ninja> ninjas = ninjaDAO.findByNamedQuery(jpql, 1, 1, new Object[]{"Sensei"});
+				
+				//I expect only 1 Richard..
+				assertEquals(1, ninjas.size());
+				Ninja result = ninjas.get(0);
+				assertEquals("Sensei", result.getFirstName());
+				assertEquals("Buendia", result.getLastName());
+				assertEquals("Male", result.getGender());
 			}
 		});
 	}

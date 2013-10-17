@@ -35,16 +35,25 @@
 		<property name="jpaProperties">
 			<props>
 				<prop key="hibernate.hbm2ddl.auto">create</prop>
+				<prop key="hibernate.dialect">org.hibernate.dialect.HSQLDialect</prop>
 			</props>
 		</property>
 	</bean>
 	
-	<bean id="dataSource"
+	<!-- <bean id="dataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
 		<property name="url" value="jdbc:mysql://localhost/opentidestest" />
 		<property name="username" value="opentides3" />
 		<property name="password" value="password" />
+	</bean> -->
+	
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="org.hsqldb.jdbcDriver" />
+		<property name="url" value="jdbc:hsqldb:mem:testdb" />
+		<property name="username" value="sa" />
+		<property name="password" value="" />
 	</bean>
 	
 	<bean id="databaseUtil"
@@ -66,6 +75,7 @@
 		class="org.springframework.beans.factory.config.PropertiesFactoryBean">
 		<property name="locations">
 			<list>
+				<value>classpath:base/jpql/core.properties</value>
 				<value>classpath:core-test.properties</value>
 			</list>
 		</property>
@@ -104,6 +114,7 @@
 		<context:include-filter type="regex" expression="org.opentides.dao.impl.UserDaoJpaImpl.*"/>
 		<context:include-filter type="regex" expression="org.opentides.dao.impl.UserGroupDaoJpaImpl.*"/>
 		<context:include-filter type="regex" expression="org.opentides.dao.impl.PasswordResetDaoJpaImpl.*"/>
+		<context:include-filter type="regex" expression="org.opentides.dao.impl.SequenceDaoJpaImpl.*"/>
 	</context:component-scan>
 	
 	<bean class="org.opentides.service.impl.UserServiceImpl" id="userService"/>

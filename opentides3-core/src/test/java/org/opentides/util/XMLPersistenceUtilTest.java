@@ -12,7 +12,7 @@ public class XMLPersistenceUtilTest {
 	public void testGetProperties() {
 		Properties props = XMLPersistenceUtil.getProperties("META-INF/persistence-test.xml", "testPU");
 		assertNotNull(props);
-		assertEquals("org.hibernate.dialect.MySQL5InnoDBDialect", props.get("hibernate.dialect"));
+		//assertEquals("org.hibernate.dialect.MySQL5InnoDBDialect", props.get("hibernate.dialect"));
 		assertEquals("create-drop", props.get("hibernate.hbm2ddl.auto"));
 		
 		assertEquals("true", props.get("hibernate.show_sql"));

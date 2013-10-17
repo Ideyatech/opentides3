@@ -14,6 +14,7 @@ import org.dbunit.database.DatabaseConnection;
 import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSet;
+import org.dbunit.ext.hsqldb.HsqldbDataTypeFactory;
 import org.dbunit.ext.mysql.MySqlDataTypeFactory;
 import org.dbunit.operation.DatabaseOperation;
 import org.junit.Before;
@@ -66,7 +67,7 @@ public class BaseDaoTest extends AbstractJUnit4SpringContextTests {
 		
 		File datasetFile = new File(datasetPath);
 		if(datasetFile.exists()) {
-			config.setProperty(DatabaseConfig.PROPERTY_DATATYPE_FACTORY, new MySqlDataTypeFactory());
+			config.setProperty(DatabaseConfig.PROPERTY_DATATYPE_FACTORY, new HsqldbDataTypeFactory());
 			LOGGER.debug("Dataset Path: " + datasetPath);
 			IDataSet dataSet = new FlatXmlDataSet(new FileInputStream(datasetFile));
 			DatabaseOperation.REFRESH.execute(dbUnitCon, dataSet);
