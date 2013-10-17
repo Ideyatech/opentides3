@@ -438,8 +438,22 @@ var opentides3 = (function() {
 
 			form.find('textarea, input[type="text"], input[type="hidden"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"],input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"]')
 					.each(function() {
-				if($(this).attr('name')){
-					var name = $(this).attr('name');
+				var $this = $(this),
+					name = $this.attr('name');
+				if(name && $this.is(":hidden") && ($this.attr('name') == "photos" || $this.hasClass("ot-images"))){ 
+					var imageIds = opentides3.getValue(json, name);
+					if(imageIds.length > 0) {
+						for(var i = 0; i < imageIds.length; i++) {
+							if(imageIds[i].id !== undefined) {
+								var data = {"imageId" : imageIds[i].id},
+									rowTable = opentides3.template($('script#filesForDownload').html(), data);
+								$this.parent().append($this.clone().val(imageIds[i].id));
+								$("#ot-image-list tbody").append(rowTable);
+							} 
+						}
+					}
+					$this.remove();
+				} else if(name){
 					var prime = toPrimitive(opentides3.getValue(json, name));
 					$(this).val(prime);
 				}
