@@ -14,10 +14,12 @@ import org.dbunit.database.DatabaseConnection;
 import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSet;
+import org.dbunit.ext.hsqldb.HsqldbDataTypeFactory;
 import org.dbunit.ext.mysql.MySqlDataTypeFactory;
 import org.dbunit.operation.DatabaseOperation;
 import org.junit.Before;
 import org.junit.runner.RunWith;
+import org.opentides.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceUtils;
@@ -49,7 +51,7 @@ public class BaseDaoTest extends AbstractJUnit4SpringContextTests {
 	
 	protected TransactionTemplate transactionTemplate;
 	
-	private String datasetBasePath = "./src/test/resources/dataset/";
+	protected String datasetBasePath = "./src/test/resources/dataset/";
 	protected String datasetPath;
 	
 	@Before
@@ -60,13 +62,15 @@ public class BaseDaoTest extends AbstractJUnit4SpringContextTests {
 		dbUnitCon = new DatabaseConnection(conn);
 		DatabaseConfig config = dbUnitCon.getConfig();
 		
-		datasetPath = datasetBasePath + getClass().getSimpleName() + ".xml";
+		if(StringUtil.isEmpty(datasetPath))
+			datasetPath = datasetBasePath + getClass().getSimpleName() + ".xml";
+		
 		File datasetFile = new File(datasetPath);
 		if(datasetFile.exists()) {
-			config.setProperty(DatabaseConfig.PROPERTY_DATATYPE_FACTORY, new MySqlDataTypeFactory());
+			config.setProperty(DatabaseConfig.PROPERTY_DATATYPE_FACTORY, new HsqldbDataTypeFactory());
 			LOGGER.debug("Dataset Path: " + datasetPath);
 			IDataSet dataSet = new FlatXmlDataSet(new FileInputStream(datasetFile));
-			DatabaseOperation.CLEAN_INSERT.execute(dbUnitCon, dataSet);
+			DatabaseOperation.REFRESH.execute(dbUnitCon, dataSet);
 		} else {
 			LOGGER.info("No initial dataset loaded");
 		}

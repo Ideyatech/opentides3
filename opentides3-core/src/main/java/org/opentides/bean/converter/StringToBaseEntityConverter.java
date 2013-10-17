@@ -61,7 +61,7 @@ public class StringToBaseEntityConverter implements
 			try {
 				//do not include system codes in this converter
 				//TODO think of a better way to exclude entities
-				if (entity.contains("SystemCodes") || entity.contains("Tag"))
+				if (entity.contains("SystemCodes") || entity.contains("Tag") || entity.contains("AuditLog"))
 					continue;
 				convertibleTypes.add(new ConvertiblePair(String.class, Class.forName(entity)));
 				_log.info("Adding generic string converter for " + entity);

@@ -26,7 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author allantan
  *
  */
-public interface DBEvolve extends Comparable<DBEvolve>{
+public interface DBEvolve{
 	/**
 	 * Actual database evolve script operations.
 	 */
