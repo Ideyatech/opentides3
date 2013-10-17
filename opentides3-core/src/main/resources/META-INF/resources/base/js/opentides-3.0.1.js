@@ -219,8 +219,14 @@ var opentides3 = (function() {
 							+ "))==null?'':__t)+\n'";
 				}
 				if (escape) {
+					var escapeHtml = true;
+					if(escape.indexOf('&') == 0) {
+						//to support unescaping of html tags using &
+						escape = escape.substring(1);
+						escapeHtml = false;
+					}
 					source += "'+\n((__t=(" + escape
-							+ "))==null?'':opentides3.escapeHtml(__t))+\n'";					
+							+ "))==null?'':" + (escapeHtml ? "opentides3.escapeHtml(__t))+\n'" : "__t)+\n'");					
 				}
 				index = offset + match.length;
 				return match;
@@ -231,7 +237,7 @@ var opentides3 = (function() {
 			// scope.
 			if (!settings.variable)
 				source = 'with(obj||{}){\n' + source + '}\n';
-
+			
 			source = "var __t,__p='',__j=Array.prototype.join,"
 					+ "print=function(){__p+=__j.call(arguments,'');};\n"
 					+ source + "return __p;\n";
@@ -254,7 +260,6 @@ var opentides3 = (function() {
 			// precompilation.
 			template.source = 'function(' + (settings.variable || 'obj')
 					+ '){\n' + source + '}';
-
 			// update the element with the given template
 			return template;
 		},

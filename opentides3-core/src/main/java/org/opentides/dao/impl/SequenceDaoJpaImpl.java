@@ -53,7 +53,7 @@ public class SequenceDaoJpaImpl extends BaseEntityDaoJpaImpl<Sequence, Long>
 		synchronized (Sequence.class) {
 			Sequence code = loadSequenceByKey(key);
 			if (code == null)
-				code = new Sequence(key,1l);
+				code = new Sequence(key,0l);
 			code.setSkipAudit(true); // no need to audit auto-generated keys
 			code.incrementValue(step);
 			this.saveEntityModel(code);

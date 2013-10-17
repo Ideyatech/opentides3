@@ -35,7 +35,14 @@
 				<option></option>
 			</c:if>
 			<c:if test="${not empty items}">
+				<c:choose>
+				<c:when test="${not empty itemLabel and not empty itemValue}">
 				<form:options items="${items}" itemLabel="${itemLabel}" itemValue="${itemValue}"/>
+				</c:when>
+				<c:otherwise>
+				<form:options items="${items}" />
+				</c:otherwise>
+				</c:choose>
 			</c:if>
 		</form:select>
 	</div>

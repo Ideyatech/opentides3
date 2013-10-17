@@ -152,5 +152,13 @@ public class UserDaoJpaImpl extends BaseEntityDaoJpaImpl<BaseUser, Long> impleme
 		}
 	}
 	
+	@Override
+	public List<BaseUser> findUsersLikeLastName(String name, int firstResult,
+			int maxResults) {
+		Map<String, Object> params = new HashMap<>();
+		params.put("name", name + "%");
+		List<BaseUser> usersList = findByNamedQuery("jpql.attacheUser.findUsersLikeLastName", params, firstResult, maxResults);
+		return usersList;
+	}
 
 }

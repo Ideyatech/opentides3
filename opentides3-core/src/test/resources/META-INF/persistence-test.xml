@@ -10,6 +10,7 @@
 		<class>org.opentides.bean.FileInfo</class>
 		<class>org.opentides.bean.Comment</class>
 		<class>org.opentides.bean.SystemCodes</class>
+		<class>org.opentides.bean.Sequence</class>
 		<class>org.opentides.bean.user.BaseUser</class>
 		<class>org.opentides.bean.user.UserGroup</class>
 		<class>org.opentides.bean.user.PasswordReset</class>
@@ -18,7 +19,8 @@
 		<class>org.opentides.bean.user.UserGroup</class>
 		<class>org.opentides.bean.AuditLog</class>
 		<properties>
-			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect" />
+			<!--<property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect" />-->
+			<property name="hibernate.dialect" value="org.hibernate.dialect.HSQLDialect" />
 			<property name="hibernate.hbm2ddl.auto" value="create-drop" />
 			<property name="hibernate.show_sql" value="true" />
 			<property name="hibernate.ejb.autodetection" value="class" />

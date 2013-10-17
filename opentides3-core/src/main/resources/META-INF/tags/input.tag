@@ -46,7 +46,7 @@
 			</c:if>
 		
 			<form:input path="${path}"
-			
+				
 				type="${empty type ? 'text': type }"
 				placeholder="${placeholder}"
 				cssClass="${cssClass}"

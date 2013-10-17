@@ -96,7 +96,7 @@ public class AuthenticationDaoJdbcImplIntegrationTest extends AbstractJUnit4Spri
 	
 	@Test
 	public void testLoadUserByUsername() {
-		UserDetails userDetails = authenticationService.loadUserByUsername("admin");
+		UserDetails userDetails = authenticationService.loadUserByUsername("ADMIN");
 		assertNotNull(userDetails);
 		//Should be an instance of SessionUser
 		SessionUser.class.isAssignableFrom(userDetails.getClass());

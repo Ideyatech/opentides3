@@ -18,23 +18,21 @@
  */
 package org.opentides.bean;
 
-import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
 import org.opentides.bean.user.BaseUser;
 import org.opentides.persistence.listener.AuditLogListener;
+import org.opentides.web.json.Views;
+
+import com.fasterxml.jackson.annotation.JsonView;
 
 /**
  * This class is responsible for handling all audit functions needed to be
@@ -45,36 +43,13 @@ import org.opentides.persistence.listener.AuditLogListener;
 @Entity
 @EntityListeners({ AuditLogListener.class })
 @Table(name = "HISTORY_LOG")
-public class AuditLog implements Serializable {
+public class AuditLog extends BaseEntity {
 
     /**
      * Auto-generated class UID.
      */
     private static final long serialVersionUID = 269168041517643087L;
 
-    /**
-     * Primary key. Annotation is transfered to getter method to allow
-     * overridding from subclass.
-     */
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "ID")
-    private Long id;
-    
-    /**
-     * Create date.
-     */
-    @Column(name = "CREATE_DATE")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createDate;
-    
-    /**
-     * Last update date.
-     */
-    @Column(name = "UPDATE_DATE")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date updateDate;
-    
     /**
      * Primary key of object being tracked.
      */
@@ -84,6 +59,7 @@ public class AuditLog implements Serializable {
     /**
      * Class type of object being tracked.
      */
+    @JsonView(Views.SearchView.class)
     @SuppressWarnings({ "rawtypes" })
     @Column(name = "ENTITY_CLASS", nullable = false, updatable = false)
     private Class entityClass;
@@ -93,12 +69,14 @@ public class AuditLog implements Serializable {
      * Use this attribute to store single reference string to different 
      * classes that are interrelated.
      */
+    @JsonView(Views.SearchView.class)
     @Column(name = "REFERENCE")
     private String reference;
     
     /**
      * Message about the actions done.
      */
+    @JsonView(Views.SearchView.class)
     @Lob
     @Column(name = "MESSAGE", nullable = false, updatable = false)
     private String message;
@@ -106,12 +84,14 @@ public class AuditLog implements Serializable {
     /**
      * User who performed the change.
      */
+    @JsonView(Views.SearchView.class)
     @Column(name = "USER_ID", nullable = false, updatable = false)
     private Long userId;
 
     /**
      * Name of user performing the change.
      */
+    @JsonView(Views.SearchView.class)
     @Column(name = "USER_DISPLAY")
     private String userDisplayName;
     
@@ -169,60 +149,6 @@ public class AuditLog implements Serializable {
         this.setCreateDate(new Date());
         this.setUserDisplayName(userDisplayName);
     }
-
-	/**
-	 * Getter method for id.
-	 *
-	 * @return the id
-	 */
-	public final Long getId() {
-		return id;
-	}
-
-	/**
-	 * Setter method for id.
-	 *
-	 * @param id the id to set
-	 */
-	public final void setId(Long id) {
-		this.id = id;
-	}
-
-	/**
-	 * Getter method for createDate.
-	 *
-	 * @return the createDate
-	 */
-	public final Date getCreateDate() {
-		return createDate;
-	}
-
-	/**
-	 * Setter method for createDate.
-	 *
-	 * @param createDate the createDate to set
-	 */
-	public final void setCreateDate(Date createDate) {
-		this.createDate = createDate;
-	}
-
-	/**
-	 * Getter method for updateDate.
-	 *
-	 * @return the updateDate
-	 */
-	public final Date getUpdateDate() {
-		return updateDate;
-	}
-
-	/**
-	 * Setter method for updateDate.
-	 *
-	 * @param updateDate the updateDate to set
-	 */
-	public final void setUpdateDate(Date updateDate) {
-		this.updateDate = updateDate;
-	}
 
 	/**
 	 * Getter method for entityId.
@@ -415,6 +341,22 @@ public class AuditLog implements Serializable {
 	 */
 	public final void setLogAction(String logAction) {
 		this.logAction = logAction;
+	}
+
+	@JsonView(Views.SearchView.class)
+	public String getUserNameDisplay() {
+		if(this.user != null) {
+			return "by " + this.user.getFirstName() + " " + this.user.getLastName();
+		}
+		
+		return "";
+	}
+	
+	@JsonView(Views.SearchView.class)
+	public String getCreateDateForDisplay() {
+		if(getCreateDate() != null)
+			return new SimpleDateFormat("MMM. dd, yyyy hh:mm aa").format(getCreateDate());
+		return "";
 	}
 	
 }

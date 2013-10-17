@@ -35,7 +35,7 @@
 	</div>
 	
 	<!-- CONTENT -->
-	<div class="span10">
+	<div class="span10" data-spy="scroll">
 		<h1><i class="icon-book"></i> Form Tags</h1>
 		
 		<h3 id="textBox"><spring:message code="label.tutorial.textBox"/></h3>

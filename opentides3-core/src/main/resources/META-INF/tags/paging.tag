@@ -10,9 +10,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
+<div class="pagination pagination-centered">
 <c:if test="${results.totalResults > 0}">	
 	<c:if test="${results.totalPages > 1}">
-	<div class="pagination pagination-centered">
      	<ul>
 <!-- First Page -->
      		<c:set var="clazz" value=""/>
@@ -66,6 +66,6 @@
 		    </c:if>
 	        <li class="ot3-lastPage ${clazz}"><a href="${linkLast}" data-page='${results.totalPages}'>&raquo;</a></li>	        
         </ul>
-	</div>
 	</c:if>
 </c:if>
+</div>

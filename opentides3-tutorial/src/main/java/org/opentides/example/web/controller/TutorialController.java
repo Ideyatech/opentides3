@@ -123,6 +123,21 @@ public class TutorialController {
 		return "app/tutorial-using-modals-2";
 	}
 	
+	@RequestMapping(method = RequestMethod.GET, value="/spring-controllers")
+	public String springControllers(ModelMap map){
+		return "app/tutorial-spring-controllers";
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value="/adding-images")
+	public String addingImages(ModelMap map){
+		return "app/tutorial-adding-images";
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value="/advanced-overview")
+	public String advancedOverview(ModelMap map){
+		return "app/tutorial-advanced-overview";
+	}
+	
 	private TutorialModel modelAttribute(){
 		return new TutorialModel();
 	}

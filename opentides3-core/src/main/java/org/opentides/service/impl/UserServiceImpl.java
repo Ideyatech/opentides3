@@ -229,11 +229,13 @@ public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 	public boolean isUserLockedOut(String username, long maxAttempts, long lockOutTime) {
 		UserDao userDao = (UserDao) getDao();
 		BaseUser user = userDao.loadByUsername(username);
-		if(user.getFailedLoginCount() != null && user.getFailedLoginCount() >= maxAttempts) {
-			long elapsedTime = System.currentTimeMillis() - 
-					(user.getLastFailedLoginMillis() == null ? 0 : user.getLastFailedLoginMillis());
-			if(elapsedTime < 1000 * lockOutTime) {
-				return true;
+		if(user != null) {
+			if(user.getFailedLoginCount() != null && user.getFailedLoginCount() >= maxAttempts) {
+				long elapsedTime = System.currentTimeMillis() - 
+						(user.getLastFailedLoginMillis() == null ? 0 : user.getLastFailedLoginMillis());
+				if(elapsedTime < 1000 * lockOutTime) {
+					return true;
+				}
 			}
 		}
 		return false;
@@ -251,9 +253,16 @@ public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 	public void updateFailedLogin(String username, long timestamp) {
 		UserDao userDao = (UserDao) getDao();
 		BaseUser user = userDao.loadByUsername(username);
-		user.incrementFailedLoginCount();
-		user.setLastFailedLoginMillis(timestamp);
-		userDao.saveEntityModel(user);
+		if(user != null) {
+			user.incrementFailedLoginCount();
+			user.setLastFailedLoginMillis(timestamp);
+			userDao.saveEntityModel(user);
+		}
+	}
+	
+	@Override
+	public List<BaseUser> findUsersLikeLastName(String name, int maxResults) {
+		return getUserDao().findUsersLikeLastName(name, -1, maxResults);
 	}
 
 	public BaseUser getCurrentUser() {
@@ -417,5 +426,9 @@ public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 		
 		
 		return credential;
+	}
+	
+	private UserDao getUserDao() {
+		return (UserDao)this.dao;
 	}
 }

@@ -49,6 +49,30 @@
 	 	<path>/META-INF/tags/input.tag</path>
 	 </tag-file>
 	 <tag-file>
+	 	<name>input-file</name>
+	 	<path>/META-INF/tags/input-file.tag</path>
+	 	<attribute>
+	 		<name>id</name>
+	 		<required>true</required>
+	 	</attribute>
+	 	<attribute>
+	 		<name>label</name>
+	 		<required>true</required>
+	 	</attribute>
+	 	<attribute>
+	 		<name>dropZone</name>
+	 		<required>false</required>
+	 	</attribute>
+	 	<attribute>
+	 		<name>dropZoneLabel</name>
+	 		<required>false</required>
+	 	</attribute>
+	 	<attribute>
+	 		<name>dataURL</name>
+	 		<required>false</required>
+	 	</attribute>
+	 </tag-file>
+	 <tag-file>
 	 	<name>paging</name>
 	 	<path>/META-INF/tags/paging.tag</path>
 	 </tag-file>

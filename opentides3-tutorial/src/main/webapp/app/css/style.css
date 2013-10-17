@@ -132,4 +132,9 @@ code.prettyprint span.kwd{
 	padding: 20px;	
 }
 
+p.tip{
+	font-size: 16px;
+	text-align: center;
+}
+
 /*  */

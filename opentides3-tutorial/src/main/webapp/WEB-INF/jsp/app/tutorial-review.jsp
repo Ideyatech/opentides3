@@ -42,9 +42,9 @@
 		
 		<hr/>
 		
-		<h3><i class="icon-file"></i> We're not yet done!</h3>
+		<h3><i class="icon-location-arrow"></i> We're not yet done!</h3>
 		<p>
-			Now that you have learned the basics of Opentides 3, it's time for the more advanced topics! Ready? Go!
+			Now that you have learned the basics of Opentides 3, it's time for the advanced topics! Ready? Go!
 		</p>
 		
 		

@@ -104,12 +104,12 @@
 						</a>
 						<div class="nav-collapse collapse">
 							<ul class="nav">
-								<li class="${active eq 'home' ? 'active' : ''}">
+								<li class="${active eq 'welcome' ? 'active' : ''}">
 									<a href="${home}">
-										<spring:message code="label.home"/>
+										<spring:message code="label.welcome"/>
 									</a>
 								</li>
-								<li class="dropdown" class="${active eq 'setting-up' ? 'active' : ''}">
+								<li class="dropdown ${active eq 'setting-up' ? 'active' : ''}">
 									<a href="#" class="dropdown-toggle" data-toggle="dropdown">
 										Setting Up
 										<b class="caret"></b>
@@ -120,7 +120,7 @@
 										<li><a href="${home}/creating-project">Creating a New Project</a></li>
 									</ul>
 								</li>
-								<li class="dropdown" class="${active eq 'basics' ? 'active' : ''}">
+								<li class="dropdown ${active eq 'basics' ? 'active' : ''}">
 									<a href="#" class="dropdown-toggle" data-toggle="dropdown">
 										Basics
 										<b class="caret"></b>
@@ -135,17 +135,20 @@
 										<li><a href="${home}/review">Review</a></li>
 									</ul>
 								</li>
-								<li class="dropdown" class="${active eq 'advanced' ? 'active' : ''}">
+								<li class="dropdown ${active eq 'advanced' ? 'active' : ''}">
 									<a href="#" class="dropdown-toggle" data-toggle="dropdown">
 										Advanced
 										<b class="caret"></b>
 									</a>
 									<ul class="dropdown-menu">
+										<li><a href="${home}/advanced-overview">Overview</a></li>
 										<li><a href="${home}/dbevolve">DB Evolve</a></li>
 										<li><a href="${home}/interfaces">Interfaces</a></li>
+										<li><a href="${home}/spring-controller">Spring Controller</a></li>
 										<li class="divider"></li>
 										<li><a href="${home}/form-tags">Form Tags</a></li>
 										<li><a href="${home}/using-modals">Using Modal</a></li>
+										<li><a href="${home}/adding-images">Adding Images</a></li>
 									</ul>
 								</li>
 							</ul>

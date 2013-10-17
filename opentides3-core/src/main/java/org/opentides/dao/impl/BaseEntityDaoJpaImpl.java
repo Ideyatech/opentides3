@@ -154,9 +154,10 @@ public class BaseEntityDaoJpaImpl<T extends BaseEntity,ID extends Serializable>
 		String queryString = getJpqlQuery(name);
 		Query queryObject = getEntityManager().createQuery(queryString);
 		if (params != null) {
-			int i=0;
+			int i=1;
 			for (Object obj:params) {
-				queryObject.setParameter(i, obj);				
+				queryObject.setParameter(i, obj);
+				i++;
 			}
 		}
 		if (start > -1) 
