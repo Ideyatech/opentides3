@@ -12,16 +12,12 @@
 <%@ taglib prefix="app" tagdir="/WEB-INF/tags"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<app:header pageTitle="label.tutorial" active="java-classes">
+<app:header pageTitle="title.dao-and-service" active="basics">
 	<script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js"></script>
 </app:header>
 
 <ul class="breadcrumb">
-	<li><a href="${home}/overview">Overview</a><span class="divider">/</span></li>
-	<li><a href="${home}/getting-started">Getting Started</a><span class="divider">/</span></li>
-	<li><a href="${home}/creating-project">Creating Project</a><span class="divider">/</span></li>
-	<li><a href="${home}/customize">Customization</a><span class="divider">/</span></li>
-	<li><a href="${home}/entities-and-attributes">Entities & Attributes</a><span class="divider">/</span></li>
+	<li>Basics<span class="divider">/</span></li>
 	<li>DAO & Services</li>
 </ul>
 
@@ -42,8 +38,7 @@
 	<!-- CONTENT -->
 	<div class="span10">
 		<h1><i class="icon-book"></i> DAO's and Services</h1>
-		<p>The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog</p>
-		
+		<p class="lead">I dont know what to put in here</p>
 		
 		<h3 id="baseEntityDao">Base Entity Dao (Interface)</h3>
 		<p>An interface that contains the basic CRUD functionalities. These functions are to be implemented by the implementing class.</p>
@@ -65,7 +60,7 @@
 		</div>
 		
 		<div class="alert alert-info">
-			<strong>Heads up!</strong> CRUD stands for <strong>C</strong>reate, <strong>R</strong>ead, <strong>U</strong>pdate, <strong>D</strong>elete
+			By convention, we name our DAO's as "YourClass"+"Dao". Example: PatientDao
 		</div>
 		
 		<hr/>
@@ -91,6 +86,9 @@
 				</ol>
 			</div>
 		</div>
+		<div class="alert alert-info">
+			<span class="code-emphasize">@Repository</span> tells Spring that the annotated class should be treated as a DAO
+		</div>
 		
 		<hr/>
 		
@@ -111,6 +109,10 @@
 					<li>Inside <code>&ltBaseEntity&gt</code>, specify your <span class="code-emphasize">Patient</span> bean</li>
 				</ol>
 			</div>
+		</div>
+		
+		<div class="alert alert-info">
+			<strong>Heads up!</strong> CRUD stands for <strong>C</strong>reate, <strong>R</strong>ead, <strong>U</strong>pdate, <strong>D</strong>elete
 		</div>
 		
 		<hr/>
@@ -135,6 +137,9 @@
 					<li>Annotate the class with <code>@Service</code> from <code>org.springframework.stereotype</code>. Give <code>@Service</code> a value of <span class="code-emphasize">patientService</span></li>
 				</ol>
 			</div>
+		</div>
+		<div class="alert alert-info">
+			<span class="code-emphasize">@Service</span> tells Spring that the annotated class should be treated on the Service layer.
 		</div>
 		
 		<hr/>

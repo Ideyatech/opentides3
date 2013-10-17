@@ -9,17 +9,12 @@
 <%@ taglib prefix="app" tagdir="/WEB-INF/tags"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<app:header pageTitle="label.tutorial" active="tags">
+<app:header pageTitle="title.crud-controller" active="basics">
 	<script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js"></script>
 </app:header>
 
 <ul class="breadcrumb">
-	<li><a href="${home}/overview">Overview</a><span class="divider">/</span></li>
-	<li><a href="${home}/getting-started">Getting Started</a><span class="divider">/</span></li>
-	<li><a href="${home}/creating-project">Creating Project</a><span class="divider">/</span></li>
-	<li><a href="${home}/customize">Customization</a><span class="divider">/</span></li>
-	<li><a href="${home}/entities-and-attributes">Entities & Attributes</a><span class="divider">/</span></li>
-	<li><a href="${home}/dao-and-service">DAO's & Services</a><span class="divider">/</span></li>
+	<li>Basics<span class="divider">/</span></li>
 	<li>CRUD Controller</li>
 </ul>
 

@@ -93,6 +93,13 @@ public interface UserService extends BaseCrudService<BaseUser> {
 	  */
 	 public void unlockUser(String username);
 	 
+	 /**
+	  * 
+	  * @param name
+	  * @return
+	  */
+	 public List<BaseUser> findUsersLikeLastName(String name, int maxResults);
+	 
 	 public BaseUser getCurrentUser();
 
 	 public void registerUser(BaseUser baseUser, boolean sendEmail);

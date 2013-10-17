@@ -120,6 +120,11 @@
 										<spring:message code="label.usergroup"/>
 									</a>
 								</li>
+								<li class="${active eq 'audit-log' ? 'active' : ''}">
+									<a href="${home}/audit-log/">
+										<spring:message code="label.audit-log"/>
+									</a>
+								</li>
 								<li class="${active eq 'account-settings' ? 'active' : ''} hidden-desktop">
 									<a href="${home}/account-settings/"> 
 										<spring:message code="label.account-settings"/>

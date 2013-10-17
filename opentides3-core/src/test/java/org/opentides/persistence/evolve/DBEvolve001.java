@@ -26,11 +26,6 @@ package org.opentides.persistence.evolve;
 public class DBEvolve001 implements DBEvolve {
 
 	@Override
-	public int compareTo(DBEvolve o) {
-		return 1;
-	}
-
-	@Override
 	public void execute() {
 		
 	}

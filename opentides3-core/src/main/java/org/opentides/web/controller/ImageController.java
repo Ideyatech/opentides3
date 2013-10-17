@@ -18,7 +18,7 @@ import org.opentides.bean.FileInfo;
 import org.opentides.bean.ImageInfo;
 import org.opentides.bean.MessageResponse;
 import org.opentides.bean.MessageResponse.Type;
-import org.opentides.bean.Photoable;
+import org.opentides.bean.ImageUploadable;
 import org.opentides.service.BaseCrudService;
 import org.opentides.service.FileUploadService;
 import org.opentides.service.ImageInfoService;
@@ -106,7 +106,7 @@ public class ImageController {
 			if(info == null) {
 				barray = ImageUtil.getDefaultImage();
 			} else {
-				barray = ImageUtil.loadImage(info.getFullPath(), c);
+				barray = ImageUtil.loadImage(getImagePath(info), c);
 			}
 			if (barray != null) {
 				response.setContentType("image/png");
@@ -120,6 +120,19 @@ public class ImageController {
 			outputStream.close();
 		}		
 		return null;		
+	}
+	
+	/**
+	 * Get the correct image path. 
+	 * @param imageInfo
+	 * @return
+	 */
+	private String getImagePath(ImageInfo imageInfo) {
+		if(!StringUtil.isEmpty(imageInfo.getCommand())) {
+			int idx = imageInfo.getFullPath().lastIndexOf(".");
+			return imageInfo.getFullPath().substring(0, idx) + "_" + imageInfo.getCommand() +".png";
+		}
+		return imageInfo.getFullPath();
 	}
 	
 	/**
@@ -181,6 +194,7 @@ public class ImageController {
 			@RequestParam("y1") Integer topLeftY,
 			@RequestParam("x2") Integer bottomRightX,
 			@RequestParam("y2") Integer bottomRightY,
+			@RequestParam("rw") Integer resizedWidth,
 			@RequestParam(value = "replaceOriginal", required = false) boolean replaceOriginal,
 			ModelMap modelMap,
 			HttpServletRequest request) {
@@ -193,7 +207,12 @@ public class ImageController {
 		
 		ImageInfo currentImage = imageInfoService.load(id);
 		try {
-			ImageUtil.cropImage(currentImage.getFullPath(), newWidth, newHeight, topLeftX, topLeftY, replaceOriginal);
+			String command = ImageUtil.createCropCommand(newWidth, newHeight, topLeftX, topLeftY);
+			ImageUtil.cropImage(getImagePath(currentImage), command, resizedWidth, replaceOriginal);
+			String newCommand = (!StringUtil.isEmpty(currentImage.getCommand()) ? currentImage.getCommand() + "_" : "" )
+					+ command;
+			currentImage.setCommand(newCommand);
+			imageInfoService.save(currentImage);
 			messages.addAll(CrudUtil.buildSuccessMessage(currentImage, "upload-photo", request.getLocale(), messageSource));
 		} catch (IOException e) {
 			_log.error("Error encountered while cropping Image.", e);
@@ -211,8 +230,8 @@ public class ImageController {
 	 * Process image upload. 
 	 * 
 	 * <p>
-	 * This method can automatically attach the image to an entity if the parameters photoableClassName
-	 * and id were provided. The photoable class needs to have a service class implementing {@link BaseCrudService}
+	 * This method can automatically attach the image to an entity if the parameters className
+	 * and id were provided. The ImageUploadable class needs to have a service class implementing {@link BaseCrudService}
 	 * since it will search via convention the required service. 
 	 * <p>
 	 * 
@@ -223,8 +242,8 @@ public class ImageController {
 	 * </p>
 	 * 
 	 * @param image
-	 * @param photoableClassName the class name of the Photoable entity. 
-	 * @param id the ID of the Photoable entity
+	 * @param className the class name of the ImageUploadable entity. 
+	 * @param id the ID of the ImageUploadable entity
 	 * @param isPrimary if the image is the primary photo of the entity
 	 * @param result contains any validation errors
 	 * @param request
@@ -234,15 +253,15 @@ public class ImageController {
 	@RequestMapping(method = RequestMethod.POST, value="/upload", produces = "application/json")
 	public @ResponseBody Map<String, Object>
 		processUpload(@Valid @ModelAttribute("image") AjaxUpload image,
-			@RequestParam(value = "photoableClassName", required = false) String photoableClassName, 
-			@RequestParam(value = "photoableClassId", required = false) Long id,
+			@RequestParam(value = "className", required = false) String className, 
+			@RequestParam(value = "classId", required = false) Long id,
 			@RequestParam(value = "isPrimary", required = false) boolean isPrimary,
 			BindingResult result, HttpServletRequest request) {
 		
 		BaseEntity entity = null;
 		BaseCrudService service = null;
-		if(!StringUtil.isEmpty(photoableClassName) && id != null) {
-			String attributeName = NamingUtil.toAttributeName(photoableClassName);
+		if(!StringUtil.isEmpty(className) && id != null) {
+			String attributeName = NamingUtil.toAttributeName(className);
 			String serviceBean = attributeName + "Service";
 			
 			service = (BaseCrudService) beanFactory.getBean(serviceBean);
@@ -251,8 +270,8 @@ public class ImageController {
 					+ "]. Please check your configuration.");
 			
 			entity = service.load(id);
-			Assert.notNull(entity, "No " + photoableClassName + " object found for the given ID [" + id + "]");
-			Assert.isAssignable(Photoable.class, entity.getClass(), "Object is not Photoable");
+			Assert.notNull(entity, "No " + className + " object found for the given ID [" + id + "]");
+			Assert.isAssignable(ImageUploadable.class, entity.getClass(), "Object is not ImageUploadable");
 		}
 		
 		Map<String, Object> model = new HashMap<String, Object>();
@@ -272,16 +291,16 @@ public class ImageController {
 		
 		if(entity != null) {
 			//Attach to entity
-			Photoable photoable = (Photoable)entity;
+			ImageUploadable imageUploadable = (ImageUploadable)entity;
 			if(isPrimary) {
-				if(photoable.getPhotos() != null) {
-					for(ImageInfo io : photoable.getPhotos()) {
+				if(imageUploadable.getPhotos() != null) {
+					for(ImageInfo io : imageUploadable.getPhotos()) {
 						io.setIsPrimary(false);
 						imageInfoService.save(io);
 					}
 				}
 			}
-			photoable.addPhoto(imageInfo);
+			imageUploadable.addPhoto(imageInfo);
 			service.save(entity);
 		}
 		
