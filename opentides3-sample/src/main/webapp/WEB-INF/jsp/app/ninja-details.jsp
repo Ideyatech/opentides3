@@ -8,8 +8,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
-<%@ taglib prefix="app" uri="http://www.ideyatech.com/tides"%>
+<%@ taglib prefix="tides" uri="http://www.ideyatech.com/tides"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="app" tagdir="/WEB-INF/tags"%>
 
 <app:header pageTitle="label.ninja" active="ninja"/>
 	
@@ -21,7 +22,7 @@
 
 <div class="row-fluid" style="margin-bottom: 20px;">
 	<div class="span2">
-		<img class="img-polaroid" src="${home}/ninja/photo?id=${ninja.id}"/>
+		<img class="img-polaroid" src="${home}/image/${ninja.primaryPhoto.id}"/>
 	</div>
 	<div class="span10">
 		<h2>${ninja.completeName}</h2>	
@@ -83,6 +84,6 @@
 
 <!-- Comments Area -->
 
-<app:comments commentList="${ninja.comments}" action="/ninja/comment" commentableId="${ninja.id}"/>
+<tides:comments commentList="${ninja.comments}" action="/ninja/comment" commentableId="${ninja.id}"/>
 
-<app:footer/>
+<tides:footer/>
