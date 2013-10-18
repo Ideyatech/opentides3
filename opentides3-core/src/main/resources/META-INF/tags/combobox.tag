@@ -9,6 +9,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ attribute name="path" required="true" type="java.lang.String" %>
+<%@ attribute name="selectValue" required="false" type="java.lang.String" %>
 <%@ attribute name="label" required="true" type="java.lang.String" %>
 <%@ attribute name="cssClass" required="false" type="java.lang.String" %>
 <%@ attribute name="items" required="false" type="java.util.Collection" %>
@@ -28,12 +29,17 @@
 		<p class="help-block"><small><spring:message code="message.combobox-help"/></small></p>
 	</div>
 </div>
-
 <script type="text/javascript">
 
 	$(document).ready(function() {
-		
-		$.extend(comboBoxTags, {'${path}' : [<c:forEach items="${items}" var="item">"${item.category}",</c:forEach>]});
+		<c:choose>
+		<c:when test="${not empty selectValue}">
+			$.extend(comboBoxTags, {'${path}' : [<c:forEach items="${items}" var="item">"${item[selectValue]}",</c:forEach>]});
+		</c:when>
+		<c:otherwise>
+			$.extend(comboBoxTags, {'${path}' : [<c:forEach items="${items}" var="item">"${item}",</c:forEach>]});
+		</c:otherwise>
+		</c:choose>
 		
 		$('#${path}.combobox').select2({
 			maximumSelectionSize: 1,

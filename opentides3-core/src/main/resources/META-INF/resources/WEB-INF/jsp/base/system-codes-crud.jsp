@@ -30,7 +30,7 @@
 			</div>
 			<div class="search-form collapse">
 				<form:form modelAttribute="searchCommand" id="system-codes-search" >
-					<tides:select path="category" items="${categoryList}" itemLabel="category" itemValue="category" label="label.system-codes.category" cssClass="input-block-level" />
+					<tides:select path="category" items="${categoryList}" label="label.system-codes.category" cssClass="input-block-level" />
 					<tides:input path="key" label="label.system-codes.key" cssClass="input-block-level"/>
 					<tides:input path="value" label="label.system-codes.value" cssClass="input-block-level"/>
 					<hr/>
