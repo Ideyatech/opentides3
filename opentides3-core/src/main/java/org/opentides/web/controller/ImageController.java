@@ -123,6 +123,33 @@ public class ImageController {
 	}
 	
 	/**
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/", method = RequestMethod.GET, produces = "image/png")
+	public String loadEmpty(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		byte [] byteArray = ImageUtil.getDefaultImage();
+		response.setContentType("image/png");
+		response.setHeader("Cache-Control", "public");
+		
+		OutputStream outputStream = null;
+		try {
+			outputStream = response.getOutputStream();
+			outputStream.write(byteArray);
+		} catch (Exception e) {
+			_log.error("Failed to load default image.", e);
+		} finally {
+			outputStream.flush();
+			outputStream.close();
+		}	
+		
+		return null;
+	}
+	
+	/**
 	 * Get the correct image path. 
 	 * @param imageInfo
 	 * @return

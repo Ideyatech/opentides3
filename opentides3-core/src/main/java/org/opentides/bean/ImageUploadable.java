@@ -4,7 +4,10 @@ import java.util.List;
 
 import org.opentides.service.BaseCrudService;
 import org.opentides.web.controller.ImageController;
+import org.opentides.web.json.Views;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.fasterxml.jackson.annotation.JsonView;
 
 /**
  * Interface for entities that can be uploaded with images. 
@@ -24,6 +27,7 @@ public interface ImageUploadable {
 	 * 
 	 * @return a list of ImageInfo objects
 	 */
+	@JsonView(Views.FormView.class)
 	List<ImageInfo> getPhotos();
 
 	/**
