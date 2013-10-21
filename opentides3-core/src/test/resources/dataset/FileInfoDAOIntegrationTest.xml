@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+	<FILE_INFO id="1" 
+		filename="file1.png" 
+		full_path="/home/user/file1.png" 
+		file_size="12345" 
+		original_filename="file.png" />
+		
+	<FILE_INFO id="2" 
+		filename="file2.png" 
+		full_path="/home/user/file2.png" 
+		file_size="12346" 
+		original_filename="file2.png" />
+</dataset>

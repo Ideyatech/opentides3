@@ -28,7 +28,7 @@
 		<property name="jpaVendorAdapter">
 			<bean
 				class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
-				<property name="showSql" value="false" />
+				<property name="showSql" value="true" />
 				<property name="generateDdl" value="true" />
 			</bean>
 		</property>
@@ -115,6 +115,7 @@
 		<context:include-filter type="regex" expression="org.opentides.dao.impl.UserGroupDaoJpaImpl.*"/>
 		<context:include-filter type="regex" expression="org.opentides.dao.impl.PasswordResetDaoJpaImpl.*"/>
 		<context:include-filter type="regex" expression="org.opentides.dao.impl.SequenceDaoJpaImpl.*"/>
+		<context:include-filter type="regex" expression="org.opentides.dao.impl.FileInfoDaoJpaImpl.*"/>
 	</context:component-scan>
 	
 	<bean class="org.opentides.service.impl.UserServiceImpl" id="userService"/>
