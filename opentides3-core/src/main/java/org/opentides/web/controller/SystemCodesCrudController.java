@@ -55,7 +55,7 @@ public class SystemCodesCrudController extends BaseCrudController<SystemCodes> {
 	 * @return list of system codes
 	 */
 	@ModelAttribute("categoryList")
-	public List<SystemCodes> categoryList() {
+	public List<String> categoryList() {
 		return systemCodesService.getAllCategories();
 	}
 	

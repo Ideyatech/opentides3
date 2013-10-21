@@ -33,7 +33,7 @@
 	<!-- Container of all image ID. -->
 	<div id="imageIds" style="display: none;">
 		<script id="imageIdsForUpload" type="text/template">
-			<input class="ot-images" type="hidden" name="photos" value="{{imageId}}"/>
+			<input class="ot-images" type="hidden" id="photos-{{imageId}}" name="photos" value="{{imageId}}"/>
 		</script>
 		<input class="ot-images" type="hidden" name="photos" value=""/>
 	</div>
@@ -80,12 +80,12 @@
     		</tr>
 		</script>
 		<script id="filesForDownload" class="template" type="text/template">
-			<tr class="template-download" >
+			<tr class="template-download" id="template-download-{{imageId}}" >
         		<td style="width: 80%" colspan="2">
             		<img class="img-polaroid" src="${home}/image/{{imageId}}?c=x64"/>
         		</td>
 				<td style="width: 20%">
-					<button class="btn btn-warning cancel">
+					<button class="btn btn-warning cancel file-delete">
                     	<i class="icon-remove"></i>
                 	</button>
 				</td>
@@ -143,7 +143,6 @@
 	        		data.context.replaceWith(newRow);
 	        		data.context.find('.cancel').click(function(e) {
         				e.preventDefault();
-        				alert("REMOVED");
         			});
 	        	}
 	        }
@@ -154,6 +153,11 @@
 		
 	}).on('drop dragover', function (e) {
 	    e.preventDefault();
+	}).on('click', '.file-delete', function(e) {
+		e.preventDefault();
+		var id = $(this).closest(".template-download").attr("id").split("-")[2];
+		$('input.ot-images[value="' + id + '"]').remove();
+		$(this).closest(".template-download").hide();
 	});;
 	
 </script>	

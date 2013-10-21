@@ -25,7 +25,7 @@ public interface SystemCodesDao extends BaseEntityDao<SystemCodes, Long> {
 	 * Returns all the available categories.
 	 * @return
 	 */
-	public List<SystemCodes> getAllCategories();
+	public List<String> getAllCategories();
 	
 	/**
 	 * Return SystemCode entity by key.
@@ -38,7 +38,7 @@ public interface SystemCodesDao extends BaseEntityDao<SystemCodes, Long> {
      * Selects all available categories except for the
      * specified ones 
      */
-	public List<SystemCodes> getAllCategoriesExcept(String ... categories);
+	public List<String> getAllCategoriesExcept(String ... categories);
 	
 	/**
 	 * Counts the existing system codes with the same key 
