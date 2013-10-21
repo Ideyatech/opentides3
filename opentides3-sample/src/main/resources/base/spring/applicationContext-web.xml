@@ -45,7 +45,7 @@
 					p:dateFormat="${date.format}" />
 				<ref bean="stringToBaseEntityConverter" />
 				<ref bean="stringToSystemCodesConverter" />
-				<bean class="org.opentides.bean.converter.StringArrayToListOfTagsConverter"/>
+				<ref bean="stringArrayToListOfTagsConverter"/>
 			</set>
 		</property>
 	</bean>

@@ -35,6 +35,7 @@ import org.opentides.bean.BaseEntity;
 import org.opentides.bean.MessageResponse;
 import org.opentides.bean.MessageResponse.Type;
 import org.opentides.bean.SearchResults;
+import org.opentides.bean.Tag;
 import org.opentides.bean.Taggable;
 import org.opentides.exception.DataAccessException;
 import org.opentides.service.BaseCrudService;
@@ -455,9 +456,10 @@ public abstract class BaseCrudController<T extends BaseEntity> {
 			final HttpServletResponse response) {
 		transactionTemplate.execute(new TransactionCallbackWithoutResult() {
 			protected void doInTransactionWithoutResult(TransactionStatus status) {
-				processTaggableEntities(command);
+				preProcessTaggableEntities(command);
 				preCreate(command, bindingResult, uiModel, request, response);
 				service.save(command);
+				postProcessTaggableEntities(command);
 				postCreate(command, bindingResult, uiModel, request, response);
 			}
 		});
@@ -468,11 +470,23 @@ public abstract class BaseCrudController<T extends BaseEntity> {
 	 * Check if entity is an instance of {@link Taggable}. If so, save the tags.
 	 * @param command
 	 */
-	private void processTaggableEntities(T command) {
+	private void preProcessTaggableEntities(T command) {
+		if (Taggable.class.isAssignableFrom(command.getClass())) {
+			Taggable taggable = (Taggable)command;
+			tagService.preProcessTags(taggable, command.getId(), this.entityBeanType);
+		}
+	}
+	
+	private void postProcessTaggableEntities(T command) {
 		if (Taggable.class.isAssignableFrom(command.getClass())) {
 			Taggable taggable = (Taggable)command;
 			if(taggable.getTags() != null && !taggable.getTags().isEmpty()) {
-				tagService.saveAllTags(taggable.getTags());
+				for(Tag tag : taggable.getTags()) {
+					if(tag.getTaggableId() == null) {
+						tag.setTaggableId(command.getId());
+						tagService.save(tag);
+					}
+				}
 			}
 		}
 	}
@@ -538,7 +552,7 @@ public abstract class BaseCrudController<T extends BaseEntity> {
 			final HttpServletResponse response) {
 		transactionTemplate.execute(new TransactionCallbackWithoutResult() {
 			protected void doInTransactionWithoutResult(TransactionStatus status) {
-				processTaggableEntities(command);
+				preProcessTaggableEntities(command);
 				preUpdate(command, bindingResult, uiModel, request, response);
 				service.save(command);
 				postUpdate(command, bindingResult, uiModel, request, response);

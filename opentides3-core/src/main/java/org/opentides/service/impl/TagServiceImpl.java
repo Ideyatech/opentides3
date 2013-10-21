@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.opentides.bean.Tag;
+import org.opentides.bean.Taggable;
 import org.opentides.dao.TagDao;
 import org.opentides.service.TagService;
 import org.opentides.util.StringUtil;
@@ -60,6 +61,56 @@ public class TagServiceImpl extends BaseCrudServiceImpl<Tag>
 	@Override
 	public void saveAllTags(Collection<Tag> tags) {
 		getDao().saveAllEntityModel(tags);
+	}
+	
+	@SuppressWarnings("rawtypes")
+	@Override
+	public List<Tag> findByTaggableClassAndId(Class clazz, Long id) {
+		return getTagDao().findByTaggableClassAndId(clazz, id);
+	}
+	
+	@SuppressWarnings("rawtypes")
+	@Override
+	public List<Tag> findByTaggableClassIdTagTexts(Class clazz, Long id,
+			List<String> tags) {
+		return getTagDao().findByTaggableClassIdTagTexts(clazz, id, tags);
+	}
+	
+	@SuppressWarnings("rawtypes")
+	@Override
+	public void preProcessTags(Taggable taggable, Long id, Class clazz) {
+		if(taggable.getTags() != null && !taggable.getTags().isEmpty()) {
+			List<String> newTagTexts = new ArrayList<>();
+			for(Tag tag : taggable.getTags()) {
+				//Set Taggable class
+				if(tag.getTaggableClass() == null) {
+					tag.setTaggableClass(clazz);
+				}
+				//Set Taggable ID
+				if(id != null && tag.getTaggableId() == null) {
+					tag.setTaggableId(id);
+				}
+				newTagTexts.add(tag.getTagText());
+			}
+			if(id != null && id >= 0l) {
+				List<Tag> finalTags = findByTaggableClassIdTagTexts(clazz, id, newTagTexts);
+				for(Tag tag : taggable.getTags()) {
+					if(!finalTags.contains(tag)) {
+						finalTags.add(tag);
+					}
+				}
+				for(Tag finalTag : finalTags) {
+					if(finalTag.isNew()) {
+						save(finalTag);
+					}
+				}
+				taggable.setTags(finalTags);
+			}
+		}
+	}
+	
+	private TagDao getTagDao() {
+		return (TagDao)dao;
 	}
         
 }
