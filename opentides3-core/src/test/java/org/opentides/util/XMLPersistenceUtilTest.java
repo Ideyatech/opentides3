@@ -15,7 +15,7 @@ public class XMLPersistenceUtilTest {
 		//assertEquals("org.hibernate.dialect.MySQL5InnoDBDialect", props.get("hibernate.dialect"));
 		assertEquals("create-drop", props.get("hibernate.hbm2ddl.auto"));
 		
-		assertEquals("true", props.get("hibernate.show_sql"));
+		assertEquals("false", props.get("hibernate.show_sql"));
 		assertEquals("class", props.get("hibernate.ejb.autodetection"));
 		assertEquals("false", props.get("hibernate.cache.use_second_level_cache"));
 		assertEquals("false", props.get("hibernate.cache.use_query_cache"));

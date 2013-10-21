@@ -1,5 +1,6 @@
 package org.opentides.dao.impl;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,5 +32,27 @@ public class TagDaoJpaImpl extends BaseEntityDaoJpaImpl<Tag, Long> implements
 		} else {
 			return result.get(0);
 		}
+	}
+	
+	@SuppressWarnings("rawtypes")
+	@Override
+	public List<Tag> findByTaggableClassAndId(Class clazz, Long id) {
+		Map<String, Object> params = new HashMap<>();
+		params.put("taggableClass", clazz);
+		params.put("taggableId", id);
+		
+		return findByNamedQuery("jpql.tag.findByTaggableClassAndId", params);
+	}
+	
+	@SuppressWarnings("rawtypes")
+	@Override
+	public List<Tag> findByTaggableClassIdTagTexts(Class clazz, Long id,
+			List<String> tags) {
+		Map<String, Object> params = new HashMap<>();
+		params.put("taggableClass", clazz);
+		params.put("taggableId", id);
+		params.put("tagTexts", tags);
+		
+		return findByNamedQuery("jpql.tag.findByTaggableClassIdTagTexts", params);
 	}
 }

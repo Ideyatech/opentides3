@@ -10,6 +10,7 @@ import org.opentides.bean.Tag;
 import org.opentides.util.StringUtil;
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.core.convert.converter.ConditionalGenericConverter;
+import org.springframework.stereotype.Component;
 
 /**
  * Converts a comma separated String to a list of {@link Tag} objects.
@@ -17,15 +18,14 @@ import org.springframework.core.convert.converter.ConditionalGenericConverter;
  * @author gino
  *
  */
+@Component("stringArrayToListOfTagsConverter")
 public class StringArrayToListOfTagsConverter implements ConditionalGenericConverter {
 	
 	private static Logger log = Logger.getLogger(StringArrayToListOfTagsConverter.class);
 
 	@Override
 	public Set<ConvertiblePair> getConvertibleTypes() {
-		Set<ConvertiblePair> convertibleTypes = new HashSet<ConvertiblePair>();
-		convertibleTypes.add(new ConvertiblePair(String[].class, new ArrayList<Tag>().getClass()));
-		return convertibleTypes;
+		return null;
 	}
 
 	@Override

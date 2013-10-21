@@ -2,6 +2,12 @@ package org.opentides.bean;
 
 import java.util.List;
 
+import org.opentides.web.json.Views;
+import org.opentides.web.json.serializer.TagsSerializer;
+
+import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 /**
  * Interface for entities that can be added with tags.
  *  
@@ -14,6 +20,8 @@ public interface Taggable {
 	 * 
 	 * @return list of tags
 	 */
+	@JsonSerialize(using = TagsSerializer.class)
+	@JsonView(Views.FormView.class)
 	public List<Tag> getTags();
 	
 	/**
