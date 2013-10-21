@@ -21,6 +21,7 @@
 	<div id="sideBar" class="span2" style="top: 55px;">
 		<ul class="nav nav-list side-nav affix">
 			<li><a href="#taggable">Taggable</a></li>
+			<li><a href="#imageuploadable">ImageUploadable</a></li>
 
 		</ul>
 	</div>
@@ -83,6 +84,30 @@
 				</li>
 			</ol>
 		</section>
+		
+		
+		<section id="imageuploadable">
+			<h3>Taggable</h3>
+			<p>
+				This interface bla bla bla bla bla bla bla bla bla
+			</p>
+			<br/>
+			<form:form modelAttribute="formCommand" cssClass="form-horizontal">
+				
+			</form:form>
+			<h4>Usage</h4>
+			<ol>
+				<li>Implement the interface <span class="code-emphasize">ImageUploadable</span> from <span class="code-emphasize">org.opentides.bean</span> and add the necessary functions</li>
+				<li>
+					Add the following required attributes:
+					
+				</li>
+			</ol>
+			
+			
+			
+		</section>
+		
 		
 		<!-- pager -->
 		<ul class="pager">
