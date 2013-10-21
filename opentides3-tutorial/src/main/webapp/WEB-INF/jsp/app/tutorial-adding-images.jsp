@@ -13,10 +13,7 @@
 	<script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js"></script>
 </app:header>
 
-<ul class="breadcrumb">
-	<li>Advanced <span class="divider">/</span></li>
-	<li>Adding Images</li>
-</ul>
+
 
 <div class="row-fluid">
 	<!-- NAVIGATION -->
@@ -28,6 +25,11 @@
 	
 	<!-- CONTENT -->
 	<div class="span10">
+		<ul class="breadcrumb">
+			<li>Advanced <span class="divider">/</span></li>
+			<li>Adding Images</li>
+		</ul>
+		
 		<h1><i class="icon-book"></i> Adding your Images</h1>
 		<p class="lead">
 			In this section, you will learn how to properly add and display your own images inside a <span class="code-emphasize">JSP</span> page.
@@ -70,21 +72,4 @@
 </div>
 
 <app:footer>
-
-	<script type="text/javascript">
-		$(document).ready(function(){
-			$('ul.nav li a').click(function(){
-				$('ul.nav li').removeClass('active');
-				$(this).parent('li').addClass('active');
-				var id = $(this).attr("id").split("-")[1];
-				scrollToView(id); 
-			});
-		});
-		
-		function scrollToView(destinationID){
-			$('html, body').animate({
-				scrollTop: $("#"+destinationID).offset().top-45
-			}, 600);
-		}
-	</script>
 </app:footer>

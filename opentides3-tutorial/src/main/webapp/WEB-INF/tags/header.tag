@@ -68,7 +68,7 @@
 
 </head>
  
-<body class="${pageType}">
+<body class="${pageType}" data-spy="scroll" data-target="#sideBar">
 
 	<c:if test="${pageType != 'modal-page'}">
     	<div class='notifications top-right'></div>
@@ -104,12 +104,12 @@
 						</a>
 						<div class="nav-collapse collapse">
 							<ul class="nav">
-								<li class="${active eq 'home' ? 'active' : ''}">
+								<li class="${active eq 'welcome' ? 'active' : ''}">
 									<a href="${home}">
-										<spring:message code="label.home"/>
+										<spring:message code="label.welcome"/>
 									</a>
 								</li>
-								<li class="dropdown" class="${active eq 'setting-up' ? 'active' : ''}">
+								<li class="dropdown ${active eq 'setting-up' ? 'active' : ''}">
 									<a href="#" class="dropdown-toggle" data-toggle="dropdown">
 										Setting Up
 										<b class="caret"></b>
@@ -120,7 +120,7 @@
 										<li><a href="${home}/creating-project">Creating a New Project</a></li>
 									</ul>
 								</li>
-								<li class="dropdown" class="${active eq 'basics' ? 'active' : ''}">
+								<li class="dropdown ${active eq 'basics' ? 'active' : ''}">
 									<a href="#" class="dropdown-toggle" data-toggle="dropdown">
 										Basics
 										<b class="caret"></b>
@@ -135,7 +135,7 @@
 										<li><a href="${home}/review">Review</a></li>
 									</ul>
 								</li>
-								<li class="dropdown" class="${active eq 'advanced' ? 'active' : ''}">
+								<li class="dropdown ${active eq 'advanced' ? 'active' : ''}">
 									<a href="#" class="dropdown-toggle" data-toggle="dropdown">
 										Advanced
 										<b class="caret"></b>
@@ -175,4 +175,3 @@
 			<div id="bd" class="container">
 		</c:otherwise>
 	</c:choose>
->>>>>>> 0ac28919b28466d94917b82353cc08d6e049a25f

@@ -49,8 +49,11 @@
 		
 		
 		<ul class="pager">
+			<li class="previous">
+				<a href="${home}/validation">&larr; Previous (Validation)</a>
+			</li>
 			<li class="next">
-				<a href="${home}/getting-started">Next (Getting Started) &rarr;</a>
+				<a href="${home}/advanced-overview">Next (Advanced) &rarr;</a>
 			</li>
 		</ul>
 	</div>

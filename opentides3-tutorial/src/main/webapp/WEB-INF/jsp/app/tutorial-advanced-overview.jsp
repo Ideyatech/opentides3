@@ -32,8 +32,7 @@
 			Welcome to the advanced section for this tutorial. Below are some topics that could
 			guide you in developing your application using <span class="code-emphasize">Opentides 3</span>.
 		</p>
-		
-		
+
 		<ul>
 			<li><a href="">DB Evolve</a></li>
 			<li><a href="">Interfaces</a></li>
