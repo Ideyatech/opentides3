@@ -19,7 +19,7 @@
 		<ul class="nav nav-list side-nav affix">
 			<li><a href="#requirements">Requirements</a></li>
 			<li><a href="#installation">Installation</a></li>
-			<li><a href="#imageutil">imageutil.lib</a></li>
+			<li><a href="#imageutil">imageutil.jar</a></li>
 			<li><a href="#maven">Maven</a></li>
 		</ul>
 	</div>
@@ -71,7 +71,7 @@
 	
 		
 		<section id="imageutil">
-			<h3>imageutil.lib</h3>
+			<h3>imageutil.jar</h3>
 			<p>Opentides 3 depends on imageutil.lib which is still not on any public maven repository. So we need to install it first in our local repository.</p>
 			<h4>Steps</h4>
 			<ol>
