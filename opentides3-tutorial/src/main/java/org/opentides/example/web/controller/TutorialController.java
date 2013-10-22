@@ -104,7 +104,7 @@ public class TutorialController {
 	
 	@RequestMapping(method = RequestMethod.GET, value="/interfaces")
 	public String tidesInterfaces(ModelMap map){
-		map.addAttribute("formCommand", modelAttribute());
+		map.addAttribute("formCommand", ninjaModelAttribute());
 		return "app/tutorial-interfaces";
 	}
 	
@@ -140,6 +140,10 @@ public class TutorialController {
 	
 	private TutorialModel modelAttribute(){
 		return new TutorialModel();
+	}
+	
+	private Ninja ninjaModelAttribute(){
+		return new Ninja();
 	}
 	
 	public List<SystemCodes> brandList() {

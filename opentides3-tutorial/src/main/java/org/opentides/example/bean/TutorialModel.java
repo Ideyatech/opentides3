@@ -6,11 +6,17 @@ import java.util.List;
 
 import org.opentides.bean.BaseEntity;
 import org.opentides.bean.Comment;
+import org.opentides.bean.ImageInfo;
+import org.opentides.bean.ImageUploadable;
 import org.opentides.bean.SystemCodes;
 import org.opentides.bean.Tag;
 import org.opentides.bean.Commentable;
+import org.opentides.web.json.Views.FormView;
+import org.springframework.web.multipart.MultipartFile;
 
-public class TutorialModel extends BaseEntity implements Commentable{
+import com.fasterxml.jackson.annotation.JsonView;
+
+public class TutorialModel extends BaseEntity implements Commentable, ImageUploadable{
 
 	private static final long serialVersionUID = 5908631314966954092L;
 	
@@ -91,6 +97,31 @@ public class TutorialModel extends BaseEntity implements Commentable{
 	@Override
 	public void setComments(List<Comment> comments) {
 		this.comments = comments;
+		
+	}
+
+	@Override
+	@JsonView(FormView.class)
+	public List<ImageInfo> getPhotos() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ImageInfo getPrimaryPhoto() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public MultipartFile getPhoto() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void addPhoto(ImageInfo photo) {
+		// TODO Auto-generated method stub
 		
 	}
 
