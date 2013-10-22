@@ -18,12 +18,10 @@
  */
 package org.opentides.web.validator;
 
-import java.io.IOException;
-
 import org.opentides.bean.AjaxUpload;
-import org.opentides.util.ImageUtil;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
+import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -34,7 +32,7 @@ import org.springframework.web.multipart.MultipartFile;
  * 
  */
 @Component
-public class PhotoValidator implements Validator {
+public class ImageValidator implements Validator {
 
 	/*
 	 * (non-Javadoc)
@@ -47,40 +45,18 @@ public class PhotoValidator implements Validator {
 
 	@Override
 	public void validate(Object obj, Errors errors) {
-
 		AjaxUpload ajaxUpload = (AjaxUpload) obj;
-		MultipartFile photo = ajaxUpload.getAttachment();
-
-		if (photo != null && !photo.isEmpty()) {
-
-			String contentType = photo.getContentType().substring(0, 6);
-
+		MultipartFile attachment = ajaxUpload.getAttachment();
+		ValidationUtils.rejectIfEmpty(errors, "attachment", "photo.image-required");
+		if (attachment != null && !attachment.isEmpty()) {
+			String contentType = attachment.getContentType().substring(0, 6);
 			if (!"image/".equals(contentType)) {
-
-				errors.rejectValue("photo",
+				errors.rejectValue("attachment",
 						"photo.invalid-file-type",
 						"Invalid file. Profile Image must be in PNG, JPEG, GIF or BMP format.");
-
-			} else {
-
-				if (photo.getSize() < 1024 * 1024 * 10) {
-
-					try {
-						if (!ImageUtil.isLargerThan(photo.getInputStream(), 200,200) ) {
-							errors.rejectValue("photo", "photo.invalid-image-size",
-									"Image size must be at least 200 x 200 pixels");
-						}
-					} catch (IOException e) {
-
-					}
-
-				} else {
-
-					errors.rejectValue("photo", "photo.invalid-file-size",
+			} else if (attachment.getSize() > 1024 * 1024 * 10) {
+					errors.rejectValue("attachment", "photo.invalid-file-size",
 							"Invalid file. Maximum file size is 10 Megabytes");
-
-				}
-
 			}
 		}
 
