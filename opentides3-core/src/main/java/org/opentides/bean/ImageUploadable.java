@@ -36,6 +36,7 @@ public interface ImageUploadable {
 	 * 
 	 * @return
 	 */
+	@JsonView(Views.SearchView.class)
 	ImageInfo getPrimaryPhoto();
 
 	/**

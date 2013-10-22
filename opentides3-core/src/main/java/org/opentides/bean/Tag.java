@@ -4,6 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+import org.opentides.annotation.Auditable;
 import org.opentides.web.json.Views;
 
 import com.fasterxml.jackson.annotation.JsonView;
@@ -17,6 +18,7 @@ import com.fasterxml.jackson.annotation.JsonView;
  */
 @Entity
 @Table(name = "TAG")
+@Auditable
 public class Tag extends BaseEntity {
 	
 	private static final long serialVersionUID = 7593186662964727295L;

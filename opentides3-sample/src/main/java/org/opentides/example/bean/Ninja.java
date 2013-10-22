@@ -494,7 +494,9 @@ public class Ninja extends BaseEntity implements Commentable, ImageUploadable, T
 				}
 			}
 		}
-		return null;
+		ImageInfo primaryPhoto = new ImageInfo();
+		primaryPhoto.setId(0l);
+		return primaryPhoto;
 	}
 	
 	@Override

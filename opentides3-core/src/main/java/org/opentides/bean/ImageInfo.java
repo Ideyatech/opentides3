@@ -4,6 +4,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+import org.opentides.annotation.Auditable;
+
 /**
  * Entity for holding uploaded images.
  * 
@@ -12,6 +14,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "IMAGE_INFO")
+@Auditable
 public class ImageInfo extends BaseEntity {
 
 	private static final long serialVersionUID = -2041575993856318770L;
