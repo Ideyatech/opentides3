@@ -9,8 +9,9 @@
 <%@ taglib prefix="app" tagdir="/WEB-INF/tags"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<app:header pageTitle="title.form-tags" active="advanced"/>
-
+<app:header pageTitle="title.form-tags" active="advanced">
+	<script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js"></script>
+</app:header>
 
 <div class="row-fluid">
 	<!-- NAVIGATION -->
@@ -27,7 +28,7 @@
 	</div>
 	
 	<!-- CONTENT -->
-	<div class="span10" data-spy="scroll">
+	<div class="span10">
 		<ul class="breadcrumb">
 			<li>Advanced <span class="divider">/</span></li>
 			<li>Form Tags</li>

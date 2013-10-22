@@ -15,11 +15,11 @@
 
 <div class="row-fluid">
 	<!-- NAVIGATION -->
-	<div id="sideBar" class="span2" style="top: 55px;">
-		<ul class="nav nav-list side-nav affix">
-			<li><a href="#functionalities">Functionalities</a></li>
-			<li><a href="#objects">Meet the Objects</a></li>
-		</ul>
+	<div class="span2" style="top: 55px;">
+		<div class="alert alert-info">
+			<strong>Did you know?</strong><br/>
+			Tatiana means "helper" in Russia
+		</div>
 	</div>
 	
 	<!-- CONTENT -->
