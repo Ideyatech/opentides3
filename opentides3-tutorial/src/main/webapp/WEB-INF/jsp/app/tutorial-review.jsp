@@ -19,7 +19,9 @@
 <div class="row-fluid">
 	<!-- NAVIGATION -->
 	<div class="span2">
-		<img src="img/cat.jpg"/>
+		<div class="alert alert-info">
+			Awesomeness!
+		</div>
 	</div>
 	
 	<!-- CONTENT -->

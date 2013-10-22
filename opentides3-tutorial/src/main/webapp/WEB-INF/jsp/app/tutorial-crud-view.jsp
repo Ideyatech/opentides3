@@ -15,14 +15,16 @@
 
 <div class="row-fluid">
 	<!-- NAVIGATION -->
-	<div id="sideBar" class="span2" style="top: 55px;">
-		<ul class="nav nav-list side-nav affix">
-			<li><a href="#create">Creating the JSP</a></li>
-			<li><a href="#dataSummary">Data Summary</a></li>
-			<li><a href="#dataTable">Data Table</a></li>
-			<li><a href="#searchPanel">Search Panel</a></li>
-			<li><a href="#newForm">Creating a Form</a></li>
-		</ul>
+	<div id="sideBar" class="span2">
+		<div id="nav-list-wrapper" class="affix">
+			<ul class="nav nav-list side-nav">
+				<li><a href="#create">Creating the JSP</a></li>
+				<li><a href="#dataSummary">Data Summary</a></li>
+				<li><a href="#dataTable">Data Table</a></li>
+				<li><a href="#searchPanel">Search Panel</a></li>
+				<li><a href="#newForm">Creating a Form</a></li>
+			</ul>
+		</div>
 	</div>
 	
 	<!-- CONTENT -->

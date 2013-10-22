@@ -15,13 +15,15 @@
 
 <div class="row-fluid">
 	<!-- NAVIGATION -->
-	<div id="sideBar" class="span2" style="top: 55px;">
-		<ul class="nav nav-list side-nav affix">
-			<li><a href="#requirements">Requirements</a></li>
-			<li><a href="#installation">Installation</a></li>
-			<li><a href="#imageutil">imageutil.jar</a></li>
-			<li><a href="#maven">Maven</a></li>
-		</ul>
+	<div id="sideBar" class="span2">
+		<div class="affix">
+			<ul class="nav nav-list side-nav">
+				<li><a href="#requirements">Requirements</a></li>
+				<li><a href="#installation">Installation</a></li>
+				<li><a href="#imageutil">imageutil.jar</a></li>
+				<li><a href="#maven">Maven</a></li>
+			</ul>
+		</div>
 	</div>
 	
 	<!-- CONTENT -->

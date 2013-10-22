@@ -15,14 +15,16 @@
 
 <div class="row-fluid">
 	<!-- NAVIGATION -->
-	<div id="sideBar" class="span2" style="top: 55px;">
-		<ul class="nav nav-list side-nav affix">
-			<li><a href="#header">Header</a></li>
-			<li><a href="#messages">Messages.properties</a></li>
-			<li><a href="#homepage">Home Page</a></li>
-			<li><a href="#css">CSS Styling</a></li>
-			<li><a href="#icons">Icons</a></li>
-		</ul>
+	<div id="sideBar" class="span2">
+		<div id="nav-list-wrapper" class="affix">
+			<ul class="nav nav-list side-nav">
+				<li><a href="#header">Header</a></li>
+				<li><a href="#messages">Messages.properties</a></li>
+				<li><a href="#homepage">Home Page</a></li>
+				<li><a href="#css">CSS Styling</a></li>
+				<li><a href="#icons">Icons</a></li>
+			</ul>
+		</div>
 	</div>
 	
 	<!-- CONTENT -->

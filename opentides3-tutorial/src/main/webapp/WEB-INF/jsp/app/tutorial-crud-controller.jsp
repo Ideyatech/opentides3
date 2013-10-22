@@ -16,12 +16,14 @@
 
 <div class="row-fluid">
 	<!-- NAVIGATION -->
-	<div id="sideBar" class="span2" style="top: 55px;">
-		<ul class="nav nav-list side-nav affix">
-			<li><a href="#basecrudcontroller">Base Crud Controller</a></li>
-			<li><a href="#systemCodesService">SystemCodes Service</a></li>
-			<li><a href="#onLoadSearch">onLoadSearch()</a></li>
-		</ul>
+	<div id="sideBar" class="span2">
+		<div id="nav-list-wrapper" class="affix">
+			<ul class="nav nav-list side-nav">
+				<li><a href="#basecrudcontroller">Base Crud Controller</a></li>
+				<li><a href="#systemCodesService">SystemCodes Service</a></li>
+				<li><a href="#onLoadSearch">onLoadSearch()</a></li>
+			</ul>
+		</div>
 	</div>
 	
 	<!-- CONTENT -->

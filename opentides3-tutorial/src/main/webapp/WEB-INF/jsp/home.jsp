@@ -11,15 +11,12 @@
 
 <app:header pageTitle="title.welcome" active="welcome"/>
 
-<ul class="breadcrumb">
-	<li>Welcome</li>
-</ul>
-
 <div class="row-fluid">
 	<!-- NAVIGATION -->
 	<div class="span2">
-		<img src="img/tacocat.png"/>
-		<p class="tip">Taco cat spelled backwards is still Taco cat</p>
+		<div class="temp-nav">
+			<span class="code-emphasize">Open-tides 3</span> is a web foundation framework that can be used to quickly setup a web application using <span class="code-emphasize">Spring MVC</span> and <span class="code-emphasize">JPA</span>.
+		</div>
 	</div>
 	
 	<!-- CONTENT -->

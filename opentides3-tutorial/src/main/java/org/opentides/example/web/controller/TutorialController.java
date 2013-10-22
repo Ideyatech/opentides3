@@ -102,10 +102,16 @@ public class TutorialController {
 		return "app/tutorial-review";
 	}
 	
-	@RequestMapping(method = RequestMethod.GET, value="/interfaces")
-	public String tidesInterfaces(ModelMap map){
+	@RequestMapping(method = RequestMethod.GET, value="/adding-tags")
+	public String taggable(ModelMap map){
 		map.addAttribute("formCommand", ninjaModelAttribute());
-		return "app/tutorial-interfaces";
+		return "app/tutorial-taggable";
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value="/attaching-images")
+	public String imageUploadable(ModelMap map){
+		map.addAttribute("formCommand", ninjaModelAttribute());
+		return "app/tutorial-imageuploadable";
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value="/dbevolve")

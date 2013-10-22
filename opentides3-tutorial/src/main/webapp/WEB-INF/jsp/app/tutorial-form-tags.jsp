@@ -15,16 +15,18 @@
 
 <div class="row-fluid">
 	<!-- NAVIGATION -->
-	<div id="sideBar" class="span2" style="top: 55px;">
-		<ul class="nav nav-list side-nav affix">
-			<li><a href="#textBox">Text Box</a></li>
-			<li><a href="#datePicker">Date Picker</a></li>
-			<li><a href="#select">Select</a></li>
-			<li><a href="#multipleSelect">Multiple Select</a></li>
-			<li><a href="#comboBox">Combo Box</a></li>
-			<li><a href="#checkBox">Check Box</a></li>
-			<li><a href="#radioButton">Radio Button</a></li>
-		</ul>
+	<div id="sideBar" class="span2">
+		<div id="nav-list-wrapper" class="affix">
+			<ul class="nav nav-list side-nav">
+				<li><a href="#textBox">Text Box</a></li>
+				<li><a href="#datePicker">Date Picker</a></li>
+				<li><a href="#select">Select</a></li>
+				<li><a href="#multipleSelect">Multiple Select</a></li>
+				<li><a href="#comboBox">Combo Box</a></li>
+				<li><a href="#checkBox">Check Box</a></li>
+				<li><a href="#radioButton">Radio Button</a></li>
+			</ul>
+		</div>
 	</div>
 	
 	<!-- CONTENT -->
@@ -336,10 +338,7 @@
 		
 		<ul class="pager">
 			<li class="previous">
-				<a href="${home}/start">&larr; Previous (Getting Started)</a>
-			</li>
-			<li class="next">
-				<a href="${home}/java-classes">Next (Basic classes) &rarr;</a>
+				<a href="${home}/advanced-overview">&larr; Get Back</a>
 			</li>
 		</ul>
 	</div>
