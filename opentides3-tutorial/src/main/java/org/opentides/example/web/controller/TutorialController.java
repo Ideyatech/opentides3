@@ -36,6 +36,11 @@ public class TutorialController {
 		return "app/tutorial-overview";
 	}
 	
+	@RequestMapping(method = RequestMethod.GET, value="/opentides")
+	public String opentides(ModelMap map){
+		return "app/tutorial-opentides";
+	}
+	
 	@RequestMapping(method = RequestMethod.GET, value="/getting-started")
 	public String gettingStarted(ModelMap map){
 		

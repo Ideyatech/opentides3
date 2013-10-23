@@ -27,26 +27,27 @@
 	<!-- CONTENT -->
 	<div class="span10">
 		<h1><i class="icon-trophy"></i> Congratulations!</h1>
-		<p class="lead">You have finished the tutorial. Job well done! *clap clap*</p>
+		<p class="lead">You have finished the first part of the tutorial. Job well done! *clap clap*</p>
 		
 		<h3><i class="icon-thumbs-up-alt"></i> Accomplishments</h3>
 		<p>Let's have a review of all the things that you have done and (hopefully) learned.</p>
-		<ul>
-			<li>Cloning a copy of Opentides 3 from GitHub into your machine.</li>
-			<li>Creating a new project on top of Opentides 3</li>
-			<li>Creating your own home page and navigation header</li>
-			<li>Creating entities and defining their attributes</li>
-			<li>SystemCodes</li>
-			<li>Implementing DAO's and Services for your entities</li>
-			<li>Creating a controller and a crud page</li>
-			<li>Validating forms</li>
+		<ul class="icons-ul">
+			<li><i class="icon-li icon-ok"></i>Cloning a copy of Opentides 3 from GitHub into your machine.</li>
+			<li><i class="icon-li icon-ok"></i>Creating a new project on top of Opentides 3</li>
+			<li><i class="icon-li icon-ok"></i>Creating your own home page and navigation header</li>
+			<li><i class="icon-li icon-ok"></i>Creating entities and defining their attributes</li>
+			<li><i class="icon-li icon-ok"></i>SystemCodes</li>
+			<li><i class="icon-li icon-ok"></i>Implementing DAO's and Services for your entities</li>
+			<li><i class="icon-li icon-ok"></i>Creating a controller and a crud page</li>
+			<li><i class="icon-li icon-ok"></i>Validating forms</li>
 		</ul>
 		
 		<hr/>
 		
 		<h3><i class="icon-location-arrow"></i> We're not yet done!</h3>
 		<p>
-			Now that you have learned the basics of Opentides 3, it's time for the advanced topics! Ready? Go!
+			In the following pages, I've also included other topics which are also essential in developing your project using
+			<span class="code-emphasize">Open-Tides 3</span>. Feel free to browse them.
 		</p>
 		
 		

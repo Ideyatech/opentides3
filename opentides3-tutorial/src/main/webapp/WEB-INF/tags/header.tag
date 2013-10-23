@@ -109,6 +109,11 @@
 										<spring:message code="label.welcome"/>
 									</a>
 								</li>
+								<li class="${active eq 'opentides' ? 'active' : ''}">
+									<a href="${home}/opentides">
+										<spring:message code="label.opentides"/>
+									</a>
+								</li>
 								<li class="dropdown ${active eq 'setting-up' ? 'active' : ''}">
 									<a href="#" class="dropdown-toggle" data-toggle="dropdown">
 										Setting Up

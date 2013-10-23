@@ -27,20 +27,20 @@
 			We tried our best to make this as user friendly as possible for you.
 		</p>
 		<p class="lead">
-			In the following pages, you'll learn and understand the basic and advanced fundamentals of <span class="code-emphasize">Opentides 3</span>. 
-			Ranging from creating CRUD pages into simply adding images, we'll tackle them all!
+			In the following pages, you'll learn and understand the basic fundamentals of <span class="code-emphasize">Open-Tides 3</span>. 
+			Ranging from creating CRUD pages into simply adding icons, we'll tackle them all!
 		</p>
 		<p class="lead">
-			The tutorial will consist of 3 parts; <span class="code-emphasize">Setting up</span>, <span class="code-emphasize">Basic</span> and <span class="code-emphasize">Advanced topics</span>
+			The tutorial will consist of 3 parts; <span class="code-emphasize">Setting up</span>, <span class="code-emphasize">Basic</span> and <span class="code-emphasize">Other topics</span>
 			We'll also develop a simple application alongside each topics covered.
 			This project will be your exercise and a playground to explore.
 			
-			Don't worry, sample codes will be provided along the way. Goodluck!
+			Don't worry, sample codes will be provided along the way. Goodluck!<i class="icon-asterisk icon-spin"></i>
 		</p>
 		
 		<ul class="pager">
 			<li class="next">
-				<a href="${home}/overview">Next (Tatiana) &rarr;</a>
+				<a href="${home}/opentides">Next (Open-Tides 3) &rarr;</a>
 			</li>
 		</ul>
 	</div>
