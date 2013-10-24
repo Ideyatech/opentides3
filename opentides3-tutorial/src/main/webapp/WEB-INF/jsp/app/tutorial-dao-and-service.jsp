@@ -17,13 +17,15 @@
 
 <div class="row-fluid">
 	<!-- NAVIGATION -->
-	<div id="sideBar" class="span2" style="top: 55px;">
-		<ul class="nav nav-list side-nav affix">
-			<li><a href="#baseEntityDao">BaseEntityDao</a></li>
-			<li><a href="#baseEntityDaoJpaImpl">BaseEntityDaoJpaImpl</a></li>
-			<li><a href="#baseCrudService">BaseCrudService</a></li>
-			<li><a href="#baseCrudServiceImpl">BaseCrudServiceImpl</a></li>
-		</ul>
+	<div id="sideBar" class="span2">
+		<div id="nav-list-wrapper" class="affix">
+			<ul class="nav nav-list side-nav">
+				<li><a href="#baseEntityDao">BaseEntityDao</a></li>
+				<li><a href="#baseEntityDaoJpaImpl">BaseEntityDaoJpaImpl</a></li>
+				<li><a href="#baseCrudService">BaseCrudService</a></li>
+				<li><a href="#baseCrudServiceImpl">BaseCrudServiceImpl</a></li>
+			</ul>
+		</div>
 	</div>
 	
 	<!-- CONTENT -->

@@ -15,13 +15,16 @@
 
 <div class="row-fluid">
 	<!-- NAVIGATION -->
-	<div id="sideBar" class="span2" style="top: 55px;">
-		<ul class="nav nav-list side-nav affix">
-			<li><a href="#requirements">Requirements</a></li>
-			<li><a href="#installation">Installation</a></li>
-			<li><a href="#imageutil">imageutil.jar</a></li>
-			<li><a href="#maven">Maven</a></li>
-		</ul>
+	<div id="sideBar" class="span2">
+		<div class="affix">
+			<ul class="nav nav-list side-nav">
+				<li><a href="#requirements">Requirements</a></li>
+				<li><a href="#installation">Installation</a></li>
+				<li><a href="#imageutil">imageutil.jar</a></li>
+				<li><a href="#maven">Maven Install</a></li>
+				<li><a href="#archetype">Installing Archetype</a></li>
+			</ul>
+		</div>
 	</div>
 	
 	<!-- CONTENT -->
@@ -46,7 +49,7 @@
 				<li><a href="https://jdk7.java.net/" target="_blank">Java 7</a></li>
 				<li><a href="http://tomcat.apache.org/download-70.cgi" target="_blank">Tomcat 7</a></li>
 				<li><a href="http://dev.mysql.com/downloads/mysql/5.5.html" target="_blank">MySql 5.5</a></li>
-				<li>IDE - We highly prefer using <a href="http://spring.io/tools/sts/all" target="_blank">Spring Tool Suite</a></li>
+				<li>IDE - We highly prefer using <a href="http://download.springsource.com/release/STS/3.4.0/dist/e4.3/spring-tool-suite-3.4.0.RELEASE-e4.3.1-win32-installer.exe">Spring Tool Suite</a></li>
 				<li><a href="https://github.com/" target="_blank">GIT</a> account</li>
 			</ul>
 		</section>
@@ -65,14 +68,15 @@
 				<li>Specify <span class="code-emphasize">https://github.com/Ideyatech/opentides3.git</span> as the URI. Host would be <span class="code-emphasize">github.com</span> and repository path would be <span class="code-emphasize">/Ideyatech/opentides3.git</span>.</li>
 				<li>In the authentication section, input the username and password of your <span class="code-emphasize">git</span> account. Then tick the checkbox <span class="code-emphasize">Store in secure store</span>. Then click next</li>
 				<li>In the next window, check the box besides <span class="code-emphasize">master</span> then press next.</li>
-				<li>Specify the destination in which <span class="code-emphasize">Opentides 3</span> will be cloned. Check the box besides <span class="code-emphasize">Import all Existing Project</li> then finish.</li>
+				<li>Specify the destination in which <span class="code-emphasize">Opentides 3</span> will be cloned. Check the box besides <span class="code-emphasize">Clone submodules</span> then finish.</li>
+				<li>Once done, proceed to <span class="code-emphasize">File</span> in your menu bar then <span class="code-emphasize">import</span>. Select <span class="code-emphasize">Existing Maven Project</span> then choose the location which you have cloned <span class="code-emphasize">Opentides 3 earlier</span> then Finish.</li>
 			</ol>
 		</section>
 	
 		
 		<section id="imageutil">
 			<h3>imageutil.jar</h3>
-			<p>Opentides 3 depends on imageutil.lib which is still not on any public maven repository. So we need to install it first in our local repository.</p>
+			<p>Opentides 3 depends on imageutil.jar which is still not on any public maven repository. So we need to install it first in our local repository.</p>
 			<h4>Steps</h4>
 			<ol>
 				<li>Right click the <span class="code-emphasize">Opentides 3</span> project in your package explorer.</li>
@@ -96,6 +100,20 @@
 				<li>In the following window, create a new <span class="code-emphasize">Maven</span> configuration.
 				<li>Specify the <span class="code-emphasize">Base Directory</span> by pressing <span class="code-emphasize">Browse Workspace</span> and selecting <span class="code-emphasize">Opentides 3</span>.</li>
 				<li>Set the goal as <span class="code-emphasize">clean install</span>.</li>
+				<li>Tick the checkbox besides <span class="code-emphasize">Skip Tests</span>
+				<li><span class="code-emphasize">Apply</span> then <span class="code-emphasize">Run</span></li>
+			</ol>
+		</section>
+		
+		<section id="archetype">
+			<h3>Installing the Sample Archetype</h3>
+			<h4>Steps</h4>
+			<ol>
+				<li>Right click on the project <span class="code-emphasize">Opentides 3</span> in the package explorer.</li>
+				<li>Select <span class="code-emphasize">Run As..</span> then <span class="code-emphasize">Run Configuration</span></li>
+				<li>In the following window, create a new <span class="code-emphasize">Maven</span> configuration.
+				<li>Specify the <span class="code-emphasize">Base Directory</span> by pressing <span class="code-emphasize">Browse Workspace</span> then select <span class="code-emphasize">opentides3-archetype</span> under <span class="code-emphasize">Opentides 3</span>.</li>
+				<li>Set the goal as <span class="code-emphasize">install</span>.</li>
 				<li><span class="code-emphasize">Apply</span> then <span class="code-emphasize">Run</span></li>
 			</ol>
 		</section>
@@ -108,7 +126,7 @@
 		
 		<ul class="pager">
 			<li class="previous">
-				<a href="${home}/overview">&larr; Previous (Overview)</a>
+				<a href="${home}/overview">&larr; Previous (Tatiana)</a>
 			</li>
 			<li class="next">
 				<a href="${home}/creating-project">Next (Creating a new project) &rarr;</a>

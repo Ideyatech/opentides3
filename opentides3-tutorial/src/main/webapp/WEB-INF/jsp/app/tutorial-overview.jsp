@@ -59,7 +59,7 @@
 		
 		<ul class="pager">
 			<li class="previous">
-				<a href="${home}">&larr; Previous (Welcome)</a>
+				<a href="${home}/opentides">&larr; Previous (Open-Tides 3)</a>
 			</li>
 			<li class="next">
 				<a href="${home}/getting-started">Next (Getting Started) &rarr;</a>

@@ -63,7 +63,7 @@
 		
 		<ul class="pager">
 			<li class="previous">
-				<a href="${home}/getting-started">&larr; Go Back</a>
+				<a href="${home}/advanced-overview">&larr; Go Back</a>
 			</li>
 		</ul>
 		

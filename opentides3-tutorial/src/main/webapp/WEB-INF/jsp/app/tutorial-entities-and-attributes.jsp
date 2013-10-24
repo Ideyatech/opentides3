@@ -17,12 +17,14 @@
 
 <div class="row-fluid">
 	<!-- NAVIGATION -->
-	<div id="sideBar" class="span2" style="top: 55px;">
-		<ul class="nav nav-list side-nav affix">
-			<li><a href="#patient">Patient</a></li>
-			<li><a href="#systemcodes">SystemCodes</a></li>
-			<li><a href="#attributes">Attributes</a></li>
-		</ul>
+	<div id="sideBar" class="span2">
+		<div id="nav-list-wrapper" class="affix">
+			<ul class="nav nav-list side-nav">
+				<li><a href="#patient">Patient</a></li>
+				<li><a href="#systemcodes">SystemCodes</a></li>
+				<li><a href="#attributes">Attributes</a></li>
+			</ul>
+		</div>
 	</div>
 	
 	<!-- CONTENT -->

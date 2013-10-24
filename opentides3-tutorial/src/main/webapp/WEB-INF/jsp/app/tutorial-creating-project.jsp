@@ -14,13 +14,15 @@
 
 <div class="row-fluid">
 	<!-- NAVIGATION -->
-	<div id="sideBar" class="span2" style="top: 55px;">
-		<ul class="nav nav-list side-nav affix">
-			<li><a href="#archetype">Maven Archetype</a></li>
-			<li><a href="#project">New Project</a></li>
-			<li><a href="#server">Running on Server</a></li>
-			<li><a href="#database">Database Configuration</a></li>
-		</ul>
+	<div id="sideBar" class="span2">
+		<div id="nav-list-wrapper" class="affix">
+			<ul class="nav nav-list side-nav">
+				<li><a href="#archetype">Maven Archetype</a></li>
+				<li><a href="#project">New Project</a></li>
+				<li><a href="#server">Running on Server</a></li>
+				<li><a href="#database">Database Configuration</a></li>
+			</ul>
+		</div>
 	</div>
 	
 	<!-- CONTENT -->

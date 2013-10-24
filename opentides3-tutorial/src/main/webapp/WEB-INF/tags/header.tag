@@ -109,6 +109,11 @@
 										<spring:message code="label.welcome"/>
 									</a>
 								</li>
+								<li class="${active eq 'opentides' ? 'active' : ''}">
+									<a href="${home}/opentides">
+										<spring:message code="label.opentides"/>
+									</a>
+								</li>
 								<li class="dropdown ${active eq 'setting-up' ? 'active' : ''}">
 									<a href="#" class="dropdown-toggle" data-toggle="dropdown">
 										Setting Up
@@ -141,11 +146,17 @@
 										<b class="caret"></b>
 									</a>
 									<ul class="dropdown-menu">
-										<li><a href="${home}/dbevolve">DB Evolve</a></li>
-										<li><a href="${home}/interfaces">Interfaces</a></li>
+										<li><a href="${home}/advanced-overview">Overview</a></li>
 										<li class="divider"></li>
-										<li><a href="${home}/form-tags">Form Tags</a></li>
+										<li><a href="${home}/spring-controllers">Learn Spring Controller</a></li>
+										<li><a href="${home}/dbevolve">DB Evolve</a></li>
+										<li class="divider"></li>
 										<li><a href="${home}/using-modals">Using Modal</a></li>
+										<li><a href="${home}/adding-images">Adding Custom Images</a></li>
+										<li class="divider"></li>
+										<li><a href="${home}/form-tags">Different Form Tags</a></li>
+										<li><a href="${home}/attaching-images">Attaching Images</a></li>
+										<li><a href="${home}/adding-tags">Adding Tags</a></li>
 									</ul>
 								</li>
 							</ul>

@@ -15,12 +15,11 @@
 
 <div class="row-fluid">
 	<!-- NAVIGATION -->
-	<div id="sideBar" class="span2" style="top: 55px;">
-		<ul class="nav nav-list side-nav affix">
-			<li><a href="#origin">Validator</a></li>
-			<li><a href="#internal">Internal Modal</a></li>
-			<li><a href="#external">External Modal</a></li>
-		</ul>
+	<div class="span2">
+		<div class="alert alert-warning">
+			<strong>Hold on!</strong><br/>
+			This page requires you to know how to <a href="${home}/spring-controllers" target="_blank">create your own spring controller</a>.
+		</div>
 	</div>
 	
 	<!-- CONTENT -->
@@ -40,10 +39,6 @@
 		<div id="modalOnContainer" class="modal-container modal hide fade">
 			<button type="button" class="close" data-dismiss="modal">&times;</button>
 			<h3><i class="icon-magic"></i> Kazam! Just like that!</h3>
-		</div>
-		
-		<div class="alert alert-warning">
-			<strong>Hold on!</strong> This page requires you to know how to <a href="http://docs.spring.io/spring/docs/3.0.x/reference/mvc.html" target="_blank">create your own spring controller</a>.
 		</div>
 
 		<section id="origin">
