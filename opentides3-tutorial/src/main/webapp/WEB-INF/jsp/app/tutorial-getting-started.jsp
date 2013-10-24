@@ -22,7 +22,6 @@
 				<li><a href="#installation">Installation</a></li>
 				<li><a href="#imageutil">imageutil.jar</a></li>
 				<li><a href="#maven">Maven Install</a></li>
-				<li><a href="#archetype">Installing Archetype</a></li>
 			</ul>
 		</div>
 	</div>
@@ -105,18 +104,7 @@
 			</ol>
 		</section>
 		
-		<section id="archetype">
-			<h3>Installing the Sample Archetype</h3>
-			<h4>Steps</h4>
-			<ol>
-				<li>Right click on the project <span class="code-emphasize">Opentides 3</span> in the package explorer.</li>
-				<li>Select <span class="code-emphasize">Run As..</span> then <span class="code-emphasize">Run Configuration</span></li>
-				<li>In the following window, create a new <span class="code-emphasize">Maven</span> configuration.
-				<li>Specify the <span class="code-emphasize">Base Directory</span> by pressing <span class="code-emphasize">Browse Workspace</span> then select <span class="code-emphasize">opentides3-archetype</span> under <span class="code-emphasize">Opentides 3</span>.</li>
-				<li>Set the goal as <span class="code-emphasize">install</span>.</li>
-				<li><span class="code-emphasize">Apply</span> then <span class="code-emphasize">Run</span></li>
-			</ol>
-		</section>
+		<hr/>
 		
 		<h2><i class="icon-trophy"></i> There you go!</h2>
 		<p>

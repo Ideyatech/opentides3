@@ -11,11 +11,6 @@
 
 <app:header pageTitle="title.review" active="basics"/>
 
-<ul class="breadcrumb">
-	<li>Basics<span class="divider">/</span></li>
-	<li>Review</li>
-</ul>
-
 <div class="row-fluid">
 	<!-- NAVIGATION -->
 	<div class="span2">
@@ -38,26 +33,27 @@
 			<li><i class="icon-li icon-ok"></i>Creating entities and defining their attributes</li>
 			<li><i class="icon-li icon-ok"></i>SystemCodes</li>
 			<li><i class="icon-li icon-ok"></i>Implementing DAO's and Services for your entities</li>
-			<li><i class="icon-li icon-ok"></i>Creating a controller and a crud page</li>
-			<li><i class="icon-li icon-ok"></i>Validating forms</li>
+			<li><i class="icon-li icon-ok"></i>Creating a controller and a CRUD page</li>
+			<li><i class="icon-li icon-ok"></i>Creating and validating forms</li>
+			<li><i class="icon-li icon-ok"></i>Creating a database evolve script</li>
 		</ul>
 		
-		<hr/>
+<!-- 		<hr/> -->
 		
-		<h3><i class="icon-location-arrow"></i> We're not yet done!</h3>
-		<p>
-			In the following pages, I've also included other topics which are also essential in developing your project using
-			<span class="code-emphasize">Open-Tides 3</span>. Feel free to browse them.
-		</p>
+<!-- 		<h3><i class="icon-location-arrow"></i> We're not yet done!</h3> -->
+<!-- 		<p> -->
+<!-- 			In the following pages, I've also included other topics which are also essential in developing your project using -->
+<!-- 			<span class="code-emphasize">Open-Tides 3</span>. Feel free to browse them. -->
+<!-- 		</p> -->
 		
 		
 		<ul class="pager">
 			<li class="previous">
-				<a href="${home}/validation">&larr; Previous (Validation)</a>
+				<a href="${home}/dbevolve">&larr; Previous (DB Evolve)</a>
 			</li>
-			<li class="next">
-				<a href="${home}/advanced-overview">Next (Advanced) &rarr;</a>
-			</li>
+<!-- 			<li class="next"> -->
+<%-- 				<a href="${home}/advanced-overview">Next (Advanced) &rarr;</a> --%>
+<!-- 			</li> -->
 		</ul>
 	</div>
 </div>

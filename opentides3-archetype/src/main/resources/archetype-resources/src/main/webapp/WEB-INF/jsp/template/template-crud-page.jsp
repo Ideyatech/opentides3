@@ -15,7 +15,7 @@
 
 <app:header pageTitle="label.%%%%" active="%%%%"/>
 
-<div id="%%%%-body">
+<div id="%%%%-body" class="container">
 
 <div id="search-body">
 

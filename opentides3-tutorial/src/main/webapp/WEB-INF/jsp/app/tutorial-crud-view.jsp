@@ -22,7 +22,6 @@
 				<li><a href="#dataSummary">Data Summary</a></li>
 				<li><a href="#dataTable">Data Table</a></li>
 				<li><a href="#searchPanel">Search Panel</a></li>
-				<li><a href="#newForm">Creating a Form</a></li>
 			</ul>
 		</div>
 	</div>
@@ -129,44 +128,19 @@
 			</div>
 		</section>
 		
-		<section id="newForm">
-			<h3>New Form</h3>
-			<p>This is the form that is used for creating a new page. Initially it is hidden but then showed when needed.</p>
-			<div class="tutorial-body">
-				<div class="example">
-					<code class="prettyprint">
-						&lt;tides:input label="label.patient.firstName" path="firstName" required="true"/&gt;<br/>
-						&lt;tides:input label="label.patient.lastName" path="lastName" required="true"/&gt;
-					</code>
-				</div>
-				<div class="highlight">
-					<h4>Steps</h4>
-					<ol>
-						<li>Search for the div with the ID <span class="code-emphasize">form-body</span>.</li>
-						<li>Change all the <span class="code-emphasize">%%%%</span> texts within the div with <code>patient</code>.</li>
-						<li>Below the <code>&lt;!-- Define form fields here --&gt;</code> is where we would add our form fields with the use of <span class="code-emphasize">tides</span> tag.</li>
-						<li>In the example above, i've shown how to create a field for the <span class="code-emphasize">first name</span> and the <span class="code-emphasize">last name</span>. Later on we'll add more fields to it.</li>
-					</ol>
-				</div>
-			</div>
-			<p>
-				<i class="icon-ok"></i> Inside the form we can find a <code>&lt;div class="message-container"&gt;&lt;/div&gt;</code>. This 
-				will hold error messages due to validation.
-			</p>
-			
-		</section>
+		<hr/>
 		
 		<h2><i class="icon-bullhorn"></i> A few notes to remember</h2>
 		<ul>
-			<li>Be sure to change all the %%%% with the class being process; in our case it is <span class="code-emphasize">patient</span></li>
+			<li>Be sure to change all the <span class="code-emphasize">%%%%</span> with the class being process; in our case it is <span class="code-emphasize">patient</span></li>
 			<li>All labels in this jsp should be defined in the <span class="code-emphasize">tatiana.messages.properties</span> file that we have discussed earlier</li>
 			<li>Remember to change the values of the header tag depending on your needs.</li>
 		</ul>
 		<p>If implemented properly, everything should look like this:</p>
 		
-		<img src="img/tides-patient-crud.png" class="img-rounded" width="800px"/>
-		
-		<p>In the next chapter, we will add validation to our forms and display error messages.</p>
+		<img src="img/tides-patient-crud.png" class="img-polaroid" width="80%"/>
+
+		<p>In the next chapter, we will add forms into our page so that we can create new objects.</p>
 
 		<!-- pager -->
 		<ul class="pager">
@@ -174,7 +148,7 @@
 				<a href="${home}/crud-controller">&larr; Previous (CRUD Controller)</a>
 			</li>
 			<li class="next">
-				<a href="${home}/validation">Next (Form Validation) &rarr;</a>
+				<a href="${home}/crud-form">Next (Adding Form) &rarr;</a>
 			</li>
 		</ul>
 		

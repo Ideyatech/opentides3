@@ -116,6 +116,7 @@
 			</ol>
 		</section>
 		
+		<hr/>
 		
 		<h2><i class="icon-plane"></i> Lets do this!</h2>
 		<p>

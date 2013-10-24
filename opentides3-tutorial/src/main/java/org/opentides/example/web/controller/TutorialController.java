@@ -83,6 +83,12 @@ public class TutorialController {
 		return "app/tutorial-crud-view";
 	}
 	
+	@RequestMapping(method = RequestMethod.GET, value="/crud-form")
+	public String crudForm(ModelMap map){
+
+		return "app/tutorial-crud-form";
+	}
+	
 	@RequestMapping(method = RequestMethod.GET, value="/validation")
 	public String validation(ModelMap map){
 
