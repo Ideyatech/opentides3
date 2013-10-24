@@ -18,6 +18,12 @@
 		<version>3.0.1-SNAPSHOT</version>
 	</dependency>
 	
+	<dependency>
+		<groupId>org.opentides</groupId>
+		<artifactId>dashboard</artifactId>
+		<version>3.0.1-SNAPSHOT</version>
+	</dependency>
+	
 	<!-- Servlet -->
 	<dependency>
 		<groupId>javax.servlet</groupId>

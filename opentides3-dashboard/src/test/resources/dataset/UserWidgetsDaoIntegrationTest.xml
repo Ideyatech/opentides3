@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+	<WIDGET id="1" name="Widget 1" title="Title 1" description="Description 1" url="URL 1" access_code="ACCESS_CODE_1" is_shown="true" CACHE_DURATION="0"/>
+	<WIDGET id="2" name="Widget 2" title="Title 2" description="Description 2" url="URL 2" access_code="ACCESS_CODE_2" is_shown="false" CACHE_DURATION="0"/>
+	<WIDGET id="3" name="Widget 3" title="Title 3" description="Description 3" url="URL 3" access_code="ACCESS_CODE_3" is_shown="true" CACHE_DURATION="0"/>
+	
+	<USER_PROFILE id="1" firstname="First1" lastname="Last1" email="email1@email.com" />
+	<USER_PROFILE id="2" firstname="First2" lastname="Last2" email="email2@email.com" />
+	<USER_PROFILE id="3" firstname="First3" lastname="Last3" email="email3@email.com" />
+	
+	<USERGROUP id="1" name="Group 1" description="Description 1" />
+	<USERGROUP id="2" name="Group 2" description="Description 2" />
+	<USERGROUP id="3" name="Group 3" description="Description 3" />
+	
+	<USER_AUTHORITY id="1" username="Username1" AUTHORITY="ACCESS_CODE_1" USERGROUP_ID="1" />
+	<USER_AUTHORITY id="2" username="Username2" AUTHORITY="ACCESS_CODE_2" USERGROUP_ID="2" />
+	<USER_AUTHORITY id="3" username="Username3" AUTHORITY="ACCESS_CODE_3" USERGROUP_ID="3" />
+	
+	<USER_GROUP user_id="1" group_id="1" />
+	<USER_GROUP user_id="2" group_id="1" />
+	<USER_GROUP user_id="1" group_id="2" />
+	<USER_GROUP user_id="1" group_id="3" />
+	
+	<USER_WIDGETS ID="1" USER_ID="1" WIDGET_ID="1" COLUMN_="1" ROW_="1" STATUS="1" />
+	<USER_WIDGETS ID="2" USER_ID="1" WIDGET_ID="2" COLUMN_="2" ROW_="1" STATUS="2"/>
+	<USER_WIDGETS ID="3" USER_ID="1" WIDGET_ID="3" COLUMN_="1" ROW_="2" STATUS="3"/>
+</dataset>

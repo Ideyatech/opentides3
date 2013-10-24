@@ -116,6 +116,11 @@
 										<spring:message code="label.system-codes"/>
 									</a>
 								</li>
+								<li class="${active eq 'widget' ? 'active' : ''}">
+									<a href="${home}/widget/">
+										<spring:message code="label.widget"/>
+									</a>
+								</li>
 								<li class="${active eq 'usergroups' ? 'active' : ''}">
 									<a href="${home}/organization/usergroups/">
 										<spring:message code="label.usergroup"/>
