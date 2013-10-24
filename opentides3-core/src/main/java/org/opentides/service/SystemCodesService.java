@@ -59,7 +59,7 @@ public interface SystemCodesService extends BaseCrudService<SystemCodes> {
 	 * Returns a list of the available categories of all system codes.
 	 * @return a list of system codes categories
 	 */
-	public List<SystemCodes> getAllCategories();
+	public List<String> getAllCategories();
 	
 	/**
 	 * Returns a list of the available categories of all system codes not
@@ -67,7 +67,7 @@ public interface SystemCodesService extends BaseCrudService<SystemCodes> {
 	 * @param categories
 	 * @return
 	 */
-	public List<SystemCodes> getAllCategoriesExcept(String ... categories);
+	public List<String> getAllCategoriesExcept(String ... categories);
 	
 	/**
 	 * Checks if a system codes ha a duplicate key.

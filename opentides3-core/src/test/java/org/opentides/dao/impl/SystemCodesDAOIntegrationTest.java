@@ -4,6 +4,8 @@ import static org.junit.Assert.assertEquals;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.junit.Ignore;
@@ -70,12 +72,17 @@ public class SystemCodesDAOIntegrationTest extends BaseDaoTest {
 		assertEquals(new Long(1l), count);
 	}
 
-	@Ignore
 	@Test
 	public void testGetAllCategories(){
 		int actual = dao.getAllCategories().size();
 		_log.debug("Number of categories: "+dao.getAllCategories().size());
 		assertEquals(2, actual);
+	}
+	
+	public void testGetAllCategoriesExcept() {
+		List<String> actual = dao.getAllCategoriesExcept("OFFICE");
+		List<String> expected = Arrays.asList("COUNTRY");
+		assertEquals(expected, actual);
 	}
 
 }

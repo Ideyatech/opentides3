@@ -24,6 +24,12 @@
 		<version>3.0.1-SNAPSHOT</version>
 	</dependency>
 	
+	<dependency>
+		<groupId>org.opentides</groupId>
+		<artifactId>dashboard</artifactId>
+		<version>3.0.1-SNAPSHOT</version>
+	</dependency>
+	
 	<!-- Servlet -->
 	<dependency>
 		<groupId>javax.servlet</groupId>
@@ -83,6 +89,16 @@
 					<version>${mysql-connector-java-version}</version>
 				</dependency>
 			</dependencies>
+		</plugin>
+		<plugin>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-maven-plugin</artifactId>
+			<version>9.0.0.M4</version>
+			<configuration>
+				<webAppConfig>
+					<jettyEnvXml>src/main/resources/jetty.xml</jettyEnvXml>
+				</webAppConfig>
+			</configuration>
 		</plugin>
   	</plugins>
   </build>

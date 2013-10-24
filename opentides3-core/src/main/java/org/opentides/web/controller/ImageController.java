@@ -26,7 +26,7 @@ import org.opentides.util.CrudUtil;
 import org.opentides.util.ImageUtil;
 import org.opentides.util.NamingUtil;
 import org.opentides.util.StringUtil;
-import org.opentides.web.validator.PhotoValidator;
+import org.opentides.web.validator.ImageValidator;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -63,7 +63,7 @@ public class ImageController {
 	protected ImageInfoService imageInfoService;
 	
 	@Autowired
-	protected PhotoValidator photoValidator;
+	protected ImageValidator imagwValidator;
 	
 	@Autowired
 	@Qualifier("defaultFileUploadService")
@@ -120,6 +120,33 @@ public class ImageController {
 			outputStream.close();
 		}		
 		return null;		
+	}
+	
+	/**
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/", method = RequestMethod.GET, produces = "image/png")
+	public String loadEmpty(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		byte [] byteArray = ImageUtil.getDefaultImage();
+		response.setContentType("image/png");
+		response.setHeader("Cache-Control", "public");
+		
+		OutputStream outputStream = null;
+		try {
+			outputStream = response.getOutputStream();
+			outputStream.write(byteArray);
+		} catch (Exception e) {
+			_log.error("Failed to load default image.", e);
+		} finally {
+			outputStream.flush();
+			outputStream.close();
+		}	
+		
+		return null;
 	}
 	
 	/**
@@ -312,7 +339,7 @@ public class ImageController {
 
 	@InitBinder
 	protected void initBinder(WebDataBinder binder){
-		binder.setValidator(photoValidator);
+		binder.setValidator(imagwValidator);
 	}
 	
 }

@@ -8,37 +8,10 @@
 	 <tag-file>
 	    <name>checkbox</name>
 	    <path>/META-INF/tags/checkbox.tag</path>
-	    <attribute>
-	    	<name>path</name>
-	    	<required>true</required>
-	    </attribute>
-	    <attribute>
-	    	<name>label</name>
-	    	<required>true</required>
-	    </attribute>
 	 </tag-file>
 	 <tag-file>
 	 	<name>combobox</name>
 	 	<path>/META-INF/tags/combobox.tag</path>
-	 	<attribute>
-	 		<name>path</name>
-	 		<required>true</required>
-	 	</attribute>
-	 	<attribute>
-	 		<name>label</name>
-	 		<required>true</required>
-	 	</attribute>
-	 	<attribute>
-	 		<name>cssClass</name>
-	 	</attribute>
-	 	<attribute>
-	 		<name>items</name>
-	 		<type>java.util.Collection</type>
-	 	</attribute>
-	 	<attribute>
-	 		<name>required</name>
-	 		<type>java.lang.Boolean</type>
-	 	</attribute>
 	 </tag-file>
 	 <tag-file>
 	 	<name>comments</name>
@@ -51,26 +24,6 @@
 	 <tag-file>
 	 	<name>input_file</name>
 	 	<path>/META-INF/tags/input_file.tag</path>
-	 	<attribute>
-	 		<name>id</name>
-	 		<required>true</required>
-	 	</attribute>
-	 	<attribute>
-	 		<name>label</name>
-	 		<required>true</required>
-	 	</attribute>
-	 	<attribute>
-	 		<name>dropZone</name>
-	 		<required>false</required>
-	 	</attribute>
-	 	<attribute>
-	 		<name>dropZoneLabel</name>
-	 		<required>false</required>
-	 	</attribute>
-	 	<attribute>
-	 		<name>dataURL</name>
-	 		<required>false</required>
-	 	</attribute>
 	 </tag-file>
 	 <tag-file>
 	 	<name>login_form</name>

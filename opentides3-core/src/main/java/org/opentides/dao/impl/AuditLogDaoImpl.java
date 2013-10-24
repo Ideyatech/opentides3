@@ -99,6 +99,12 @@ public class AuditLogDaoImpl extends BaseEntityDaoJpaImpl<AuditLog, Long> implem
 	@Override
 	protected String appendClauseToExample(AuditLog example, boolean exactMatch) {
 		StringBuilder append = new StringBuilder("");
+		if (!StringUtil.isEmpty(append.toString())){
+			append.append(" and ");
+		}
+		append.append(" obj.message is not null ");
+		append.append(" and ");
+		append.append(" obj.message <> '' ");
 		if (example.getStartDate() != null){
 			if (!StringUtil.isEmpty(append.toString())){
 				append.append(" and ");

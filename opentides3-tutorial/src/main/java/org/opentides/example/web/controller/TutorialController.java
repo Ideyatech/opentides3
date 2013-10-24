@@ -36,6 +36,11 @@ public class TutorialController {
 		return "app/tutorial-overview";
 	}
 	
+	@RequestMapping(method = RequestMethod.GET, value="/opentides")
+	public String opentides(ModelMap map){
+		return "app/tutorial-opentides";
+	}
+	
 	@RequestMapping(method = RequestMethod.GET, value="/getting-started")
 	public String gettingStarted(ModelMap map){
 		
@@ -102,10 +107,16 @@ public class TutorialController {
 		return "app/tutorial-review";
 	}
 	
-	@RequestMapping(method = RequestMethod.GET, value="/interfaces")
-	public String tidesInterfaces(ModelMap map){
-		map.addAttribute("formCommand", modelAttribute());
-		return "app/tutorial-interfaces";
+	@RequestMapping(method = RequestMethod.GET, value="/adding-tags")
+	public String taggable(ModelMap map){
+		map.addAttribute("formCommand", ninjaModelAttribute());
+		return "app/tutorial-taggable";
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value="/attaching-images")
+	public String imageUploadable(ModelMap map){
+		map.addAttribute("formCommand", ninjaModelAttribute());
+		return "app/tutorial-imageuploadable";
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value="/dbevolve")
@@ -140,6 +151,10 @@ public class TutorialController {
 	
 	private TutorialModel modelAttribute(){
 		return new TutorialModel();
+	}
+	
+	private Ninja ninjaModelAttribute(){
+		return new Ninja();
 	}
 	
 	public List<SystemCodes> brandList() {

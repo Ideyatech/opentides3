@@ -13,11 +13,6 @@
 	<script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js"></script>
 </app:header>
 
-<ul class="breadcrumb">
-	<li>Advanced <span class="divider">/</span></li>
-	<li>DB Evolve</li>
-</ul>
-
 <div class="row-fluid">
 	<!-- NAVIGATION -->
 	<div class="span2">
@@ -28,6 +23,11 @@
 	
 	<!-- CONTENT -->
 	<div class="span10">
+		<ul class="breadcrumb">
+			<li>Advanced <span class="divider">/</span></li>
+			<li>DB Evolve</li>
+		</ul>
+		
 		<h1><i class="icon-book"></i> DB Evolve</h1>
 		<p class="lead">
 			DB Evolves are special classes from Opentides 3 that helps developers to populate the database in advance with pre-defined contents.
@@ -74,11 +74,9 @@
 			</li>
 		</ol>
 		
-		<hr/>
-		
 		<ul class="pager">
 			<li class="previous">
-				<a href="${home}/getting-started">&larr; Go Back</a>
+				<a href="${home}/advanced-overview">&larr; Go Back</a>
 			</li>
 		</ul>
 		
@@ -87,21 +85,4 @@
 </div>
 
 <app:footer>
-
-	<script type="text/javascript">
-		$(document).ready(function(){
-			$('ul.nav li a').click(function(){
-				$('ul.nav li').removeClass('active');
-				$(this).parent('li').addClass('active');
-				var id = $(this).attr("id").split("-")[1];
-				scrollToView(id); 
-			});
-		});
-		
-		function scrollToView(destinationID){
-			$('html, body').animate({
-				scrollTop: $("#"+destinationID).offset().top-45
-			}, 600);
-		}
-	</script>
 </app:footer>

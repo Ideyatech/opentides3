@@ -37,7 +37,7 @@ import org.springframework.stereotype.Service;
 public class SystemCodesServiceImpl extends BaseCrudServiceImpl<SystemCodes>
 		implements SystemCodesService {
 	
-	public List<SystemCodes> getAllCategories() {
+	public List<String> getAllCategories() {
 		return getSystemCodesDao().getAllCategories();
 	}
 
@@ -53,7 +53,7 @@ public class SystemCodesServiceImpl extends BaseCrudServiceImpl<SystemCodes>
 		return getSystemCodesDao().findSystemCodesByCategory(category);
 	}
 
-	public List<SystemCodes> getAllCategoriesExcept(String... categories) {
+	public List<String> getAllCategoriesExcept(String... categories) {
 		return getSystemCodesDao().getAllCategoriesExcept(categories);
 	}
 	

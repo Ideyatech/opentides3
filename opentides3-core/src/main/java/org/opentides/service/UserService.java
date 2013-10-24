@@ -105,5 +105,4 @@ public interface UserService extends BaseCrudService<BaseUser> {
 	 public void registerUser(BaseUser baseUser, boolean sendEmail);
 	 
 	 public UserCredential generateFakeCredentials();
-
 }

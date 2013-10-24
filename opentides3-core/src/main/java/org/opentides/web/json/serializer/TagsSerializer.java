@@ -37,6 +37,8 @@ public class TagsSerializer extends StdSerializer<List<Tag>> {
 					sb.append(",");
 			}
 			jgen.writeString(sb.toString());
+		} else {
+			jgen.writeString("");
 		}
 	}
 	

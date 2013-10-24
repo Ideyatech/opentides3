@@ -476,7 +476,6 @@ public class Ninja extends BaseEntity implements Commentable, ImageUploadable, T
 			inverseJoinColumns = {
 						@JoinColumn(name = "PHOTO_ID")}
 	)
-	@JsonView(Views.FormView.class)
 	private List<ImageInfo> photos;
 	
 	private transient MultipartFile photo;
@@ -495,7 +494,9 @@ public class Ninja extends BaseEntity implements Commentable, ImageUploadable, T
 				}
 			}
 		}
-		return null;
+		ImageInfo primaryPhoto = new ImageInfo();
+		primaryPhoto.setId(0l);
+		return primaryPhoto;
 	}
 	
 	@Override

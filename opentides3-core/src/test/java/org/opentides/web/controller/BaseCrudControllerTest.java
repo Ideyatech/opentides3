@@ -15,6 +15,7 @@ import org.mockito.Mockito;
 import org.opentides.bean.MessageResponse;
 import org.opentides.bean.SearchResults;
 import org.opentides.exception.DataAccessException;
+import org.opentides.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -47,6 +48,9 @@ public class BaseCrudControllerTest {
 	
 	@Autowired
 	private NinjaService ninjaService;
+	
+	@Autowired
+	private TagService tagService;
 	
 	@Autowired
 	private PlatformTransactionManager transactionManager;
@@ -333,5 +337,31 @@ public class BaseCrudControllerTest {
 		//Verify that ninjaService(T t) method was invoked 
 		Mockito.verify(ninjaService).save(command);
 	}
+	
+	/*@SuppressWarnings("unchecked")
+	@Test
+	public void testCreateWithTags() {
+		Long id = 0l;
+		ExtendedModelMap modelMap = new ExtendedModelMap();
+		Ninja command = new Ninja();
+		command.setId(id);
+		command.setFirstName("Sasuke");
+		command.setLastName("Uchiha");
+		
+		BindingResult bindingResult = new BeanPropertyBindingResult(command, "ninja");
+		
+		Map<String, Object> model = ninjaCrudController.create(command,
+				bindingResult, modelMap, mockRequest, mockResponse);
+		
+		assertEquals(command, model.get("command"));
+		List<MessageResponse> messages = (List<MessageResponse>)model.get("messages");
+		assertEquals(1, messages.size());
+		
+		MessageResponse message = messages.get(0);
+		assertEquals("Record has been successfully added.", message.getMessage());
+		
+		//Verify that ninjaService(T t) method was invoked 
+		Mockito.verify(ninjaService).save(command);
+	}*/
 
 }

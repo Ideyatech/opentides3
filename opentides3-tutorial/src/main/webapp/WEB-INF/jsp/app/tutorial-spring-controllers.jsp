@@ -13,26 +13,23 @@
 	<script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js"></script>
 </app:header>
 
-<ul class="breadcrumb">
-	<li>Advanced <span class="divider">/</span></li>
-	<li>Spring Controllers</li>
-</ul>
-
 <div class="row-fluid">
 	<!-- NAVIGATION -->
 	<div class="span2">
-		<div data-spy="affix" data-offset-top="60" class="affix-top" style="top: 55px;">
-			<ul class="nav nav-list side-nav">
-				<li class="nav-header">Navigation</li>
-				<li class="active"><a id="scroll-creation">Creation</a></li>
-				<li><a id="scroll-links">Useful Links</a></li>
-				<li><a id="scroll-exercise">Exercise</a></li>
-			</ul>
+		<div class="alert alert-info">
+			<strong>By convention</strong>, 
+			we append the word "Controller" at the end for the name of our controller.
 		</div>
 	</div>
 	
 	<!-- CONTENT -->
 	<div class="span10">
+	
+		<ul class="breadcrumb">
+			<li>Advanced <span class="divider">/</span></li>
+			<li>Spring Controllers</li>
+		</ul>
+		
 		<h1><i class="icon-book"></i> Spring Controllers</h1>
 		<p class="lead">
 			Controllers in general interpret user input and transform it into a model that is represented to the user by the view.
@@ -51,10 +48,6 @@
 				Annotate the file with <code>@Controller</code> from <code>org.springframework.stereotype</code>
 			</li>
 		</ol>
-		
-		<div class="alert alert-info">
-			By convention, we append the word "Controller" at the end for the name of our controller.
-		</div>
 		
 		<hr/>
 		
@@ -81,7 +74,7 @@
 
 		<ul class="pager">
 			<li class="previous">
-				<a href="${home}/getting-started">&larr; Go Back</a>
+				<a href="${home}/advanced-overview">&larr; Go Back</a>
 			</li>
 		</ul>
 		
