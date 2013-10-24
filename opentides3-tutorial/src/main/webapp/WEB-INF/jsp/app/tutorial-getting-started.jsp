@@ -23,10 +23,11 @@
 	<div class="span2">
 		<div data-spy="affix" data-offset-top="60" class="affix-top" style="top: 55px;">
 			<ul class="nav nav-list side-nav">
-				<li class="nav-header">Project Overview</li>
-				<li class="active"><a id="scroll-hello">Hello Tatiana!</a></li>
-				<li><a id="scroll-functionalities">What can she do?</a></li>
-				<li><a id="scroll-components">Meet the objects</a></li>
+				<li class="nav-header">Navigation</li>
+				<li class="active"><a id="scroll-requirements">Requirements</a></li>
+				<li><a id="scroll-installation">Installation</a></li>
+				<li><a id="scroll-imageutil">imageutil.lib</a></li>
+				<li><a id="scroll-maven">Maven Install</a></li>
 			</ul>
 		</div>
 	</div>
@@ -39,7 +40,7 @@
 			
 		</p>
 		
-		<h3 id="hello">Requirements</h3>
+		<h3 id="requirements">Requirements</h3>
 		<p>
 			With great power comes great responsibility. Of course, there are some requirements that you should have before obtaining the <span class="code-emphasize">"power"</span> <i class="icon-bolt"></i>
 		</p>
@@ -53,7 +54,7 @@
 		
 		<hr/>
 		
-		<h3>Installation</h3>
+		<h3 id="installation">Installation</h3>
 		<p>
 			Actually, we're really not installing <span class="code-emphasize">Opentides 3</span> into your machine, we're just cloning the original project
 			from <span class="code-emphasize">GitHub <i class="icon-github"></i>.</span> Sorry <i class="icon-meh"></i>
@@ -71,7 +72,7 @@
 		
 		<hr/>
 		
-		<h3>imageutil.lib</h3>
+		<h3 id="imageutil">imageutil.lib</h3>
 		<p>Opentides 3 depends on imageutil.lib which is still not on any public maven repository. So we need to install it first in our local repository.</p>
 		<h4>Steps</h4>
 		<ol>
@@ -88,7 +89,7 @@
 		
 		<hr/>
 		
-		<h3>Maven Install</h3>
+		<h3 id="maven">Maven Install</h3>
 		<h4>Steps</h4>
 		<ol>
 			<li>Right click on the project <span class="code-emphasize">Opentides 3</span> in the package explorer.</li>

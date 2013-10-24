@@ -58,6 +58,7 @@
 		<property name="locations">
 			<list>
 				<value>classpath:base/jpql/core.properties</value>
+				<value>classpath:social/jpql/social.properties</value>
 				<value>${jpql.custom.properties}</value>
 			</list>
 		</property>

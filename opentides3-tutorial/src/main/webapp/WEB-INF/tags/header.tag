@@ -175,3 +175,4 @@
 			<div id="bd" class="container">
 		</c:otherwise>
 	</c:choose>
+>>>>>>> 0ac28919b28466d94917b82353cc08d6e049a25f

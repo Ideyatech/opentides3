@@ -1,28 +1,70 @@
-<%@ taglib prefix="tides" uri="http://www.ideyatech.com/tides"%>
-<%@ taglib prefix="app" tagdir="/WEB-INF/tags"%>
+<%--
+	- @author - ONZ
+--%>
+
+<%@ page contentType="text/html;utf-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="app" tagdir="/WEB-INF/tags"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<app:header pageTitle="label.home" active="home"/>
+<app:header pageTitle="title.welcome" active="welcome"/>
 
-	<ul class="breadcrumb">
-	  <li><spring:message code="label.home"/></li>
-	</ul>
-	
-	<h1><i class="icon-coffee"></i> Welcome to Opentides 3 Sample Application!</h1>
-	<p class="lead"><a href="https://github.com/Ideyatech/opentides3">https://github.com/Ideyatech/opentides3</a></p>
-	
-	<p>Now, one of the peculiar characteristics of the savage in his domestic hours, is his wonderful patience of industry. An ancient Hawaiian war-club or spear-paddle, in its full multiplicity and elaboration of carving, is as great a trophy of human perseverance as a Latin lexicon. For, with but a bit of broken sea-shell or a shark's tooth, that miraculous intricacy of wooden net-work has been achieved; and it has cost steady years of steady application.</p>
+<ul class="breadcrumb">
+	<li>Welcome</li>
+</ul>
 
-	<p>As with the Hawaiian savage, so with the white sailor-savage. With the same marvellous patience, and with the same single shark's tooth, of his one poor jack-knife, he will carve you a bit of bone sculpture, not quite as workmanlike, but as close packed in its maziness of design, as the Greek savage, Achilles's shield; and full of barbaric spirit and suggestiveness, as the prints of that fine old Dutch savage, Albert Durer.</p>
-	
-	<p>Wooden whales, or whales cut in profile out of the small dark slabs of the noble South Sea war-wood, are frequently met with in the forecastles of American whalers. Some of them are done with much accuracy.</p>	
-
-	<hr/>
-	
-	<div class="row-fluid">
-		
+<div class="row-fluid">
+	<!-- NAVIGATION -->
+	<div class="span2">
+		<img src="img/tacocat.png"/>
+		<p class="tip">Taco cat spelled backwards is still Taco cat</p>
 	</div>
 	
-<tides:footer/>
+	<!-- CONTENT -->
+	<div class="span10">
+		<h1><i class="icon-flag"></i> This is a tutorial. Got it?</h1>
+		<p class="lead">
+			This is a tutorial. Expect this to be hard, tedious and lots of incomplete/inaccurate data. Nahh I'm just kidding,
+			We tried our best to make this as user friendly as possible for you.
+		</p>
+		<p class="lead">
+			In the following pages, you'll learn and understand the basic and advanced fundamentals of <span class="code-emphasize">Opentides 3</span>. 
+			Ranging from creating CRUD pages into simply adding images, we'll tackle them all!
+		</p>
+		<p class="lead">
+			The tutorial will consist of 3 parts; <span class="code-emphasize">Setting up</span>, <span class="code-emphasize">Basic</span> and <span class="code-emphasize">Advanced topics</span>
+			We'll also develop a simple application alongside each topics covered.
+			This project will be your exercise and a playground to explore.
+			
+			Don't worry, sample codes will be provided along the way. Goodluck!
+		</p>
+		
+		<ul class="pager">
+			<li class="next">
+				<a href="${home}/overview">Next (Tatiana) &rarr;</a>
+			</li>
+		</ul>
+	</div>
+</div>
+
+<app:footer>
+
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$('ul.nav li a').click(function(){
+				$('ul.nav li').removeClass('active');
+				$(this).parent('li').addClass('active');
+				var id = $(this).attr("id").split("-")[1];
+				scrollToView(id); 
+			});
+		});
+		
+		function scrollToView(destinationID){
+			$('html, body').animate({
+				scrollTop: $("#"+destinationID).offset().top-45
+			}, 600);
+		}
+	</script>
+</app:footer>

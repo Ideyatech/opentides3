@@ -1,7 +1,4 @@
 <%--
-	- tutorial-project-details.jsp
-	- Displays a tutorial for using the tags of opentides 3
-	-
 	- @author - ONZ
 --%>
 
@@ -64,6 +61,9 @@
 		
 		
 		<ul class="pager">
+			<li class="previous">
+				<a href="${home}">&larr; Previous (Welcome)</a>
+			</li>
 			<li class="next">
 				<a href="${home}/getting-started">Next (Getting Started) &rarr;</a>
 			</li>

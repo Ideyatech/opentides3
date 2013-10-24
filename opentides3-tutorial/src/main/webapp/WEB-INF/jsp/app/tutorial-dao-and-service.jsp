@@ -1,7 +1,4 @@
 <%--
-	- tutorial.jsp
-	- Displays a tutorial for using the tags of opentides 3
-	-
 	- @author - ONZ
 --%>
 
@@ -38,7 +35,10 @@
 	<!-- CONTENT -->
 	<div class="span10">
 		<h1><i class="icon-book"></i> DAO's and Services</h1>
-		<p class="lead">I dont know what to put in here</p>
+		<p class="lead">
+			DAO pattern is used to separate low level data accessing API or operations from high level business services
+			while Service pattern aims to organize the services, within a service inventory, into a set of logical layers
+		</p>
 		
 		<h3 id="baseEntityDao">Base Entity Dao (Interface)</h3>
 		<p>An interface that contains the basic CRUD functionalities. These functions are to be implemented by the implementing class.</p>

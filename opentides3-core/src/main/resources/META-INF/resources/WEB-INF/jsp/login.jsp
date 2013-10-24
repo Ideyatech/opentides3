@@ -15,37 +15,10 @@
 
 <div class="form-login modal">
 	<div class="modal-body">
-		<c:if test="${not empty param.login_error}">
-			<div class="alert alert-error">
-				<a class="close" data-dismiss="alert" href="#">&times;</a>
-				<spring:message code='error.${param.login_error}' /> 
-				<c:out value="${SPRING_SECURITY_LAST_EXCEPTION.message}" />
-			</div>
-		</c:if>
 		<div class="row-fluid">
 			
-			<form class="span6" method="POST" action="<c:url value='j_spring_security_check'/>">
-				
-				<h4><spring:message code='label.login' /></h4>
-				<hr/>
-				
-				<div class="control-group">
-					<input class="input-block-level" type="text" name="j_username" placeholder="Username" autofocus="autofocus">
-				</div>
-				<div class="control-group">
-					<input class="input-block-level" type="password" name="j_password" placeholder="Password">
-				</div>
-				
-				<div class="control-group">
-					<label class="checkbox">
-						<input type="checkbox" checked>
-						<small><spring:message code="label.remember-me" /></small>
-					</label>
-				</div>
-				
-				<input type="submit" class="btn btn-info btn-block btn-large" value="<spring:message code="label.login" />"/>
-				
-			</form>
+			<tides:login_form />
+			
 			<div class="span6 alternative-logins pagination-centered">
 				<div class="control-group"><small><spring:message code="message.alternative-login-help" /></small></div>
 				<div class="control-group">

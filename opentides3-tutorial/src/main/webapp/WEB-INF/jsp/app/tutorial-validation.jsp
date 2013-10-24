@@ -101,7 +101,7 @@
 		
 		<h2><i class="icon-rocket"></i> We're all set!</h2>
 		<p>Let's try out our new validation!</p>
-		<img src="img/tides-login.png" width="800px" class="img-rounded"/>
+		<img src="img/tides-patient-validator.png" width="800px" class="img-polaroid"/>
 		
 		<ul class="pager">
 			<li class="previous">

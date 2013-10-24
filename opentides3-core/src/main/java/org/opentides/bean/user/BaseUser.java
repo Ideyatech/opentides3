@@ -29,6 +29,8 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -58,6 +60,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "USER_PROFILE")
 @Auditable
+@Inheritance(strategy = InheritanceType.JOINED)
 public class BaseUser extends BaseEntity implements ImageUploadable {
 
 	private static final long serialVersionUID = 7634675501487373408L;
@@ -123,34 +126,13 @@ public class BaseUser extends BaseEntity implements ImageUploadable {
 	@JsonView(Views.DisplayView.class)
 	private Long lastFailedLoginMillis;
 	
-	@Column(name="FACEBOOK_ID")
-	private String facebookId;
-	
-	@Column(name="FACEBOOK_ACCESS_TOKEN")
-	private String facebookAccessToken;
-	
-	@Column(name="GOOGLE_ID")
-	private String googleId;
-	
-	@Column(name="GOOGLE_ACCESS_TOKEN")
-	private String googleAccessToken;
-
-	@Column(name="TWITTER_ID")
-	private String twitterId;
-	
-	@Column(name="TWITTER_ACCESS_TOKEN")
-	private String twitterAccessToken;
-	
-	@Column(name="TWITTER_SECRET")
-	private String twitterSecret;
-
 	// ImageUploadable requirements
-	
 	@OneToMany(cascade=CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinTable(name = "USER_PHOTO", 
 			joinColumns = { @JoinColumn(name = "USER_ID", referencedColumnName = "ID") }, 
 			inverseJoinColumns = @JoinColumn(name = "PHOTO_ID")
 	)
+	@JsonView(Views.FormView.class)
 	private List<ImageInfo> photos;
 	
 	@Transient
@@ -621,62 +603,6 @@ public class BaseUser extends BaseEntity implements ImageUploadable {
 		this.lastFailedLoginMillis = lastFailedLoginMillis;
 	}
 
-	public String getFacebookId() {
-		return facebookId;
-	}
-	
-	public void setFacebookId(String facebookId) {
-		this.facebookId = facebookId;
-	}
-	
-	public String getFacebookAccessToken() {
-		return facebookAccessToken;
-	}
-	
-	public void setFacebookAccessToken(String facebookAccessToken) {
-		this.facebookAccessToken = facebookAccessToken;
-	}
-	
-	public String getGoogleId() {
-		return googleId;
-	}
-	
-	public void setGoogleId(String googleId) {
-		this.googleId = googleId;
-	}
-	
-	public String getGoogleAccessToken() {
-		return googleAccessToken;
-	}
-	
-	public void setGoogleAccessToken(String googleAccessToken) {
-		this.googleAccessToken = googleAccessToken;
-	}
-	
-	public String getTwitterId() {
-		return twitterId;
-	}
-	
-	public void setTwitterId(String twitterId) {
-		this.twitterId = twitterId;
-	}
-	
-	public String getTwitterAccessToken() {
-		return twitterAccessToken;
-	}
-	
-	public void setTwitterAccessToken(String twitterAccessToken) {
-		this.twitterAccessToken = twitterAccessToken;
-	}
-	
-	public String getTwitterSecret() {
-		return twitterSecret;
-	}
-	
-	public void setTwitterSecret(String twitterSecret) {
-		this.twitterSecret = twitterSecret;
-	}
-		
 	@Override
 	public List<ImageInfo> getPhotos() {
 		return photos;

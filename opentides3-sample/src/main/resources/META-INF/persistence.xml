@@ -38,6 +38,8 @@
 		<class>org.opentides.bean.user.UserAuthority</class>
 		<class>org.opentides.bean.user.UserCredential</class>
 		<class>org.opentides.bean.user.UserGroup</class>
+		<class>org.opentides.social.bean.SocialBaseUser</class>
+		<class>org.opentides.social.bean.SocialCredential</class>
 		<properties>
 			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect" />
 			<property name="hibernate.hbm2ddl.auto" value="update" />

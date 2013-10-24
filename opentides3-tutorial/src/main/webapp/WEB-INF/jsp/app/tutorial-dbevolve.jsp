@@ -21,13 +21,8 @@
 <div class="row-fluid">
 	<!-- NAVIGATION -->
 	<div class="span2">
-		<div data-spy="affix" data-offset-top="60" class="affix-top" style="top: 55px;">
-			<ul class="nav nav-list side-nav">
-				<li class="nav-header">Project Overview</li>
-				<li class="active"><a id="scroll-hello">Hello Tatiana!</a></li>
-				<li><a id="scroll-functionalities">What can she do?</a></li>
-				<li><a id="scroll-components">Meet the objects</a></li>
-			</ul>
+		<div class="alert alert-info">
+			<strong>Heads up!</strong><br/>DB Evolves are not limited to a single file only. You can create as many as you want. Just make sure you made it in a sequential order.
 		</div>
 	</div>
 	
@@ -42,7 +37,7 @@
 		<hr/>
 		
 		<h3>Usage</h3>
-		<ul>
+		<ol>
 			<li>Create the package <span class="code-emphasize">org.tutorial.tathiana.persistence.evolve</span> under <span class="code-emphasize">src/main/java</li>
 			<li>Create the class <span class="code-emphasize">DBEvolve0001.java</span>.</li>
 			<li>Extend the class <span class="code-emphasize">Evolver</span> from <span class="code-emphasize">org.opentides.persistence.evolve</span> and implement the interface <span class="code-emphasize">DBEvolve</span> from <span class="code-emphasize">org.opentides.persistence.evolve</span></li>
@@ -77,10 +72,7 @@
 					</code>
 				</div>
 			</li>
-		</ul>
-		<div class="alert alert-info">
-			<strong>Heads up!</strong> DB Evolves are not limited to a single file only. You can create as many as you want. Just make sure you made it in a sequential order.
-		</div>
+		</ol>
 		
 		<hr/>
 		

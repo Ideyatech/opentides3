@@ -14,17 +14,19 @@
 
 <div class="form-login modal">
 	<div class="modal-body">
-		<c:if test="${not empty param.login_error}">
-			<div class="alert alert-error">
-				<a class="close" data-dismiss="alert" href="#">&times;</a>
-				<spring:message code='error.${param.login_error}' /> 
-				<c:out value="${SPRING_SECURITY_LAST_EXCEPTION.message}" />
-			</div>
-		</c:if>
+
 		<div class="row-fluid">
 			
 			<form class="span6" method="POST" action="<c:url value='login'/>">
 				
+				<c:if test="${not empty param.login_error}">
+					<div class="alert alert-error">
+						<a class="close" data-dismiss="alert" href="#">&times;</a>
+						<spring:message code='error.${param.login_error}' /> 
+						<c:out value="${SPRING_SECURITY_LAST_EXCEPTION.message}" />
+					</div>
+				</c:if>
+		
 				<h4><spring:message code='label.login' /></h4>
 				<hr/>
 				

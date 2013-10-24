@@ -49,8 +49,8 @@
 	 	<path>/META-INF/tags/input.tag</path>
 	 </tag-file>
 	 <tag-file>
-	 	<name>input-file</name>
-	 	<path>/META-INF/tags/input-file.tag</path>
+	 	<name>input_file</name>
+	 	<path>/META-INF/tags/input_file.tag</path>
 	 	<attribute>
 	 		<name>id</name>
 	 		<required>true</required>
@@ -69,6 +69,22 @@
 	 	</attribute>
 	 	<attribute>
 	 		<name>dataURL</name>
+	 		<required>false</required>
+	 	</attribute>
+	 </tag-file>
+	 <tag-file>
+	 	<name>login_form</name>
+	 	<path>/META-INF/tags/login_form.tag</path>
+	 	<attribute>
+	 		<name>userNamePlaceHolder</name>
+	 		<required>false</required>
+	 	</attribute>
+	 	<attribute>
+	 		<name>loginLabel</name>
+	 		<required>false</required>
+	 	</attribute>
+	 	<attribute>
+	 		<name>rememberMeLabel</name>
 	 		<required>false</required>
 	 	</attribute>
 	 </tag-file>

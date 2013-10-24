@@ -62,7 +62,7 @@
 		<sec:authentication-provider ref="socialMediaAuthenticationProvider" />
 	</sec:authentication-manager>
 		
-	<bean id="socialMediaAuthenticationProvider" class="org.opentides.security.SocialMediaAuthenticationProvider"/>
+	<bean id="socialMediaAuthenticationProvider" class="org.opentides.social.security.SocialAuthenticationProvider"/>
 
 	<bean id="httpRequestAccessDecisionManager"
 		class="org.springframework.security.access.vote.AffirmativeBased">
