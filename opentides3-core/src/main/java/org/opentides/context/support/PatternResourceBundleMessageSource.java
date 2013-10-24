@@ -53,8 +53,11 @@ public class PatternResourceBundleMessageSource extends ReloadableResourceBundle
 				Resource[] resources;
 				try {
 					resources = patternResolver.getResources(basenames[i]);
-					// assumes only 1 wildcard is used
 					String prefix = basenames[i].substring(0,basenames[i].indexOf('*'));
+					if(basenames[i].startsWith("classpath*")) {
+						prefix = basenames[i].substring(0, basenames[i].indexOf('*')) + 
+								 basenames[i].substring(basenames[i].indexOf("*") + 1, basenames[i].lastIndexOf('*')); 
+					}
 					for (int j=0; j< resources.length; j++) {
 						String filename = resources[j].getFilename();
 						// assumes messages are stored as properties file
@@ -67,4 +70,5 @@ public class PatternResourceBundleMessageSource extends ReloadableResourceBundle
 		}
 		super.setBasenames(names.toArray(new String[names.size()]));
 	}
+	
 }

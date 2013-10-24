@@ -72,7 +72,7 @@
 			</form:form>
 		</div>
 		
-		<div id="my-accounts" class="span4">
+		<%-- <div id="my-accounts" class="span4">
 			<h3><spring:message code="label.account-settings.my-accounts"/></h3>
 			<table class="table">
 				<tr>
@@ -121,7 +121,7 @@
 					</td>
 				</tr>
 			</table>
-		</div>
+		</div> --%>
 
 	</div>
 	<hr/>

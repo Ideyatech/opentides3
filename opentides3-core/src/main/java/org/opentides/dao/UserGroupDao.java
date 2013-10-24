@@ -63,4 +63,5 @@ public interface UserGroupDao extends BaseEntityDao<UserGroup, Long> {
 	 * @return
 	 */
 	public boolean removeUserAuthority(UserAuthority authority);
+	
 }

@@ -12,40 +12,46 @@
 <app:header pageTitle="title.creating-project" active="setting-up">
 </app:header>
 
+<ul class="breadcrumb">
+	<li>Setting Up <span class="divider">/</span></li>
+	<li>Creating Project</li>
+</ul>
+
 <div class="row-fluid">
 	<!-- NAVIGATION -->
 	<div class="span2">
 		<div class="alert alert-info">
-			I should write something useful and informative here so that the layout won't be ruined.
+			
 		</div>
 	</div>
 	
 	<!-- CONTENT -->
 	<div class="span10">
-		<ul class="breadcrumb">
-			<li>Advanced Topics <span class="divider">/</span></li>
-			<li>Overview</li>
-		</ul>
-		
 		<h1><i class="icon-book"></i> Oh hi.</h1>
 		<p class="lead">
 			Welcome to the advanced section for this tutorial. Below are some topics that could
 			guide you in developing your application using <span class="code-emphasize">Opentides 3</span>.
 		</p>
-
+		
+		
 		<ul>
-			<li><a href="${home}/dbevolve">DB Evolve</a></li>
-			<li><a href="${home}/attaching-images">Attaching Images</a></li>
-			<li><a href="${home}/adding-tags">Adding Tags</a></li>
-			<li><a href="${home}/using-modals">Using Modals</a></li>
-			<li><a href="${home}/form-tags">Form Tags</a></li>
-			<li><a href="${home}/spring-controllers">Spring Controller</a></li>
-			<li><a href="${home}/adding-images">Adding custom Images</a></li>
+			<li><a href="">DB Evolve</a></li>
+			<li><a href="">Interfaces</a></li>
+			<li><a href="">Using Modals</a></li>
+			<li><a href="">Form Tags</a></li>
+			<li><a href="">Spring Controller</a></li>
+			<li><a href="">Adding custom Images</a></li>
 		</ul>
+		
+		
+		
 		
 		<ul class="pager">
 			<li class="previous">
-				<a href="${home}/review">&larr; Previous (Basics)</a>
+				<a href="${home}/getting-started">&larr; Previous (Getting Started)</a>
+			</li>
+			<li class="next">
+				<a href="${home}/customize">Next (Customization) &rarr;</a>
 			</li>
 		</ul>
 		

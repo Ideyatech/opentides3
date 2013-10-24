@@ -39,7 +39,6 @@ import org.opentides.service.UserGroupService;
 import org.opentides.service.UserService;
 import org.opentides.util.SecurityUtil;
 import org.opentides.util.StringUtil;
-import org.scribe.model.Token;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.encoding.PasswordEncoder;
@@ -48,13 +47,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
-import org.springframework.social.facebook.api.FacebookProfile;
-import org.springframework.social.facebook.api.impl.FacebookTemplate;
-import org.springframework.social.google.api.Google;
-import org.springframework.social.google.api.impl.GoogleTemplate;
-import org.springframework.social.google.api.legacyprofile.LegacyGoogleProfile;
-import org.springframework.social.twitter.api.TwitterProfile;
-import org.springframework.social.twitter.api.impl.TwitterTemplate;
 import org.springframework.stereotype.Service;
 
 @Service(value="userService")
@@ -305,111 +297,6 @@ public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 	}
 
 	@Override
-	public BaseUser getUserByFacebookId(String facebookId) {
-		UserDao userDao = (UserDao) getDao();
-		return userDao.loadByFacebookId(facebookId);
-	}
-
-	@Override
-	public BaseUser getUserByFacebookAccessToken(String facebookAccessToken) {
-		FacebookTemplate facebookTemplate = new FacebookTemplate(facebookAccessToken);
-		String facebookId = facebookTemplate.userOperations().getUserProfile().getId();
-		UserDao userDao = (UserDao) getDao();
-		return userDao.loadByFacebookId(facebookId);
-	}
-
-	@Override
-	public BaseUser getUserByGoogleId(String googleId) {
-		UserDao userDao = (UserDao) getDao();
-		return userDao.loadByGoogleId(googleId);
-	}
-
-	@Override
-	public BaseUser getUserByGoogleAccessToken(String googleAccessToken) {
-		Google googleTemplate = new GoogleTemplate(googleAccessToken);
-		String googleUserId = googleTemplate.userOperations().getUserProfile().getId();
-		UserDao userDao = (UserDao) getDao();
-		return userDao.loadByGoogleId(googleUserId);
-	}
-
-	@Override
-	public BaseUser getUserByTwitterId(String twitterId) {
-		UserDao userDao = (UserDao) getDao();
-		return userDao.loadByTwitterId(twitterId);
-	}
-
-	@Override
-	public BaseUser getUserByTwitterAccessToken(String appId, String clientSecret, Token token) {
-		TwitterTemplate twitterTemplate = new TwitterTemplate(appId, clientSecret, token.getToken(), token.getSecret());
-		long twitterUserId = twitterTemplate.userOperations().getUserProfile().getId();
-		UserDao userDao = (UserDao) getDao();
-		return userDao.loadByTwitterId(String.valueOf(twitterUserId));
-	}
-	
-	@Override
-	public void registerFacebookAccount(BaseUser user,
-			String facebookAccessToken) {
-		
-		FacebookTemplate facebookTemplate = new FacebookTemplate(facebookAccessToken);
-		FacebookProfile profile = facebookTemplate.userOperations().getUserProfile();
-		
-		user.setFirstName(profile.getFirstName());
-		user.setLastName(profile.getLastName());
-		user.setMiddleName(profile.getMiddleName());
-		user.setEmailAddress(profile.getEmail());
-		
-		user.setFacebookId(profile.getId());
-		user.setFacebookAccessToken(facebookAccessToken);
-
-		if(user.getId() == null) {
-			user.setCredential(generateFakeCredentials());
-			registerUser(user, false);
-		} else
-			save(user);
-		
-	}
-
-	@Override
-	public void registerGoogleAccount(BaseUser user,
-			String googleAccessToken) {
-		
-		Google googleTemplate = new GoogleTemplate(googleAccessToken);
-		LegacyGoogleProfile profile = googleTemplate.userOperations().getUserProfile();
-		
-		user.setFirstName(profile.getFirstName());
-		user.setLastName(profile.getLastName());
-		user.setEmailAddress(profile.getEmail());
-		
-		user.setGoogleId(profile.getId());
-		user.setGoogleAccessToken(googleAccessToken);
-		
-		if(user.getId() == null) {
-			user.setCredential(generateFakeCredentials());
-			registerUser(user, false);
-		} else
-			save(user);
-		
-	}
-
-	@Override
-	public void registerTwitterAccount(BaseUser user, String appId, String clientSecret, Token token) {
-		TwitterTemplate twitterTemplate = new TwitterTemplate(appId, clientSecret, token.getToken(), token.getSecret());
-		TwitterProfile profile = twitterTemplate.userOperations().getUserProfile();
-		
-		user.setFirstName(profile.getName());
-		
-		user.setTwitterId(String.valueOf(profile.getId()));
-		user.setTwitterSecret(token.getSecret());
-		user.setGoogleAccessToken(token.getToken());
-		
-		if(user.getId() == null) {
-			user.setCredential(generateFakeCredentials());
-			registerUser(user, false);
-		} else
-			save(user);
-		
-	}
-	
 	public UserCredential generateFakeCredentials(){
 
 		UserDao userDao = (UserDao) getDao();
@@ -421,6 +308,7 @@ public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 			username = RandomStringUtils.randomAlphanumeric(10);
 		} while (userDao.loadByUsername(username) != null);
 		
+		credential.setSkipAudit(true);
 		credential.setUsername(username);
 		credential.setPassword(encryptPassword(RandomStringUtils.randomAlphanumeric(10)));
 		
@@ -431,4 +319,5 @@ public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 	private UserDao getUserDao() {
 		return (UserDao)this.dao;
 	}
+	
 }
