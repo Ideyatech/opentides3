@@ -32,7 +32,7 @@
 		</ul>
 		
 		<h1><i class="icon-book"></i> Implementing Validations</h1>
-		<p>In this chapter, we discuss and create form validations and how to implement them. Implementation will be based on Spring 3's validation.</p>
+		<p class="lead">In this chapter, we discuss and create form validations and how to implement them. Implementation will be based on Spring 3's validation.</p>
 		
 		<section id="validator">
 			<h3>Validator</h3>
@@ -104,13 +104,18 @@
 		<h2><i class="icon-rocket"></i> We're all set!</h2>
 		<p>Let's try out our new validation!</p>
 		<img src="img/tides-patient-validator.png" width="800px" class="img-polaroid"/>
+		<br/><br/>
+		<p class="lead">
+			In the next chapter, we'll discuss Database Evolve or also known as DB Evolve. It may sound complex but trust me
+			it's really easy and useful too! <i class="icon-star-empty"></i><i class="icon-star-empty"></i><i class="icon-star-empty"></i>
+		</p>
 		
 		<ul class="pager">
 			<li class="previous">
-				<a href="${home}/crud-view">&larr; Previous (CRUD Pages)</a>
+				<a href="${home}/crud-form">&larr; Previous (CRUD Form)</a>
 			</li>
 			<li class="next">
-				<a href="${home}/review">Next &rarr;</a>
+				<a href="${home}/dbevolve">Next (DB Evolve)&rarr;</a>
 			</li>
 		</ul>
 		

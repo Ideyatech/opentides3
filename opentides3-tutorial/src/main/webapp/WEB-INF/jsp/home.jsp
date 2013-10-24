@@ -35,7 +35,7 @@
 			We'll also develop a simple application alongside each topics covered.
 			This project will be your exercise and a playground to explore.
 			
-			Don't worry, sample codes will be provided along the way. Goodluck!<i class="icon-asterisk icon-spin"></i>
+			Don't worry, sample codes will be provided along the way. Goodluck! <i class="icon-thumbs-up-alt"></i>
 		</p>
 		
 		<ul class="pager">

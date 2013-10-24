@@ -35,7 +35,7 @@
 		</ul>
 		
 		<h1><i class="icon-book"></i> Creating Entities & Defining Attributes</h1>
-		<p class="lead">In this chapter, we create all the required classes for Tatiana and define it's basic attributes.</p>
+		<p class="lead">In this chapter, we create all the required classes for Tatiana and define it's basic attributes. We'll also tackle about SystemCodes; a very useful class in <span class="code-emphasize">Open-Tides 3</span></p>
 		
 		<section id="patient">
 			<h3>Patient</h3>

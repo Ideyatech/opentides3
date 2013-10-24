@@ -54,6 +54,8 @@
 			<p>We will only cover the CRUD page for the patient class. However, the project may be continued into something bigger such as adding treatments to a patient and appointments as well.</p>
 		</section>
 		
+		<hr/>
+		
 		<h2><i class="icon-lightbulb"></i> Up next!</h2>
 		<p>In the next chapter, we will create a new project under <span class="code-emphasize">Opentides 3</span>. We will also configure our server and database and then run the project!</p>
 		

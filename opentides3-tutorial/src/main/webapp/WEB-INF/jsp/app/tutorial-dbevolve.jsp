@@ -9,7 +9,7 @@
 <%@ taglib prefix="app" tagdir="/WEB-INF/tags"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<app:header pageTitle="title.dbevolve" active="advanced">
+<app:header pageTitle="title.dbevolve" active="basics">
 	<script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js"></script>
 </app:header>
 
@@ -17,21 +17,21 @@
 	<!-- NAVIGATION -->
 	<div class="span2">
 		<div class="alert alert-info">
-			<strong>Heads up!</strong><br/>DB Evolves are not limited to a single file only. You can create as many as you want. Just make sure you made it in a sequential order.
+			<strong>Heads up!</strong><br/>DB Evolves are not limited to a single file only. You can create as many as you want. Just make sure you made it in a sequential order for consistency.
 		</div>
 	</div>
 	
 	<!-- CONTENT -->
 	<div class="span10">
 		<ul class="breadcrumb">
-			<li>Advanced <span class="divider">/</span></li>
+			<li>Basics <span class="divider">/</span></li>
 			<li>DB Evolve</li>
 		</ul>
 		
 		<h1><i class="icon-book"></i> DB Evolve</h1>
 		<p class="lead">
-			DB Evolves are special classes from Opentides 3 that helps developers to populate the database in advance with pre-defined contents.
-			Most Common use of DB Evolves are countries, cities, and even genders.
+			DB Evolves are special classes from Opentides 3 that helps developers populate or alter the database in advance with pre-defined contents.
+			They ensure that database schema and data is consistently maintained across several releases and multiple servers.
 		</p>
 
 		<hr/>
@@ -74,9 +74,31 @@
 			</li>
 		</ol>
 		
+		<div class="alert alert-info">
+			<strong>Don't..</strong> Don't ever try to forget incrementing the version number when creating multiple DB Evolves. Something bad will happen (it won't work).
+		</div>
+		
+		<hr/>
+		
+		<h2><i class="icon-cloud"></i> Jogging</h2>
+		<p>Jogging is a form of body exercise. Exercise is good. Therefore its time for your coding exercise <i class="icon-code"></i></p>
+		<p>Create a DB Evolve that would add the following Asian countries into your database as <span class="code-emphasize">System Codes</span></p>
+		<ul>
+			<li>Japan</li>
+			<li>Korea</li>
+			<li>Philippines</li>
+			<li>Singapore</li>
+			<li>Taiwan</li>
+			<li>Thailand</li>
+		</ul>
+		<p>Check if you have done it properly by visiting the <span class="code-emphasize">System Codes</span> tab in your header.
+		
 		<ul class="pager">
 			<li class="previous">
-				<a href="${home}/advanced-overview">&larr; Go Back</a>
+				<a href="${home}/validation">&larr; Previous (Validation)</a>
+			</li>
+			<li class="next">
+				<a href="${home}/review">Next &rarr;</a>
 			</li>
 		</ul>
 		
