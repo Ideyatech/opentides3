@@ -289,6 +289,21 @@
 				<entry key="MANAGE_WIDGETS_PAGE">
 					<value>11.04.00.00 Manage Widgets</value>
 				</entry>
+				<entry key="VIEW_WIDGET">
+					<value>11.04.01.00 View Widget</value>
+				</entry>
+				<entry key="SEARCH_WIDGET">
+					<value>11.04.02.00 Search Widget</value>
+				</entry>
+				<entry key="ADD_WIDGET">
+					<value>11.04.03.00 Add Widget</value>
+				</entry>
+				<entry key="EDIT_WIDGET">
+					<value>11.04.04.00 Edit Widget</value>
+				</entry>
+				<entry key="DELETE_WIDGET">
+					<value>11.04.05.00 Delete Widget</value>
+				</entry>
 				
 				<!-- USER DEFINED FIELDS -->				
 				<entry key="MANAGE_USER_DEFINED_FIELD_PAGE">
@@ -365,7 +380,7 @@
 				<entry key="DELETE_FORM_INSTRUCTION">
 					<value>11.11.03.00 Delete Instruction</value>
 				</entry>
-
+				
 				<!-- GENERAL FUNCTIONS -->
 				<entry key="GENERAL_FEATURES">
 					<value>98.00.00.00 General Features</value>
@@ -408,5 +423,4 @@
 			</map>
 		</property>
 	</bean>
-
 </beans>

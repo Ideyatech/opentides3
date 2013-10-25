@@ -18,6 +18,7 @@
  */
 package org.opentides.bean;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -34,7 +35,12 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
+import org.opentides.annotation.Auditable;
+import org.opentides.annotation.SearchableFields;
 import org.opentides.util.StringUtil;
+import org.opentides.web.json.Views;
+
+import com.fasterxml.jackson.annotation.JsonView;
 
 /**
  * The Widget entity is responsible for holding the dashboard widgets and and its cache.
@@ -43,6 +49,7 @@ import org.opentides.util.StringUtil;
  * 
  * @author ideyatech
  */
+@Auditable
 @Entity
 @Table(name = "WIDGET")
 public class Widget extends BaseEntity {
@@ -51,12 +58,15 @@ public class Widget extends BaseEntity {
 	public static final String TYPE_HTML = "html";
 	public static final String TYPE_IMAGE = "image";
 	
+	@JsonView(Views.SearchView.class)
 	@Column(name = "NAME", unique = true)
 	private String name;
 	
+	@JsonView(Views.SearchView.class)
 	@Column(name = "TITLE")
 	private String title;
 	
+	@JsonView(Views.SearchView.class)
 	@Column(name = "IS_SHOWN")
 	private Boolean isShown;
 	
@@ -65,18 +75,23 @@ public class Widget extends BaseEntity {
 	@JoinColumn(name="SCREENSHOT_ID")
 	private List<FileInfo> screenshot;
 	
+	@JsonView(Views.FormView.class)
 	@Column(name = "DESCRIPTION")
 	private String description;
 
+	@JsonView(Views.FormView.class)
 	@Column(name = "URL", unique = true)
 	private String url;
 	
+	@JsonView(Views.FormView.class)
 	@Column(name = "ACCESS_CODE")
 	private String accessCode;
 	
+	@JsonView(Views.FormView.class)
 	@Column(name = "CACHE_DURATION")
 	private long cacheDuration;
 
+	@JsonView(Views.SearchView.class)
 	@Column(name = "LAST_CACHE_UPDATE")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date lastCacheUpdate;
@@ -88,6 +103,7 @@ public class Widget extends BaseEntity {
 	@Column(name = "CACHE_TYPE")
 	private String cacheType;
 	
+	@JsonView(Views.FormView.class)
 	@Column(name = "IS_USER_DEFINED")
 	private Boolean isUserDefined;
 	
@@ -404,6 +420,16 @@ public class Widget extends BaseEntity {
 		} else if (!url.equals(other.url))
 			return false;
 		return true;
+	}
+	
+	@SearchableFields
+	public List<String> searchProperties() {
+		List<String> searchProps = new ArrayList<>();
+		searchProps.add("name");
+		searchProps.add("title");
+		searchProps.add("url");
+		searchProps.add("accessCode");
+		return searchProps;
 	}
 	
 }

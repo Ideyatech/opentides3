@@ -316,6 +316,11 @@ public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 		return credential;
 	}
 	
+	@Override
+	public List<BaseUser> findAllUsersWithAuthority(String authority) {
+		return getUserDao().findAllUsersWithAuthority(authority);
+	}
+	
 	private UserDao getUserDao() {
 		return (UserDao)this.dao;
 	}

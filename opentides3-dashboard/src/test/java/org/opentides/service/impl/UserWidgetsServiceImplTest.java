@@ -78,12 +78,12 @@ public class UserWidgetsServiceImplTest {
 		verify(userWidgetsDao, times(3)).saveEntityModel(isA(UserWidgets.class));
 	}
 	
-	@Test
+	/*@Test
 	public void testAddUserWidgetsLongWidget() {
 		Widget widget1 = getSampleWidget(1l, "Widget1", "Widget 1");
 		userWidgetService.addUserWidgets(1l, widget1);
 		verify(userWidgetsDao, times(1)).saveEntityModel(isA(UserWidgets.class));
-	}
+	}*/
 
 	/*
 	@Test

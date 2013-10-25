@@ -18,10 +18,29 @@
  */
 package org.opentides.web.controller;
 
-import javax.annotation.PostConstruct;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
+import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.hsqldb.lib.StringUtil;
+import org.opentides.annotation.FormBind;
+import org.opentides.annotation.FormBind.Load;
 import org.opentides.bean.Widget;
+import org.opentides.bean.user.BaseUser;
+import org.opentides.service.UserService;
+import org.opentides.service.UserWidgetsService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
@@ -32,8 +51,43 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping(value = "/widget")
 public class WidgetController extends BaseCrudController<Widget> {
 	
+	@Autowired
+	private UserService userService;
+	
+	@Autowired
+	private UserWidgetsService userWidgetsService;
+	
 	@PostConstruct
 	public void init() {
 		singlePage = "/base/widget-crud";
 	}
+	
+	@FormBind(mode = Load.NEW)
+	public Widget getInitialWidget(HttpServletRequest request) {
+		Widget object = new Widget();
+		object.setCacheDuration(3600);
+		object.setIsUserDefined(true);
+		return object;
+	}
+	
+	@InitBinder
+	protected void registerEditor(WebDataBinder binder) throws Exception {
+		binder.registerCustomEditor(Date.class, "lastCacheUpdate", new CustomDateEditor(new SimpleDateFormat("MMM dd, yyyy hh:mm:ss"), true));
+	}
+	
+	@Override
+	protected void postCreate(Widget command, BindingResult bindingResult,
+			Model uiModel, HttpServletRequest request,
+			HttpServletResponse response) {
+		if(command.getIsShown()) {
+			List<BaseUser> users = new ArrayList<>(1);
+			if(StringUtil.isEmpty(command.getAccessCode())) {
+				users = userService.findAll();
+			} else {
+				users = userService.findAllUsersWithAuthority(command.getAccessCode());
+			}
+			userWidgetsService.addUserWidgets(users, command);
+		}
+	}
+	
 }

@@ -18,7 +18,6 @@
 		<module>opentides3-template</module>
 		<module>opentides3-codegen</module>
 		<module>opentides3-core</module>
-		<module>opentides3-social</module>
 	</modules>
 	
 	<dependencyManagement>

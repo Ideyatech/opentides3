@@ -167,7 +167,7 @@
 				<tides:select label="label.ninja.status" path="status" items="${statusList}" itemLabel="value" itemValue="key" select2="true" />
 				<tides:select label="label.ninja.skills" path="skillSet" items="${skillsList}" itemLabel="value" itemValue="key" multiple="true" select2="true" />
 				<tides:checkbox label="label.ninja.active" path="active"/>
-				<tides:input-file label="Images" id="fileUpload"/>
+				<tides:input_file label="Images" id="fileUpload"/>
 				<br/>
 			</div>
 			<div class="modal-footer">

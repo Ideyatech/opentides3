@@ -100,6 +100,13 @@ public interface UserService extends BaseCrudService<BaseUser> {
 	  */
 	 public List<BaseUser> findUsersLikeLastName(String name, int maxResults);
 	 
+	 /**
+	  * Find all users with authority
+	  * @param authority
+	  * @return
+	  */
+	 public List<BaseUser> findAllUsersWithAuthority(String authority);
+	 
 	 public BaseUser getCurrentUser();
 
 	 public void registerUser(BaseUser baseUser, boolean sendEmail);

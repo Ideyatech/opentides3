@@ -84,10 +84,10 @@
 							</tr>
 						</script>
 						<c:forEach items="${results.results}" var="record" varStatus="status">
-							<tr id="system-codes-row-${record.name}">
+							<tr id="widget-row-${record.id}">
+								<td><c:out value="${record.name}" /></td>
 								<td><c:out value="${record.title}" /></td>
 								<td><c:out value="${record.isShown}" /></td>
-								<td><c:out value="${record.category}" /></td>
 								<td><c:out value="${record.lastCacheUpdate}" /></td>
 								<td>
 									<i class='icon-pencil edit-action' data-id='${record.id}' data-title="<spring:message code="label.edit" />"></i>
@@ -119,11 +119,11 @@
 		<form:form modelAttribute="formCommand" id="widget-form">
 			<div class="modal-body">
 				<div class="message-container"></div>
-				<tides:input path="name" label="label.widget.name" />
-				<tides:input path="title" label="label.widget.title" />
+				<tides:input path="name" label="label.widget.name" required="true"/>
+				<tides:input path="title" label="label.widget.title" required="true"/>
 				<tides:checkbox path="isShown" label="label.widget.isShown" />
 				<tides:input path="description" label="label.widget.description" />
-				<tides:input path="url" label="label.widget.url" />
+				<tides:input path="url" label="label.widget.url" required="true"/>
 				<tides:input path="accessCode" label="label.widget.accessCode" />
 				<tides:input path="cacheDuration" label="label.widget.cacheDuration" />
 				<tides:input path="lastCacheUpdate" label="label.widget.lastCacheUpdate" />
