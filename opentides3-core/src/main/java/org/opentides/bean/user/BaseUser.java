@@ -133,7 +133,7 @@ public class BaseUser extends BaseEntity implements ImageUploadable {
 			inverseJoinColumns = @JoinColumn(name = "PHOTO_ID")
 	)
 	@JsonView(Views.FormView.class)
-	private List<ImageInfo> photos;
+	private List<ImageInfo> images;
 	
 	@Transient
 	private transient MultipartFile photo;
@@ -604,19 +604,19 @@ public class BaseUser extends BaseEntity implements ImageUploadable {
 	}
 
 	@Override
-	public List<ImageInfo> getPhotos() {
-		return photos;
+	public List<ImageInfo> getImages() {
+		return images;
 	}
 	
 	@Override
-	public MultipartFile getPhoto() {
+	public MultipartFile getImage() {
 		return photo;
 	}
 	
 	@Override
-	public ImageInfo getPrimaryPhoto() {
-		if(!CollectionUtils.isEmpty(this.photos)) {
-			for(ImageInfo imageInfo : this.photos) {
+	public ImageInfo getPrimaryImage() {
+		if(!CollectionUtils.isEmpty(this.images)) {
+			for(ImageInfo imageInfo : this.images) {
 				if(imageInfo.getIsPrimary()) {
 					return imageInfo;
 				}
@@ -626,19 +626,19 @@ public class BaseUser extends BaseEntity implements ImageUploadable {
 	}
 	
 	public void setPhotos(List<ImageInfo> photos) {
-		this.photos = photos;
+		this.images = photos;
 	}
 	
 	public void setPhoto(MultipartFile photo) {
 		this.photo = photo;
 	}
 	
-	public void addPhoto(ImageInfo photoInfo){
+	public void addImage(ImageInfo photoInfo){
 		synchronized (photoInfo) {
-			if (photos == null){
-				photos = new ArrayList<ImageInfo>();
+			if (images == null){
+				images = new ArrayList<ImageInfo>();
 			}
-			photos.add(photoInfo);
+			images.add(photoInfo);
 		}
 	}
 	

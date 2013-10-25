@@ -5,7 +5,13 @@
 <%@ taglib prefix="tides" uri="http://www.ideyatech.com/tides"%>
 <%@ taglib prefix="app" tagdir="/WEB-INF/tags"%>
 
-<app:header pageTitle="label.widget" active="widget"/>
+<app:header pageTitle="label.widget" active="widget">
+	<script type="text/javascript" src="<c:url value='/js/jquery-ui.min.js'/>"></script>
+	<script type="text/javascript" src="<c:url value='/js/jquery.iframe-transport.js'/>"></script>
+	<script type="text/javascript" src="<c:url value='/js/jquery.fileupload.js'/>"></script>
+	<script type="text/javascript" src="<c:url value='/js/jquery.fileupload-process.js'/>"></script>
+	<script type="text/javascript" src="<c:url value='/js/jquery.fileupload-image.js'/>"></script>
+</app:header>
 
 <div id="widget-body">
 
@@ -116,7 +122,7 @@
 			<h4 class="${update}"><spring:message code="label.widget.update" /></h4>
 		</div>
 
-		<form:form modelAttribute="formCommand" id="widget-form">
+		<form:form modelAttribute="formCommand" id="widget-form" cssClass="form-horizontal">
 			<div class="modal-body">
 				<div class="message-container"></div>
 				<tides:input path="name" label="label.widget.name" required="true"/>
@@ -126,6 +132,8 @@
 				<tides:input path="url" label="label.widget.url" required="true"/>
 				<tides:input path="accessCode" label="label.widget.accessCode" />
 				<tides:input path="cacheDuration" label="label.widget.cacheDuration" />
+				<tides:input_file label="label.widget.screenshot" 
+					dropZone="false" id="screenshot"/>
 				<tides:input path="lastCacheUpdate" label="label.widget.lastCacheUpdate" />
 			</div>
 			<div class="modal-footer">

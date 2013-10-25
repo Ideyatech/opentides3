@@ -28,6 +28,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.Lob;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -35,10 +36,12 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.opentides.annotation.Auditable;
 import org.opentides.annotation.SearchableFields;
 import org.opentides.util.StringUtil;
 import org.opentides.web.json.Views;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
@@ -52,7 +55,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 @Auditable
 @Entity
 @Table(name = "WIDGET")
-public class Widget extends BaseEntity {
+public class Widget extends BaseEntity implements ImageUploadable {
 	private static final long serialVersionUID = -4154117306413896179L;
 	
 	public static final String TYPE_HTML = "html";
@@ -95,7 +98,7 @@ public class Widget extends BaseEntity {
 	@Column(name = "LAST_CACHE_UPDATE")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date lastCacheUpdate;
-
+	
 	@Lob
 	@Column(name = "CACHE")
 	private byte[] cache;
@@ -109,6 +112,14 @@ public class Widget extends BaseEntity {
 	
 	@OneToMany(cascade=CascadeType.ALL, mappedBy="widget", fetch = FetchType.LAZY)
     private List<UserWidgets> userWidget;
+	
+	@OneToMany(cascade=CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinTable(name = "WIDGET_IMAGE", 
+			joinColumns = { @JoinColumn(name = "WIDGET_ID", referencedColumnName = "ID")}, 
+			inverseJoinColumns = {
+						@JoinColumn(name = "IMAGE_ID")}
+	)
+	private List<ImageInfo> images;
 	
 	@Transient
 	private transient boolean isInstalled = false;
@@ -430,6 +441,41 @@ public class Widget extends BaseEntity {
 		searchProps.add("url");
 		searchProps.add("accessCode");
 		return searchProps;
+	}
+
+	@Override
+	public List<ImageInfo> getImages() {
+		return this.images;
+	}
+	
+	public void setImages(List<ImageInfo> images) {
+		this.images = images;
+	}
+
+	@Override
+	public ImageInfo getPrimaryImage() {
+		//TODO From old opentides it always get the File in index zero
+		if(!CollectionUtils.isEmpty(getImages())) { 
+			return getImages().get(0);
+		}
+		ImageInfo imageInfo = new ImageInfo();
+		imageInfo.setId(0l);
+		return imageInfo;
+	}
+
+	@Override
+	public MultipartFile getImage() {
+		return null;
+	}
+
+	@Override
+	public void addImage(ImageInfo imageInfo) {
+		synchronized (imageInfo) {
+			if (images == null){
+				images = new ArrayList<ImageInfo>();
+			}
+			images.add(imageInfo);
+		}
 	}
 	
 }

@@ -82,7 +82,7 @@ public class CacheUtilTest {
 		auditableFields.add(new AuditableField("sellingPrice"));
 		auditableFields.add(new AuditableField("avatar"));
 		auditableFields.add(new AuditableField("attachment"));
-		auditableFields.add(new AuditableField("photos"));
+		auditableFields.add(new AuditableField("images"));
 		auditableFields.add(new AuditableField("comments"));
 		return auditableFields;
 	}
@@ -145,7 +145,7 @@ public class CacheUtilTest {
 		persistentFields.add("sellingPrice");
 		persistentFields.add("avatar");
 		persistentFields.add("attachment");
-		persistentFields.add("photos");
+		persistentFields.add("images");
 		persistentFields.add("comments");
 		return persistentFields;
 	}

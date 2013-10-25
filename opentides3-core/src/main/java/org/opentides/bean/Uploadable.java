@@ -12,7 +12,17 @@ import org.springframework.web.multipart.MultipartFile;
  */
 public interface Uploadable {
 
-	public abstract List<FileInfo> getFiles();
+	/**
+	 * Get all uploaded files.
+	 * @return
+	 */
+	public List<FileInfo> getFiles();
+	
+	/**
+	 * Add a file 
+	 * @param fileInfo
+	 */
+	public void addFile(FileInfo fileInfo);
 	
 	// Required upon form submit, should a transient variable. 
 	public MultipartFile getFile();
