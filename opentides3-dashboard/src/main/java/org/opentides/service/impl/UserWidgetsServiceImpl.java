@@ -104,16 +104,16 @@ public class UserWidgetsServiceImpl extends BaseCrudServiceImpl<UserWidgets> imp
 
 	@Override
 	public void addUserWidgets(long userId, Widget widget) {
-		/* Steps in adding user widget on dashboard
-		 * 1. Find the column and row where we're going to add the widget
-		 * 2. Add the widget
-		 */
 		BaseUser user = userService.load(userId);
-		
-		int[] pos = getColumnRowOfUserWidget(userId);
+		addUserWidgets(user, widget);
+	}
+	
+	@Override
+	public void addUserWidgets(BaseUser baseUser, Widget widget) {
+		int[] pos = getColumnRowOfUserWidget(baseUser.getId());
 		
 		UserWidgets userWidget = new UserWidgets();
-		userWidget.setUser(user);
+		userWidget.setUser(baseUser);
 		userWidget.setWidget(widget);
 		userWidget.setColumn(pos[0]);
 		userWidget.setRow((int)++pos[1]);
@@ -121,7 +121,13 @@ public class UserWidgetsServiceImpl extends BaseCrudServiceImpl<UserWidgets> imp
 		_log.debug("saving widget " + userWidget.getWidget().getName() + " at column " 
 				+ userWidget.getColumn()+", row "+ userWidget.getRow());
 		getDao().saveEntityModel(userWidget);
-		
+	}
+	
+	@Override
+	public void addUserWidgets(List<BaseUser> users, Widget widget) {
+		for(BaseUser user : users) {
+			addUserWidgets(user, widget);
+		}
 	}
 
 	@Override

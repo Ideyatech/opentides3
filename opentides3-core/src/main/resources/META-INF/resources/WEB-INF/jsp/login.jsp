@@ -20,7 +20,7 @@
 			<tides:login_form />
 			
 			<div class="span6 alternative-logins pagination-centered">
-				<div class="control-group"><small><spring:message code="message.alternative-login-help" /></small></div>
+<%-- 				<div class="control-group"><small><spring:message code="message.alternative-login-help" /></small></div> --%>
 				<div class="control-group">
 					<button class="btn btn-primary btn-block" onclick="window.location.href='${home}/facebook/connect'">
 					<i class="icon-facebook-sign"></i><spring:message code="message.login-with-facebook" /></button>

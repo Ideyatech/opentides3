@@ -229,6 +229,21 @@ public class UserDAOIntegrationTest extends BaseDaoTest {
 		assertFalse(coreUserDAO.isRegisteredByEmail(""));
 		assertFalse(coreUserDAO.isRegisteredByEmail(null));
 	}
+	
+	@Test
+	public void testFindAllUsersWithAuthority() {
+		List<BaseUser> users = coreUserDAO.findAllUsersWithAuthority("Auths1");
+		assertEquals(1, users.size());
+		BaseUser actual = users.get(0);
+		BaseUser expected = coreUserDAO.loadEntityModel(1l);
+		assertEquals(expected, actual);
+		
+		users = coreUserDAO.findAllUsersWithAuthority("Auths2");
+		assertEquals(2, users.size());
+		
+		users = coreUserDAO.findAllUsersWithAuthority("Auths3");
+		assertEquals(0, users.size());
+	}
 
 	/**
 	 * Setter method for coreUserDAO.

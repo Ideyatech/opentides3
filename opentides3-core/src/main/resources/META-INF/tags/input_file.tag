@@ -33,9 +33,9 @@
 	<!-- Container of all image ID. -->
 	<div id="imageIds" style="display: none;">
 		<script id="imageIdsForUpload" type="text/template">
-			<input class="ot-images" type="hidden" name="photos" value="{{imageId}}"/>
+			<input class="ot-images" type="hidden" name="images" value="{{imageId}}"/>
 		</script>
-		<input class="ot-images" type="hidden" name="photos" value=""/>
+		<input class="ot-images" type="hidden" name="images" value=""/>
 	</div>
 	
 	<label class="control-label"><spring:message code="${label}" text="Images"/></label>

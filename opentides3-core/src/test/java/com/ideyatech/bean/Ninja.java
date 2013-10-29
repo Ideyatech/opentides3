@@ -460,38 +460,38 @@ private static final long serialVersionUID = -4142599915292096152L;
 			joinColumns = { @JoinColumn(name = "NINJA_ID", referencedColumnName = "ID") }, 
 			inverseJoinColumns = @JoinColumn(name = "PHOTO_ID")
 	)
-	private List<ImageInfo> photos;
-	private transient MultipartFile photo;
+	private List<ImageInfo> images;
+	private transient MultipartFile image;
 	
 	@Override
-	public List<ImageInfo> getPhotos() {
-		return photos;
+	public List<ImageInfo> getImages() {
+		return images;
 	}
 	
-	public void setPhotos(List<ImageInfo> photos) {
-		this.photos = photos;
-	}
-	
-	@Override
-	public MultipartFile getPhoto() {
-		return photo;
+	public void setImages(List<ImageInfo> images) {
+		this.images = images;
 	}
 	
 	@Override
-	public ImageInfo getPrimaryPhoto() {
+	public MultipartFile getImage() {
+		return image;
+	}
+	
+	@Override
+	public ImageInfo getPrimaryImage() {
 		return null;
 	}
 	
-	public void setPhoto(MultipartFile photo) {
-		this.photo = photo;
+	public void setImage(MultipartFile image) {
+		this.image = image;
 	}
 	
-	public void addPhoto(ImageInfo photoInfo){
-		synchronized (photoInfo) {
-			if (photos == null){
-				photos = new ArrayList<ImageInfo>();
+	public void addImage(ImageInfo imageInfo){
+		synchronized (imageInfo) {
+			if (images == null){
+				images = new ArrayList<ImageInfo>();
 			}
-			photos.add(photoInfo);
+			images.add(imageInfo);
 		}
 	}
 	

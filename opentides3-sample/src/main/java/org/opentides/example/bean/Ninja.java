@@ -476,19 +476,19 @@ public class Ninja extends BaseEntity implements Commentable, ImageUploadable, T
 			inverseJoinColumns = {
 						@JoinColumn(name = "PHOTO_ID")}
 	)
-	private List<ImageInfo> photos;
+	private List<ImageInfo> images;
 	
-	private transient MultipartFile photo;
+	private transient MultipartFile image;
 	
 	@Override
-	public List<ImageInfo> getPhotos() {
-		return photos;
+	public List<ImageInfo> getImages() {
+		return images;
 	}
 	
 	@Override
-	public ImageInfo getPrimaryPhoto() {
-		if(!CollectionUtils.isEmpty(this.photos)) {
-			for(ImageInfo imageInfo : this.photos) {
+	public ImageInfo getPrimaryImage() {
+		if(!CollectionUtils.isEmpty(this.images)) {
+			for(ImageInfo imageInfo : this.images) {
 				if(imageInfo.getIsPrimary()) {
 					return imageInfo;
 				}
@@ -500,24 +500,25 @@ public class Ninja extends BaseEntity implements Commentable, ImageUploadable, T
 	}
 	
 	@Override
-	public MultipartFile getPhoto() {
-		return photo;
+	public MultipartFile getImage() {
+		return image;
 	}
 	
-	public void setPhotos(List<ImageInfo> photos) {
-		this.photos = photos;
-	}	
-	
-	public void setPhoto(MultipartFile photo) {
-		this.photo = photo;
+	public void setImage(MultipartFile image) {
+		this.image = image;
 	}
 	
-	public void addPhoto(ImageInfo photoInfo){
-		synchronized (photoInfo) {
-			if (photos == null){
-				photos = new ArrayList<ImageInfo>();
+	public void setImages(List<ImageInfo> images) {
+		this.images = images;
+	}
+	
+	@Override
+	public void addImage(ImageInfo imageInfo){
+		synchronized (imageInfo) {
+			if (images == null){
+				images = new ArrayList<ImageInfo>();
 			}
-			photos.add(photoInfo);
+			images.add(imageInfo);
 		}
 	}
 	

@@ -466,44 +466,44 @@ private static final long serialVersionUID = -4142599915292096152L;
 	// ImageUploadable requirements
 	
 	@OneToMany(cascade=CascadeType.ALL, fetch = FetchType.LAZY)
-	@JoinTable(name = "NINJA_PHOTO", 
+	@JoinTable(name = "NINJA_IMAGE", 
 			joinColumns = { @JoinColumn(name = "NINJA_ID", referencedColumnName = "ID") }, 
-			inverseJoinColumns = @JoinColumn(name = "PHOTO_ID")
+			inverseJoinColumns = @JoinColumn(name = "IMAGE_ID")
 	)
-	private List<ImageInfo> photos;
-	private transient MultipartFile photo;
+	private List<ImageInfo> images;
+	private transient MultipartFile image;
 	
 	@Override
-	public List<ImageInfo> getPhotos() {
-		return photos;
+	public List<ImageInfo> getImages() {
+		return images;
 	}
 	
-	public void setPhotos(List<ImageInfo> photos) {
-		this.photos = photos;
+	public void setImages(List<ImageInfo> images) {
+		this.images = images;
 	}
 	
 	@Override
-	public MultipartFile getPhoto() {
-		return photo;
+	public MultipartFile getImage() {
+		return image;
 	}
 	
-	public void setPhoto(MultipartFile photo) {
-		this.photo = photo;
+	public void setImage(MultipartFile image) {
+		this.image = image;
 	}
 	
-	public void addPhoto(ImageInfo photoInfo){
-		synchronized (photoInfo) {
-			if (photos == null){
-				photos = new ArrayList<ImageInfo>();
+	public void addImage(ImageInfo imageInfo){
+		synchronized (imageInfo) {
+			if (images == null){
+				images = new ArrayList<ImageInfo>();
 			}
-			photos.add(photoInfo);
+			images.add(imageInfo);
 		}
 	}
 	
 	@Override
-	public ImageInfo getPrimaryPhoto() {
-		if(!CollectionUtils.isEmpty(this.photos)) {
-			for(ImageInfo imageInfo : this.photos) {
+	public ImageInfo getPrimaryImage() {
+		if(!CollectionUtils.isEmpty(this.images)) {
+			for(ImageInfo imageInfo : this.images) {
 				if(imageInfo.getIsPrimary()) {
 					return imageInfo;
 				}

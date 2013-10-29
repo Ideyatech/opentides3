@@ -111,5 +111,13 @@ public class UserDaoJpaImpl extends BaseEntityDaoJpaImpl<BaseUser, Long> impleme
 		List<BaseUser> usersList = findByNamedQuery("jpql.attacheUser.findUsersLikeLastName", params, firstResult, maxResults);
 		return usersList;
 	}
+	
+	@Override
+	public List<BaseUser> findAllUsersWithAuthority(String authority) {
+		Map<String, Object> params = new HashMap<>();
+		params.put("authority", authority);
+		List<BaseUser> usersList = findByNamedQuery("jpql.user.findUsersWithAuthority", params);
+		return usersList;
+	}
 
 }

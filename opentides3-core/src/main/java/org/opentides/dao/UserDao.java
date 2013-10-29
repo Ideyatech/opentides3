@@ -44,4 +44,11 @@ public interface UserDao extends BaseEntityDao<BaseUser, Long> {
 	 * @return
 	 */
 	public List<BaseUser> findUsersLikeLastName(String name, int firstResult, int maxResults);
+	
+	/**
+	 * Find all users with the given authoriry
+	 * @param authority
+	 * @return
+	 */
+	public List<BaseUser> findAllUsersWithAuthority(String authority);
 }

@@ -2,26 +2,6 @@
 <persistence xmlns="http://java.sun.com/xml/ns/persistence"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
-<!-- 
-	<persistence-unit name="opentidesPU"
-		transaction-type="RESOURCE_LOCAL">
-		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
-		<class>org.opentides.bean.AuditLog</class>
-		<properties>
-			<property name="eclipselink.target-database"
-				value="org.eclipse.persistence.platform.database.MySQLPlatform" />
--->				
-			<!-- value="drop-and-create-tables" to build a new database on each run; 
-				value="create-tables" creates new tables if needed; value="none" makes no 
-				changes to the database -->
-<!-- 
-			<property name="eclipselink.ddl-generation" value="create-or-extend-tables" />
-			<property name="eclipselink.ddl-generation.output-mode" value="database" />
-			<property name="eclipselink.weaving" value="static" />
-		</properties>
-	</persistence-unit>
--->
-
 	<persistence-unit name="ninjaPU" transaction-type="RESOURCE_LOCAL">
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
 		<!-- <jar-file>/WEB-INF/lib/core-3.0.1-SNAPSHOT.jar</jar-file> -->
@@ -33,6 +13,8 @@
 		<class>org.opentides.bean.Sequence</class>
 		<class>org.opentides.bean.SystemCodes</class>
 		<class>org.opentides.bean.Tag</class>
+		<class>org.opentides.bean.Widget</class>
+		<class>org.opentides.bean.UserWidgets</class>
 		<class>org.opentides.bean.user.BaseUser</class>
 		<class>org.opentides.bean.user.PasswordReset</class>
 		<class>org.opentides.bean.user.UserAuthority</class>
@@ -57,5 +39,4 @@
 			<property name="net.sf.ehcache.configurationResourceName" value="/app/cache/ehcache.xml" />
 		</properties>
 	</persistence-unit>
-	
 </persistence>

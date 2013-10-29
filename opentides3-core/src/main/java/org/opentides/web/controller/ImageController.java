@@ -320,14 +320,14 @@ public class ImageController {
 			//Attach to entity
 			ImageUploadable imageUploadable = (ImageUploadable)entity;
 			if(isPrimary) {
-				if(imageUploadable.getPhotos() != null) {
-					for(ImageInfo io : imageUploadable.getPhotos()) {
+				if(imageUploadable.getImages() != null) {
+					for(ImageInfo io : imageUploadable.getImages()) {
 						io.setIsPrimary(false);
 						imageInfoService.save(io);
 					}
 				}
 			}
-			imageUploadable.addPhoto(imageInfo);
+			imageUploadable.addImage(imageInfo);
 			service.save(entity);
 		}
 		

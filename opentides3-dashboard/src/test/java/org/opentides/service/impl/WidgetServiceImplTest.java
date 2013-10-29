@@ -215,11 +215,11 @@ public class WidgetServiceImplTest {
 	
 	private Authentication getAuthentication() {
 		List<GrantedAuthority> auths = new ArrayList<>();
-		auths.add(new SimpleGrantedAuthority("VIEW_WIDGETS"));
-		auths.add(new SimpleGrantedAuthority("SEARCH_WIDGETS"));
-		auths.add(new SimpleGrantedAuthority("ADD_WIDGETS"));
-		auths.add(new SimpleGrantedAuthority("EDIT_WIDGETS"));
-		auths.add(new SimpleGrantedAuthority("DELETE_WIDGETS"));
+		auths.add(new SimpleGrantedAuthority("VIEW_WIDGET"));
+		auths.add(new SimpleGrantedAuthority("SEARCH_WIDGET"));
+		auths.add(new SimpleGrantedAuthority("ADD_WIDGET"));
+		auths.add(new SimpleGrantedAuthority("EDIT_WIDGET"));
+		auths.add(new SimpleGrantedAuthority("DELETE_WIDGET"));
 		auths.add(new SimpleGrantedAuthority("ACCESS_WIDGET_1"));
 		auths.add(new SimpleGrantedAuthority("ACCESS_WIDGET_2"));
 		
