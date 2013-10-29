@@ -18,6 +18,7 @@
 		<div id="nav-list-wrapper" class="affix">
 			<ul class="nav nav-list side-nav">
 				<li><a href="#archetype">Maven Archetype</a></li>
+				<li><a href="#schema">Creating a database Schema</a></li>
 				<li><a href="#project">New Project</a></li>
 				<li><a href="#server">Running on Server</a></li>
 				<li><a href="#database">Database Configuration</a></li>
@@ -53,6 +54,31 @@
 			<div class="alert alert-info">
 				<strong>Heads up!</strong> Installing the maven archetype is only a one time process. You don't need to repeat this step for every project you will make.
 			</div>
+		</section>
+		
+		<section id="schema">
+			<h3>Creating a database schema</h3>
+			<p>Obviously, we're gonna need a database for our project. In this section, we'll create a schema and a user that has access to that schema</p>
+			<h4>Creating the schema</h4>
+			<ol>
+				<li>Open up your <span class="code-emphasize">MySQL Workbench</span></li>
+				<li>Create a new connection on the left side if there are none</li>
+				<li>Open your newly created connection by double clicking on it</li>
+				<li>Create a new schema by pressing the <img src="img/new-schema.png"/> button. Provide a name and apply</li>
+			</ol>
+			<h4>Creating the user</h4>
+			<ol>
+				<li>Open up your <span class="code-emphasize">MySQL Workbench</span></li>
+				<li>Initiate a new server instance on the right side if there are none.</li>
+				<li>Click <span class="code-emphasize">Server Administration</span> at the right side of the screen</li>
+				<li>Select <span class="code-emphasize">Users and Privileges</span> under the security section at the left side of the screen</li>
+				<li>Press the <span class="code-emphasize">Add Account</span> button at the bottom of the screen.</li>
+				<li>Fill up all the fields. Keep in mind that the <span class="code-emphasize">Login Name</span> would be the username. Specify <span class="code-emphasize">%</span> for the field <span class="code-emphasize">Limit connectivity to hosts matching</span>. Then <span class="code-emphasize">Apply</span></li>
+				<li>Change the view into <span class="code-emphasize">Schema Privileges</span> by changing the tab at the top part of the page</li>
+				<li>Select your user from the list on the left and press <span class="code-emphasize">Add Entry</span></li>
+				<li>Under the schema section, select <span class="code-emphasize">Selected Schema</span> then choose the name of your database. Press <span class="code-emphasize">Ok</span></li>
+				<li>Notice all the the Checkboxes below, click <span class="code-emphasize">Select "All"</span> then <span class="code-emphasize">Save Changes</span></li>
+			</ol>
 		</section>
 		
 		<section id="project">

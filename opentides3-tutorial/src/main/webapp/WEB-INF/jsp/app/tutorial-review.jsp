@@ -36,6 +36,7 @@
 			<li><i class="icon-li icon-ok"></i>Creating a controller and a CRUD page</li>
 			<li><i class="icon-li icon-ok"></i>Creating and validating forms</li>
 			<li><i class="icon-li icon-ok"></i>Creating a database evolve script</li>
+			<li><i class="icon-li icon-ok"></i>User Management (authorities, usergroup, user)</li>
 		</ul>
 		
 <!-- 		<hr/> -->
@@ -49,7 +50,7 @@
 		
 		<ul class="pager">
 			<li class="previous">
-				<a href="${home}/dbevolve">&larr; Previous (DB Evolve)</a>
+				<a href="${home}/user-management">&larr; Previous (User Management)</a>
 			</li>
 <!-- 			<li class="next"> -->
 <%-- 				<a href="${home}/advanced-overview">Next (Advanced) &rarr;</a> --%>

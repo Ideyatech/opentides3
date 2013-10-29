@@ -91,14 +91,18 @@
 			<li>Taiwan</li>
 			<li>Thailand</li>
 		</ul>
-		<p>Check if you have done it properly by visiting the <span class="code-emphasize">System Codes</span> tab in your header.
+		<p>Check if you have done it properly by visiting the <span class="code-emphasize">System Codes</span> tab in your header.</p>
+		<p>
+			In the following chapter, we would talk about <span class="code-emphasize">User Management</span> which would help
+			us understand <span class="code-emphasize">usergroups</span> and <span class="code-emphasize">authorities</span> to prevent other users from accessing valuable information.
+		</p>
 		
 		<ul class="pager">
 			<li class="previous">
 				<a href="${home}/validation">&larr; Previous (Validation)</a>
 			</li>
 			<li class="next">
-				<a href="${home}/review">Next &rarr;</a>
+				<a href="${home}/user-management">Next (User Management)&rarr;</a>
 			</li>
 		</ul>
 		

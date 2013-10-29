@@ -147,7 +147,7 @@
 								</li>
 								<li class="dropdown ${active eq 'advanced' ? 'active' : ''}">
 									<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-										Advanced
+										Others
 										<b class="caret"></b>
 									</a>
 									<ul class="dropdown-menu">
@@ -158,7 +158,7 @@
 										<li><a href="${home}/using-modals">Using Modal</a></li>
 										<li><a href="${home}/adding-images">Adding Custom Images</a></li>
 										<li class="divider"></li>
-										<li><a href="${home}/form-tags">Different Form Tags</a></li>
+										<li><a href="${home}/form-tags">Form Tags</a></li>
 										<li><a href="${home}/attaching-images">Attaching Images</a></li>
 										<li><a href="${home}/adding-tags">Adding Tags</a></li>
 									</ul>

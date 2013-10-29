@@ -48,9 +48,15 @@
 				<li><a href="https://jdk7.java.net/" target="_blank">Java 7</a></li>
 				<li><a href="http://tomcat.apache.org/download-70.cgi" target="_blank">Tomcat 7</a></li>
 				<li><a href="http://dev.mysql.com/downloads/mysql/5.5.html" target="_blank">MySql 5.5</a></li>
-				<li>IDE - We highly prefer using <a href="http://download.springsource.com/release/STS/3.4.0/dist/e4.3/spring-tool-suite-3.4.0.RELEASE-e4.3.1-win32-installer.exe">Spring Tool Suite</a></li>
+				<li><a href="http://www.mysql.com/products/workbench/">MySQL Workbench</a></li>
+				<li>IDE - We've used <a href="http://download.springsource.com/release/STS/3.4.0/dist/e4.3/spring-tool-suite-3.4.0.RELEASE-e4.3.1-win32-installer.exe">Spring Tool Suite</a> for windows when creating this tutorial.</li>
 				<li><a href="https://github.com/" target="_blank">GIT</a> account</li>
 			</ul>
+			
+			<div class="alert alert-warning">
+				<strong>Heads up!</strong> This tutorial is written based on Windows. Flow may change depending on the installed operating system.
+			</div>
+			
 		</section>
 		
 		<section id="installation">

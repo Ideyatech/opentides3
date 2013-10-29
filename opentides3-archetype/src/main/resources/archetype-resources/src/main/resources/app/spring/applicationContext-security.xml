@@ -14,12 +14,9 @@
 	<sec:http pattern="/font/**" security="none"/>
 	<sec:http pattern="/register**" security="none"/>
 	
-	<sec:http pattern="/facebook/connect**" security="none"/>
-	<sec:http pattern="/facebook/callback**" security="none"/>
-	<sec:http pattern="/twitter/connect**" security="none"/>
-	<sec:http pattern="/twitter/callback**" security="none"/>
-	<sec:http pattern="/google/connect**" security="none"/>
-	<sec:http pattern="/google/callback**" security="none"/>
+	<sec:http pattern="/facebook/**" security="none"/>
+	<sec:http pattern="/twitter/**" security="none"/>
+	<sec:http pattern="/google/**" security="none"/>
 	
     <sec:global-method-security secured-annotations="enabled"/>
 
@@ -48,10 +45,10 @@
 			user-service-ref="authenticationService">
 			<sec:password-encoder ref="passwordEncoder" />
 		</sec:authentication-provider>
-		<sec:authentication-provider ref="socialMediaAuthenticationProvider" />
+		<sec:authentication-provider ref="socialAuthenticationProvider" />
 	</sec:authentication-manager>
 		
-	<bean id="socialMediaAuthenticationProvider" class="org.opentides.security.SocialMediaAuthenticationProvider"/>
+	<bean id="socialAuthenticationProvider" class="org.opentides.social.security.SocialAuthenticationProvider"/>
 
 	<bean id="httpRequestAccessDecisionManager"
 		class="org.springframework.security.access.vote.AffirmativeBased">

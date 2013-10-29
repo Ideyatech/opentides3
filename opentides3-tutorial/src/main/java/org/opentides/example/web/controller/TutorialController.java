@@ -59,6 +59,11 @@ public class TutorialController {
 		return "app/tutorial-customize";
 	}
 	
+	@RequestMapping(method = RequestMethod.GET, value="/user-management")
+	public String userManagement(ModelMap map){
+		return "app/tutorial-user-management";
+	}
+	
 	@RequestMapping(method = RequestMethod.GET, value="/entities-and-attributes")
 	public String entitiesAndAttributes(ModelMap map){
 

@@ -39,9 +39,9 @@
 			<h3>What can she do?</h3>
 			<p>Tatiana will be simple, fast and clean. It can do the following: </p>
 			<ul>
+				<li>Login</li>
 				<li>Provide a list of all existing patients.</li>
 				<li>Create and manage a patient record</li>
-				<li>Login</li>
 			</ul>
 			<p>Basically, <span class="code-emphasize">Tatiana</span> will demonstrate the core features of <span class="code-emphasize">Opentides 3</span> which is CRUD.</p>
 		</section>
