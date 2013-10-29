@@ -27,18 +27,21 @@ import org.opentides.annotation.field.TextField;
 import org.opentides.annotation.field.Validation;
 import org.opentides.bean.BaseEntity;
 import org.opentides.bean.Comment;
+import org.opentides.bean.Commentable;
 import org.opentides.bean.ImageInfo;
+import org.opentides.bean.ImageUploadable;
 import org.opentides.bean.SystemCodes;
 import org.opentides.bean.Tag;
-import org.opentides.bean.Commentable;
-import org.opentides.bean.ImageUploadable;
 import org.opentides.bean.Taggable;
 import org.opentides.util.StringUtil;
 import org.opentides.web.json.Views;
+import org.opentides.web.json.serializer.TagsSerializer;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.annotation.JsonView;
 //import org.opentides.annotation.Secure;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 /**
  * This is the master class for testing all annotations
@@ -46,8 +49,8 @@ import com.fasterxml.jackson.annotation.JsonView;
  */ 
 @Entity  
 @Table(name="NINJA")
-@Auditable
-public class Ninja extends BaseEntity implements Commentable, Taggable, ImageUploadable {
+@Auditable(excludeFields = {"tags"})
+public class Ninja extends BaseEntity implements Commentable, ImageUploadable, Taggable {
 	
 	private static final long serialVersionUID = -4142599915292096152L;
 	
@@ -175,6 +178,17 @@ public class Ninja extends BaseEntity implements Commentable, Taggable, ImageUpl
 	
 	// file upload
 	private String attachment;
+	
+	@OneToMany(cascade = CascadeType.REMOVE)
+	@JoinTable(name="NINJA_TAGS",
+	joinColumns = { 
+			@JoinColumn(name="NINJA_ID", referencedColumnName="ID") 
+	},
+	inverseJoinColumns = {
+			@JoinColumn(name="TAG_ID")
+	})
+	@JsonView(Views.FormView.class)
+	private List<Tag> tags;
 
 	/**
 	 * @return the firstName
@@ -456,32 +470,55 @@ public class Ninja extends BaseEntity implements Commentable, Taggable, ImageUpl
 	}
 	
 	// ImageUploadable requirements
-	
 	@OneToMany(cascade=CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinTable(name = "NINJA_PHOTO", 
-			joinColumns = { @JoinColumn(name = "NINJA_ID", referencedColumnName = "ID") }, 
-			inverseJoinColumns = @JoinColumn(name = "PHOTO_ID")
+			joinColumns = { @JoinColumn(name = "NINJA_ID", referencedColumnName = "ID")}, 
+			inverseJoinColumns = {
+						@JoinColumn(name = "PHOTO_ID")}
 	)
-	private List<ImageInfo> photos;
-	private transient MultipartFile photo;
+	private List<ImageInfo> images;
+	
+	private transient MultipartFile image;
 	
 	@Override
-	public List<ImageInfo> getPhotos() {
-		return photos;
+	public List<ImageInfo> getImages() {
+		return images;
 	}
 	
 	@Override
-	public MultipartFile getPhoto() {
-		return photo;
-	}
-	
-	
-	public void addPhoto(ImageInfo photoInfo){
-		synchronized (photoInfo) {
-			if (photos == null){
-				photos = new ArrayList<ImageInfo>();
+	public ImageInfo getPrimaryImage() {
+		if(!CollectionUtils.isEmpty(this.images)) {
+			for(ImageInfo imageInfo : this.images) {
+				if(imageInfo.getIsPrimary()) {
+					return imageInfo;
+				}
 			}
-			photos.add(photoInfo);
+		}
+		ImageInfo primaryPhoto = new ImageInfo();
+		primaryPhoto.setId(0l);
+		return primaryPhoto;
+	}
+	
+	@Override
+	public MultipartFile getImage() {
+		return image;
+	}
+	
+	public void setImage(MultipartFile image) {
+		this.image = image;
+	}
+	
+	public void setImages(List<ImageInfo> images) {
+		this.images = images;
+	}
+	
+	@Override
+	public void addImage(ImageInfo imageInfo){
+		synchronized (imageInfo) {
+			if (images == null){
+				images = new ArrayList<ImageInfo>();
+			}
+			images.add(imageInfo);
 		}
 	}
 	
@@ -494,7 +531,7 @@ public class Ninja extends BaseEntity implements Commentable, Taggable, ImageUpl
 			joinColumns = { @JoinColumn(name = "NINJA_ID", referencedColumnName = "ID") }, 
 			inverseJoinColumns = @JoinColumn(name = "COMMENT_ID")
 	)
-	private List<Comment> comments = new ArrayList<Comment>();
+	private List<Comment> comments;
 
 	@Override
 	public List<Comment> getComments() {
@@ -506,21 +543,7 @@ public class Ninja extends BaseEntity implements Commentable, Taggable, ImageUpl
 		this.comments = comments;
 	}
 	
-	// End of Commentable requirements 
-	
-	// Taggable requirements
-	
-	@OneToMany(cascade=CascadeType.PERSIST, fetch = FetchType.LAZY)
-	@JoinTable(name = "NINJA_TAG", 
-			joinColumns = { @JoinColumn(name = "NINJA_ID", referencedColumnName = "ID") }, 
-			inverseJoinColumns = @JoinColumn(name = "TAG_ID")
-	)
-	private List<Tag> tags;
-
-	@Column(name="CS_TAGS")
-	@JsonView(Views.FormView.class)
-	private String csTags;
-
+	@JsonSerialize(using = TagsSerializer.class)
 	@Override
 	public List<Tag> getTags() {
 		return tags;
@@ -530,15 +553,5 @@ public class Ninja extends BaseEntity implements Commentable, Taggable, ImageUpl
 	public void setTags(List<Tag> tags) {
 		this.tags = tags;
 	}
-
-	@Override
-	public ImageInfo getPrimaryPhoto() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	
-	
-	// End of Taggable requirements 
 	
 }
