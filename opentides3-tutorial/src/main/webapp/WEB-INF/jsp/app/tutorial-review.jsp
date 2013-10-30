@@ -39,6 +39,8 @@
 			<li><i class="icon-li icon-ok"></i>User Management (authorities, usergroup, user)</li>
 		</ul>
 		
+		<p class="lead">Now, if you are still thirsty for more knowledge, feel free to browse our other topics. Have fun!</p>
+		
 <!-- 		<hr/> -->
 		
 <!-- 		<h3><i class="icon-location-arrow"></i> We're not yet done!</h3> -->

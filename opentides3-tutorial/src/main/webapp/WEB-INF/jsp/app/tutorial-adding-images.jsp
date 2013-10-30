@@ -61,11 +61,11 @@
 			<a href="http://getbootstrap.com/2.3.2/base-css.html#images" target="_blank">Visit the link</a>
 		</p>
 		
-		<ul class="pager">
-			<li class="previous">
-				<a href="${home}/advanced-overview">&larr; Go Back</a>
-			</li>
-		</ul>
+<!-- 		<ul class="pager"> -->
+<!-- 			<li class="previous"> -->
+<%-- 				<a href="${home}/advanced-overview">&larr; Go Back</a> --%>
+<!-- 			</li> -->
+<!-- 		</ul> -->
 		
 		
 	</div>

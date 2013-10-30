@@ -76,11 +76,11 @@
 		</ol>
 		
 		<!-- pager -->
-		<ul class="pager">
-			<li class="previous">
-				<a href="${home}/advanced-overview">&larr; Go Back</a>
-			</li>
-		</ul>
+<!-- 		<ul class="pager"> -->
+<!-- 			<li class="previous"> -->
+<%-- 				<a href="${home}/advanced-overview">&larr; Go Back</a> --%>
+<!-- 			</li> -->
+<!-- 		</ul> -->
 	</div>
 </div>
 
