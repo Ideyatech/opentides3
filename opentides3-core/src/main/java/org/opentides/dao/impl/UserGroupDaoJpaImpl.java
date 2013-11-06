@@ -18,11 +18,14 @@
  */
 package org.opentides.dao.impl;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import javax.persistence.Query;
 
 import org.opentides.bean.user.UserAuthority;
 import org.opentides.bean.user.UserGroup;
@@ -97,4 +100,29 @@ public class UserGroupDaoJpaImpl extends BaseEntityDaoJpaImpl<UserGroup, Long>
 	protected String appendOrderToExample(UserGroup example) {
 		return " ORDER by obj.name";
 	}
+
+	/* (non-Javadoc)
+	 * @see org.opentides.dao.UserGroupDao#getOldDefaultUserGroups(java.lang.Long[])
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<UserGroup> getOldDefaultUserGroups(Long ... groupIds) {
+		String queryString = getJpqlQuery("jpql.usergroup.findOldDefault");
+		Query query = getEntityManager().createQuery(queryString);
+		query.setParameter("groupIds", Arrays.asList(groupIds));
+		
+		return query.getResultList();
+	}
+
+	/* (non-Javadoc)
+	 * @see org.opentides.dao.UserGroupDao#getDefaultUserGroup()
+	 */
+	@Override
+	public UserGroup getDefaultUserGroup() {
+		String queryString = getJpqlQuery("jpql.usergroup.findDefault");
+		Query query = getEntityManager().createQuery(queryString);
+		
+		return (UserGroup) query.getSingleResult();
+	}
+
 }

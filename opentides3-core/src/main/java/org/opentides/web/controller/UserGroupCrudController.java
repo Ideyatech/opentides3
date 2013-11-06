@@ -75,7 +75,6 @@ public class UserGroupCrudController extends BaseCrudController<UserGroup> {
 		}
 	}
 
-	
 	/* (non-Javadoc)
 	 * @see org.opentides.web.controller.BaseCrudController#onLoadSearch(org.opentides.bean.BaseEntity, org.springframework.validation.BindingResult, org.springframework.ui.Model, javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
 	 */
@@ -88,6 +87,24 @@ public class UserGroupCrudController extends BaseCrudController<UserGroup> {
 			Model uiModel, HttpServletRequest request,
 			HttpServletResponse response) {
 		uiModel.addAttribute("results", search(command, request));
+	}
+
+	/* (non-Javadoc)
+	 * @see org.opentides.web.controller.BaseCrudController#postCreate(org.opentides.bean.BaseEntity)
+	 */
+	@Override
+	protected void postCreate(UserGroup command) {
+		if(command.getIsDefault())
+			((UserGroupService) getService()).removeOldDefaultUserGroup(command.getId());
+	}
+
+	/* (non-Javadoc)
+	 * @see org.opentides.web.controller.BaseCrudController#postUpdate(org.opentides.bean.BaseEntity)
+	 */
+	@Override
+	protected void postUpdate(UserGroup command) {
+		if(command.getIsDefault())
+			((UserGroupService) getService()).removeOldDefaultUserGroup(command.getId());
 	}
 
 	/**

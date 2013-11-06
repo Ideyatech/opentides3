@@ -546,11 +546,13 @@ var opentides3 = (function() {
 		var settings = $.extend({
 			'search'     : '#search-body',
 			'form'       : '#form-body',
+			'view'       : '#view-body',
 			'results'    : '#results-panel',
 			'status'     : '.status',
 			'pagination' : '.pagination',
 			'add'        : '.add-action',
 			'edit'       : '.edit-action',
+			'display'    : '.display-action',
 			'remove'     : '.remove-action'
 		}, options);
 
@@ -787,6 +789,30 @@ var opentides3 = (function() {
 										mode : 'update',
 										data : json,
 										form : settings['form'],
+										action : path
+									}, null, opentides3.getPath() + '/' + id);
+								}
+								form.page();
+							}
+						});
+					});
+
+					// attach view to all action-view
+					$(this).on("click", settings['display'], function() {
+						var id = $(this).data('id');
+						var path = opentides3.getPath() + '/view/' + id;
+						$.getJSON(path, // url
+						"", // data
+						function(json) { // callback
+//							displayForm('update', form, path, json)
+							if (form.hasClass('modal'))
+								form.modal();
+							else if (form.hasClass('page')) {
+								if (opentides3.supportsHistory()) {
+									history.pushState({
+										mode : 'view',
+										data : json,
+										form : settings['view'],
 										action : path
 									}, null, opentides3.getPath() + '/' + id);
 								}

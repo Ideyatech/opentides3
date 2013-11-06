@@ -12,4 +12,5 @@ import org.opentides.social.enums.SocialMediaType;
  */
 public interface SocialCredentialService extends BaseCrudService<SocialCredential>{
 	public void createSocialCredential(SocialMediaType type, String socialId, String email, SocialBaseUser socialUser);
+	public void removeSocialCredential(SocialBaseUser socialBaseUser, SocialMediaType type);
 }

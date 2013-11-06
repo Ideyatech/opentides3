@@ -13,6 +13,16 @@ import org.springframework.social.twitter.api.TwitterProfile;
 import org.springframework.social.twitter.api.impl.TwitterTemplate;
 import org.springframework.stereotype.Service;
 
+/**
+ * Service that holds specific methods for specific Social Media 
+ * and the one responsible for injecting Spring Social Requirements like:
+ * @clientSecret - Holds the client secret given by the Social Provider (e.g. Facebook, Google, and Twitter)
+ * @callback - Callback URL after authentication success.
+ * @appID - Holds the app id given by the Social Provider (e.g. Facebook, Google, and Twitter)
+ * @scope - Holds the list of scopes you need to get from the Social Provider (e.g. Facebook, Google, and Twitter)
+ * 
+ * @author rabanes
+ */
 @Service(TwitterProviderServiceImpl.NAME)
 public class TwitterProviderServiceImpl extends SocialProviderServiceImpl implements TwitterProviderService {
 
@@ -34,12 +44,13 @@ public class TwitterProviderServiceImpl extends SocialProviderServiceImpl implem
 		TwitterTemplate twitterTemplate = new TwitterTemplate(appId, clientSecret, accessToken.getToken(), accessToken.getSecret());
 		TwitterProfile profile = twitterTemplate.userOperations().getUserProfile();
 		
-		socialUser.setFirstName(profile.getName());
+		// Create Social Credential
 		socialCredentialService.createSocialCredential(SocialMediaType.TWITTER, String.valueOf(profile.getId()), "", socialUser);
 		
 		if(socialUser.getId() == null) {
-			socialUser.setCredential(socialBaseUserService.generateFakeCredentials());
-			socialBaseUserService.registerUser(socialUser, false);
+			socialUser.setFirstName(profile.getName());
+			socialUser.setCredential(socialBaseUserService.getBaseUserService().generateFakeCredentials());
+			socialBaseUserService.getBaseUserService().registerUser(socialUser, false);
 		} else {
 			socialBaseUserService.save(socialUser);
 		}

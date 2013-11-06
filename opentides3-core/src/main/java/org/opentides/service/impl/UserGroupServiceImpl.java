@@ -97,6 +97,7 @@ public class UserGroupServiceImpl extends BaseCrudServiceImpl<UserGroup>
 			UserGroup userGroup = new UserGroup();
 			userGroup.setName("Administrator");
 			userGroup.setDescription("System Administrators (Default)");
+			userGroup.setIsDefault(Boolean.TRUE);
 			List<String> names = new ArrayList<String>();
 			for (String key:authorities.keySet()) {
 				names.add(key);
@@ -106,6 +107,34 @@ public class UserGroupServiceImpl extends BaseCrudServiceImpl<UserGroup>
 			_log.info("New installation detected, inserted Administrator usergroup to database.");
 		}		
 		return !exist;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.opentides.service.UserGroupService#loadDefaultUserGroup()
+	 */
+	@Override
+	public List<UserGroup> getOldDefaultUserGroups(Long ... groupIds) {
+		return ((UserGroupDao)dao).getOldDefaultUserGroups(groupIds);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.opentides.service.UserGroupService#getDefaultUserGroup()
+	 */
+	@Override
+	public UserGroup getDefaultUserGroup() {
+		return ((UserGroupDao)dao).getDefaultUserGroup();
+	}
+
+	/* (non-Javadoc)
+	 * @see org.opentides.service.UserGroupService#removeOldDefaultUserGroup()
+	 */
+	@Override
+	public void removeOldDefaultUserGroup(Long groupId) {
+		List<UserGroup> groups = ((UserGroupDao)dao).getOldDefaultUserGroups(groupId);
+		for(UserGroup group : groups) {
+			group.setIsDefault(Boolean.FALSE);
+			save(group);
+		}
 	}
 
 }

@@ -241,6 +241,7 @@ public abstract class BaseCrudController<T extends BaseEntity> {
 		uiModel.addAttribute("mode", "search");
 		uiModel.addAttribute("search", "ot3-search");
 		uiModel.addAttribute("form", "ot3-form hide");
+		uiModel.addAttribute("view", "ot3-view hide");
 		uiModel.addAttribute("add", "ot3-add");
 		uiModel.addAttribute("update", "ot3-update");
 		uiModel.addAttribute("method", "post");
@@ -360,6 +361,36 @@ public abstract class BaseCrudController<T extends BaseEntity> {
 		uiModel.addAttribute("mode", "form");
 		uiModel.addAttribute("search", "ot3-search hide");
 		uiModel.addAttribute("form", "ot3-form");
+		uiModel.addAttribute("view", "ot3-view hide");
+
+		// load default search page settings
+		onLoadSearch(null, null, uiModel, request, response);
+		return singlePage;
+	}
+	
+	/**
+	 * @param id
+	 * @param uiModel
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/view/{id}", method = RequestMethod.GET)
+	public String getDisplayHtml(@PathVariable("id") Long id, Model uiModel,
+			HttpServletRequest request, HttpServletResponse response) {
+		T command = null;
+		if (id > 0) {
+			command = service.load(id);
+			uiModel.addAttribute("add", "ot3-add hide");
+			uiModel.addAttribute("update", "ot3-update hide");
+			uiModel.addAttribute("method", "put");
+		} 
+		uiModel.addAttribute("formCommand", command);
+		uiModel.addAttribute("searchCommand", BeanUtils.instantiateClass(this.entityBeanType));
+		uiModel.addAttribute("mode", "view");
+		uiModel.addAttribute("search", "ot3-search hide");
+		uiModel.addAttribute("form", "ot3-form hide");
+		uiModel.addAttribute("view", "ot3-view");
 
 		// load default search page settings
 		onLoadSearch(null, null, uiModel, request, response);

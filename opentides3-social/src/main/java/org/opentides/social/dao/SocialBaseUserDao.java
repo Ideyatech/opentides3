@@ -1,6 +1,6 @@
 package org.opentides.social.dao;
 
-import org.opentides.dao.UserDao;
+import org.opentides.dao.BaseEntityDao;
 import org.opentides.social.bean.SocialBaseUser;
 import org.opentides.social.enums.SocialMediaType;
 
@@ -9,6 +9,6 @@ import org.opentides.social.enums.SocialMediaType;
  * 
  * @author rabanes 
  */
-public interface SocialBaseUserDao extends UserDao {
+public interface SocialBaseUserDao extends BaseEntityDao<SocialBaseUser, Long> {
 	public SocialBaseUser loadBySocialIdAndType(String socialId, SocialMediaType type);
 }

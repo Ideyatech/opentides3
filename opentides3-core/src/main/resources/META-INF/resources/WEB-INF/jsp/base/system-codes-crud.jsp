@@ -14,7 +14,7 @@
   <li><spring:message code="label.system-codes"/></li>
 </ul>
 
-<div id="search-body">
+<div id="search-body" class="${search}">
 
 	<div id="search-panel" class="span3">
 
@@ -71,7 +71,11 @@
 					<tbody>
 						<script type="text/template" class="template">
 	                		<tr data-id="{{id}}">
-								<td>{{value}}</td>
+								<td>
+									<a href="${home}/system/system-codes/view/{{id}}">
+										{{value}}
+									</a>
+								</td>
 								<td>{{key}}</td>
 								<td>{{category}}</td>
 								<td>
@@ -82,7 +86,11 @@
 						</script>
 						<c:forEach items="${results.results}" var="record" varStatus="status">
 							<tr id="system-codes-row-${record.id}">
-								<td><c:out value="${record.value}" /></td>
+								<td>
+									<a href="${home}/system/system-codes/view/${record.id}">
+										<c:out value="${record.value}" />
+									</a>
+								</td>
 								<td><c:out value="${record.key}" /></td>
 								<td><c:out value="${record.category}" /></td>
 								<td>
@@ -103,7 +111,7 @@
 	
 </div>
 
-<div id="form-body" class="modal fade hide">
+<div id="form-body" class="modal fade ${form}">
 
 	<div id="form-panel" >
 		<div class="modal-header">
@@ -128,6 +136,30 @@
 		</form:form>
 	</div>
 	
+</div>
+
+<div id="view-body" class="page ${view}">
+	
+	<div class="row-fluid" style="margin-bottom: 20px;">
+		<div class="span10">
+			<h2>${formCommand.category}</h2>	
+		</div>
+	</div>
+	
+	<table class="table table-striped">
+		<tr>
+			<td><spring:message code="label.system-codes.key"/></td>
+			<td>${formCommand.key}</td>
+		</tr>
+		<tr>
+			<td><spring:message code="label.system-codes.value"/></td>
+			<td>${formCommand.value}</td>
+		</tr>
+		<tr>
+			<td><spring:message code="label.system-codes.number-value"/></td>
+			<td><a href="mailto:#">${formCommand.numberValue}</a></td>
+		</tr>
+	</table>
 </div>
 
 </div>

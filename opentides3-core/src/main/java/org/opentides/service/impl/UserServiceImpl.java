@@ -309,6 +309,7 @@ public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 		} while (userDao.loadByUsername(username) != null);
 		
 		credential.setSkipAudit(true);
+		credential.setEnabled(Boolean.TRUE);
 		credential.setUsername(username);
 		credential.setPassword(encryptPassword(RandomStringUtils.randomAlphanumeric(10)));
 		

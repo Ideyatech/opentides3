@@ -16,6 +16,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Service;
 
+/**
+ * This Service is responsible for creating OAuthService which is necessary for doing connection 
+ * with Social Provider (e.g. Facebook, Google, and Twitter)
+ * and providing a method to automatically log in the user.
+ * 
+ * @author rabanes
+ */
 @Service
 public class SocialProviderServiceImpl implements SocialProviderService {
 
@@ -66,6 +73,7 @@ public class SocialProviderServiceImpl implements SocialProviderService {
 		Authentication authentication = authenticationManager.authenticate(authToken);
 		SecurityContext context = SecurityContextHolder.getContext();
 		context.setAuthentication(authentication);
+		
 		request.getSession().setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, context);
 	}
 

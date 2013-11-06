@@ -55,6 +55,10 @@ public class UserGroup extends BaseEntity{
 	@Column(name = "DESCRIPTION")
 	@JsonView(Views.SearchView.class)
 	private String description;
+	
+	@Column(name = "IS_DEFAULT")
+	@JsonView(Views.FormView.class)
+	private Boolean isDefault;
 
 	@ManyToMany(mappedBy = "groups")
 	@JsonIgnore	
@@ -272,6 +276,20 @@ public class UserGroup extends BaseEntity{
 		this.users = users;
 	}
 	
+	/**
+	 * @return the isDefault
+	 */
+	public Boolean getIsDefault() {
+		return isDefault;
+	}
+
+	/**
+	 * @param isDefault the isDefault to set
+	 */
+	public void setIsDefault(Boolean isDefault) {
+		this.isDefault = isDefault;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 

@@ -23,7 +23,7 @@
   <li><spring:message code="label.user"/></li>
 </ul>	
 
-<div id="search-body">
+<div id="search-body" class="${search}">
 
 	<div id="search-panel" class="span3">
 	
@@ -81,6 +81,7 @@
 					<thead>
 		               	<tr class="table-header">
 		                   	<th data-class="expand" data-field-name="completeName"><spring:message code="label.user.name"/></th>
+		                   	<th data-class="expand" data-field-name="completeName"><spring:message code="label.user.photo"/></th>
 		                	<th data-field-name="emailAddress"><spring:message code="label.user.email"/></th>
 		               		<th data-hide="phone" data-field-name="displayGroups"><spring:message code="label.user.groups"/></th>
 		               		<th data-hide="phone" data-field-name="credential.enabled"><spring:message code="label.user.active"/></th>
@@ -93,7 +94,16 @@
 	           		<tbody>
 	           			<script type="text/template" class="template">
 	                		<tr id="user-row-{{id}}" data-id="{{id}}">
-								<td>{{completeName}}</td>
+								<td>
+									<a href="${home}/organization/users/view/{{id}}">
+										{{completeName}}
+									</a>
+								</td>
+								<td>
+									<div class="btn-group">
+									  <img class="img-polaroid" src="${home}/image/{{primaryPhoto.id}}?c=32"/>
+									</div>
+								</td>
 								<td>{{emailAddress}}</td>
 								<td>{{displayGroups}}</td>
 								<td>{{credential.enabled}}</td>
@@ -105,13 +115,23 @@
 						</script>
 		            	<c:forEach items="${results.results}" var="record" varStatus="status">
 			            	<tr id="user-row-${record.id}" data-id="${record.id}">            
-			                	<td><c:out value="${record.completeName}" /></td>
+			                	<td>
+			                		<a href="${home}/organization/users/view/${record.id}">
+										<c:out value="${record.completeName}" />
+									</a>
+								</td>
+								<td>
+								  <img class="img-polaroid" src="${home}/image/${record.primaryPhoto.id}?c=32"/>
+								</td>
 			                	<td><c:out value="${record.emailAddress}" /></td>
 			                	<td><c:out value="${record.displayGroups}" /></td>
 			                	<td><c:out value="${record.credential.enabled}" /></td>
 				                <td>
 									<i class='icon-pencil edit-action' data-id='${record.id}' data-title="<spring:message code="label.edit" />"></i>
 									<i class='icon-trash remove-action' data-id='${record.id}' data-title="<spring:message code="label.delete" />"></i>
+									<a data-url="${home}/image/upload?imageId=${record.primaryPhoto.id}&className=User&classId=${record.id}" class="upload-photo">
+										<i class="icon-upload"></i>
+									</a>
 				                </td>
 			            	</tr>
 		            	</c:forEach>
@@ -127,7 +147,7 @@
 
 </div>
    		
-<div id="form-body" class="modal fade hide">
+<div id="form-body" class="modal fade ${form}">
 
 	<div id="form-panel">
 	
@@ -162,6 +182,46 @@
 			
 </div>
 
+<div class="adjust-photo-modal modal hide fade" data-width="760" tabindex="-1"></div>
+<div class="upload-photo-modal modal hide fade" data-width="760" tabindex="-2"></div>
+
+<div id="view-body" class="page ${view}">
+	
+	<div class="row-fluid" style="margin-bottom: 20px;">
+		<div class="span2">
+			<img class="img-polaroid" src="${home}/image/${formCommand.primaryPhoto.id}"/>
+		</div>
+		<div class="span10">
+			<h2>${formCommand.completeName}</h2>	
+		</div>
+	</div>
+	
+	<table class="table table-striped">
+		<tr>
+			<td><spring:message code="label.user.first-name"/></td>
+			<td>${formCommand.firstName}</td>
+		</tr>
+		<tr>
+			<td><spring:message code="label.user.last-name"/></td>
+			<td>${formCommand.lastName}</td>
+		</tr>
+		<tr>
+			<td><spring:message code="label.user.email"/></td>
+			<td><a href="mailto:#">${formCommand.emailAddress}</a></td>
+		</tr>
+		<tr>
+			<td><spring:message code="label.user.groups"/></td>
+			<td><a href="mailto:#">${formCommand.displayGroups}</a></td>
+		</tr>
+		<tr>
+			<td><spring:message code="label.user.active"/></td>
+			<td>
+				<i class="${formCommand.credential.enabled ? 'icon-ok' : 'icon-remove'}"></i>
+			</td>
+		</tr>
+	</table>
+</div>
+
 </div>
 
 <tides:footer>
@@ -169,7 +229,8 @@
   	$(document).ready(function() {
   		$("#user-body").RESTful();
 		$('body').tooltip({selector: '.edit-action, .remove-action'});
-		//bootstro.start();
-	});
+	})
+	.on("click", '.adjust-photo', opentides3.showAdjustPhoto)
+	.on("click", '.upload-photo', opentides3.showUploadPhoto);
   </script>
 </tides:footer>

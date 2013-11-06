@@ -28,8 +28,7 @@
 					<spring:message code="label.usergroup.add" />
 				</button>
 				<div class="status" data-display-pagelinks="false" data-display-summary="true" data-summary-message='
-					<spring:message code="message.displaying-x-of-y" arguments="#start,#end,#total,records"/>
-				'>
+					<spring:message code="message.displaying-x-of-y" arguments="#start,#end,#total,records"/>'>
 					<tides:status results="${results}" />
 				</div>
 			</div>
@@ -96,6 +95,7 @@
 				<div>
 					<tides:input path="name" label="label.usergroup.name" required="true"/>
 					<tides:input path="description" label="label.usergroup.description"/>
+					<tides:checkbox path="isDefault" label="label.usergroup.isDefault"/>
 					<div class="control-group">
 						<form:label path="authorityNames" cssClass="control-label"><spring:message code="label.usergroup.actions"/></form:label>
 						<div class="controls">

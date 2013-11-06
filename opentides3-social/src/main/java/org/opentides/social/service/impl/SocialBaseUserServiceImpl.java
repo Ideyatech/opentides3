@@ -5,7 +5,9 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.opentides.bean.user.BaseUser;
-import org.opentides.service.impl.UserServiceImpl;
+import org.opentides.dao.UserDao;
+import org.opentides.service.UserService;
+import org.opentides.service.impl.BaseCrudServiceImpl;
 import org.opentides.social.bean.SocialBaseUser;
 import org.opentides.social.dao.SocialBaseUserDao;
 import org.opentides.social.enums.SocialMediaType;
@@ -19,8 +21,13 @@ import org.springframework.social.google.api.impl.GoogleTemplate;
 import org.springframework.social.twitter.api.impl.TwitterTemplate;
 import org.springframework.stereotype.Service;
 
+/**
+ * Service for social base user operations.
+ * 
+ * @author rabanes
+ */
 @Service(SocialBaseUserServiceImpl.NAME)
-public class SocialBaseUserServiceImpl extends UserServiceImpl implements
+public class SocialBaseUserServiceImpl extends BaseCrudServiceImpl<SocialBaseUser> implements
 		SocialBaseUserService {
 
 	public static final String NAME = "socialBaseUserService";
@@ -30,6 +37,12 @@ public class SocialBaseUserServiceImpl extends UserServiceImpl implements
 
 	@Autowired
 	private SocialBaseUserDao socialBaseUserDao;
+	
+	@Autowired
+	private UserDao userDao;
+	
+	@Autowired
+	private UserService userService;
 	
 	@Value("${twitter.appID}")
 	private String twitterAppId;
@@ -57,7 +70,7 @@ public class SocialBaseUserServiceImpl extends UserServiceImpl implements
 			return Boolean.FALSE;
 		
 		String email = details.get("email").toString();		
-		BaseUser user = socialBaseUserDao.loadByEmailAddress(email);
+		BaseUser user = userDao.loadByEmailAddress(email);
 		if(user != null)
 			return Boolean.TRUE;
 		
@@ -84,5 +97,10 @@ public class SocialBaseUserServiceImpl extends UserServiceImpl implements
 		}
 		return details;
 	}
-
+	
+	@Override
+	public UserService getBaseUserService() {
+		return userService;
+	}
+	
 }
