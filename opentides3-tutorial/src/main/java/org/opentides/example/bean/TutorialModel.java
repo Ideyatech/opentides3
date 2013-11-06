@@ -12,6 +12,7 @@ import org.opentides.bean.SystemCodes;
 import org.opentides.bean.Tag;
 import org.opentides.bean.Commentable;
 import org.opentides.web.json.Views.FormView;
+import org.opentides.web.json.Views.SearchView;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.annotation.JsonView;
@@ -102,28 +103,27 @@ public class TutorialModel extends BaseEntity implements Commentable, ImageUploa
 
 	@Override
 	@JsonView(FormView.class)
-	public List<ImageInfo> getPhotos() {
+	public List<ImageInfo> getImages() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ImageInfo getPrimaryPhoto() {
+	@JsonView(SearchView.class)
+	public ImageInfo getPrimaryImage() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public MultipartFile getPhoto() {
+	public MultipartFile getImage() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public void addPhoto(ImageInfo photo) {
+	public void addImage(ImageInfo image) {
 		// TODO Auto-generated method stub
 		
 	}
-
-	
 }

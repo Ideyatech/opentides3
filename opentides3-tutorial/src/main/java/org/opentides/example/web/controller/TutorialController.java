@@ -59,6 +59,11 @@ public class TutorialController {
 		return "app/tutorial-customize";
 	}
 	
+	@RequestMapping(method = RequestMethod.GET, value="/user-management")
+	public String userManagement(ModelMap map){
+		return "app/tutorial-user-management";
+	}
+	
 	@RequestMapping(method = RequestMethod.GET, value="/entities-and-attributes")
 	public String entitiesAndAttributes(ModelMap map){
 
@@ -81,6 +86,12 @@ public class TutorialController {
 	public String crudView(ModelMap map){
 
 		return "app/tutorial-crud-view";
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value="/crud-form")
+	public String crudForm(ModelMap map){
+
+		return "app/tutorial-crud-form";
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value="/validation")

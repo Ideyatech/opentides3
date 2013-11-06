@@ -336,11 +336,11 @@
 		</ul>
 		<p>Meanwhile, feel free to explore the tags for yourself. Ciao!</p>
 		
-		<ul class="pager">
-			<li class="previous">
-				<a href="${home}/advanced-overview">&larr; Get Back</a>
-			</li>
-		</ul>
+<!-- 		<ul class="pager"> -->
+<!-- 			<li class="previous"> -->
+<%-- 				<a href="${home}/advanced-overview">&larr; Get Back</a> --%>
+<!-- 			</li> -->
+<!-- 		</ul> -->
 	</div>
 </div>
 

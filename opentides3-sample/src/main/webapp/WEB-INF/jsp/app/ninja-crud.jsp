@@ -91,7 +91,7 @@
 								</td>
 								<td>
 									<div class="btn-group">
-									  <img class="img-polaroid" src="${home}/image/{{primaryPhoto.id}}?c=32"/>
+									  <img class="img-polaroid" src="${home}/image/{{primaryImage.id}}?c=32"/>
 									</div>
 								</td>
 	                			<td>{{email}}</td>
@@ -102,7 +102,7 @@
 								<td>
 									<i class='icon-pencil edit-action' data-id='{{id}}' data-title="<spring:message code="label.edit" />"></i>
 									<i class='icon-trash remove-action' data-id='{{id}}' data-title="<spring:message code="label.delete" />"></i>
-									<a data-url="${home}/image/upload?imageId={{primaryPhoto.id}}&className=Ninja&classId={{id}}" class="upload-photo">
+									<a data-url="${home}/image/upload?imageId={{primaryImage.id}}&className=Ninja&classId={{id}}" class="upload-photo">
 										<i class="icon-upload"></i> <spring:message code="photo.change-photo" />
 									</a>
 								</td>
@@ -116,7 +116,7 @@
 									</a>
 								</td>
 								<td>
-								  <img class="img-polaroid" src="${home}/image/${record.primaryPhoto.id}?c=32"/>
+								  <img class="img-polaroid" src="${home}/image/${record.primaryImage.id}?c=32"/>
 								</td>
 			                	<td><c:out value="${record.email}" /></td>
 			                	<td><c:out value="${record.age}" /></td>
@@ -126,7 +126,7 @@
 								<td>
 									<i class='icon-pencil edit-action' data-id='${record.id}' data-title="<spring:message code="label.edit" />"></i>
 									<i class='icon-trash remove-action' data-id='${record.id}' data-title="<spring:message code="label.delete" />"></i>
-									<a data-url="${home}/image/upload?imageId=${record.primaryPhoto.id}&className=Ninja&classId=${record.id}" class="upload-photo">
+									<a data-url="${home}/image/upload?imageId=${record.primaryImage.id}&className=Ninja&classId=${record.id}" class="upload-photo">
 										<i class="icon-upload"></i>
 									</a>
 								</td>

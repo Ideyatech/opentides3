@@ -39,9 +39,9 @@
 			<h3>What can she do?</h3>
 			<p>Tatiana will be simple, fast and clean. It can do the following: </p>
 			<ul>
+				<li>Login</li>
 				<li>Provide a list of all existing patients.</li>
 				<li>Create and manage a patient record</li>
-				<li>Login</li>
 			</ul>
 			<p>Basically, <span class="code-emphasize">Tatiana</span> will demonstrate the core features of <span class="code-emphasize">Opentides 3</span> which is CRUD.</p>
 		</section>
@@ -53,6 +53,8 @@
 			</ul>
 			<p>We will only cover the CRUD page for the patient class. However, the project may be continued into something bigger such as adding treatments to a patient and appointments as well.</p>
 		</section>
+		
+		<hr/>
 		
 		<h2><i class="icon-lightbulb"></i> Up next!</h2>
 		<p>In the next chapter, we will create a new project under <span class="code-emphasize">Opentides 3</span>. We will also configure our server and database and then run the project!</p>

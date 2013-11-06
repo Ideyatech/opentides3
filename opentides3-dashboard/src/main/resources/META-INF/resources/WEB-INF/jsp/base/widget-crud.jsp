@@ -5,7 +5,13 @@
 <%@ taglib prefix="tides" uri="http://www.ideyatech.com/tides"%>
 <%@ taglib prefix="app" tagdir="/WEB-INF/tags"%>
 
-<app:header pageTitle="label.widget" active="widget"/>
+<app:header pageTitle="label.widget" active="widget">
+	<script type="text/javascript" src="<c:url value='/js/jquery-ui.min.js'/>"></script>
+	<script type="text/javascript" src="<c:url value='/js/jquery.iframe-transport.js'/>"></script>
+	<script type="text/javascript" src="<c:url value='/js/jquery.fileupload.js'/>"></script>
+	<script type="text/javascript" src="<c:url value='/js/jquery.fileupload-process.js'/>"></script>
+	<script type="text/javascript" src="<c:url value='/js/jquery.fileupload-image.js'/>"></script>
+</app:header>
 
 <div id="widget-body">
 
@@ -84,10 +90,10 @@
 							</tr>
 						</script>
 						<c:forEach items="${results.results}" var="record" varStatus="status">
-							<tr id="system-codes-row-${record.name}">
+							<tr id="widget-row-${record.id}">
+								<td><c:out value="${record.name}" /></td>
 								<td><c:out value="${record.title}" /></td>
 								<td><c:out value="${record.isShown}" /></td>
-								<td><c:out value="${record.category}" /></td>
 								<td><c:out value="${record.lastCacheUpdate}" /></td>
 								<td>
 									<i class='icon-pencil edit-action' data-id='${record.id}' data-title="<spring:message code="label.edit" />"></i>
@@ -116,16 +122,18 @@
 			<h4 class="${update}"><spring:message code="label.widget.update" /></h4>
 		</div>
 
-		<form:form modelAttribute="formCommand" id="widget-form">
+		<form:form modelAttribute="formCommand" id="widget-form" cssClass="form-horizontal">
 			<div class="modal-body">
 				<div class="message-container"></div>
-				<tides:input path="name" label="label.widget.name" />
-				<tides:input path="title" label="label.widget.title" />
+				<tides:input path="name" label="label.widget.name" required="true"/>
+				<tides:input path="title" label="label.widget.title" required="true"/>
 				<tides:checkbox path="isShown" label="label.widget.isShown" />
 				<tides:input path="description" label="label.widget.description" />
-				<tides:input path="url" label="label.widget.url" />
+				<tides:input path="url" label="label.widget.url" required="true"/>
 				<tides:input path="accessCode" label="label.widget.accessCode" />
 				<tides:input path="cacheDuration" label="label.widget.cacheDuration" />
+				<tides:input_file label="label.widget.screenshot" 
+					dropZone="false" id="screenshot"/>
 				<tides:input path="lastCacheUpdate" label="label.widget.lastCacheUpdate" />
 			</div>
 			<div class="modal-footer">

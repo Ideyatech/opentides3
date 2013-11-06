@@ -28,7 +28,7 @@ public interface ImageUploadable {
 	 * @return a list of ImageInfo objects
 	 */
 	@JsonView(Views.FormView.class)
-	List<ImageInfo> getPhotos();
+	List<ImageInfo> getImages();
 
 	/**
 	 * Gets the primary photo. 
@@ -37,20 +37,20 @@ public interface ImageUploadable {
 	 * @return
 	 */
 	@JsonView(Views.SearchView.class)
-	ImageInfo getPrimaryPhoto();
+	ImageInfo getPrimaryImage();
 
 	/**
 	 * Required upon form submit, should be a transient variable.
 	 * 
 	 * @return
 	 */
-	MultipartFile getPhoto();
+	MultipartFile getImage();
 
 	/**
 	 * Add {@link ImageInfo} object to the list of photos.
 	 * 
-	 * @param photo
+	 * @param image
 	 */
-	void addPhoto(ImageInfo photo);
+	void addImage(ImageInfo image);
 
 }

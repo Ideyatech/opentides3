@@ -23,7 +23,7 @@ import org.opentides.util.UrlUtil;
 import org.springframework.stereotype.Service;
 
 @Service("widgetService")
-@CrudSecure(value="WIDGETS")
+@CrudSecure(value="WIDGET")
 public class WidgetServiceImpl extends BaseCrudServiceImpl<Widget> implements
 		WidgetService {
 	

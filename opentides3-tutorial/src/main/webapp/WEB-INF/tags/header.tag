@@ -132,29 +132,33 @@
 									</a>
 									<ul class="dropdown-menu">
 										<li><a href="${home}/customize">Customization</a></li>
+										<li class="divider"></li>
 										<li><a href="${home}/entities-and-attributes">Entities & Attributes</a></li>
 										<li><a href="${home}/dao-and-service">DAO & Service</a></li>
+										<li class="divider"></li>
 										<li><a href="${home}/crud-controller">CRUD Controller</a></li>
 										<li><a href="${home}/crud-view">CRUD View</a></li>
+										<li><a href="${home}/crud-form">CRUD Form</a></li>
 										<li><a href="${home}/validation">Form Validation</a></li>
+										<li class="divider"></li>
+										<li><a href="${home}/dbevolve">DB Evolve</a></li>
 										<li><a href="${home}/review">Review</a></li>
 									</ul>
 								</li>
 								<li class="dropdown ${active eq 'advanced' ? 'active' : ''}">
 									<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-										Advanced
+										Others
 										<b class="caret"></b>
 									</a>
 									<ul class="dropdown-menu">
-										<li><a href="${home}/advanced-overview">Overview</a></li>
-										<li class="divider"></li>
+<%-- 										<li><a href="${home}/advanced-overview">Overview</a></li> --%>
+<!-- 										<li class="divider"></li> -->
 										<li><a href="${home}/spring-controllers">Learn Spring Controller</a></li>
-										<li><a href="${home}/dbevolve">DB Evolve</a></li>
 										<li class="divider"></li>
 										<li><a href="${home}/using-modals">Using Modal</a></li>
 										<li><a href="${home}/adding-images">Adding Custom Images</a></li>
 										<li class="divider"></li>
-										<li><a href="${home}/form-tags">Different Form Tags</a></li>
+										<li><a href="${home}/form-tags">Form Tags</a></li>
 										<li><a href="${home}/attaching-images">Attaching Images</a></li>
 										<li><a href="${home}/adding-tags">Adding Tags</a></li>
 									</ul>

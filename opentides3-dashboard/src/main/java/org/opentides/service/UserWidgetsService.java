@@ -29,6 +29,20 @@ public interface UserWidgetsService extends BaseCrudService<UserWidgets> {
 	 */
 	public void addUserWidgets(long userId, Widget widget);
 	
+	/**
+	 * Add user widgets based on the given BaseUser and widget object
+	 * @param user - the BaseUser
+	 * @param widget - Widget Object
+	 */
+	public void addUserWidgets(BaseUser baseUser, Widget widget);
+	
+	/**
+	 * Add the widget to all the users 
+	 * @param users
+	 * @param widget
+	 */
+	public void addUserWidgets(List<BaseUser> users, Widget widget);
+	
 	
 	/**
 	 * Retrieve all widgets of a user based on the given status
