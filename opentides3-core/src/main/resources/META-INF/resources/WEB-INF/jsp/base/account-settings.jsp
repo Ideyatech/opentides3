@@ -128,15 +128,15 @@
 	<div id="profile-picture" class="row-fluid">
 		<h3><spring:message code="label.account-settings.profile-picture"/></h3>
 		<div class="media">
-			<img class="img-polaroid pull-left" src="${home}/image/${user.primaryPhoto.id}" />
+			<img class="img-polaroid pull-left" src="${home}/image/${user.primaryImage.id}" />
 			<div class="media-body">
 				<div class="control-group">
-					<button class="btn btn-info upload-photo" data-url="${home}/image/upload?imageId=${user.primaryPhoto.id}&className=User&classId=${user.id}">
+					<button class="btn btn-info upload-photo" data-url="${home}/image/upload?imageId=${user.primaryImage.id}&className=User&classId=${user.id}">
 						<i class="icon-picture"></i> <spring:message code="photo.change-photo" />
 					</button>
 				</div>
 				<div class="control-group">
-					<button class="btn adjust-photo" data-url="${home}/image/adjust?imageId=${user.primaryPhoto.id}&className=User&classId=${user.id}">
+					<button class="btn adjust-photo" data-url="${home}/image/adjust?imageId=${user.primaryImage.id}&className=User&classId=${user.id}">
 						<i class="icon-move"></i> <spring:message code="photo.edit-thumbnail" />
 					</button>
 				</div>

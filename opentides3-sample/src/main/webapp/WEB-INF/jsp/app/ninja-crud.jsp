@@ -72,7 +72,6 @@
 					<thead>
 						<tr class="table-header">
 							<th data-class="expand" data-field-name="completeName"><spring:message code="label.ninja.completeName"/></th>
-							<th data-class="expand" data-field-name="completeName"><spring:message code="label.ninja.photo"/></th>
 		                   	<th data-hide="phone" data-field-name="email"><spring:message code="label.ninja.email"/></th>
 		                	<th data-hide="phone,tablet" data-field-name="age"><spring:message code="label.ninja.age"/></th>
 		               		<th data-hide="phone,tablet" data-field-name="score"><spring:message code="label.ninja.score"/></th>
@@ -102,9 +101,7 @@
 								<td>
 									<i class='icon-pencil edit-action' data-id='{{id}}' data-title="<spring:message code="label.edit" />"></i>
 									<i class='icon-trash remove-action' data-id='{{id}}' data-title="<spring:message code="label.delete" />"></i>
-									<a data-url="${home}/image/upload?imageId={{primaryImage.id}}&className=Ninja&classId={{id}}" class="upload-photo">
-										<i class="icon-upload"></i> <spring:message code="photo.change-photo" />
-									</a>
+									
 								</td>
 							</tr>
 						</script>
@@ -126,9 +123,6 @@
 								<td>
 									<i class='icon-pencil edit-action' data-id='${record.id}' data-title="<spring:message code="label.edit" />"></i>
 									<i class='icon-trash remove-action' data-id='${record.id}' data-title="<spring:message code="label.delete" />"></i>
-									<a data-url="${home}/image/upload?imageId=${record.primaryImage.id}&className=Ninja&classId=${record.id}" class="upload-photo">
-										<i class="icon-upload"></i>
-									</a>
 								</td>
 							</tr>
 						</c:forEach>

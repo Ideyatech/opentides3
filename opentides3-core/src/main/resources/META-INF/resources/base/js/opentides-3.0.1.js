@@ -497,16 +497,18 @@ var opentides3 = (function() {
 
 	/**
 	 * Clears all the input of the form.
+	 * **removed by aj. conflict with jquery clear form
 	 */
-	$.fn.clearForm = function() {
+	/*$.fn.clearForm = function() {
+		console.log("please remove me");
 		return this.each(function() {
 			$(this).find(
-					'input:text, input:password, input:file, select, textarea')
+					'input:text, input:password, input:hidden, input:file, select, textarea')
 					.val('');
 			$(this).find('input:radio, input:checkbox').prop('checked', false)
 					.prop('selected', false);
 		});
-	};
+	};*/
 
 	/**
 	 * 
@@ -702,7 +704,7 @@ var opentides3 = (function() {
 									if (typeof (json.command) === 'object'
 											&& json.command.id > 0) {
 										// successfully saved
-										firstForm.clearForm();
+										firstForm.clearForm(true);
 										if (button.data('submit') !== 'save-and-new') {
 											// hide modal
 											if (form.hasClass('modal'))
@@ -841,7 +843,8 @@ var opentides3 = (function() {
 					// attach clear button functions
 					searchForms.find('[data-submit="clear"]').on("click",
 						function() {
-							$(this).closest('form').clearForm();
+							
+							$(this).closest('form').clearForm(true);
 							return false;
 						});
 				});
