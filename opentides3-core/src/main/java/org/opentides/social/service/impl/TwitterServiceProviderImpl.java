@@ -4,7 +4,11 @@ import org.opentides.social.service.TwitterServiceProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-@Service
+/**
+ * Twitter implementation of SocialProviderService class. The needed Scribe Twitter API class
+ * is provided, as well as the needed API key, secret and callback URL strings.
+ */
+@Service("twitter")
 public class TwitterServiceProviderImpl extends SocialProviderServiceImpl implements TwitterServiceProvider {
 
 	@SuppressWarnings("rawtypes")

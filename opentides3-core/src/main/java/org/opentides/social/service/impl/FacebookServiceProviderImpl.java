@@ -4,6 +4,10 @@ import org.opentides.social.service.FacebookServiceProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+/**
+ * Facebook implementation of SocialProviderService class. The needed Scribe Facebook API class
+ * is provided, as well as the needed API key, secret and callback URL strings.
+ */
 @Service
 public class FacebookServiceProviderImpl extends SocialProviderServiceImpl implements FacebookServiceProvider {
 

@@ -9,6 +9,12 @@ import org.opentides.enums.SocialMediaType;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 
+/**
+ * Custom authentication token that holds the attributes that will be put
+ * into the security context when a user tries to login using social media
+ * accounts. This token will be used in an AuthenticationProvider class.
+ *
+ */
 public class SocialMediaAuthenticationToken extends AbstractAuthenticationToken {
 
 	private static final long serialVersionUID = 8079278000065128059L;
@@ -18,7 +24,15 @@ public class SocialMediaAuthenticationToken extends AbstractAuthenticationToken 
 	private String socialMediaId;
 	private SocialMediaType socialMediaType;
 	private List<GrantedAuthority> authorities;
-	
+
+    /**
+     * Default constructor
+     * @param user
+     * @param userId
+     * @param socialMediaId
+     * @param socialMediaType
+     * @param authorities
+     */
 	public SocialMediaAuthenticationToken(BaseUser user, Long userId,
 			String socialMediaId, SocialMediaType socialMediaType,
 			List<GrantedAuthority> authorities) {
@@ -30,12 +44,23 @@ public class SocialMediaAuthenticationToken extends AbstractAuthenticationToken 
 		this.authorities = authorities;
 		super.setAuthenticated(true);
 	}
-	
+
+    /**
+     *
+     * @param user
+     * @param userId
+     * @param socialMediaId
+     * @param socialMediaType
+     */
 	public SocialMediaAuthenticationToken(BaseUser user, Long userId,
 			String socialMediaId, SocialMediaType socialMediaType) {
 		this(user, userId, socialMediaId, socialMediaType, null);
 	}
-	
+
+    /**
+     *
+     * @param authorities
+     */
 	public SocialMediaAuthenticationToken(
 			Collection<? extends GrantedAuthority> authorities) {
 		super(authorities);

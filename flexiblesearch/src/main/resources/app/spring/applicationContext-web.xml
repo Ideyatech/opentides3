@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-3.2.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+        http://www.springframework.org/schema/util
+        http://www.springframework.org/schema/util/spring-util-3.2.xsd">
+
+    <!-- The controllers are autodetected POJOs labeled with the @Controller
+		annotation. -->
+    <context:component-scan base-package="org.opentides.web"
+                            use-default-filters="false">
+        <context:include-filter expression="org.springframework.stereotype.Controller"
+                                type="annotation" />
+    </context:component-scan>
+
+    <!-- Turns on support for mapping requests to Spring MVC @Controller methods
+        Also registers default Formatters and Validators for use across all @Controllers -->
+    <mvc:annotation-driven conversion-service="applicationConversionService">
+        <mvc:message-converters>
+            <bean class="org.opentides.web.json.ViewAwareJsonMessageConverter"
+                  p:objectMapper-ref="objectMapper" />
+        </mvc:message-converters>
+        <mvc:argument-resolvers>
+            <bean class="org.opentides.web.processor.FormBindMethodProcessor" />
+        </mvc:argument-resolvers>
+    </mvc:annotation-driven>
+
+    <!-- Default Converters -->
+
+    <bean id="objectMapper"
+          class="org.springframework.http.converter.json.Jackson2ObjectMapperFactoryBean"
+          p:simpleDateFormat="${date.format}">
+    </bean>
+
+    <bean id="applicationConversionService"
+          class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+        <property name="converters">
+            <set>
+                <bean class="org.opentides.bean.converter.BaseEntityToLongConverter" />
+                <bean class="org.opentides.bean.converter.BaseEntityToStringConverter" />
+                <bean class="org.opentides.bean.converter.StringToDateConverter"
+                      p:dateFormat="${date.format}" />
+                <ref bean="stringToBaseEntityConverter" />
+                <ref bean="stringToSystemCodesConverter" />
+            </set>
+        </property>
+    </bean>
+
+    <!-- Handles HTTP GET requests for /resources/** by efficiently serving
+        up static resources -->
+    <mvc:resources location="/base/css/,/app/css/" mapping="/css/**" />
+    <mvc:resources location="/base/js/,/app/js/" mapping="/js/**" />
+    <mvc:resources location="/base/img/,/app/img/" mapping="/img/**" />
+    <mvc:resources location="/base/font/,/app/font/" mapping="/font/**" />
+
+    <!-- Allows for mapping the DispatcherServlet to "/" by forwarding static
+        resource requests to the container's default Servlet -->
+    <!-- <mvc:default-servlet-handler /> -->
+
+    <!-- Register "global" interceptor beans to apply to all registered HandlerMappings -->
+    <mvc:interceptors>
+        <bean class="org.springframework.web.servlet.theme.ThemeChangeInterceptor" />
+        <bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor"
+              p:paramName="lang" />
+    </mvc:interceptors>
+
+    <bean id="messageSource"
+          class="org.opentides.context.support.PatternResourceBundleMessageSource"
+          p:cacheSeconds="${messages.cache.seconds}"
+          p:basenames="classpath:app/languages/*messages.properties,classpath:base/languages/*messages.properties" />
+
+
+    <!-- Store preferred language configuration in a cookie -->
+    <bean class="org.springframework.web.servlet.i18n.CookieLocaleResolver"
+          id="localeResolver" p:cookieName="locale" />
+
+    <!-- Store preferred theme configuration in a cookie -->
+    <bean id="themeSource"
+          class="org.springframework.ui.context.support.ResourceBundleThemeSource"
+          p:basenamePrefix="app/themes/" />
+
+    <bean id="themeResolver"
+          class="org.springframework.web.servlet.theme.CookieThemeResolver"
+          p:cookieName="theme" p:defaultThemeName="default" />
+
+    <!-- This bean resolves specific types of exceptions to corresponding logical
+        - view names for error views. The default behaviour of DispatcherServlet
+        - is to propagate all exceptions to the servlet container: this will happen
+        - here with all other types of exceptions. -->
+    <bean class="org.opentides.web.AlertingExceptionResolver"
+          p:defaultErrorView="uncaughtException">
+        <property name="exceptionMappings">
+            <props>
+                <prop key=".DataAccessException">dataAccessFailure</prop>
+                <prop key=".NoSuchRequestHandlingMethodException">resourceNotFound</prop>
+                <prop key=".TypeMismatchException">dataAccessFailure</prop>
+                <prop key=".MissingServletRequestParameterException">resourceNotFound</prop>
+                <prop key="java.lang.Exception">uncaughtException</prop>
+            </props>
+        </property>
+    </bean>
+
+    <!-- Selects a static view for rendering without the need for an explicit
+        controller -->
+    <!-- <mvc:view-controller path="/" view-name="index" /> -->
+    <mvc:view-controller path="/uncaughtException" />
+    <mvc:view-controller path="/resourceNotFound" />
+    <mvc:view-controller path="/dataAccessFailure" />
+
+    <!-- Default View Resolver -->
+    <bean id="viewResolver"
+          class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="cache" value="false" />
+        <property name="viewClass"
+                  value="org.springframework.web.servlet.view.JstlView" />
+        <property name="prefix" value="/WEB-INF/jsp/" />
+        <property name="suffix" value=".jsp" />
+    </bean>
+
+    <!-- Support for JsonView -->
+    <bean class="org.opentides.web.json.JsonViewSupportFactoryBean" />
+
+    <!-- Enable this for integration of file upload functionality -->
+    <bean id="multipartResolver"
+          class="org.springframework.web.multipart.commons.CommonsMultipartResolver" />
+
+    <!-- Register Application Listeners -->
+    <!-- Application Startup Listener -->
+    <bean id="startupListener" class="org.opentides.listener.ApplicationStartupListener">
+        <property name="propertyName" value="${property.name}" />
+    </bean>
+
+    <!-- Add system properties through spring XML configuration. -->
+    <bean
+            class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="targetObject">
+            <bean
+                    class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+                <property name="targetClass" value="java.lang.System" />
+                <property name="targetMethod" value="getProperties" />
+            </bean>
+        </property>
+        <property name="targetMethod" value="putAll" />
+        <property name="arguments">
+            <util:properties>
+                <prop key="facebook.domainUrl">http://localhost:8080/Opentides/</prop>
+                <prop key="facebook.appID">443772175710131</prop>
+                <prop key="facebook.clientSecret">5264d6fbef180542cc2d41190366d547</prop>
+                <prop key="facebook.callback">http://localhost:8080/Opentides/facebook/callback</prop>
+                <prop key="facebook.apiClass">org.scribe.builder.api.FacebookApi</prop>
+
+                <prop key="google.domainUrl">http://localhost:8080/Opentides/</prop>
+                <prop key="google.appID">403711571000.apps.googleusercontent.com</prop>
+                <prop key="google.clientSecret">nzW9HyRqJJSn5-JeMdoPPYNh</prop>
+                <prop key="google.callback">http://localhost:8080/Opentides/google/callback</prop>
+                <prop key="google.apiClass">org.opentides.social.bean.Google2Api</prop>
+
+                <prop key="twitter.domainUrl">http://127.0.0.1:8080/Opentides/</prop>
+                <prop key="twitter.appID">TilpFfrcjfa2E0tEoeK9A</prop>
+                <prop key="twitter.clientSecret">LvD44MHWgGMl1lkLYUavmwD0V0ujl6HkecpymwYiutU</prop>
+                <prop key="twitter.callback">http://127.0.0.1:8080/Opentides/twitter/callback</prop>
+                <prop key="twitter.apiClass">org.scribe.builder.api.TwitterApi</prop>
+            </util:properties>
+        </property>
+    </bean>
+
+	<context:component-scan base-package="com.ideyatech.ninja">
+		<context:exclude-filter expression="org.springframework.stereotype.Controller"
+			type="annotation" />
+	</context:component-scan>
+
+	<context:component-scan base-package="com.ideyatech.ninja.web"
+			use-default-filters="false">
+		<context:include-filter expression="org.springframework.stereotype.Controller"
+			type="annotation" />
+	</context:component-scan>
+
+	<bean id="additionalMessages" class="java.util.ArrayList" >
+		<constructor-arg>
+			<list>
+			</list>
+		</constructor-arg>
+	</bean>
+	
+</beans>

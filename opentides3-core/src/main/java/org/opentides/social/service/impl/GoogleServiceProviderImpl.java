@@ -4,6 +4,10 @@ import org.opentides.social.service.GoogleServiceProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+/**
+ * Google implementation of SocialProviderService class. The needed Scribe Googl API class
+ * is provided, as well as the needed API key, secret and callback URL strings.
+ */
 @Service
 public class GoogleServiceProviderImpl extends SocialProviderServiceImpl implements GoogleServiceProvider {
 

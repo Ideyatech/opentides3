@@ -33,7 +33,11 @@ public class Google2Api extends DefaultApi20 {
     public String getAccessTokenEndpoint() {
         return "https://accounts.google.com/o/oauth2/token";
     }
-    
+
+    /**
+     * Method to handle the retrieval of the access token from response URL from Google.
+     * @return accessToken
+     */
     @Override
     public AccessTokenExtractor getAccessTokenExtractor() {
         return new AccessTokenExtractor() {
@@ -55,7 +59,13 @@ public class Google2Api extends DefaultApi20 {
             }
         };
     }
- 
+
+    /**
+     * Method to retrieve the authorization URL from the OAuth configuration set in the
+     * application.
+     * @param config
+     * @return
+     */
     @Override
     public String getAuthorizationUrl(OAuthConfig config) {
         // Append scope if present

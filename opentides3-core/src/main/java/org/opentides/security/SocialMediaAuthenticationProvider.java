@@ -16,11 +16,25 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+/**
+ * Custom authentication provider for opentides3 to allow users to login to the
+ * application using social media account.
+ */
 public class SocialMediaAuthenticationProvider implements AuthenticationProvider {
 
 	@Autowired
 	UserService userService;
-	
+
+    /**
+     *  This method handles the authentication os users through Social Media means,
+     *  i.e. Facebook, Google, Twitter. The method will retrieve the current user record
+     *  by the social media ID and retrieve the attributes (roles, basic user stuff, etc)
+     *  and put them in the security context using the SocialMediaAuthenticationToken.
+     *
+     * @param authentication
+     * @return
+     * @throws AuthenticationException
+     */
 	@Override
 	public Authentication authenticate(Authentication authentication)
 			throws AuthenticationException {
