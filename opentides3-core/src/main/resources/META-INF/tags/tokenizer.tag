@@ -15,7 +15,6 @@
 <%@ attribute name="label" required="true" type="java.lang.String" %>
 <%@ attribute name="cssClass" required="false" type="java.lang.String" %>
 <%@ attribute name="required" required="false" type="java.lang.Boolean" %>
-
 <div class="control-group">
 
 	<form:label path="${path}" cssClass="control-label" cssErrorClass="highlight-error">

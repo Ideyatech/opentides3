@@ -10,14 +10,28 @@
 <%@ attribute name="dropZoneLabel" required="false" type="java.lang.String" %>
 <%@ attribute name="id" required="true" type="java.lang.String" %>
 <%@ attribute name="dataURL" required="false" type="java.lang.String" %>
+<%@ attribute name="isFile" required="false" type="java.lang.Boolean" %>
+<%@ attribute name="uploadType" required="false" type="java.lang.String" %>
 
 <!-- Get all dynamic attributes of this tag. -->
 <c:forEach items="${dAttrs}" var="attr">
 	<c:set var="attrs" value='${attrs} ${attr.key}="${attr.value}"'/>
 </c:forEach>
 
+
+
 <!-- Initialize Upload URL. -->
 <c:set var="uploadURL" value="${home}/image/upload"/>
+
+<!-- Default upload type is images -->
+<c:set var="uploadType" value="images" />
+
+<!-- Determine if file upload -->
+<c:if test="${isFile}">
+	<c:set var="uploadURL" value="${home}/file/upload" />
+	<c:set var="uploadType" value="files" />
+</c:if>
+
 <c:if test="${not empty dataURL}">
 	<c:set var="uploadURL" value="${dataURL}" />
 </c:if>
@@ -31,14 +45,14 @@
 <div class="control-group ot-upload-file">
 	
 	<!-- Container of all image ID. -->
-	<div id="imageIds" style="display: none;">
-		<script id="imageIdsForUpload" type="text/template">
-			<input class="ot-images" type="hidden" name="images" value="{{imageId}}"/>
+	<div id="attachmentIds" style="display: none;">
+		<script id="attachmentIdsForUpload" type="text/template">
+			<input class="ot-images" type="hidden" name="${uploadType}" value="{{attachmentId}}"/>
 		</script>
-		<input class="ot-images" type="hidden" name="images" value=""/>
+		<input class="ot-images" type="hidden" name="${uploadType}" value=""/>
 	</div>
 	
-	<label class="control-label"><spring:message code="${label}" text="Images"/></label>
+	<label class="control-label"><spring:message code="${label}" text="Files"/></label>
 	<div class="controls">
 		
 		<div class="fileupload-buttonbar">
@@ -82,7 +96,7 @@
 		<script id="filesForDownload" class="template" type="text/template">
 			<tr class="template-download" >
         		<td style="width: 80%" colspan="2">
-            		<img class="img-polaroid" src="${home}/image/{{imageId}}?c=x64"/>
+            		<img class="img-polaroid" src="${home}/image/{{attachmentId}}?c=x64"/>
         		</td>
 				<td style="width: 20%">
 					<button class="btn btn-warning cancel">
@@ -136,8 +150,8 @@
 	        	}
 	        },
 	        done : function(e, data) {
-	        	var imageId = $.trim(opentides3.template($('script#imageIdsForUpload').html(), data.result));
-	        	$('#imageIds').append(imageId);
+	        	var attachmentId = $.trim(opentides3.template($('script#attachmentIdsForUpload').html(), data.result));
+	        	$('#attachmentIds').append(attachmentId);
 	        	if (data.context) {
 	        		var newRow = opentides3.template($('script#filesForDownload').html(), data.result);
 	        		data.context.replaceWith(newRow);

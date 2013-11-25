@@ -18,6 +18,7 @@
  */
 package org.opentides.service;
 
+import java.util.List;
 import java.util.Map;
 
 import org.opentides.bean.user.UserAuthority;
@@ -62,5 +63,24 @@ public interface UserGroupService extends BaseCrudService<UserGroup> {
 	 * Creates the initial usergroup for system administration;
 	 */
 	public boolean setupAdminGroup();
-
+	
+	/**
+	 * Get Default User Group 
+	 * @param groupIds
+	 * @return
+	 */
+	public List<UserGroup> getOldDefaultUserGroups(Long ... groupIds);
+	
+	/**
+	 * Get Default User group
+	 * @return
+	 */
+	public UserGroup getDefaultUserGroup();
+	
+	/**
+	 * Remove old default User group.
+	 * @param groupId
+	 */
+	public void removeOldDefaultUserGroup(Long groupId);
+	
 }

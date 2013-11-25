@@ -13,7 +13,7 @@ import org.opentides.social.enums.SocialMediaType;
 
 /**
  * 
- * This is the base class for all social entity objects (model) of open-tides.
+ * This holds the social credential details.
  * 
  * @author rabanes
  */
@@ -32,7 +32,7 @@ public class SocialCredential extends BaseEntity {
 	
 	@Column(name = "SOCIAL_EMAIL")
 	private String emailAddress;
-
+	
 	@ManyToOne
 	@JoinColumn(name = "SOCIAL_BASE_USER")
 	private SocialBaseUser socialBaseUser;
@@ -91,6 +91,56 @@ public class SocialCredential extends BaseEntity {
 	 */
 	public void setSocialBaseUser(SocialBaseUser socialBaseUser) {
 		this.socialBaseUser = socialBaseUser;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result
+				+ ((emailAddress == null) ? 0 : emailAddress.hashCode());
+		result = prime * result
+				+ ((socialBaseUser == null) ? 0 : socialBaseUser.hashCode());
+		result = prime * result
+				+ ((socialId == null) ? 0 : socialId.hashCode());
+		result = prime * result
+				+ ((socialType == null) ? 0 : socialType.hashCode());
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		SocialCredential other = (SocialCredential) obj;
+		if (emailAddress == null) {
+			if (other.emailAddress != null)
+				return false;
+		} else if (!emailAddress.equals(other.emailAddress))
+			return false;
+		if (socialBaseUser == null) {
+			if (other.socialBaseUser != null)
+				return false;
+		} else if (!socialBaseUser.equals(other.socialBaseUser))
+			return false;
+		if (socialId == null) {
+			if (other.socialId != null)
+				return false;
+		} else if (!socialId.equals(other.socialId))
+			return false;
+		if (socialType != other.socialType)
+			return false;
+		return true;
 	}
 
 }

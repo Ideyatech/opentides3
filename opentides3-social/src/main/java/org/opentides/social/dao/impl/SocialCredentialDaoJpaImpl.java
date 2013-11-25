@@ -8,8 +8,8 @@ import org.springframework.stereotype.Repository;
 /**
  * @author rabanes
  */
-@Repository(SocialCredentialDaoImpl.NAME)
-public class SocialCredentialDaoImpl extends BaseEntityDaoJpaImpl<SocialCredential, Long> implements SocialCredentialDao {
+@Repository(SocialCredentialDaoJpaImpl.NAME)
+public class SocialCredentialDaoJpaImpl extends BaseEntityDaoJpaImpl<SocialCredential, Long> implements SocialCredentialDao {
 	
 	public static final String NAME = "socialCredentialDao";
 	

@@ -453,6 +453,22 @@ var opentides3 = (function() {
 						}
 					}
 					$this.remove();
+				//for file upload
+				} else if(name && $this.is(":hidden") && ($this.attr('name') == "files" || $this.hasClass("ot-files"))){
+					var fileIds = opentides3.getValue(json, name);
+					if(fileIds.length > 0) {
+						for(var i = 0; i < fileIds.length; i++) {
+							if(fileIds[i].id !== undefined) {
+								var data = {"attachmentId" : fileIds[i].id, "attachmentName" : fileIds[i].filename}, 
+									rowTable = opentides3.template($('script#filesForDownload').html(), data);
+								
+								newRow = $this.clone().val(fileIds[i].id).attr("id", "hidden-attachment-"+fileIds[i].id);
+								$this.parent().append(newRow);
+								$("#ot-attachment-list tbody").append(rowTable);
+							} 
+						}
+					}
+					$this.remove();
 				} else if(name){
 					var prime = toPrimitive(opentides3.getValue(json, name));
 					$(this).val(prime);
@@ -548,11 +564,13 @@ var opentides3 = (function() {
 		var settings = $.extend({
 			'search'     : '#search-body',
 			'form'       : '#form-body',
+			'view'       : '#view-body',
 			'results'    : '#results-panel',
 			'status'     : '.status',
 			'pagination' : '.pagination',
 			'add'        : '.add-action',
 			'edit'       : '.edit-action',
+			'display'    : '.display-action',
 			'remove'     : '.remove-action'
 		}, options);
 
@@ -789,6 +807,30 @@ var opentides3 = (function() {
 										mode : 'update',
 										data : json,
 										form : settings['form'],
+										action : path
+									}, null, opentides3.getPath() + '/' + id);
+								}
+								form.page();
+							}
+						});
+					});
+
+					// attach view to all action-view
+					$(this).on("click", settings['display'], function() {
+						var id = $(this).data('id');
+						var path = opentides3.getPath() + '/view/' + id;
+						$.getJSON(path, // url
+						"", // data
+						function(json) { // callback
+//							displayForm('update', form, path, json)
+							if (form.hasClass('modal'))
+								form.modal();
+							else if (form.hasClass('page')) {
+								if (opentides3.supportsHistory()) {
+									history.pushState({
+										mode : 'view',
+										data : json,
+										form : settings['view'],
 										action : path
 									}, null, opentides3.getPath() + '/' + id);
 								}

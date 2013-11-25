@@ -20,6 +20,8 @@
 package org.opentides.util;
 
 import java.net.InetAddress;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Map;
 
 import javax.servlet.http.Cookie;
@@ -34,6 +36,7 @@ import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.params.HttpClientParams;
 import org.apache.commons.httpclient.params.HttpMethodParams;
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.opentides.bean.UrlResponseObject;
 
@@ -100,6 +103,22 @@ public class UrlUtil {
 		if (endIndex < 0)
 			endIndex = url.length();
 		return url.substring(startIndex, endIndex);
+	}
+	
+	/**
+	 * Returns the hostname of the given url
+	 * 
+	 * @param url
+	 * @return
+	 */
+	public static String getRefererURI(HttpServletRequest request) {
+		String refererURI = "";
+		try {
+			refererURI = new URI(request.getHeader("referer")).getPath();
+		} catch (URISyntaxException e) {
+			_log.log(Level.ERROR, "Failed to get Referer URI.", e);
+		}
+		return refererURI;
 	}
 
 	/**

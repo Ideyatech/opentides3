@@ -37,8 +37,7 @@ import com.ideyatech.service.NinjaService;
  * @author gino
  *
  */
-@ContextConfiguration(locations = 
-	{"classpath:org/opentides/bean/converter/applicationContext-converter-test.xml"})
+@ContextConfiguration(locations = {"classpath:org/opentides/bean/converter/applicationContext-converter-test.xml"})
 public class StringToBaseEntityConverterTest extends AbstractJUnit4SpringContextTests {
 	
 	@Autowired

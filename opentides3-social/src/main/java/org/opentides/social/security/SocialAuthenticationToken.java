@@ -9,6 +9,10 @@ import org.opentides.social.enums.SocialMediaType;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 
+/**
+ * AuthenticationToken to hold user details that is going to be authenticated by the SocialAuthenticationProvider.
+ * @author rabanes
+ */
 public class SocialAuthenticationToken extends AbstractAuthenticationToken {
 
 	private static final long serialVersionUID = 8079278000065128059L;

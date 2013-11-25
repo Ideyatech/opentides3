@@ -18,8 +18,6 @@
  */
 package org.opentides.dao.impl;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -76,8 +74,6 @@ public class SystemCodesDaoJpaImpl extends BaseEntityDaoJpaImpl<SystemCodes, Lon
      */
 	@SuppressWarnings("unchecked")
 	public List<String> getAllCategoriesExcept(String... categories) {
-		List<String> categoryList = new ArrayList<String>();
-		Collections.addAll(categoryList, categories);
 		String queryString = getJpqlQuery("jpql.systemcodes.findAllCategoriesExcept");
 		Query queryObject = getEntityManager().createQuery(queryString);
 		queryObject.setParameter("categories", categories);

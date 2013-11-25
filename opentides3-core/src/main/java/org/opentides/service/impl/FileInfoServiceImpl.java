@@ -30,7 +30,7 @@ import org.springframework.stereotype.Service;
  * @author allantan
  *
  */
-@Service(value="FileInfoService")
+@Service(value="fileInfoService")
 public class FileInfoServiceImpl extends BaseCrudServiceImpl<FileInfo>
                 implements FileInfoService {
         

@@ -124,4 +124,5 @@ public class UserCrudController extends BaseCrudController<BaseUser> {
 			HttpServletResponse response) {
 		uiModel.addAttribute("results", search(command, request));
 	}
+
 }

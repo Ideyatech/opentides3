@@ -12,6 +12,7 @@ import org.opentides.bean.user.BaseUser;
 import org.opentides.social.enums.SocialMediaType;
 
 /**
+ * Entity that holds the connection to all Social Credentials (e.g. Facebook, Google, and Twitter)
  * 
  * @author rabanes
  */
@@ -38,6 +39,10 @@ public class SocialBaseUser extends BaseUser {
 		this.socialCredentials = socialCredentials;
 	}
 	
+	/**
+	 * Get a specific Social Credential by type.
+	 * @param type 
+	 */
 	public SocialCredential getCredentialByType(SocialMediaType type) {
 		for(SocialCredential credential : this.socialCredentials) {
 			if(type.equals(credential.getSocialType())) 
@@ -45,5 +50,5 @@ public class SocialBaseUser extends BaseUser {
 		}
 		return null;
 	}
-
+	
 }

@@ -56,10 +56,10 @@
 			user-service-ref="authenticationService">
 			<sec:password-encoder ref="passwordEncoder" />
 		</sec:authentication-provider>
-		<sec:authentication-provider ref="socialAuthenticationProvider" />
+		<sec:authentication-provider ref="socialMediaAuthenticationProvider" />
 	</sec:authentication-manager>
 		
-	<bean id="socialAuthenticationProvider" class="org.opentides.social.security.SocialAuthenticationProvider"/>
+	<bean id="socialMediaAuthenticationProvider" class="org.opentides.social.security.SocialAuthenticationProvider"/>
 
 	<bean id="httpRequestAccessDecisionManager"
 		class="org.springframework.security.access.vote.AffirmativeBased">
@@ -405,4 +405,5 @@
 			</map>
 		</property>
 	</bean>
+
 </beans>

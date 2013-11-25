@@ -16,24 +16,7 @@
 <div class="form-login modal">
 	<div class="modal-body">
 		<div class="row-fluid">
-			
 			<tides:login_form />
-			
-			<div class="span6 alternative-logins pagination-centered">
-<%-- 				<div class="control-group"><small><spring:message code="message.alternative-login-help" /></small></div> --%>
-				<div class="control-group">
-					<button class="btn btn-primary btn-block" onclick="window.location.href='${home}/facebook/connect'">
-					<i class="icon-facebook-sign"></i><spring:message code="message.login-with-facebook" /></button>
-				</div>
-				<div class="control-group">
-					<button class="btn btn-info btn-block" onclick="window.location.href='${home}/twitter/connect'">
-					<i class="icon-twitter-sign"></i><spring:message code="message.login-with-twitter" /></button>
-				</div>
-				<div class="control-group">
-					<button class="btn btn-danger btn-block" onclick="window.location.href='${home}/google/connect'">
-					<i class="icon-google-plus-sign"></i><spring:message code="message.login-with-google" /></button>
-				</div>
-			</div>
 		</div>
 	</div>
 	<div class="modal-footer">

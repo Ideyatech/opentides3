@@ -1,5 +1,10 @@
 package org.opentides.social.enums;
 
+/**
+ * List of all Social Media Types
+ * @author rabanes
+ *
+ */
 public enum SocialMediaType {
 	FACEBOOK("Facebook"),
 	GOOGLE("Google"),

@@ -45,7 +45,6 @@
 					p:dateFormat="${date.format}" />
 				<ref bean="stringToBaseEntityConverter" />
 				<ref bean="stringToSystemCodesConverter" />
-				<ref bean="stringArrayToListOfTagsConverter"/>
 			</set>
 		</property>
 	</bean>
@@ -71,7 +70,7 @@
 	<bean id="messageSource"
 		class="org.opentides.context.support.PatternResourceBundleMessageSource"
 		p:cacheSeconds="${messages.cache.seconds}"
-		p:basenames="classpath:app/languages/*messages.properties,classpath*:base/languages/*messages.properties" />
+		p:basenames="classpath:app/languages/*messages.properties,classpath:base/languages/*messages.properties" />
 
 
 	<!-- Store preferred language configuration in a cookie -->
@@ -134,4 +133,6 @@
 		<property name="propertyName" value="${property.name}" />
 	</bean>
 
+	<!-- Add system properties through spring XML configuration. -->
+	
 </beans>

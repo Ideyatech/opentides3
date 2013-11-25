@@ -51,6 +51,8 @@ public class SessionUser extends User {
 	
 	public SessionUser(BaseUser user, List<GrantedAuthority> authorities) {
 		super(user.getCredential().getUsername(), user.getCredential().getPassword(), user.getCredential().getEnabled(), true, true, true, authorities);
+		this.addProfile("lastName", user.getLastName());
+		this.addProfile("firstName", user.getFirstName());
 		this.id = user.getId();
 	}
 

@@ -12,6 +12,16 @@ import org.springframework.social.facebook.api.FacebookProfile;
 import org.springframework.social.facebook.api.impl.FacebookTemplate;
 import org.springframework.stereotype.Service;
 
+/**
+ * Service that holds specific methods for specific Social Media 
+ * and the one responsible for injecting Spring Social Requirements like:
+ * @clientSecret - Holds the client secret given by the Social Provider (e.g. Facebook, Google, and Twitter)
+ * @callback - Callback URL after authentication success.
+ * @appID - Holds the app id given by the Social Provider (e.g. Facebook, Google, and Twitter)
+ * @scope - Holds the list of scopes you need to get from the Social Provider (e.g. Facebook, Google, and Twitter)
+ * 
+ * @author rabanes
+ */
 @Service(FacebookProviderServiceImpl.NAME)
 public class FacebookProviderServiceImpl extends SocialProviderServiceImpl implements FacebookProviderService {
 	
@@ -33,16 +43,17 @@ public class FacebookProviderServiceImpl extends SocialProviderServiceImpl imple
 		FacebookTemplate facebookTemplate = new FacebookTemplate(facebookAccessToken);
 		FacebookProfile profile = facebookTemplate.userOperations().getUserProfile();
 		
-		socialUser.setSkipAudit(true);
-		socialUser.setFirstName(profile.getFirstName());
-		socialUser.setLastName(profile.getLastName());
-		socialUser.setMiddleName(profile.getMiddleName());
-		socialUser.setEmailAddress(profile.getEmail());
+		// Create Social Credential
 		socialCredentialService.createSocialCredential(SocialMediaType.FACEBOOK, profile.getId(), profile.getEmail(), socialUser);
 		
 		if(socialUser.getId() == null) {
-			socialUser.setCredential(socialBaseUserService.generateFakeCredentials());
-			socialBaseUserService.registerUser(socialUser, false);
+			socialUser.setSkipAudit(true);
+			socialUser.setFirstName(profile.getFirstName());
+			socialUser.setLastName(profile.getLastName());
+			socialUser.setMiddleName(profile.getMiddleName());
+			socialUser.setEmailAddress(profile.getEmail());
+			socialUser.setCredential(socialBaseUserService.getBaseUserService().generateFakeCredentials());
+			socialBaseUserService.getBaseUserService().registerUser(socialUser, false);
 		} else {
 			socialBaseUserService.save(socialUser);
 		}

@@ -333,7 +333,7 @@ public class ImageController {
 		
 		messages.addAll(CrudUtil.buildSuccessMessage(imageInfo, "upload-photo", request.getLocale(), messageSource));
 		model.put("messages", messages);
-		model.put("imageId", imageInfo.getId());
+		model.put("attachmentId", imageInfo.getId());
 		return model;
 	}
 

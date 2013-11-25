@@ -13,6 +13,16 @@ import org.springframework.social.google.api.impl.GoogleTemplate;
 import org.springframework.social.google.api.legacyprofile.LegacyGoogleProfile;
 import org.springframework.stereotype.Service;
 
+/**
+ * Service that holds specific methods for specific Social Media 
+ * and the one responsible for injecting Spring Social Requirements like:
+ * @clientSecret - Holds the client secret given by the Social Provider (e.g. Facebook, Google, and Twitter)
+ * @callback - Callback URL after authentication success.
+ * @appID - Holds the app id given by the Social Provider (e.g. Facebook, Google, and Twitter)
+ * @scope - Holds the list of scopes you need to get from the Social Provider (e.g. Facebook, Google, and Twitter)
+ * 
+ * @author rabanes
+ */
 @Service(GoogleProviderServiceImpl.NAME)
 public class GoogleProviderServiceImpl extends SocialProviderServiceImpl implements GoogleProviderService {
 	
@@ -34,14 +44,15 @@ public class GoogleProviderServiceImpl extends SocialProviderServiceImpl impleme
 		Google googleTemplate = new GoogleTemplate(googleAccessToken);
 		LegacyGoogleProfile profile = googleTemplate.userOperations().getUserProfile();
 		
-		socialUser.setFirstName(profile.getFirstName());
-		socialUser.setLastName(profile.getLastName());
-		socialUser.setEmailAddress(profile.getEmail());
+		// Create Social Credential
 		socialCredentialService.createSocialCredential(SocialMediaType.GOOGLE, profile.getId(), profile.getEmail(), socialUser);
 		
 		if(socialUser.getId() == null) {
-			socialUser.setCredential(socialBaseUserService.generateFakeCredentials());
-			socialBaseUserService.registerUser(socialUser, false);
+			socialUser.setFirstName(profile.getFirstName());
+			socialUser.setLastName(profile.getLastName());
+			socialUser.setEmailAddress(profile.getEmail());
+			socialUser.setCredential(socialBaseUserService.getBaseUserService().generateFakeCredentials());
+			socialBaseUserService.getBaseUserService().registerUser(socialUser, false);
 		} else {
 			socialBaseUserService.save(socialUser);
 		}
