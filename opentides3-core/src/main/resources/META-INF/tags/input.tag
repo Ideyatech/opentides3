@@ -10,7 +10,6 @@
 <%@ attribute name="label" required="true" type="java.lang.String" %>
 <%@ attribute name="required" required="false" type="java.lang.Boolean" %>
 <%@ attribute name="textarea" required="false" type="java.lang.Boolean" %>
-<%@ attribute name="datepicker" required="false" type="java.lang.Boolean" %>
 <%@ attribute name="type" required="false" type="java.lang.String" %>
 <%@ attribute name="placeholder" required="false" type="java.lang.String" %>
 <%@ attribute name="cssClass" required="false" type="java.lang.String" %>
@@ -35,7 +34,6 @@
 	<div class="controls">
 	
 		<div class="
-			${datepicker ? 'date' : ''}
 			${not empty prependText or not empty prependIcon ? 'input-prepend': ''}
 			${not empty appendText or not empty appendIcon ? 'input-append': ''}">
 			
@@ -62,7 +60,6 @@
 						type="${empty type ? 'text': type }"
 						placeholder="${placeholder}"
 						cssClass="${cssClass}"
-						autocomplete="${autoComplete}"
 						/>
 				</c:otherwise>
 			</c:choose>
@@ -78,14 +75,3 @@
 	</div>
 	
 </div>
-
-<c:if test="${datepicker}">
-	<script type="text/javascript">
-		$(document).ready(function() {
-			$('#${path}').datepicker();
-			$('#${path}').siblings().on("click", function(){
-				$('#${path}').focus();
-			});
-		});
-	</script>
-</c:if>
