@@ -22,6 +22,14 @@
 	 	<path>/META-INF/tags/input.tag</path>
 	 </tag-file>
 	 <tag-file>
+	 	<name>date_picker</name>
+	 	<path>/META-INF/tags/date_picker.tag</path>
+	 </tag-file>
+	 <tag-file>
+	 	<name>auto_complete</name>
+	 	<path>/META-INF/tags/auto_complete.tag</path>
+	 </tag-file>
+	 <tag-file>
 	 	<name>input_file</name>
 	 	<path>/META-INF/tags/input_file.tag</path>
 	 </tag-file>
