@@ -230,6 +230,7 @@ public class UserDAOIntegrationTest extends BaseDaoTest {
 		assertFalse(coreUserDAO.isRegisteredByEmail(null));
 	}
 	
+	@Ignore
 	@Test
 	public void testFindAllUsersWithAuthority() {
 		List<BaseUser> users = coreUserDAO.findAllUsersWithAuthority("Auths1");
