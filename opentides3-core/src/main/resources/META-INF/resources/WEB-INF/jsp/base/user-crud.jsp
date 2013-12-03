@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;utf-8"%>
+	<%@ page contentType="text/html;utf-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
@@ -101,7 +101,7 @@
 								</td>
 								<td>
 									<div class="btn-group">
-									  <img class="img-polaroid" src="${home}/image/{{primaryPhoto.id}}?c=32"/>
+									  <img class="img-polaroid" src="${home}/image/{{primaryImage.id}}?c=32"/>
 									</div>
 								</td>
 								<td>{{emailAddress}}</td>
@@ -121,7 +121,7 @@
 									</a>
 								</td>
 								<td>
-								  <img class="img-polaroid" src="${home}/image/${record.primaryPhoto.id}?c=32"/>
+								  <img class="img-polaroid" src="${home}/image/${record.primaryImage.id}?c=32"/>
 								</td>
 			                	<td><c:out value="${record.emailAddress}" /></td>
 			                	<td><c:out value="${record.displayGroups}" /></td>
@@ -129,7 +129,7 @@
 				                <td>
 									<i class='icon-pencil edit-action' data-id='${record.id}' data-title="<spring:message code="label.edit" />"></i>
 									<i class='icon-trash remove-action' data-id='${record.id}' data-title="<spring:message code="label.delete" />"></i>
-									<a data-url="${home}/image/upload?imageId=${record.primaryPhoto.id}&className=User&classId=${record.id}" class="upload-photo">
+									<a data-url="${home}/image/upload?imageId=${record.primaryImage.id}&className=User&classId=${record.id}" class="upload-photo">
 										<i class="icon-upload"></i>
 									</a>
 				                </td>
@@ -189,7 +189,7 @@
 	
 	<div class="row-fluid" style="margin-bottom: 20px;">
 		<div class="span2">
-			<img class="img-polaroid" src="${home}/image/${formCommand.primaryPhoto.id}"/>
+			<img class="img-polaroid" src="${home}/image/${formCommand.primaryImage.id}"/>
 		</div>
 		<div class="span10">
 			<h2>${formCommand.completeName}</h2>	
