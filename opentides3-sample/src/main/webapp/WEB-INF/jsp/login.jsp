@@ -4,7 +4,6 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="tides" uri="http://www.ideyatech.com/tides"%>
-<%@ taglib prefix="social" uri="http://www.ideyatech.com/tides/social"%>
 <%@ taglib prefix="app" tagdir="/WEB-INF/tags"%>
 
 <app:header pageTitle="label.login" pageType="anonymous-page" />
@@ -22,9 +21,6 @@
 			
 			<div class="span6 alternative-logins pagination-centered">
 <%-- 				<div class="control-group"><small><spring:message code="message.alternative-login-help" /></small></div> --%>
-				<social:facebook_login />
-				<social:google_login />
-				<social:twitter_login />
 			</div>
 		</div>
 	</div>
