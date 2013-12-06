@@ -8,7 +8,8 @@
 
 <%@ attribute name="path" required="true" type="java.lang.String" %>
 <%@ attribute name="pathValue" required="true" type="java.lang.String" %>
-<%@ attribute name="source" required="false" type="java.lang.String" %>
+<%@ attribute name="url" required="false" type="java.lang.String" %>
+<%@ attribute name="parameterName" required="false" type="java.lang.String" %>
 <%@ attribute name="label" required="true" type="java.lang.String" %>
 <%@ attribute name="required" required="false" type="java.lang.Boolean" %>
 <%@ attribute name="placeholder" required="false" type="java.lang.String" %>
@@ -32,6 +33,7 @@
 				   name="${pathValue}"
 				   placeholder="${placeholder}"
 				   autocomplete="off"
+				   data-provide="typeahead"
 				   />
 			<form:hidden path="${path}"/>
 		</div>
@@ -42,10 +44,62 @@
 
 <script type="text/javascript">
 	$(document).ready(function() {
+		selectedId = "";
+		mapId = {};
+		var finished = true;
 		$('#${pathValue}').typeahead({
-			remote : '${source}',
-		}).on('typeahead:selected', function(e, datum) {
-			$(this).parents(".ot-typeahead-wrapper:first").find('#${path}').val(datum.key);
+		    source: function(query, process) {
+		    	if(typeof(selectedId) != 'undefined' && selectedId != "") {
+		    		if(query != "") {
+		    			selectedId = "";
+		    			$(this).closest(".ot-typeahead-wrapper").find('#${path}').val(selectedId);
+		    		}
+		    	}
+		   		if(!finished) {
+		            return;
+		        }
+		   	 	finished = false;
+		   	 	values = [];
+		      	$.ajax({
+		        	url: "${url}?${parameterName}=" + $.trim(query),
+		        	contentType : "application/json",
+					dataType : "json",
+					cache : false,
+		        	success: function(data) { 
+		        		$.each(data, function (i, obj) {
+		        			mapId[obj.value] = obj.key;
+		        	        values.push(obj.value);
+		        	    });
+		        		process(values);
+	       				finished = true;
+		    		}
+		    	});
+		    },
+		    matcher: function (item) {
+		        if (item.toLowerCase().indexOf($.trim(this.query).toLowerCase()) != -1) {
+		            return true;
+		        }
+		    },
+		    sorter: function (items) {
+		        return items.sort();
+		    },
+		    highlighter: function(item) {
+		        var regex = new RegExp( '(' + this.query + ')', 'gi' );
+		        return item.replace( regex, "<strong>$1</strong>" );
+		    }, 
+		    updater: function(item) {
+		    	selectedId = mapId[item];
+		    	$('#${pathValue}').closest(".ot-typeahead-wrapper").find('#${path}').val(selectedId);
+		    	return item;
+		    }
+		}).on("blur", function(){
+		    $this = $(this);
+		    var item = $(this).val();
+		    if(mapId[item] != null) {
+		        selectedId = mapId[item];
+		        $this.closest(".ot-typeahead-wrapper").find('#${path}').val(selectedId);
+		    }
+		    $this.typeahead($this);
 		});
 	});
 </script>

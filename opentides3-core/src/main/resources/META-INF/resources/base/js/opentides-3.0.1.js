@@ -434,7 +434,7 @@ var opentides3 = (function() {
 	$.fn.bindForm = function(json) {
 		return this.each(function() {
 			var form = $(this);
-			form.clearForm();
+			form.clearOTForm();
 
 			form.find('textarea, input[type="text"], input[type="hidden"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"],input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"]')
 					.each(function() {
@@ -515,16 +515,24 @@ var opentides3 = (function() {
 	 * Clears all the input of the form.
 	 * **removed by aj. conflict with jquery clear form
 	 */
-	/*$.fn.clearForm = function() {
-		console.log("please remove me");
+	$.fn.clearOTForm = function() {
 		return this.each(function() {
-			$(this).find(
-					'input:text, input:password, input:hidden, input:file, select, textarea')
-					.val('');
-			$(this).find('input:radio, input:checkbox').prop('checked', false)
-					.prop('selected', false);
+			$('.ot-select2').select2('data', null);
+			$('.date').datepicker();
+			
+			//removes dynamically binded entities
+			$('.removeable-pill').remove();
+			
+			//clears uploaded files
+			$('#ot-attachment-list tbody').html('');
+			
+			
+			$(':input', this).not(':button, :submit')
+							 .val('')
+							 .prop('checked', false)
+							 .prop('selected', false);
 		});
-	};*/
+	};
 
 	/**
 	 * 
@@ -722,7 +730,7 @@ var opentides3 = (function() {
 									if (typeof (json.command) === 'object'
 											&& json.command.id > 0) {
 										// successfully saved
-										firstForm.clearForm(true);
+										firstForm.clearOTForm();
 										if (button.data('submit') !== 'save-and-new') {
 											// hide modal
 											if (form.hasClass('modal'))
@@ -886,7 +894,7 @@ var opentides3 = (function() {
 					searchForms.find('[data-submit="clear"]').on("click",
 						function() {
 							
-							$(this).closest('form').clearForm(true);
+							$(this).closest('form').clearOTForm();
 							return false;
 						});
 				});
