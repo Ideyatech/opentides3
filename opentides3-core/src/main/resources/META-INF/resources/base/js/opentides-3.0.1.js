@@ -526,10 +526,9 @@ var opentides3 = (function() {
 			//clears uploaded files
 			$('#ot-attachment-list tbody').html('');
 			
-			
-			$(':input', this).not(':button, :submit')
+			$(':checkbox, :radiobutton').prop('checked', false);
+			$(':input', this).not(':checkbox, :radiobutton, :button, :submit')
 							 .val('')
-							 .prop('checked', false)
 							 .prop('selected', false);
 		});
 	};
