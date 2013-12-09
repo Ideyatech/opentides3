@@ -5,6 +5,7 @@
 <%@ attribute name="userNamePlaceHolder" required="false" type="java.lang.String" %>
 <%@ attribute name="loginLabel" required="false" type="java.lang.String" %>
 <%@ attribute name="rememberMeLabel" required="false" type="java.lang.String" %>
+<%@ attribute name="cssClass" required="false" type="java.lang.String" %>
 
 <!-- Initialize Login Label. -->
 <c:set var="btnLoginLabel" value="label.login"/>
@@ -18,7 +19,7 @@
 	<c:set var="btnRememberMeLabel" value="${rememberMeLabel}" />
 </c:if>
 
-<form class="span6" method="POST" action="<c:url value='j_spring_security_check'/>">
+<form class="${cssClass}" method="POST" action="<c:url value='j_spring_security_check'/>">
 				
 	<c:if test="${not empty param.login_error}">
 		<div class="alert alert-error">
