@@ -23,9 +23,15 @@ import org.apache.velocity.app.VelocityEngine;
 import org.opentides.service.MailingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 
+/**
+ * 
+ * @author AJ
+ *
+ */
 @Service
 public class MailingServiceImpl implements MailingService {
 	
@@ -34,14 +40,23 @@ public class MailingServiceImpl implements MailingService {
 	@Autowired
 	private VelocityEngine velocityEngine;
 	
-	@Value("#{applicationSettings['mail.server.username']}")
+	@Autowired
+	private TaskExecutor taskExecutor;
+	
+	@Value("#{applicationSettings['settings.mail.admin-username']}")
 	private String adminEmail;
-	@Value("#{applicationSettings['mail.server.password']}")
+	
+	@Value("#{applicationSettings['settings.mail.admin-password']}")
 	private String adminPassword;
-	@Value("#{applicationSettings['mail.server.domain']}")
+	
+	@Value("#{applicationSettings['settings.mail.server.host']}")
 	private String host;
-	@Value("#{applicationSettings['mail.server.port']}")
+	
+	@Value("#{applicationSettings['settings.mail.server.port']}")
 	private String port;
+	
+	@Value("#{applicationSettings['application.name']}")
+	private String applicationName;
 	
 	@Override
 	public void sendEmail(String[] toEmail, String subject, String template,
@@ -64,7 +79,7 @@ public class MailingServiceImpl implements MailingService {
 		MimeBodyPart htmlPart = new MimeBodyPart();
 
 		try {
-			message.setFrom(new InternetAddress(adminEmail, "Opentides"));
+			message.setFrom(new InternetAddress(adminEmail, applicationName));
 			for (String addr : toEmail) {
 				message.addRecipient(RecipientType.TO,
 						new InternetAddress(addr));
@@ -79,7 +94,7 @@ public class MailingServiceImpl implements MailingService {
 			multipart.addBodyPart(htmlPart);
 			message.setContent(multipart);
 
-			Transport.send(message);
+			send(message);
 			
 		} catch (AddressException e) {
 			_log.error("Failed to send email.", e);
@@ -89,6 +104,19 @@ public class MailingServiceImpl implements MailingService {
 			_log.error("Failed to send email.", e);
 		}
 		
+	}
+	
+	private void send(final Message message) {
+		taskExecutor.execute(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					Transport.send(message);
+				} catch (MessagingException e) {
+					_log.error("Failed to send email.", e);
+				}
+			}
+		});
 	}
 	
 }
