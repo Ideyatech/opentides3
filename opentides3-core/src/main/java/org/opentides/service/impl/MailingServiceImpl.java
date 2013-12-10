@@ -43,16 +43,16 @@ public class MailingServiceImpl implements MailingService {
 	@Autowired
 	private TaskExecutor taskExecutor;
 	
-	@Value("#{applicationSettings['settings.mail.admin-username']}")
+	@Value("#{applicationSettings['mail.server.username']}")
 	private String adminEmail;
 	
-	@Value("#{applicationSettings['settings.mail.admin-password']}")
+	@Value("#{applicationSettings['mail.server.password']}")
 	private String adminPassword;
 	
-	@Value("#{applicationSettings['settings.mail.server.host']}")
+	@Value("#{applicationSettings['mail.server.domain']}")
 	private String host;
 	
-	@Value("#{applicationSettings['settings.mail.server.port']}")
+	@Value("#{applicationSettings['mail.server.port']}")
 	private String port;
 	
 	@Value("#{applicationSettings['application.name']}")
