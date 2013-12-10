@@ -11,6 +11,7 @@ import org.opentides.util.DateUtil;
 import org.opentides.util.FileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -20,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
  *
  */
 @Service(value="defaultFileUploadService")
+@Transactional
 public class DefaultFileUploadServiceImpl implements FileUploadService {
 
 	private String uploadPath = (new StringBuilder()).append(File.separator)
@@ -28,13 +30,21 @@ public class DefaultFileUploadServiceImpl implements FileUploadService {
 	@Autowired
 	private FileInfoService fileInfoService;
 	
+	@Override
+	@Transactional
 	public FileInfo upload(MultipartFile file) {
+		return upload(file, uploadPath);
+	}
+	
+	@Override
+	@Transactional
+	public FileInfo upload(MultipartFile file, String destination) {
 		FileInfo fileInfo = new FileInfo();
 		fileInfo.setFilename(file.getOriginalFilename());
 		fileInfo.setFileSize(Long.valueOf(file.getSize()));
 		fileInfo.setOriginalFileName(file.getOriginalFilename());
 		
-		File directory = FileUtil.createDirectory(uploadPath);
+		File directory = FileUtil.createDirectory(destination);
 		String subdir = (new StringBuilder())
 				.append(directory.getAbsoluteFile()).append(File.separator)
 				.append(DateUtil.convertShortDate(new Date())).toString();
@@ -68,7 +78,7 @@ public class DefaultFileUploadServiceImpl implements FileUploadService {
 		}
 		
 		return fileInfo;
-
 	}
+	
 	
 }
