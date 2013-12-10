@@ -102,6 +102,14 @@
 			</props>
 		</property>
 	</bean>
+	
+	<!-- Task Executor -->
+	<bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+		<property name="corePoolSize" value="5" />
+		<property name="maxPoolSize" value="10" />
+		<property name="queueCapacity" value="25" />
+		<property name="waitForTasksToCompleteOnShutdown" value="true" />
+	</bean>
 
 	<!-- Selects a static view for rendering without the need for an explicit 
 		controller -->
