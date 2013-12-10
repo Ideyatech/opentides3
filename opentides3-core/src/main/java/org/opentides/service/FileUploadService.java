@@ -12,4 +12,6 @@ public interface FileUploadService {
 	
 	public FileInfo upload(MultipartFile multipartFile);
 	
+	public FileInfo upload(MultipartFile multipartFile, String destination);
+	
 }

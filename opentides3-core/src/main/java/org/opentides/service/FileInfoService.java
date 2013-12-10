@@ -35,4 +35,12 @@ public interface FileInfoService extends BaseCrudService<FileInfo> {
 	 * @return
 	 */
 	public List<FileInfo> getFileInfoByFullPath(String path);
+	
+	/**
+	 * Delete the physical file
+	 * @param path
+	 * @return
+	 */
+	public boolean deletePhysicalFile(String path);
+	
 }
