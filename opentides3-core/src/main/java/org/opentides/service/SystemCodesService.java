@@ -76,5 +76,12 @@ public interface SystemCodesService extends BaseCrudService<SystemCodes> {
 	 * @return boolean indicated whether a system code has a duplicate or not
 	 */
 	public boolean isDuplicateKey(SystemCodes systemCodes);
+	
+	/**
+	 * Check if the parent of system codes is valid
+	 * @param systemCodes
+	 * @return
+	 */
+	public boolean isParentValid(SystemCodes systemCodes);
 
 }

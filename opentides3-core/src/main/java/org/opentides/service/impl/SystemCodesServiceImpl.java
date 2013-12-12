@@ -68,4 +68,13 @@ public class SystemCodesServiceImpl extends BaseCrudServiceImpl<SystemCodes>
 		else
 			return false;
 	}
+	
+	@Override
+	public boolean isParentValid(SystemCodes systemCodes) {
+		SystemCodes parent = systemCodes.getParent();
+		if(parent != null) {
+			
+		}
+		return true;
+	}
 }

@@ -19,6 +19,9 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Cache;
@@ -67,6 +70,10 @@ public class SystemCodes extends BaseEntity implements Serializable {
 	
 	@Column(name="SORT_ORDER")
 	private Integer sortOrder;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "PARENT_", referencedColumnName = "KEY_")
+	private SystemCodes parent;
 
 	public SystemCodes() {
 	}
@@ -111,7 +118,7 @@ public class SystemCodes extends BaseEntity implements Serializable {
 	 *            the key to set
 	 */
 	public void setKey(String key) {
-		this.key = key.trim();
+		this.key = key.trim().toUpperCase();
 	}
 
 	/**
@@ -141,7 +148,7 @@ public class SystemCodes extends BaseEntity implements Serializable {
 	 *            the category to set
 	 */
 	public void setCategory(String category) {
-		this.category = category;
+		this.category = category.trim().toUpperCase();
 	}
 
 	/**
@@ -171,6 +178,20 @@ public class SystemCodes extends BaseEntity implements Serializable {
 	 */
 	public synchronized void setNumberValue(Long numberValue) {
 		this.numberValue = numberValue;
+	}
+	
+	/**
+	 * @return the parent
+	 */
+	public SystemCodes getParent() {
+		return parent;
+	}
+
+	/**
+	 * @param parent the parent to set
+	 */
+	public void setParent(SystemCodes parent) {
+		this.parent = parent;
 	}
 
 	@Override
