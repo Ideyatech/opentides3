@@ -30,6 +30,7 @@
 			</div>
 			<div class="search-form collapse">
 				<form:form modelAttribute="searchCommand" id="system-codes-search" >
+					<tides:select path="parent.key" items="${parentList}" itemValue="key" itemLabel="key" label="label.system-codes.parent" cssClass="input-block-level" />
 					<tides:select path="category" items="${categoryList}" label="label.system-codes.category" cssClass="input-block-level" />
 					<tides:input path="key" label="label.system-codes.key" cssClass="input-block-level"/>
 					<tides:input path="value" label="label.system-codes.value" cssClass="input-block-level"/>
@@ -65,6 +66,7 @@
 							<th data-class="expand" data-field-name="value"><spring:message code="label.system-codes.value" /></th>
 							<th data-hide="phone" data-field-name="key"><spring:message code="label.system-codes.key" /></th>
 							<th data-field-name="category"><spring:message code="label.system-codes.category" /></th>
+							<th data-field-name="parent"><spring:message code="label.system-codes.parent" /></th>
 							<th data-field-name="ot3-controls"></th>
 						</tr>
 					</thead>
@@ -78,6 +80,7 @@
 								</td>
 								<td>{{key}}</td>
 								<td>{{category}}</td>
+								<td>{{parent.key}}</td>
 								<td>
 									<i class='icon-pencil edit-action' data-id='{{id}}' data-title="<spring:message code="label.edit" />"></i>
 									<i class='icon-trash remove-action' data-id='{{id}}' data-title="<spring:message code="label.delete" />"></i>
@@ -93,6 +96,7 @@
 								</td>
 								<td><c:out value="${record.key}" /></td>
 								<td><c:out value="${record.category}" /></td>
+								<td><c:out value="${record.parent.key}" /></td>
 								<td>
 									<i class='icon-pencil edit-action' data-id='${record.id}' data-title="<spring:message code="label.edit" />"></i>
 									<i class='icon-trash remove-action' data-id='${record.id}' data-title="<spring:message code="label.delete" />"></i>
@@ -123,6 +127,7 @@
 		<form:form modelAttribute="formCommand" id="system-codes-form">
 			<div class="modal-body">
 				<div class="message-container"></div>
+				<tides:combobox path="parent" selectValue="key" label="label.system-codes.parent" items="${parentList}"/>
 				<tides:combobox path="category" label="label.system-codes.category" items="${categoryList}"/>
 				<tides:input path="key" label="label.system-codes.key" />
 				<tides:input path="value" label="label.system-codes.value" />

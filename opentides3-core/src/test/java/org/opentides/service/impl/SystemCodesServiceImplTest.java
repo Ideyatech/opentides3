@@ -113,7 +113,7 @@ public class SystemCodesServiceImplTest {
 	}
 	
 	@Test
-	public void testIsParentValid() {
+	public void testIsParentValid() throws Exception {
 		Map<String, SystemCodes> testCodes = getTestSystemCodes();
 		when(systemCodesDao.loadBySystemCodesByKey("PARENT_1")).thenReturn(testCodes.get("PARENT_1"));
 		when(systemCodesDao.loadBySystemCodesByKey("PARENT_2")).thenReturn(testCodes.get("PARENT_2"));
@@ -123,15 +123,24 @@ public class SystemCodesServiceImplTest {
 		SystemCodes systemCodes1 = testCodes.get("PARENT_1");
 		SystemCodes systemCodes3 = testCodes.get("PARENT_3");
 		systemCodes1.setParent(systemCodes3);
-		assertFalse(systemCodesService.isParentValid(systemCodes1));
+		assertFalse(systemCodes1.isParentValid());
 		
 		SystemCodes parent5 = new SystemCodes();
 		parent5.setKey("PARENT_5");
 		systemCodes1.setParent(parent5);
-		assertTrue(systemCodesService.isParentValid(systemCodes1));
+		assertTrue(systemCodes1.isParentValid());
+		
+		SystemCodes parent6 = new SystemCodes();
+		parent6.setKey("CASE_STATUS");
+		SystemCodes parent7 = new SystemCodes();
+		parent7.setKey("CASE_ACTION");
+		parent6.setParent(parent7);
+		parent7.setParent(parent6);
+		assertFalse(parent6.isParentValid());
+		
 	}
 	
-	private Map<String, SystemCodes> getTestSystemCodes() {
+	private Map<String, SystemCodes> getTestSystemCodes() throws Exception {
 		Map<String, SystemCodes> maps = new HashMap<>();
 		SystemCodes systemCodes1 = new SystemCodes();
 		systemCodes1.setKey("PARENT_1");
