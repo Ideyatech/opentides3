@@ -33,6 +33,8 @@ import org.opentides.annotation.GenerateService;
 import org.opentides.annotation.PrimaryField;
 import org.opentides.web.json.Views;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonView;
 
 /**
@@ -46,6 +48,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 @Table(name = "SYSTEM_CODES")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Auditable(label = "System Codes")
+@JsonInclude(Include.NON_NULL)
 public class SystemCodes extends BaseEntity implements Serializable {
 
 	private static final long serialVersionUID = -4142599915292096152L;
@@ -71,7 +74,6 @@ public class SystemCodes extends BaseEntity implements Serializable {
 	@Column(name = "SORT_ORDER")
 	private Integer sortOrder;
 
-	@JsonView(Views.SearchView.class)
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "PARENT_", referencedColumnName = "KEY_")
 	private SystemCodes parent;
@@ -253,5 +255,13 @@ public class SystemCodes extends BaseEntity implements Serializable {
 		}
 		return true;
 	}
-	
+
+	@JsonView(Views.SearchView.class)
+	public String getParentKey() {
+		if (this.parent != null) {
+			return this.parent.getKey();
+		}
+		return "";
+	}
+
 }

@@ -80,7 +80,7 @@
 								</td>
 								<td>{{key}}</td>
 								<td>{{category}}</td>
-								<td>{{parent.key}}</td>
+								<td>{{parentKey}}</td>
 								<td>
 									<i class='icon-pencil edit-action' data-id='{{id}}' data-title="<spring:message code="label.edit" />"></i>
 									<i class='icon-trash remove-action' data-id='{{id}}' data-title="<spring:message code="label.delete" />"></i>
@@ -96,7 +96,7 @@
 								</td>
 								<td><c:out value="${record.key}" /></td>
 								<td><c:out value="${record.category}" /></td>
-								<td><c:out value="${record.parent.key}" /></td>
+								<td><c:out value="${record.parentKey}" /></td>
 								<td>
 									<i class='icon-pencil edit-action' data-id='${record.id}' data-title="<spring:message code="label.edit" />"></i>
 									<i class='icon-trash remove-action' data-id='${record.id}' data-title="<spring:message code="label.delete" />"></i>
