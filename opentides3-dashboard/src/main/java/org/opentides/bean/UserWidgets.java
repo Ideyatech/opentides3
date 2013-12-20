@@ -10,6 +10,8 @@ import javax.persistence.Transient;
 
 import org.opentides.bean.user.BaseUser;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 @Table(name = "USER_WIDGETS")
 public class UserWidgets extends BaseEntity {
@@ -23,6 +25,7 @@ public class UserWidgets extends BaseEntity {
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "WIDGET_ID", nullable = false)
+	@JsonBackReference
 	private Widget widget;
 	
 	@Column(name="COLUMN_")

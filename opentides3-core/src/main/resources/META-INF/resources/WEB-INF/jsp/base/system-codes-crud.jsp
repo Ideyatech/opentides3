@@ -33,6 +33,7 @@
 					<tides:select path="category" items="${categoryList}" label="label.system-codes.category" cssClass="input-block-level" />
 					<tides:input path="key" label="label.system-codes.key" cssClass="input-block-level"/>
 					<tides:input path="value" label="label.system-codes.value" cssClass="input-block-level"/>
+					<tides:select path="parent.key" items="${parentList}" itemValue="key" itemLabel="key" label="label.system-codes.parent" cssClass="input-block-level" />
 					<hr/>
 					<input type="submit" class="btn btn-info btn-block" data-submit="search" value="<spring:message code="label.search"/>">
 					<button type="button" class="btn btn-link btn-block" data-submit="clear"><spring:message code="label.clear" /></button>
@@ -65,6 +66,7 @@
 							<th data-class="expand" data-field-name="value"><spring:message code="label.system-codes.value" /></th>
 							<th data-hide="phone" data-field-name="key"><spring:message code="label.system-codes.key" /></th>
 							<th data-field-name="category"><spring:message code="label.system-codes.category" /></th>
+							<th data-field-name="parent"><spring:message code="label.system-codes.parent" /></th>
 							<th data-field-name="ot3-controls"></th>
 						</tr>
 					</thead>
@@ -78,6 +80,7 @@
 								</td>
 								<td>{{key}}</td>
 								<td>{{category}}</td>
+								<td>{{parentKey}}</td>
 								<td>
 									<i class='icon-pencil edit-action' data-id='{{id}}' data-title="<spring:message code="label.edit" />"></i>
 									<i class='icon-trash remove-action' data-id='{{id}}' data-title="<spring:message code="label.delete" />"></i>
@@ -93,6 +96,7 @@
 								</td>
 								<td><c:out value="${record.key}" /></td>
 								<td><c:out value="${record.category}" /></td>
+								<td><c:out value="${record.parentKey}" /></td>
 								<td>
 									<i class='icon-pencil edit-action' data-id='${record.id}' data-title="<spring:message code="label.edit" />"></i>
 									<i class='icon-trash remove-action' data-id='${record.id}' data-title="<spring:message code="label.delete" />"></i>
@@ -126,6 +130,7 @@
 				<tides:combobox path="category" label="label.system-codes.category" items="${categoryList}"/>
 				<tides:input path="key" label="label.system-codes.key" />
 				<tides:input path="value" label="label.system-codes.value" />
+				<tides:combobox path="parent" selectValue="key" label="label.system-codes.parent" items="${parentList}"/>
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-link" data-dismiss="modal"><spring:message code="label.close" /></button>
@@ -156,8 +161,12 @@
 			<td>${formCommand.value}</td>
 		</tr>
 		<tr>
+			<td><spring:message code="label.system-codes.parent"/></td>
+			<td>${formCommand.parentKey}</td>
+		</tr>
+		<tr>
 			<td><spring:message code="label.system-codes.number-value"/></td>
-			<td><a href="mailto:#">${formCommand.numberValue}</a></td>
+			<td>${formCommand.numberValue}</td>
 		</tr>
 	</table>
 </div>

@@ -99,5 +99,5 @@ public class SystemCodesDaoJpaImpl extends BaseEntityDaoJpaImpl<SystemCodes, Lon
 		queryObject.setParameter("keyName", code.getKey());
 		queryObject.setParameter("id", code.getId());
 		return (Long) queryObject.getSingleResult();	
-	}	
+	}
 }

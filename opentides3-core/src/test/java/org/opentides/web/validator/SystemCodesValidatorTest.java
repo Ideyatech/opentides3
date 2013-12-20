@@ -98,5 +98,33 @@ public class SystemCodesValidatorTest {
 		assertEquals(1, errors.getGlobalErrorCount());
 
 	}
+	
+	@Test
+	public void testValidateParentValidKey() {
+		SystemCodes obj = new SystemCodes();
+		obj.setKey("KEY_1");
+		obj.setCategory("CATEGORY_1");
+		obj.setValue("Value1");
+		
+		SystemCodes obj2 = new SystemCodes();
+		obj2.setKey("KEY_2");
+		obj2.setCategory("CATEGORY_2");
+		obj2.setValue("Value2");
+		
+		obj2.setParent(obj);
+		obj.setParent(obj2);
+		
+		BindException errors = new BindException(obj, "systemCodes");
+		
+		Mockito.when(obj.isParentValid()).thenReturn(false);
+		
+		systemCodesValidator.validate(obj, errors);
+		
+		Mockito.verify(obj).isParentValid();
+		
+		assertTrue(errors.hasErrors());
+		assertEquals(1, errors.getGlobalErrorCount());
+
+	}
 
 }

@@ -59,6 +59,16 @@ public class SystemCodesCrudController extends BaseCrudController<SystemCodes> {
 		return systemCodesService.getAllCategories();
 	}
 	
+	/**
+	 * Method stub that returns a list of all system codes.
+	 * 
+	 * @return list of system codes
+	 */
+	@ModelAttribute("parentList")
+	public List<SystemCodes> parentList() {
+		return systemCodesService.findAll();
+	}
+	
 	/* (non-Javadoc)
 	 * @see org.opentides.web.controller.BaseCrudController#onLoadSearch(org.opentides.bean.BaseEntity, org.springframework.validation.BindingResult, org.springframework.ui.Model, javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
 	 */
