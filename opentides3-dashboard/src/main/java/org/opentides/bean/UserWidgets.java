@@ -16,6 +16,7 @@ public class UserWidgets extends BaseEntity {
 	
 	private static final long serialVersionUID = -300267552372161026L;
 
+	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "USER_ID", nullable = false)
 	private BaseUser user;
