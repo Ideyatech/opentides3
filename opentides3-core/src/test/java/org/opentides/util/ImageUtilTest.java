@@ -18,8 +18,6 @@
  */
 package org.opentides.util;
 
-import imageUtil.Image;
-import imageUtil.ImageLoader;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -27,6 +25,8 @@ import java.io.IOException;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.opentides.util.imageutil.Image;
+import org.opentides.util.imageutil.ImageLoader;
 
 /**
  * @author allantan

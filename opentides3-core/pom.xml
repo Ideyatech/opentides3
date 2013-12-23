@@ -363,20 +363,27 @@
 			<artifactId>mail</artifactId>
 			<version>1.4.7</version>
 		</dependency>
-
-		<!-- Image Utility (Use of system scope is discouraged) -->
+<!-- 
+		Image Utility (Use of system scope is discouraged)
 		<dependency>
 			<groupId>imageutil</groupId>
 			<artifactId>imageutil</artifactId>
 			<version>1.0</version>
 		</dependency>
 		
+ -->
 		<dependency>
-		    <groupId>com.mortennobel</groupId>
-		    <artifactId>java-image-scaling</artifactId>
-		    <version>0.8.5</version>
+			<groupId>com.mortennobel</groupId>
+			<artifactId>java-image-scaling</artifactId>
+			<version>0.8.5</version>
 		</dependency>
-
+		
+		<dependency>
+			<groupId>com.jhlabs</groupId>
+			<artifactId>filters</artifactId>
+			<version>2.0.235-1</version>
+		</dependency>
+		
 	</dependencies>
 
 	<build>

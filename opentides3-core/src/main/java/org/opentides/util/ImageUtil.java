@@ -18,8 +18,6 @@
 */
 package org.opentides.util;
 
-import imageUtil.Image;
-import imageUtil.ImageLoader;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -29,6 +27,8 @@ import java.io.InputStream;
 import javax.imageio.ImageIO;
 
 import org.apache.log4j.Logger;
+import org.opentides.util.imageutil.Image;
+import org.opentides.util.imageutil.ImageLoader;
 
 /**
  * Static helper functions for image manipulation.
