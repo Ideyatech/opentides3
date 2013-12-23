@@ -97,7 +97,12 @@ public class SystemCodesDaoJpaImpl extends BaseEntityDaoJpaImpl<SystemCodes, Lon
 		String queryString = getJpqlQuery("jpql.systemcodes.countDuplicate");
 		Query queryObject = getEntityManager().createQuery(queryString);
 		queryObject.setParameter("keyName", code.getKey());
-		queryObject.setParameter("id", code.getId());
+		// if id is null it means it is a new systemCodes
+		if (code.getId() == null) {
+			queryObject.setParameter("id", 0l);
+		} else {
+			queryObject.setParameter("id", code.getId());
+		}
 		return (Long) queryObject.getSingleResult();	
 	}
 }
