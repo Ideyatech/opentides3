@@ -116,11 +116,11 @@ public class SystemCodesValidatorTest {
 		
 		BindException errors = new BindException(obj, "systemCodes");
 		
-		Mockito.when(obj.isParentValid()).thenReturn(false);
+		//Mockito.when(obj.isParentValid()).thenReturn(false);
 		
 		systemCodesValidator.validate(obj, errors);
 		
-		Mockito.verify(obj).isParentValid();
+		//Mockito.verify(obj).isParentValid();
 		
 		assertTrue(errors.hasErrors());
 		assertEquals(1, errors.getGlobalErrorCount());
