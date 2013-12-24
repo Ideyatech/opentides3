@@ -1,10 +1,5 @@
 package org.opentides.util.imageutil;
 
-import com.mortennobel.imagescaling.AdvancedResizeOp;
-import com.mortennobel.imagescaling.MultiStepRescaleOp;
-import com.sun.image.codec.jpeg.JPEGCodec;
-import com.sun.image.codec.jpeg.JPEGEncodeParam;
-import com.sun.image.codec.jpeg.JPEGImageEncoder;
 import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -12,12 +7,14 @@ import java.awt.image.BufferedImage;
 import java.awt.image.ConvolveOp;
 import java.awt.image.Kernel;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.List;
+
 import javax.imageio.ImageIO;
+
+import com.mortennobel.imagescaling.AdvancedResizeOp;
+import com.mortennobel.imagescaling.MultiStepRescaleOp;
 
 public class Image {
 	BufferedImage img;
@@ -181,7 +178,10 @@ public class Image {
 		return ImageIO.getWriterFormatNames();
 	}
 
-	public void writeToJPG(File file, float quality) throws IOException {
+	// TODO Find a way to implement this without using com.sun.image.codec.jpeg packages.
+	// sun packages will not work on all platforms. 
+	// More info here: http://www.oracle.com/technetwork/java/faq-sun-packages-142232.html
+	/*public void writeToJPG(File file, float quality) throws IOException {
 		FileOutputStream out = new FileOutputStream(file);
 
 		JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(out);
@@ -192,7 +192,7 @@ public class Image {
 
 		encoder.setJPEGEncodeParam(param);
 		encoder.encode(this.img);
-	}
+	}*/
 
 	public void dispose() {
 		this.img.flush();
