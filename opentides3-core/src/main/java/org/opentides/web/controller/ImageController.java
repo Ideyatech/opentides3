@@ -1,7 +1,9 @@
 package org.opentides.web.controller;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,6 +12,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.opentides.annotation.Valid;
 import org.opentides.bean.AjaxUpload;
@@ -67,7 +70,11 @@ public class ImageController {
 	
 	@Autowired
 	@Qualifier("defaultFileUploadService")
-	protected FileUploadService fileUploadService;
+	protected FileUploadService defaultFileUploadService;
+
+	@Autowired
+	@Qualifier("amazonS3FileUploadService")
+	protected FileUploadService amazonFileUploadService;
 	
 	@Autowired
 	protected BeanFactory beanFactory;
@@ -81,6 +88,9 @@ public class ImageController {
 	@Value("#{applicationSettings.imageAdjustPage}")
 	protected String adjustPhoto = "";	
 
+	@Value("#{applicationSettings['amazon.s3.use']}")
+	private String useAmazon;
+	
 	/**
 	 * 
 	 * @param modelMap
@@ -97,16 +107,28 @@ public class ImageController {
 			@PathVariable("id") Long id,
 			@RequestParam(value="c", required=false) String c,
 			HttpServletRequest request, HttpServletResponse response) throws IOException {
-				
+
+		ImageInfo info = imageInfoService.load(id);
+		
 		byte[] barray = null;
 		OutputStream outputStream = response.getOutputStream();
 
 		try {
-			ImageInfo info = imageInfoService.load(id);
 			if(info == null) {
 				barray = ImageUtil.getDefaultImage();
 			} else {
-				barray = ImageUtil.loadImage(getImagePath(info), c);
+				
+				if("true".equals(useAmazon)) {
+
+					URL toDownload = new URL(info.getFullPath());
+					
+					InputStream in = toDownload.openStream();
+					barray = IOUtils.toByteArray(in);
+					
+				} else {
+
+					barray = ImageUtil.loadImage(getImagePath(info), c);
+				}
 			}
 			if (barray != null) {
 				response.setContentType("image/png");
@@ -283,6 +305,7 @@ public class ImageController {
 			@RequestParam(value = "className", required = false) String className, 
 			@RequestParam(value = "classId", required = false) Long id,
 			@RequestParam(value = "isPrimary", required = false) boolean isPrimary,
+			@RequestParam(value = "folderName", required = false) String folderName,
 			BindingResult result, HttpServletRequest request) {
 		
 		BaseEntity entity = null;
@@ -310,8 +333,15 @@ public class ImageController {
 			model.put("messages", messages);
 			return model;
 		}
-				
-		FileInfo f = fileUploadService.upload(image.getAttachment());
+		
+		FileInfo f;
+		
+		if("true".equals(useAmazon)) {
+			f = amazonFileUploadService.upload(image.getAttachment(), folderName);
+		} else {
+			f = defaultFileUploadService.upload(image.getAttachment());
+		}
+		
 		ImageInfo imageInfo = new ImageInfo(f);
 		imageInfo.setIsPrimary(isPrimary);
 		imageInfoService.save(imageInfo);
