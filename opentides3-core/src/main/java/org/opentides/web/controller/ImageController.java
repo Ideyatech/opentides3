@@ -1,7 +1,6 @@
 package org.opentides.web.controller;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.util.ArrayList;
@@ -12,7 +11,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.opentides.annotation.Valid;
 import org.opentides.bean.AjaxUpload;
@@ -119,14 +117,8 @@ public class ImageController {
 			} else {
 				
 				if("true".equals(useAmazon)) {
-
-					URL toDownload = new URL(info.getFullPath());
-					
-					InputStream in = toDownload.openStream();
-					barray = IOUtils.toByteArray(in);
-					
+					barray = ImageUtil.loadImage(new URL(info.getFullPath()), c);
 				} else {
-
 					barray = ImageUtil.loadImage(getImagePath(info), c);
 				}
 			}

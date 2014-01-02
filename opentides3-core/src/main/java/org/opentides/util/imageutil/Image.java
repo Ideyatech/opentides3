@@ -198,7 +198,7 @@ public class Image {
 		this.img.flush();
 	}
 
-	private BufferedImage getBufferedImage() {
+	public BufferedImage getBufferedImage() {
 		return this.img;
 	}
 }
