@@ -83,7 +83,7 @@
 			<div id="hd" class="navbar navbar-inverse">
 				<div class="navbar-inner">
 					<div class="container">
-						<a class="brand" href="${home}">
+						<a class="brand" href="${home}/">
 							<img class="logo" src="<c:url value='${logo}'/>"/>
 						</a>
 					</div>
@@ -99,13 +99,13 @@
 							data-target=".nav-collapse"> <span class="icon-bar"></span> <span
 							class="icon-bar"></span> <span class="icon-bar"></span>
 						</a>
-						<a class="brand" href="${home}">
+						<a class="brand" href="${home}/">
 							<img class="logo" src="<c:url value='${logo}'/>"/>
 						</a>
 						<div class="nav-collapse collapse">
 							<ul class="nav">
 								<li class="${active eq 'welcome' ? 'active' : ''}">
-									<a href="${home}">
+									<a href="${home}/">
 										<spring:message code="label.welcome"/>
 									</a>
 								</li>

@@ -15,7 +15,7 @@
 <app:header pageTitle="label.ninja" active="ninja"/>
 	
 <ul class="breadcrumb">
-  <li><a href="${home}"><spring:message code="label.home"/></a> <span class="divider">/</span></li>
+  <li><a href="${home}/"><spring:message code="label.home"/></a> <span class="divider">/</span></li>
   <li><a href="${home}/ninja"><spring:message code="label.ninja"/></a> <span class="divider">/</span></li>
   <li>${ninja.completeName}</li>
 </ul>

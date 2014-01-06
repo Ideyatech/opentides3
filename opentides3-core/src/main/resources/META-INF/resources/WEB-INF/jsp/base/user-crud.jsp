@@ -19,7 +19,7 @@
 	data-bootstro-title="Breadcrumb Navigation"
 	data-bootstro-content="You are at Home / User. This is where you can manage the users of your system."
 	data-bootstro-step="0" data-bootstro-placement="bottom" >
-  <li><a href="${home}"><spring:message code="label.home"/></a> <span class="divider">/</span></li>
+  <li><a href="${home}/"><spring:message code="label.home"/></a> <span class="divider">/</span></li>
   <li><spring:message code="label.user"/></li>
 </ul>	
 
