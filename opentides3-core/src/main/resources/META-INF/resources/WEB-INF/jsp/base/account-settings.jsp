@@ -80,6 +80,6 @@
 			opentides3.jsonForm($('#change-password form'));
 		})
 		.on("click", '.adjust-photo', opentides3.showAdjustPhoto)
-		.on("click", '.upload-photo', opentides3.showUploadPhoto);;
+		.on("click", '.upload-photo', opentides3.showUploadPhoto);
 	</script>
 </tides:footer>

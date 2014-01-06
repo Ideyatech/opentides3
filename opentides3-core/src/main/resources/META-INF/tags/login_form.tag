@@ -25,7 +25,7 @@
 		<div class="alert alert-error">
 			<a class="close" data-dismiss="alert" href="#">&times;</a>
 			<spring:message code='error.${param.login_error}' /> 
-			<c:out value="${SPRING_SECURITY_LAST_EXCEPTION.message}" />
+			${SPRING_SECURITY_LAST_EXCEPTION.message}
 		</div>
 	</c:if>
 

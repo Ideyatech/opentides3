@@ -18,17 +18,20 @@
 */
 package org.opentides.util;
 
-import imageUtil.Image;
-import imageUtil.ImageLoader;
 
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 
 import javax.imageio.ImageIO;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
+import org.opentides.util.imageutil.Image;
+import org.opentides.util.imageutil.ImageLoader;
 
 /**
  * Static helper functions for image manipulation.
@@ -80,6 +83,33 @@ public class ImageUtil {
 		} catch (Exception e) { 
 			_log.error("Failed to load image.", e);
 			return null;
+		}
+	}
+	
+	/**
+	 * Loads the image from a URL.
+	 * 
+	 * @param fullPath
+	 * @return
+	 */
+	public static byte[] loadImage(URL url, String command) {
+		try {
+			InputStream in = url.openStream();
+			byte[] barray = IOUtils.toByteArray(in);
+						
+			Image img = ImageLoader.fromBytes(barray);
+			Image rez = ImageUtil.transformImage(img, command);
+			
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			ImageIO.write( rez.getBufferedImage(), "jpg", baos );
+			baos.flush();
+			byte[] imageInByte = baos.toByteArray();
+			baos.close();
+			
+			return imageInByte;
+		} catch (Exception e) { 
+			_log.error("Failed to load image.", e);
+			return DEFAULT_IMAGE;
 		}
 	}
 	

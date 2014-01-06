@@ -126,6 +126,11 @@
 										<spring:message code="label.audit-log"/>
 									</a>
 								</li>
+								<li class="${active eq 'widget' ? 'active' : ''}">
+									<a href="${home}/widget/">
+										<spring:message code="label.widget"/>
+									</a>
+								</li>
 								<li class="${active eq 'ninja' ? 'active' : ''}">
 									<a href="${home}/ninja/">
 										<spring:message code="label.ninja"/>

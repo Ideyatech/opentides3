@@ -16,7 +16,7 @@
 	
 	<div class="modal-body">
 		<div class="original-image-wrapper" style="">
-			<img id="original-image" src="${home}/image/${imageId}"/>
+			<img id="original-image" src="${home}/image/${imageId}?c=full"/>
 		</div>
 		<input type="hidden" name="imageId" value="${imageId}"/>
 		<input type="hidden" name="replaceOriginal" value="true"/>

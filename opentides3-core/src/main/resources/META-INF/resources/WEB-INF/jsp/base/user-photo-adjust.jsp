@@ -5,7 +5,7 @@
 <%@ taglib prefix="tides" uri="http://www.ideyatech.com/tides"%>
 <%@ taglib prefix="app" tagdir="/WEB-INF/tags"%>
 
-<form:form id="user-adjust-photo" commandName="command" enctype="multipart/form-data"
+<form:form id="user-adjust-photo" commandName="commasnd" enctype="multipart/form-data"
 	method="POST" action="/user/photo/adjust?id=${command.id}">
 	
 	<div class="modal-header">
