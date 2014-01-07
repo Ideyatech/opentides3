@@ -22,6 +22,8 @@ package org.opentides.web.validator;
 import org.opentides.bean.user.PasswordReset;
 import org.opentides.dao.UserDao;
 import org.opentides.util.StringUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
@@ -29,25 +31,20 @@ import org.springframework.validation.Validator;
 
 /**
  * @author allanctan
- *
  */
+@Component
 public class ChangePasswordValidator implements Validator {
-	private UserDao coreUserDao;
+	@Autowired
+	private UserDao userDao;
 
-	/* (non-Javadoc)
-	 * @see org.springframework.validation.Validator#supports(java.lang.Class)
-	 */
 	public boolean supports(Class<?> clazz) {
 		return PasswordReset.class.isAssignableFrom(clazz);		
 	}
 
-	/* (non-Javadoc)
-	 * @see org.springframework.validation.Validator#validate(java.lang.Object, org.springframework.validation.Errors)
-	 */
 	public void validate(Object clazz, Errors e) {
 		PasswordReset obj = (PasswordReset) clazz;
 		ValidationUtils.rejectIfEmptyOrWhitespace(e, "emailAddress", "error.required", new Object[]{"Email Address"});
-		if (!StringUtil.isEmpty(obj.getEmailAddress()) && !coreUserDao.isRegisteredByEmail(obj.getEmailAddress())) {
+		if (!StringUtil.isEmpty(obj.getEmailAddress()) && !userDao.isRegisteredByEmail(obj.getEmailAddress())) {
 			e.rejectValue("emailAddress","msg.email-address-is-not-registered",
 					"Sorry, but your email address is not registered.");
 		}
@@ -62,12 +59,4 @@ public class ChangePasswordValidator implements Validator {
 					"Your password confirmation did not match with password.");
 		}
 	}
-
-	/**
-	 * @param userService the userService to set
-	 */
-	public void setCoreUserDao(UserDao coreUserDao) {
-		this.coreUserDao = coreUserDao;
-	}
-
 }

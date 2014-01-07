@@ -21,8 +21,20 @@
 	</div>
 	<div class="modal-footer">
 		<small class="pull-left"><spring:message code="message.signup-help" /> <a href="#" data-url="${home}/register" class="show-signup"><spring:message code="message.signup-now" /></a></small>
-		<small class="pull-right"><a href="#"><spring:message code="message.forgot-your-password" /></a></small>
+		<small class="pull-right"><a href="#" data-url="${home}/request-reset-password" class="show-forgot-password"><spring:message code="message.forgot-your-password" /></a></small>
 	</div>
+</div>
+
+<div class="resend-email-modal modal hide fade" data-width="420">
+	<form:form commandName="passwordReset"  action="${home}/request-password-reset/request">
+	<div class="modal-body">
+		<h4><spring:message code="msg.forgot-password-instructions"/></h4>
+		<tides:input path="emailAddress" label="label.user.email"/>
+	</div>
+	<div class="modal-footer pagination-centered">
+		<input type="submit" class="btn btn-info btn-large" value="<spring:message code="registration.brand.submit" />"/>
+	</div>
+	</form:form>
 </div>
 
 <div class="form-signup modal hide fade" data-width="460"></div>
