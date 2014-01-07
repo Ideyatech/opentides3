@@ -42,6 +42,25 @@
 					<target>${java-version}</target>
 				</configuration>
 			</plugin>
+			
+			<plugin>
+			<groupId>org.apache.tomcat.maven</groupId>
+            <artifactId>tomcat7-maven-plugin</artifactId>
+            <version>2.1</version>
+			<configuration>
+				<url>${tomcat-url}</url>
+				<path>${tomcat-path}</path>
+				<username>${tomcat-username}</username>
+				<password>${tomcat-password}</password>
+			</configuration>
+			<dependencies>
+				<dependency>
+					<groupId>mysql</groupId>
+					<artifactId>mysql-connector-java</artifactId>
+					<version>5.1.21</version>
+				</dependency>
+			</dependencies>
+		</plugin>
 		</plugins>
 	</build>
 	

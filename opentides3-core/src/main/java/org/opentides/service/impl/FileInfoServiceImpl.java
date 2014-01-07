@@ -25,6 +25,8 @@ import java.util.List;
 import org.opentides.bean.FileInfo;
 import org.opentides.dao.FileInfoDao;
 import org.opentides.service.FileInfoService;
+import org.opentides.util.FileUtil;
+import org.opentides.util.StringUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -61,6 +63,17 @@ public class FileInfoServiceImpl extends BaseCrudServiceImpl<FileInfo>
 			throw new RuntimeException("File cannot be deleted.");
 		}
 		return isDeleted;
+	}
+
+	@Override
+	public byte[] convertToByteArray(FileInfo fileInfo) {
+		if(fileInfo!=null && !StringUtil.isEmpty(fileInfo.getFullPath())){
+			File file = new File(fileInfo.getFullPath());
+			
+			return FileUtil.readFileAsBytes(file);
+		}
+		
+		return null;
 	}
 
 }

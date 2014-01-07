@@ -43,4 +43,11 @@ public interface FileInfoService extends BaseCrudService<FileInfo> {
 	 */
 	public boolean deletePhysicalFile(String path);
 	
+	/**
+	 * Converts fileinfo into bytearray
+	 * @param fileInfo
+	 * @return
+	 */
+	public byte[] convertToByteArray(FileInfo fileInfo);
+	
 }
