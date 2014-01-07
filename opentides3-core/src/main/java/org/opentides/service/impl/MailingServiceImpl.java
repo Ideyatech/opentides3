@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.Map;
 import java.util.Properties;
 
+import javax.annotation.PostConstruct;
 import javax.mail.Authenticator;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -24,6 +25,7 @@ import org.opentides.service.MailingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.task.TaskExecutor;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 
@@ -40,7 +42,7 @@ public class MailingServiceImpl implements MailingService {
 	@Autowired
 	private VelocityEngine velocityEngine;
 	
-	@Autowired
+	@Autowired(required = false)
 	private TaskExecutor taskExecutor;
 	
 	@Value("#{applicationSettings['mail.server.username']}")
@@ -104,6 +106,18 @@ public class MailingServiceImpl implements MailingService {
 			_log.error("Failed to send email.", e);
 		}
 		
+	}
+	
+	@PostConstruct
+	public void postInit() {
+		if(taskExecutor == null) {
+			//set default taskExecutor
+			taskExecutor = new ThreadPoolTaskExecutor();
+			((ThreadPoolTaskExecutor)taskExecutor).setCorePoolSize(5);
+			((ThreadPoolTaskExecutor)taskExecutor).setMaxPoolSize(10);
+			((ThreadPoolTaskExecutor)taskExecutor).setQueueCapacity(25);
+			((ThreadPoolTaskExecutor)taskExecutor).setWaitForTasksToCompleteOnShutdown(true);
+		}
 	}
 	
 	private void send(final Message message) {
