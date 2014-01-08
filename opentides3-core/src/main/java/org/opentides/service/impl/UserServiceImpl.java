@@ -27,6 +27,7 @@ import java.util.Map;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.log4j.Logger;
 import org.opentides.bean.user.BaseUser;
+import org.opentides.bean.user.PasswordReset;
 import org.opentides.bean.user.SessionUser;
 import org.opentides.bean.user.UserCredential;
 import org.opentides.bean.user.UserGroup;
@@ -34,6 +35,7 @@ import org.opentides.dao.PasswordResetDao;
 import org.opentides.dao.UserDao;
 import org.opentides.dao.UserGroupDao;
 import org.opentides.dao.impl.AuditLogDaoImpl;
+import org.opentides.exception.InvalidImplementationException;
 import org.opentides.service.MailingService;
 import org.opentides.service.UserGroupService;
 import org.opentides.service.UserService;
@@ -41,6 +43,7 @@ import org.opentides.util.SecurityUtil;
 import org.opentides.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
 import org.springframework.security.core.Authentication;
@@ -73,6 +76,11 @@ public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 	@Autowired
 	@Qualifier("passwordEncoder")
 	private PasswordEncoder passwordEncoder;
+
+	private int tokenLength = 10;
+
+	@Value("#{applicationSettings['confirm.password.reset.url']}")
+	private String confirmURL;
 
 	@Autowired
 	public void setUserDao(UserDao userDao) {
@@ -324,6 +332,133 @@ public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 	
 	private UserDao getUserDao() {
 		return (UserDao)this.dao;
+	}
+
+	@Override
+	public void requestPasswordReset(String emailAddress) {
+		UserDao userDAO = (UserDao) getDao();
+		if (!userDAO.isRegisteredByEmail(emailAddress)) {
+			throw new InvalidImplementationException(
+					"Email ["
+							+ emailAddress
+							+ "] was not validated prior to calling this service. Please validate first.");
+		}
+		PasswordReset passwd = new PasswordReset();
+		String token = StringUtil.generateRandomString(tokenLength);
+		String cipher = StringUtil.encrypt(token + emailAddress);
+		passwd.setEmailAddress(emailAddress);
+		passwd.setToken(token);
+		passwd.setStatus("active");
+		passwd.setCipher(cipher);
+		passwordResetDao.saveEntityModel(passwd);
+		// send email for confirmation
+		sendEmailConfirmation(emailAddress, token, cipher);
+	}
+
+	/**
+	 * @param emailAddress
+	 * @param token
+	 * @param cipher
+	 */
+	private void sendEmailConfirmation(String emailAddress, String token,
+			String cipher) {
+		Map<String, Object> dataMap = new HashMap<String, Object>();
+		dataMap.put("address", emailAddress);
+		dataMap.put("confirmationCode", token);
+		dataMap.put("confirmURL", confirmURL);
+		dataMap.put("link", confirmURL + "?cipher=" + cipher);
+		mailingService.sendEmail(new String[] {emailAddress}, "Information regarding your password reset", "password_reset.vm", dataMap);
+	}
+
+	/**
+	 * Resets the password by specifying email address and token.
+	 */
+	public boolean confirmPasswordReset(String emailAddress, String token) {
+		// check if email and token matched
+		PasswordReset example = new PasswordReset();
+		example.setEmailAddress(emailAddress);
+		example.setToken(token);
+		example.setStatus("active");
+		List<PasswordReset> actuals = passwordResetDao.findByExample(example,
+				true);
+		if (actuals == null || actuals.size() == 0) {
+			_log.info("Failed to confirm password reset. No records matched in password reset database for email "
+					+ emailAddress);
+			return false;
+		}
+		// check if password reset is active and not expired
+		PasswordReset actual = actuals.get(0);
+		Date updated = actual.getUpdateDate();
+		Date expireDate = new Date(updated.getTime() + 86400000);
+		Date today = new Date();
+		if (expireDate.getTime() < today.getTime()) {
+			// expired
+			_log.info("Password reset has expired for " + emailAddress);
+			actual.setStatus(PasswordReset.STATUS_EXPIRED);
+			passwordResetDao.saveEntityModel(actual);
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Validates the cipher for password reset and returns the corresponding
+	 * email address and token.
+	 * 
+	 * @param passwd
+	 * @return
+	 */
+	@Override
+	public boolean confirmPasswordResetByCipher(PasswordReset passwd) {
+		String decrypted = "";
+		try {
+			decrypted = StringUtil.decrypt(passwd.getCipher());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if (StringUtil.isEmpty(decrypted)) {
+			_log.info("Failed attempt to confirm password reset due to wrong cipher key.["
+					+ passwd.getCipher() + "]");
+			return false;
+		}
+		String token = decrypted.substring(0, tokenLength);
+		String email = decrypted.substring(tokenLength);
+		passwd.setToken(token);
+		passwd.setEmailAddress(email);
+		return confirmPasswordReset(email, token);
+	}
+
+	/**
+	 * Resets the password
+	 * 
+	 * @param passwd
+	 * @return
+	 */
+	@Override
+	public boolean resetPassword(PasswordReset passwd) {
+		// check if password reset is active and not expired
+		PasswordReset example = new PasswordReset();
+		example.setEmailAddress(passwd.getEmailAddress());
+		example.setToken(passwd.getToken());
+		example.setStatus("active");
+		List<PasswordReset> actuals = passwordResetDao.findByExample(example,
+				true);
+		if (actuals == null || actuals.size() == 0) {
+			_log.info("Failed to reset password. No records found in password reset for email "
+					+ passwd.getEmailAddress());
+			return false;
+		}
+		PasswordReset actual = actuals.get(0);
+		actual.setStatus(PasswordReset.STATUS_USED);
+		passwordResetDao.saveEntityModel(actual);
+
+		// now reset the password
+		UserDao userDAO = (UserDao) getDao();
+		BaseUser user = userDAO.loadByEmailAddress(passwd.getEmailAddress());
+		user.getCredential().setPassword(encryptPassword(passwd.getPassword()));
+		userDAO.saveEntityModel(user);
+
+		return true;
 	}
 	
 }

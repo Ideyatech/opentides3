@@ -20,7 +20,6 @@ package org.opentides.service.impl;
 
 import java.util.List;
 
-import org.opentides.annotation.CrudSecure;
 import org.opentides.bean.SystemCodes;
 import org.opentides.dao.SystemCodesDao;
 import org.opentides.service.SystemCodesService;
@@ -34,7 +33,6 @@ import org.springframework.stereotype.Service;
  * 
  */
 @Service(value = "systemCodesService")
-@CrudSecure("SYSTEM_CODES")
 public class SystemCodesServiceImpl extends BaseCrudServiceImpl<SystemCodes>
 		implements SystemCodesService {
 
