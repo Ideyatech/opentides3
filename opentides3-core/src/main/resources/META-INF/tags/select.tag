@@ -39,6 +39,12 @@
 				<c:when test="${not empty itemLabel and not empty itemValue}">
 				<form:options items="${items}" itemLabel="${itemLabel}" itemValue="${itemValue}"/>
 				</c:when>
+				<c:when test="${not empty itemValue}">
+				<form:options items="${items}" itemValue="${itemValue}"/>
+				</c:when>
+				<c:when test="${not empty itemLabel}">
+				<form:options items="${items}" itemLabel="${itemLabel}"/>
+				</c:when>
 				<c:otherwise>
 				<form:options items="${items}" />
 				</c:otherwise>
