@@ -6,11 +6,17 @@
 	--%>
 <%@ tag dynamic-attributes="attributes" isELIgnored="false" body-content="empty" %>
 <%@ attribute name="results" required="true" type="org.opentides.bean.SearchResults" %>
+<%@ attribute name="cssClass" required="false" type="java.lang.String" %>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-
-<div class="pagination pagination-centered">
+<%--
+	- for custom class in pagination
+	--%>
+<c:if test="${empty cssClass}">
+	<c:set var="cssClass" value="pagination pagination-centered"/>
+</c:if>
+<div class="${cssClass}">
 <c:if test="${results.totalResults > 0}">	
 	<c:if test="${results.totalPages > 1}">
      	<ul>
