@@ -190,3 +190,61 @@ section{
 	font-size: 14px;
 	
 }
+
+/*WELCOME*/
+#bd .row-fluid.welcome .span2 {
+    display: none;
+}
+
+#bd .row-fluid.welcome .span10 {
+    width: 100%;
+    margin-left: 0;
+}
+#wrap .span12 {
+    margin: -20px 0 20px 0;
+    height: 400px;
+    width: 100%;
+}
+
+#wrap {
+    position: relative;
+}
+
+#wrap #bd .texture {
+    position: absolute;
+    top: -18px;
+    left: 0;
+    z-index: -1;
+    background: url(../img/bg-texture.jpg) repeat;
+    border-bottom: 1px solid #F4F4F4;
+    width: 100%;
+    height: 400px;
+}
+#wrap .logo-holder {
+    margin: 0 auto;
+    max-width: 1225px;
+    padding: 8em 0 0 0;
+}
+@media (max-width: 980px) {
+    #wrap .span12 {
+        margin:0;
+    }
+    #wrap .logo-holder {
+        padding: 4.5em 0 0;
+    }
+}
+#wrap .logo-holder h4 {
+    font-size: 22px;
+    font-weight: normal;
+    line-height: 28px;
+}
+#wrap .logo-holder h4 .text-info {
+    color: #2A6DB2;
+    font-weight: bold;
+}
+@media (max-width: 768px) {
+    #wrap .logo-holder {
+        padding: 4.5em 2em 0;
+        text-align: center;
+    }
+}

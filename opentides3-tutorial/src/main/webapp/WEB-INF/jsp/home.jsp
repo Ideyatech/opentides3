@@ -11,7 +11,16 @@
 
 <app:header pageTitle="title.welcome" active="welcome"/>
 
-<div class="row-fluid">
+<div class="texture"></div>
+
+<div class="span12">
+    <div class="logo-holder">
+        <div class="ot3-logo"><img src="img/ot3-logo.png"/></div>
+        <h4>a web foundation framework that can be used to quickly setup <br>a web application using <span class="text-info">Spring MVC</span> and <span class="text-info">JPA.</span></h4>
+    </div>
+</div>
+
+<div class="row-fluid welcome">
 	<!-- NAVIGATION -->
 	<div class="span2">
 		<div class="temp-nav">
