@@ -332,7 +332,17 @@ public abstract class BaseCrudController<T extends BaseEntity> {
 		} else {
 			command = formBackingObject(request, response);
 		}
+		preProcessCommand(command);
 		return command;
+	}
+	
+	/**
+	 * This is the method handler that process the command.
+	 * 
+	 * @param command
+	 */
+	public void preProcessCommand(T command) {
+		
 	}
 
 	/**
