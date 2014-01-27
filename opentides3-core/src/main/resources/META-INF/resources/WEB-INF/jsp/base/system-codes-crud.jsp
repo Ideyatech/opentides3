@@ -2,7 +2,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
-<%@ taglib prefix="app" uri="http://www.ideyatech.com/tides"%>
+<%@ taglib prefix="tides" uri="http://www.ideyatech.com/tides"%>
+<%@ taglib prefix="app" tagdir="/WEB-INF/tags"%>
 
 <app:header pageTitle="label.system-codes" active="system-codes"/>
 
@@ -13,7 +14,7 @@
   <li><spring:message code="label.system-codes"/></li>
 </ul>
 
-<div id="search-body">
+<div id="search-body" class="${search}">
 
 	<div id="search-panel" class="span3">
 
@@ -29,9 +30,9 @@
 			</div>
 			<div class="search-form collapse">
 				<form:form modelAttribute="searchCommand" id="system-codes-search" >
-					<app:select path="category" items="${categoryList}" itemLabel="category" itemValue="category" label="label.system-codes.category" cssClass="input-block-level" />
-					<app:input path="key" label="label.system-codes.key" cssClass="input-block-level"/>
-					<app:input path="value" label="label.system-codes.value" cssClass="input-block-level"/>
+					<tides:select path="category" items="${categoryList}" label="label.system-codes.category" cssClass="input-block-level" />
+					<tides:input path="key" label="label.system-codes.key" cssClass="input-block-level"/>
+					<tides:input path="value" label="label.system-codes.value" cssClass="input-block-level"/>
 					<hr/>
 					<input type="submit" class="btn btn-info btn-block" data-submit="search" value="<spring:message code="label.search"/>">
 					<button type="button" class="btn btn-link btn-block" data-submit="clear"><spring:message code="label.clear" /></button>
@@ -50,7 +51,7 @@
 			<div class="status" data-display-pagelinks="false" data-display-summary="true" data-summary-message='
 				<spring:message code="message.displaying-x-of-y" arguments="#start,#end,#total,records"/>
 			'>
-				<app:status results="${results}" />
+				<tides:status results="${results}" />
 			</div>
 		</div>
 		
@@ -70,7 +71,11 @@
 					<tbody>
 						<script type="text/template" class="template">
 	                		<tr data-id="{{id}}">
-								<td>{{value}}</td>
+								<td>
+									<a href="${home}/system/system-codes/view/{{id}}">
+										{{value}}
+									</a>
+								</td>
 								<td>{{key}}</td>
 								<td>{{category}}</td>
 								<td>
@@ -81,7 +86,11 @@
 						</script>
 						<c:forEach items="${results.results}" var="record" varStatus="status">
 							<tr id="system-codes-row-${record.id}">
-								<td><c:out value="${record.value}" /></td>
+								<td>
+									<a href="${home}/system/system-codes/view/${record.id}">
+										<c:out value="${record.value}" />
+									</a>
+								</td>
 								<td><c:out value="${record.key}" /></td>
 								<td><c:out value="${record.category}" /></td>
 								<td>
@@ -96,13 +105,13 @@
 		</div>
 
 		<div class="paging clearfix">
-			<app:paging results="${results}"/>
+			<tides:paging results="${results}"/>
 		</div>
 	</div>
 	
 </div>
 
-<div id="form-body" class="modal fade hide">
+<div id="form-body" class="modal fade ${form}">
 
 	<div id="form-panel" >
 		<div class="modal-header">
@@ -114,9 +123,9 @@
 		<form:form modelAttribute="formCommand" id="system-codes-form">
 			<div class="modal-body">
 				<div class="message-container"></div>
-				<app:combobox path="category" label="label.system-codes.category" items="${categoryList}"/>
-				<app:input path="key" label="label.system-codes.key" />
-				<app:input path="value" label="label.system-codes.value" />
+				<tides:combobox path="category" label="label.system-codes.category" items="${categoryList}"/>
+				<tides:input path="key" label="label.system-codes.key" />
+				<tides:input path="value" label="label.system-codes.value" />
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-link" data-dismiss="modal"><spring:message code="label.close" /></button>
@@ -129,13 +138,37 @@
 	
 </div>
 
+<div id="view-body" class="page ${view}">
+	
+	<div class="row-fluid" style="margin-bottom: 20px;">
+		<div class="span10">
+			<h2>${formCommand.category}</h2>	
+		</div>
+	</div>
+	
+	<table class="table table-striped">
+		<tr>
+			<td><spring:message code="label.system-codes.key"/></td>
+			<td>${formCommand.key}</td>
+		</tr>
+		<tr>
+			<td><spring:message code="label.system-codes.value"/></td>
+			<td>${formCommand.value}</td>
+		</tr>
+		<tr>
+			<td><spring:message code="label.system-codes.number-value"/></td>
+			<td><a href="mailto:#">${formCommand.numberValue}</a></td>
+		</tr>
+	</table>
 </div>
 
-<app:footer>
+</div>
+
+<tides:footer>
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$("#system-codes-body").RESTful();
 			$('body').tooltip({selector: '.edit-action, .remove-action'});
 		});
 	</script>
-</app:footer>
+</tides:footer>

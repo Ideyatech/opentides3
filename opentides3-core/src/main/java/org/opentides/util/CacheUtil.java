@@ -193,6 +193,9 @@ public class CacheUtil {
             	pf = new AuditableField("","");
             primaryField.put(obj.getClass(), pf);
             ret = primaryField.get(obj.getClass());
+            if(_log.isDebugEnabled()) {
+            	_log.debug("Primary Field is " + ret.getTitle() + ":" + ret.getFieldName());
+            }
 		}
 		return ret;				
 	}

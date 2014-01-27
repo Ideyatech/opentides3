@@ -2,13 +2,10 @@ package org.opentides.bean;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "FILE_INFO")
-@Inheritance(strategy=InheritanceType.JOINED)
 public class FileInfo extends BaseEntity {
 
 	private static final long serialVersionUID = -6814443831130229864L;

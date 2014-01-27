@@ -32,10 +32,23 @@ import org.springframework.stereotype.Repository;
 public interface UserDao extends BaseEntityDao<BaseUser, Long> {
 	public boolean isRegisteredByEmail(String emailAddress);
 	public BaseUser loadByUsername(String username);
-	public BaseUser loadByFacebookId(String facebookId);
-	public BaseUser loadByGoogleId(String googleId);
-	public BaseUser loadByTwitterId(String twitterId);
 	public BaseUser loadByEmailAddress(String emailAddress);
 	public List<BaseUser> findByUsergroupName(String userGroupName);
 	public void updateLastLogin(String username);
+	
+	/**
+	 *   
+	 * @param name
+	 * @param firstResult
+	 * @param maxResults
+	 * @return
+	 */
+	public List<BaseUser> findUsersLikeLastName(String name, int firstResult, int maxResults);
+	
+	/**
+	 * Find all users with the given authoriry
+	 * @param authority
+	 * @return
+	 */
+	public List<BaseUser> findAllUsersWithAuthority(String authority);
 }

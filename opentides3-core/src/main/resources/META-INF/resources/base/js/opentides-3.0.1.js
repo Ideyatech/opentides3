@@ -219,8 +219,14 @@ var opentides3 = (function() {
 							+ "))==null?'':__t)+\n'";
 				}
 				if (escape) {
+					var escapeHtml = true;
+					if(escape.indexOf('&') == 0) {
+						//to support unescaping of html tags using &
+						escape = escape.substring(1);
+						escapeHtml = false;
+					}
 					source += "'+\n((__t=(" + escape
-							+ "))==null?'':opentides3.escapeHtml(__t))+\n'";					
+							+ "))==null?'':" + (escapeHtml ? "opentides3.escapeHtml(__t))+\n'" : "__t)+\n'");					
 				}
 				index = offset + match.length;
 				return match;
@@ -231,7 +237,7 @@ var opentides3 = (function() {
 			// scope.
 			if (!settings.variable)
 				source = 'with(obj||{}){\n' + source + '}\n';
-
+			
 			source = "var __t,__p='',__j=Array.prototype.join,"
 					+ "print=function(){__p+=__j.call(arguments,'');};\n"
 					+ source + "return __p;\n";
@@ -254,7 +260,6 @@ var opentides3 = (function() {
 			// precompilation.
 			template.source = 'function(' + (settings.variable || 'obj')
 					+ '){\n' + source + '}';
-
 			// update the element with the given template
 			return template;
 		},
@@ -341,7 +346,6 @@ var opentides3 = (function() {
 						setSelect: [0, 0, 200, 200],
 						allowSelect: false,
 						minSize: [ 200, 200 ],
-						aspectRatio: 1,
 						onChange: function(c){
 							$('#x').val(c.x);
 						    $('#y').val(c.y);
@@ -434,8 +438,22 @@ var opentides3 = (function() {
 
 			form.find('textarea, input[type="text"], input[type="hidden"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"],input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"]')
 					.each(function() {
-				if($(this).attr('name')){
-					var name = $(this).attr('name');
+				var $this = $(this),
+					name = $this.attr('name');
+				if(name && $this.is(":hidden") && ($this.attr('name') == "photos" || $this.hasClass("ot-images"))){ 
+					var imageIds = opentides3.getValue(json, name);
+					if(imageIds.length > 0) {
+						for(var i = 0; i < imageIds.length; i++) {
+							if(imageIds[i].id !== undefined) {
+								var data = {"imageId" : imageIds[i].id},
+									rowTable = opentides3.template($('script#filesForDownload').html(), data);
+								$this.parent().append($this.clone().val(imageIds[i].id));
+								$("#ot-image-list tbody").append(rowTable);
+							} 
+						}
+					}
+					$this.remove();
+				} else if(name){
 					var prime = toPrimitive(opentides3.getValue(json, name));
 					$(this).val(prime);
 				}
@@ -528,11 +546,13 @@ var opentides3 = (function() {
 		var settings = $.extend({
 			'search'     : '#search-body',
 			'form'       : '#form-body',
+			'view'       : '#view-body',
 			'results'    : '#results-panel',
 			'status'     : '.status',
 			'pagination' : '.pagination',
 			'add'        : '.add-action',
 			'edit'       : '.edit-action',
+			'display'    : '.display-action',
 			'remove'     : '.remove-action'
 		}, options);
 
@@ -769,6 +789,30 @@ var opentides3 = (function() {
 										mode : 'update',
 										data : json,
 										form : settings['form'],
+										action : path
+									}, null, opentides3.getPath() + '/' + id);
+								}
+								form.page();
+							}
+						});
+					});
+
+					// attach view to all action-view
+					$(this).on("click", settings['display'], function() {
+						var id = $(this).data('id');
+						var path = opentides3.getPath() + '/view/' + id;
+						$.getJSON(path, // url
+						"", // data
+						function(json) { // callback
+//							displayForm('update', form, path, json)
+							if (form.hasClass('modal'))
+								form.modal();
+							else if (form.hasClass('page')) {
+								if (opentides3.supportsHistory()) {
+									history.pushState({
+										mode : 'view',
+										data : json,
+										form : settings['view'],
 										action : path
 									}, null, opentides3.getPath() + '/' + id);
 								}

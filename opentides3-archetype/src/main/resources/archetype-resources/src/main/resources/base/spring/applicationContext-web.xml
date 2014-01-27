@@ -73,7 +73,7 @@
 	<bean id="messageSource"
 		class="org.opentides.context.support.PatternResourceBundleMessageSource"
 		p:cacheSeconds="${symbol_dollar}{messages.cache.seconds}"
-		p:basenames="classpath:app/languages/*messages.properties,classpath:base/languages/*messages.properties" />
+		p:basenames="classpath:app/languages/*messages.properties,classpath*:base/languages/*messages.properties" />
 
 
 	<!-- Store preferred language configuration in a cookie -->
@@ -137,37 +137,5 @@
 	</bean>
 
 	<!-- Add system properties through spring XML configuration. -->
-	<bean
-		class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
-		<property name="targetObject">
-			<bean
-				class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
-				<property name="targetClass" value="java.lang.System" />
-				<property name="targetMethod" value="getProperties" />
-			</bean>
-		</property>
-		<property name="targetMethod" value="putAll" />
-		<property name="arguments">
-			<util:properties>
-				<prop key="facebook.domainUrl">http://localhost:8080/Opentides/</prop>
-				<prop key="facebook.appID">443772175710131</prop>
-				<prop key="facebook.clientSecret">5264d6fbef180542cc2d41190366d547</prop>
-				<prop key="facebook.callback">http://localhost:8080/Opentides/facebook/callback</prop>
-				<prop key="facebook.apiClass">org.scribe.builder.api.FacebookApi</prop>
-			
-				<prop key="google.domainUrl">http://localhost:8080/Opentides/</prop>
-				<prop key="google.appID">403711571000.apps.googleusercontent.com</prop>
-				<prop key="google.clientSecret">nzW9HyRqJJSn5-JeMdoPPYNh</prop>
-				<prop key="google.callback">http://localhost:8080/Opentides/google/callback</prop>
-				<prop key="google.apiClass">org.opentides.social.bean.Google2Api</prop>
-				
-				<prop key="twitter.domainUrl">http://127.0.0.1:8080/Opentides/</prop>
-				<prop key="twitter.appID">TilpFfrcjfa2E0tEoeK9A</prop>
-				<prop key="twitter.clientSecret">LvD44MHWgGMl1lkLYUavmwD0V0ujl6HkecpymwYiutU</prop>
-				<prop key="twitter.callback">http://127.0.0.1:8080/Opentides/twitter/callback</prop>
-				<prop key="twitter.apiClass">org.scribe.builder.api.TwitterApi</prop>
-			</util:properties>
-		</property>
-	</bean>
 	
 </beans>

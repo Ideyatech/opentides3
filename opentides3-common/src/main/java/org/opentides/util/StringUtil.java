@@ -29,6 +29,12 @@ public class StringUtil {
 	private static String zeros = "0000000000";
 	private static Random random = new Random((new Date()).getTime());
 	
+	/**
+	 * Checks if a given string is empty or null.
+	 * 
+	 * @param obj
+	 * @return
+	 */
     public static boolean isEmpty(String obj) {
     	if ((obj==null) || (obj.trim().length()==0))
     		return true;
@@ -143,6 +149,33 @@ public class StringUtil {
     	return str;
     }
     
+    /**
+     * Converts the given string in hex to a byte array.
+     * 
+     * For example: 
+     *     byte[] CDRIVES = convertHexToArray("e04fd020ea3a6910a2d808002b30309d");
+	 *
+     * @param s
+     * @return
+     */
+    public static byte[] convertHexToArray(String s) {
+        int len = s.length();
+        byte[] data = new byte[len / 2];
+        for (int i = 0; i < len; i += 2) {
+            data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4)
+                                 + Character.digit(s.charAt(i+1), 16));
+        }
+        return data;
+    }
+    
+    /**
+     * Converts the given number to a fixed length.
+     * Note: max length is 10.
+     * 
+     * @param value
+     * @param length
+     * @return
+     */
     public static String toFixedString(int value, int length) {
     	String val = Integer.toString(value);
     	int diff = length-val.length();
@@ -152,11 +185,25 @@ public class StringUtil {
     		return val;
     }
     
+    /**
+     * Removes HTML tags in an HTML string using regex.
+     * 
+     * @param html
+     * @return
+     */
     public static String removeHTMLTags(String html) {
     	return  html.replaceAll("<(.*?)>"," ")
     				.replaceAll("\\s+"," ");
     }
     
+    /** 
+     * Converts the given string to int. 
+     * If string is not a number, defValue is used.
+     * 
+     * @param str
+     * @param defValue
+     * @return
+     */
     public static int convertToInt(String str, int defValue) {
 		int value = defValue;
 		try {
@@ -167,6 +214,14 @@ public class StringUtil {
 		return value;
     }
     
+    /** 
+     * Converts the given string to long. 
+     * If string is not a number, defValue is used.
+     * 
+     * @param str
+     * @param defValue
+     * @return
+     */
     public static long convertToLong(String str, long defValue) {
 		long value = defValue;
 		try {
@@ -177,8 +232,16 @@ public class StringUtil {
 		return value;
     }
     
-    public static Double convertToDouble(String str, double defValue){
-    	Double doub = defValue;
+    /** 
+     * Converts the given string to double. 
+     * If string is not a number, defValue is used.
+     * 
+     * @param str
+     * @param defValue
+     * @return
+     */
+    public static double convertToDouble(String str, double defValue){
+    	double doub = defValue;
 		try {
 			doub = Double.parseDouble(str);			
 		} catch (NumberFormatException nfe) {

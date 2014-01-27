@@ -27,8 +27,6 @@ import java.util.TimeZone;
 
 import javax.persistence.Query;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.opentides.bean.user.BaseUser;
 import org.opentides.dao.UserDao;
 import org.opentides.util.DateUtil;
@@ -39,8 +37,6 @@ import org.springframework.stereotype.Repository;
 public class UserDaoJpaImpl extends BaseEntityDaoJpaImpl<BaseUser, Long> implements
 		UserDao {
 
-	@SuppressWarnings("unused")
-	private static Log _log = LogFactory.getLog(UserDaoJpaImpl.class);
 	private static final String DEFAULT_TIME_ZONE = "Asia/Manila";
 
 	public final boolean isRegisteredByEmail(String emailAddress) {
@@ -108,49 +104,20 @@ public class UserDaoJpaImpl extends BaseEntityDaoJpaImpl<BaseUser, Long> impleme
 	}
 
 	@Override
-	public BaseUser loadByFacebookId(String facebookId) {
-		if (StringUtil.isEmpty(facebookId))
-			return null;
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("facebookId", facebookId);
-		List<BaseUser> result = findByNamedQuery("jpql.user.findByFacebookId",
-				params);
-		if (result == null || result.size() == 0) {
-			return null;
-		} else {
-			return result.get(0);
-		}
+	public List<BaseUser> findUsersLikeLastName(String name, int firstResult,
+			int maxResults) {
+		Map<String, Object> params = new HashMap<>();
+		params.put("name", name + "%");
+		List<BaseUser> usersList = findByNamedQuery("jpql.attacheUser.findUsersLikeLastName", params, firstResult, maxResults);
+		return usersList;
 	}
 	
 	@Override
-	public BaseUser loadByGoogleId(String googleId) {
-		if (StringUtil.isEmpty(googleId))
-			return null;
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("googleId", googleId);
-		List<BaseUser> result = findByNamedQuery("jpql.user.findByGoogleId",
-				params);
-		if (result == null || result.size() == 0) {
-			return null;
-		} else {
-			return result.get(0);
-		}
+	public List<BaseUser> findAllUsersWithAuthority(String authority) {
+		Map<String, Object> params = new HashMap<>();
+		params.put("authority", authority);
+		List<BaseUser> usersList = findByNamedQuery("jpql.user.findUsersWithAuthority", params);
+		return usersList;
 	}
-	
-	@Override
-	public BaseUser loadByTwitterId(String twitterId) {
-		if (StringUtil.isEmpty(twitterId))
-			return null;
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("twitterId", twitterId);
-		List<BaseUser> result = findByNamedQuery("jpql.user.findByTwitterId",
-				params);
-		if (result == null || result.size() == 0) {
-			return null;
-		} else {
-			return result.get(0);
-		}
-	}
-	
 
 }

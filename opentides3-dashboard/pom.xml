@@ -1,0 +1,84 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <parent>
+    <groupId>org.opentides</groupId>
+    <artifactId>opentides3</artifactId>
+    <version>3.0.1-SNAPSHOT</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>dashboard</artifactId>
+  <name>opentides-dashboard</name>
+  <packaging>jar</packaging>
+  
+  <properties>
+	<org.springframework-version>3.2.1.RELEASE</org.springframework-version>
+  </properties>
+  
+  <dependencies>
+  	<dependency>
+  		<groupId>org.opentides</groupId>
+  		<artifactId>core</artifactId>
+  		<version>3.0.1-SNAPSHOT</version>
+  	</dependency>
+  	<dependency>
+		<groupId>javax.servlet</groupId>
+		<artifactId>servlet-api</artifactId>
+		<version>2.5</version>
+		<scope>provided</scope>
+	</dependency>
+	<dependency>
+		<groupId>javax.servlet.jsp</groupId>
+		<artifactId>jsp-api</artifactId>
+		<version>2.1</version>
+		<scope>provided</scope>
+	</dependency>
+	<dependency>
+		<groupId>javax.servlet</groupId>
+		<artifactId>jstl</artifactId>
+		<version>1.2</version>
+	</dependency>
+	<dependency>
+		<groupId>junit</groupId>
+		<artifactId>junit</artifactId>
+		<scope>test</scope>
+	</dependency>
+	<dependency>
+		<groupId>org.springframework</groupId>
+		<artifactId>spring-test</artifactId>
+		<version>${org.springframework-version}</version>
+		<scope>test</scope>
+	</dependency>
+	
+	<dependency>
+		<groupId>org.mockito</groupId>
+		<artifactId>mockito-all</artifactId>
+		<version>1.8.5</version>
+		<scope>test</scope>
+	</dependency>
+	
+	<dependency>
+		<groupId>org.dbunit</groupId>
+		<artifactId>dbunit</artifactId>
+		<version>2.4.3</version>
+		<scope>test</scope>
+	</dependency>
+	
+	<dependency>
+		<groupId>org.hsqldb</groupId>
+		<artifactId>hsqldb</artifactId>
+		<version>2.2.8</version>
+	</dependency>
+  </dependencies>
+  <build>
+  	<plugins>
+  		<plugin>
+			<artifactId>maven-surefire-plugin</artifactId>
+			<version>2.13</version>
+			<configuration>
+				<excludes>
+					<exclude>**/BaseDaoTest.java</exclude>
+				</excludes>
+			</configuration>
+		</plugin>
+  	</plugins>
+  </build>
+</project>

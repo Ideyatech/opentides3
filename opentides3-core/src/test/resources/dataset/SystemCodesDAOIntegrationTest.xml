@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+	<SYSTEM_CODES ID="9001" CATEGORY_="COUNTRY" KEY_="PH" VALUE_="Philippines" />
+	<SYSTEM_CODES ID="9002" CATEGORY_="COUNTRY" KEY_="US" VALUE_="United States" />
+	<SYSTEM_CODES ID="9003" CATEGORY_="COUNTRY" KEY_="IN" VALUE_="India" />
+	<SYSTEM_CODES ID="9004" CATEGORY_="COUNTRY" KEY_="CN" VALUE_="China" />
+	<SYSTEM_CODES ID="9005" CATEGORY_="COUNTRY" KEY_="SI" VALUE_="Singapore" />
+	<SYSTEM_CODES ID="9006" CATEGORY_="COUNTRY" KEY_="UK" VALUE_="United Kingdom" />
+	<SYSTEM_CODES ID="9007" CATEGORY_="OFFICE" KEY_="AD" VALUE_="Administration Office" />
+	<SYSTEM_CODES ID="9008" CATEGORY_="OFFICE" KEY_="DV" VALUE_="Software Development" />
+	<SYSTEM_CODES ID="9009" CATEGORY_="OFFICE" KEY_="TT" VALUE_="Software Testing" />
+</dataset>

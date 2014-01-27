@@ -18,7 +18,7 @@
  */
 package org.opentides.util;
 
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -51,6 +51,21 @@ public class FileUtilTest {
 			// do nothing
 		}
 
+	}
+	
+	@Test
+	public void testReadFileWithFileParam() {
+		File file = new File("src/test/resources/test.properties");
+		String expected = "run.environment=test\n" + 
+						  "application.mode.debug=true";
+		String actual = FileUtil.readFile(file).trim();
+		assertEquals(expected, actual);
+	}
+	
+	@Test(expected = CodeGenerationException.class)
+	public void testReadFileWithFileParamFileNotFound() {
+		File file = new File("src/test/resources/test.properties.notexisting");
+		FileUtil.readFile(file).trim();
 	}
 
 	/**

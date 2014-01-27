@@ -14,22 +14,19 @@
 	<sec:http pattern="/font/**" security="none"/>
 	<sec:http pattern="/register**" security="none"/>
 	
-	<sec:http pattern="/facebook/connect**" security="none"/>
-	<sec:http pattern="/facebook/callback**" security="none"/>
-	<sec:http pattern="/twitter/connect**" security="none"/>
-	<sec:http pattern="/twitter/callback**" security="none"/>
-	<sec:http pattern="/google/connect**" security="none"/>
-	<sec:http pattern="/google/callback**" security="none"/>
+	<sec:http pattern="/facebook/**" security="none"/>
+	<sec:http pattern="/twitter/**" security="none"/>
+	<sec:http pattern="/google/**" security="none"/>
 	
     <sec:global-method-security secured-annotations="enabled"/>
 
 	<sec:http auto-config='false' use-expressions="true"
 		access-decision-manager-ref="httpRequestAccessDecisionManager">
-		<sec:intercept-url pattern="/"  access="permitAll"/>
+		<sec:intercept-url pattern="/login"  access="permitAll"/>
 
-		<sec:form-login login-page="/"
-			default-target-url="/"
-			authentication-failure-url="/?login_error=authentication-failed" login-processing-url="/login"/>
+		<sec:form-login login-page="/login"
+			default-target-url="/login"
+			authentication-failure-url="/login?login_error=authentication-failed" />
 
 		<sec:logout logout-url="/logout" logout-success-url="/" />
 		<sec:intercept-url pattern="/**" access="isAuthenticated()" />
@@ -41,20 +38,6 @@
 		<sec:session-management invalid-session-url="/?login_error=expired-session">
 			<sec:concurrency-control max-sessions="1" expired-url="/?login_error=invalid-session" session-registry-alias="sessionRegistry" />
 		</sec:session-management>
-<!-- 	
-		
-		<sec:custom-filter ref="expiredSessionFilter" after="BASIC_AUTH_FILTER"/>
-
-		<sec:custom-filter ref="concurrentSessionPromptFilter" before="CONCURRENT_SESSION_FILTER"/>
-		<sec:custom-filter ref="concurrentSessionRedirectFilter" after="BASIC_AUTH_FILTER"/>
-
-		<sec:intercept-url pattern="/widgetDisplay.jspx*" access="hasIpAddress('127.0.0.1/24') OR hasIpAddress('::1/128')"/>
-	
-		<sec:intercept-url pattern="/login*" access="hasRole('ROLE_ANONYMOUS')" />
-		<sec:intercept-url pattern="/organization/**" access="hasRole('ACCESS_ORGANIZATION_TAB')" />
-		<sec:intercept-url pattern="/system/**" access="hasRole('ACCESS_SYSTEM_TAB')" />
- -->
-
 	</sec:http>
 	
 	<sec:authentication-manager alias="authenticationManager">
@@ -62,10 +45,10 @@
 			user-service-ref="authenticationService">
 			<sec:password-encoder ref="passwordEncoder" />
 		</sec:authentication-provider>
-		<sec:authentication-provider ref="socialMediaAuthenticationProvider" />
+		<sec:authentication-provider ref="socialAuthenticationProvider" />
 	</sec:authentication-manager>
 		
-	<bean id="socialMediaAuthenticationProvider" class="org.opentides.security.SocialMediaAuthenticationProvider"/>
+	<bean id="socialAuthenticationProvider" class="org.opentides.social.security.SocialAuthenticationProvider"/>
 
 	<bean id="httpRequestAccessDecisionManager"
 		class="org.springframework.security.access.vote.AffirmativeBased">

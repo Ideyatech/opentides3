@@ -35,9 +35,12 @@ import org.opentides.bean.BaseEntity;
 import org.opentides.bean.MessageResponse;
 import org.opentides.bean.MessageResponse.Type;
 import org.opentides.bean.SearchResults;
+import org.opentides.bean.Tag;
+import org.opentides.bean.Taggable;
 import org.opentides.exception.DataAccessException;
 import org.opentides.service.BaseCrudService;
 import org.opentides.service.SystemCodesService;
+import org.opentides.service.TagService;
 import org.opentides.util.CacheUtil;
 import org.opentides.util.CrudUtil;
 import org.opentides.util.NamingUtil;
@@ -106,6 +109,12 @@ public abstract class BaseCrudController<T extends BaseEntity> {
 	 */
 	@Autowired
 	protected SystemCodesService systemCodesService;
+	
+	/**
+	 * 
+	 */
+	@Autowired
+	protected TagService tagService;
 
 	/**
 	 * This attribute contains the class type of the bean.
@@ -232,6 +241,7 @@ public abstract class BaseCrudController<T extends BaseEntity> {
 		uiModel.addAttribute("mode", "search");
 		uiModel.addAttribute("search", "ot3-search");
 		uiModel.addAttribute("form", "ot3-form hide");
+		uiModel.addAttribute("view", "ot3-view hide");
 		uiModel.addAttribute("add", "ot3-add");
 		uiModel.addAttribute("update", "ot3-update");
 		uiModel.addAttribute("method", "post");
@@ -351,6 +361,36 @@ public abstract class BaseCrudController<T extends BaseEntity> {
 		uiModel.addAttribute("mode", "form");
 		uiModel.addAttribute("search", "ot3-search hide");
 		uiModel.addAttribute("form", "ot3-form");
+		uiModel.addAttribute("view", "ot3-view hide");
+
+		// load default search page settings
+		onLoadSearch(null, null, uiModel, request, response);
+		return singlePage;
+	}
+	
+	/**
+	 * @param id
+	 * @param uiModel
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/view/{id}", method = RequestMethod.GET)
+	public String getDisplayHtml(@PathVariable("id") Long id, Model uiModel,
+			HttpServletRequest request, HttpServletResponse response) {
+		T command = null;
+		if (id > 0) {
+			command = service.load(id);
+			uiModel.addAttribute("add", "ot3-add hide");
+			uiModel.addAttribute("update", "ot3-update hide");
+			uiModel.addAttribute("method", "put");
+		} 
+		uiModel.addAttribute("formCommand", command);
+		uiModel.addAttribute("searchCommand", BeanUtils.instantiateClass(this.entityBeanType));
+		uiModel.addAttribute("mode", "view");
+		uiModel.addAttribute("search", "ot3-search hide");
+		uiModel.addAttribute("form", "ot3-form hide");
+		uiModel.addAttribute("view", "ot3-view");
 
 		// load default search page settings
 		onLoadSearch(null, null, uiModel, request, response);
@@ -447,12 +487,39 @@ public abstract class BaseCrudController<T extends BaseEntity> {
 			final HttpServletResponse response) {
 		transactionTemplate.execute(new TransactionCallbackWithoutResult() {
 			protected void doInTransactionWithoutResult(TransactionStatus status) {
+				preProcessTaggableEntities(command);
 				preCreate(command, bindingResult, uiModel, request, response);
 				service.save(command);
+				postProcessTaggableEntities(command);
 				postCreate(command, bindingResult, uiModel, request, response);
 			}
 		});
 		
+	}
+	
+	/**
+	 * Check if entity is an instance of {@link Taggable}. If so, save the tags.
+	 * @param command
+	 */
+	private void preProcessTaggableEntities(T command) {
+		if (Taggable.class.isAssignableFrom(command.getClass())) {
+			Taggable taggable = (Taggable)command;
+			tagService.preProcessTags(taggable, command.getId(), this.entityBeanType);
+		}
+	}
+	
+	private void postProcessTaggableEntities(T command) {
+		if (Taggable.class.isAssignableFrom(command.getClass())) {
+			Taggable taggable = (Taggable)command;
+			if(taggable.getTags() != null && !taggable.getTags().isEmpty()) {
+				for(Tag tag : taggable.getTags()) {
+					if(tag.getTaggableId() == null) {
+						tag.setTaggableId(command.getId());
+						tagService.save(tag);
+					}
+				}
+			}
+		}
 	}
 
 	/**
@@ -516,6 +583,7 @@ public abstract class BaseCrudController<T extends BaseEntity> {
 			final HttpServletResponse response) {
 		transactionTemplate.execute(new TransactionCallbackWithoutResult() {
 			protected void doInTransactionWithoutResult(TransactionStatus status) {
+				preProcessTaggableEntities(command);
 				preUpdate(command, bindingResult, uiModel, request, response);
 				service.save(command);
 				postUpdate(command, bindingResult, uiModel, request, response);

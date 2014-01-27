@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+	<TAG ID="1" TAG_TEXT="Tag 1" TAGGABLE_CLASS="org.opentides.bean.SystemCodes" TAGGABLE_ID="1"/>
+	<TAG ID="2" TAG_TEXT="Tag 2" TAGGABLE_CLASS="org.opentides.bean.SystemCodes" TAGGABLE_ID="1"/>
+	<TAG ID="3" TAG_TEXT="Tag 3" TAGGABLE_CLASS="org.opentides.bean.ImageInfo" TAGGABLE_ID="1"/>
+	<TAG ID="4" TAG_TEXT="Tag 4" TAGGABLE_CLASS="org.opentides.bean.ImageInfo" TAGGABLE_ID="2"/>
+</dataset>

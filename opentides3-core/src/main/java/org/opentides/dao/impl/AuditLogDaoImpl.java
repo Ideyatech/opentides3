@@ -19,13 +19,7 @@
 
 package org.opentides.dao.impl;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.log4j.Logger;
@@ -33,128 +27,25 @@ import org.opentides.bean.AuditLog;
 import org.opentides.bean.BaseEntity;
 import org.opentides.bean.user.SessionUser;
 import org.opentides.dao.AuditLogDao;
-import org.opentides.exception.InvalidImplementationException;
 import org.opentides.listener.ApplicationStartupListener;
 import org.opentides.util.DatabaseUtil;
 import org.opentides.util.DateUtil;
 import org.opentides.util.SecurityUtil;
 import org.opentides.util.StringUtil;
+import org.springframework.stereotype.Repository;
 
 /**
  * Logging DAO for audit tracking.
- * This class didn't extend BaseCrudDao to avoid conflict on
- * variables used by BaseEntity.
  * 
  * @author allantan
+ * @author gino
  *
  */
-public class AuditLogDaoImpl implements AuditLogDao {	
+@Repository("auditLogDao")
+public class AuditLogDaoImpl extends BaseEntityDaoJpaImpl<AuditLog, Long> implements AuditLogDao {	
 	
 	private static Logger _log = Logger.getLogger(AuditLogDaoImpl.class);
 	
-	private Properties properties;
-	
-    // the entity manager
-	@PersistenceContext
-    private EntityManager em;
-	    
-	@SuppressWarnings("unchecked")
-	public final List<AuditLog> findAll(int start, int total) {
-		Query query =  getEntityManager().createQuery("from AuditLog obj");
-		if (start > -1) 
-			query.setFirstResult(start);
-		if (total > -1)
-			query.setMaxResults(total);		
-        return query.getResultList();
-	}
-    
-	/**
-	 * Counts all the audit log.
-	 */
-	public final long countAll() {
-		return (Long) getEntityManager().createQuery("select count(*) from AuditLog obj ").getSingleResult();
-	}
-/*		
-	public final long countByExample(AuditLog example) {
-		String whereClause = CrudUtil.buildJpaQueryString(example, false);
-		String append = appendClauseToExample(example);
-		whereClause = doSQLAppend(whereClause, append);
-		if (_log.isDebugEnabled()) _log.debug("Count QBE >> "+whereClause);
-		return (Long) getEntityManager().createQuery("select count(*) from AuditLog obj "
-				 + whereClause).getSingleResult();
-	}
-	
-	@SuppressWarnings("unchecked")
-	public final List<AuditLog> findByExample(AuditLog example, int start, int total) {
-		if (example instanceof Searchable) {
-			Searchable criteria = (Searchable) example;
-			String whereClause = CrudUtil.buildJpaQueryString(criteria, false);
-			String orderClause = " " + appendOrderToExample(example);
-			String append = appendClauseToExample(example);
-			whereClause = doSQLAppend(whereClause, append);
-			if (_log.isDebugEnabled()) _log.debug("QBE >> "+whereClause+orderClause);
-			Query query = getEntityManager().createQuery("from AuditLog obj " + 
-	        		whereClause + orderClause);
-			if (start > -1) 
-				query.setFirstResult(start);
-			if (total > -1)
-				query.setMaxResults(total);	
-			return query.getResultList();
-		} else {
-			throw new InvalidImplementationException("Parameter example ["+example.getClass().getName()+"] is not an instance of Searchable");
-		}
-	}
-*/
-	
-	public final List<AuditLog> findByNamedQuery(final String name, final Map<String,Object> params) {
-		return findByNamedQuery(name, params, -1, -1);
-	}
-	
-	@SuppressWarnings("unchecked")
-	public final List<AuditLog> findByNamedQuery(final String name, final Map<String,Object> params, int start, int total) {
-		String queryString = getJpqlQuery(name);
-		Query queryObject = getEntityManager().createQuery(queryString);
-		if (params != null) {
-			for (Map.Entry<String, Object> entry:params.entrySet())
-				queryObject.setParameter(entry.getKey(), entry.getValue());
-		}
-		if (start > -1) 
-			queryObject.setFirstResult(start);
-		if (total > -1)
-			queryObject.setMaxResults(total);	
-		return queryObject.getResultList();
-	}
-	
-	/**
-	 * Helper method to retrieve the jpql query.
-	 * @param key
-	 * @return
-	 */
-	public final String getJpqlQuery(String key) {
-		String query = (String) properties.get(key);
-		if (StringUtil.isEmpty(query)) {
-			throw new InvalidImplementationException("Key ["+key+"] is not defined in custom jpql property file.");
-		} else
-			return query;
-	}
-
-	/**
-	 * Helper method to append two SQL string.
-	 * @param whereClause
-	 * @param append
-	 * @return
-	 */
-//	private String doSQLAppend(String whereClause, String append) {
-//		if (!StringUtil.isEmpty(append)) {
-//			if (StringUtil.isEmpty(whereClause))
-//				whereClause += " where ";
-//			else
-//				whereClause += " and ";
-//			whereClause += append;
-//		}			
-//		return whereClause;
-//	}
-
 	/**
 	 * Saves the log event into the database.
 	 * @param shortMessage
@@ -205,8 +96,15 @@ public class AuditLogDaoImpl implements AuditLogDao {
 		return "order by createDate desc";
 	}
 	
-	protected String appendClauseToExample(AuditLog example) {
+	@Override
+	protected String appendClauseToExample(AuditLog example, boolean exactMatch) {
 		StringBuilder append = new StringBuilder("");
+		if (!StringUtil.isEmpty(append.toString())){
+			append.append(" and ");
+		}
+		append.append(" obj.message is not null ");
+		append.append(" and ");
+		append.append(" obj.message <> '' ");
 		if (example.getStartDate() != null){
 			if (!StringUtil.isEmpty(append.toString())){
 				append.append(" and ");
@@ -235,23 +133,4 @@ public class AuditLogDaoImpl implements AuditLogDao {
 		return append.toString();
 	}
 	
-	/**
-	 * Setter method for properties.
-	 *
-	 * @param properties the properties to set
-	 */
-	public final void setProperties(Properties properties) {
-		this.properties = properties;
-	}
-
-	public final void setEntityManager(EntityManager em) {
-        this.em = em;
-    }
-	  
-    protected final EntityManager getEntityManager() {
-        if (em == null)
-            throw new IllegalStateException("EntityManager has not been set on DAO before usage");
-        return em;
-    }
-
 }

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<dataset>
+	<USERGROUP ID="981"	NAME="group1" DESCRIPTION="Group 1" />
+	<USERGROUP ID="982" NAME="group2" DESCRIPTION="Group 2" />
+	
+	<USER_PROFILE
+			ID="1"
+			VERSION="5"
+			EMAIL="admin@opentides.com"
+			FIRSTNAME="John"
+			LASTNAME="Doe"
+			FAILED_LOGIN_COUNT="0"
+	/>
+	
+	<USERS 	ID="1" 
+			VERSION="0" 
+			PASSWORD="f895803aa6c5e10d81a40c73a46f4069977fa6c73b7968845556e98d90f28ff6"
+			USERNAME="ADMIN"
+			USERID="1" 
+			ENABLED="1"
+	/>
+	
+	<USER_PROFILE
+			ID="2"
+			VERSION="5"
+			EMAIL="user2@opentides.com"
+			FIRSTNAME="Jane"
+			LASTNAME="Dane"
+			FAILED_LOGIN_COUNT="0"
+	/>
+	
+	<USERS 	ID="2" 
+			VERSION="0" 
+			PASSWORD="f895803aa6c5e10d81a40c73a46f4069977fa6c73b7968845556e98d90f28ff6"
+			USERNAME="user2"
+			USERID="2" 
+			ENABLED="1"
+	/>
+	
+	<USER_GROUP USER_ID="1" GROUP_ID="981" />
+	<USER_GROUP USER_ID="2" GROUP_ID="982" />
+	
+	<USER_AUTHORITY id="1" username="Username1"  AUTHORITY="Auths1" USERGROUP_ID="981" />
+	<USER_AUTHORITY id="2" username="Username2"  AUTHORITY="Auths2" USERGROUP_ID="981" />
+	<USER_AUTHORITY id="3" username="Username3"  AUTHORITY="Auths2" USERGROUP_ID="982" />
+	
+</dataset>

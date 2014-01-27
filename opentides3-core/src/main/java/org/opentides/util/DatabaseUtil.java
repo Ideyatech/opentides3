@@ -25,6 +25,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
+import org.apache.log4j.Logger;
+
 /**
  * This utility allows creation of Hibernate session directly.
  * Used for logging purposes.
@@ -32,6 +34,8 @@ import javax.persistence.Persistence;
  * @author allantan
  */
 public class DatabaseUtil {
+	
+	private static final Logger LOGGER = Logger.getLogger(DatabaseUtil.class);
 
     /**
      * Local entity manager to manage database sessions.
@@ -42,6 +46,11 @@ public class DatabaseUtil {
      * Persistence name in hibernate.
      */
     private static String persistenceUnitName = "opentidesPU";
+    
+    /**
+     * Persistence file
+     */
+    private static String persistenceFile = "META-INF/persistence.xml";
     
     /**
      * Database driver class name (e.g. com.mysql.jdbc.Driver)
@@ -80,7 +89,7 @@ public class DatabaseUtil {
     private static void initialize() {
         try { 
 //        	if (emf == null || !emf.isOpen()) {
-            	Properties propertiesMap = XMLPersistenceUtil.getProperties("META-INF/persistence.xml", persistenceUnitName);        	
+            	Properties propertiesMap = XMLPersistenceUtil.getProperties(persistenceFile, persistenceUnitName);        	
 //            	if (StringUtil.isEmpty(jndiName)) {
     	            propertiesMap.put("javax.persistence.jdbc.driver", driverClassName);
             		propertiesMap.put("javax.persistence.jdbc.url", url);
@@ -98,7 +107,7 @@ public class DatabaseUtil {
         	entityManager = emf.createEntityManager();        	
         } catch (Throwable ex) {
             // Make sure you log the exception, as it might be swallowed
-            System.err.println("Initial EntityManager creation failed." + ex);
+            LOGGER.error("Initial EntityManager creation failed.", ex);
             throw new ExceptionInInitializerError(ex);
         }	
     }
@@ -156,6 +165,14 @@ public class DatabaseUtil {
 	 */
 	public final void setPersistenceUnitName(String persistenceUnitName) {
 		DatabaseUtil.persistenceUnitName = persistenceUnitName;
+	}
+	
+	/**
+	 * 
+	 * @param persistenceFile
+	 */
+	public final void setPersistenceFile(String persistenceFile) {
+		DatabaseUtil.persistenceFile = persistenceFile;
 	}
 	
 }

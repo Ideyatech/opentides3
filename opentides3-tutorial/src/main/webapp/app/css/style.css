@@ -1,0 +1,192 @@
+/* css for the tutorial page */
+
+div.example {
+	position: relative;
+	margin: 15px 0;
+	padding: 39px 19px 14px;
+	background-color: #fff;
+	border: 1px solid #ddd;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+	z-index: 10;
+}
+
+div.highlight {
+	position: relative;
+	margin: -30px 0 15px 0;
+	padding: 19px 19px 14px;
+	background-color: #f5f5f5;
+	border: 1px solid #ddd;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+}
+
+div.highlight-alt {
+	position: relative;
+	margin: 0px 0 15px 0;
+	padding: 19px 19px 14px;
+	background-color: #f5f5f5;
+	border: 1px solid #ddd;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+}
+
+div.example:after {
+	content: "Example";
+	position: absolute;
+	top: -1px;
+	left: -1px;
+	padding: 3px 7px;
+	font-size: 12px;
+	font-weight: bold;
+	background-color: #f5f5f5;
+	border: 1px solid #ddd;
+	color: #9da0a4;
+	-webkit-border-radius: 4px 0 4px 0;
+	-moz-border-radius: 4px 0 4px 0;
+	border-radius: 4px 0 4px 0;
+}
+
+span.code {
+	font-family: Monaco,Menlo,Consolas,"Courier New",monospace;
+	font-size: 12px;
+}
+
+span.code-emphasize {
+	font-family: Monaco,Menlo,Consolas,"Courier New",monospace;
+	font-size: 14px;
+	font-weight: bold;
+	color: #08c;
+}
+
+p.lead span.code-emphasize{
+	font-size: 20px;
+}
+
+span.code-gray {
+	font-family: Monaco,Menlo,Consolas,"Courier New",monospace;
+	font-size: 12px;
+	color: #555;
+}
+
+span.code-red {
+	color: #d14;
+}
+
+span.code-teal {
+	color: teal;
+}
+
+span.code-gray {
+	color: #555;
+}
+
+span.code-maroon{
+	color: #7B0052;
+	font-weight: bold;
+}
+
+td.wider {
+	width: 130px;
+}
+
+/* ul.side-nav { */
+/* 	background-color: #fff; */
+/* 	-webkit-border-radius: 3px; */
+/* 	-moz-border-radius: 3px; */
+/* 	border-radius: 3px; */
+/* 	-webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, .065); */
+/* 	-moz-box-shadow: 0 1px 4px rgba(0, 0, 0, .065); */
+/* 	box-shadow: 0 1px 4px rgba(0, 0, 0, .065); */
+/* 	width: 100%; */
+/* } */
+
+/* ul.side-nav li a { */
+/* 	padding: 4px 0px 4px 14px; */
+/* 	cursor: pointer; */
+/* } */
+
+
+ul.side-nav li a{
+	border: 1px solid #e5e5e5;
+	margin: 0 0 -1px;
+	padding: 8px 14px;
+}
+
+ul.side-nav{
+	padding: 0;
+	background-color: #fff;
+	-webkit-box-shadow: 0 1px 4px rgba(0,0,0,.065);
+	-moz-box-shadow: 0 1px 4px rgba(0,0,0,.065);
+	box-shadow: 0 1px 4px rgba(0,0,0,.065);
+	width: 170px;
+}
+
+
+
+a.pointer{
+	cursor: pointer;
+}
+
+ul.side-nav li.nav-header{
+	background-color: #f1f1f1;
+}
+
+code.prettyprint{
+	background-color: #fff;
+	border: 0;
+	padding: 0;
+}
+
+code.prettyprint span.kwd{
+	font-weight: bold;
+}
+
+
+.modal-container{
+	padding: 20px;	
+}
+
+p.tip{
+	font-size: 16px;
+	text-align: center;
+}
+
+section{
+	padding-top: 35px;
+}
+
+@media (max-width: 1200px) {
+	ul.side-nav{
+		width: 150px;
+	}
+}
+
+@media (max-width: 980px) {
+	ul.side-nav{
+		width: 110px;
+	}
+}
+
+@media (max-width: 768px) {
+	#sideBar div{
+		display: none;
+	}
+}
+
+#sideBar{
+	top: 55px;
+}
+
+.temp-nav{
+	background-color: #f5f5f5;
+	padding: 10px;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	font-size: 14px;
+	
+}

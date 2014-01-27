@@ -1,0 +1,40 @@
+<taglib version="2.0" xmlns="http://java.sun.com/xml/j2ee" 
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+		xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd">
+	 <description>Open Tides 3 Social Tag Files</description>
+	 <tlib-version>3.0</tlib-version>
+	 <short-name>social</short-name>
+	 <uri>http://www.ideyatech.com/tides/social</uri>
+	 <tag-file>
+	    <name>social_login</name>
+	    <path>/META-INF/tags/social_login.tag</path>
+	    <attribute>
+	    	<name>socialType</name>
+	    	<required>true</required>
+	    </attribute>
+	    <attribute>
+	    	<name>labelCode</name>
+	    	<required>false</required>
+	    </attribute>
+	    <attribute>
+	    	<name>cssClass</name>
+	    	<required>false</required>
+	    </attribute>
+	    <attribute>
+	    	<name>iconClass</name>
+	    	<required>false</required>
+	    </attribute>
+	 </tag-file>
+	 <tag-file>
+	    <name>social_link</name>
+	    <path>/META-INF/tags/social_link.tag</path>
+	    <attribute>
+	    	<name>socialType</name>
+	    	<required>true</required>
+	    </attribute>
+	    <attribute>
+	    	<name>user</name>
+	    	<required>true</required>
+	    </attribute>
+	 </tag-file>
+</taglib>

@@ -2,7 +2,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
-<%@ taglib prefix="app" uri="http://www.ideyatech.com/tides"%>
+<%@ taglib prefix="tides" uri="http://www.ideyatech.com/tides"%>
+<%@ taglib prefix="app" tagdir="/WEB-INF/tags"%>
 
 <form:form id="user-upload-photo" commandName="command" enctype="multipart/form-data"
 		method="POST" action="/user/photo/upload?id=${command.id}">

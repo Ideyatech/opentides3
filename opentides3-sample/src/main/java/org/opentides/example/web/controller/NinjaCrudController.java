@@ -81,7 +81,7 @@ public class NinjaCrudController extends BaseCrudController<Ninja> {
 		uiModel.addAttribute("results", search(command, request));
 	}
 	
-	@Override
+	/*@Override
 	protected void preUpdate(Ninja command) {
 		command.setTags(tagService.createTags(command.getCsTags().split(",")));
 	}
@@ -89,6 +89,6 @@ public class NinjaCrudController extends BaseCrudController<Ninja> {
 	@Override
 	protected void preCreate(Ninja command) {
 		command.setTags(tagService.createTags(command.getCsTags().split(",")));
-	}
+	}*/
 
 }

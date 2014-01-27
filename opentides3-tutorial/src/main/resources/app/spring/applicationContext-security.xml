@@ -1,0 +1,409 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:sec="http://www.springframework.org/schema/security" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+                        http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+
+	<sec:http pattern="/css/**" security="none"/>
+	<sec:http pattern="/js/**" security="none"/>
+	<sec:http pattern="/img/**" security="none"/>
+	<sec:http pattern="/font/**" security="none"/>
+	<sec:http pattern="/register**" security="none"/>
+	
+	<sec:http pattern="/facebook/**" security="none"/>
+	<sec:http pattern="/twitter/**" security="none"/>
+	<sec:http pattern="/google/**" security="none"/>
+	
+    <sec:global-method-security secured-annotations="enabled"/>
+
+	<sec:http auto-config='false' use-expressions="true"
+		access-decision-manager-ref="httpRequestAccessDecisionManager">
+		<sec:intercept-url pattern="/"  access="permitAll"/>
+
+		<sec:form-login login-page="/"
+			default-target-url="/"
+			authentication-failure-url="/?login_error=authentication-failed" login-processing-url="/login"/>
+
+		<sec:logout logout-url="/logout" logout-success-url="/" />
+		<sec:intercept-url pattern="/**" access="isAuthenticated()" />
+
+		<sec:anonymous />
+		<sec:http-basic />
+		
+		<sec:remember-me />
+		<sec:session-management invalid-session-url="/?login_error=expired-session">
+			<sec:concurrency-control max-sessions="1" expired-url="/?login_error=invalid-session" session-registry-alias="sessionRegistry" />
+		</sec:session-management>
+<!-- 	
+		
+		<sec:custom-filter ref="expiredSessionFilter" after="BASIC_AUTH_FILTER"/>
+
+		<sec:custom-filter ref="concurrentSessionPromptFilter" before="CONCURRENT_SESSION_FILTER"/>
+		<sec:custom-filter ref="concurrentSessionRedirectFilter" after="BASIC_AUTH_FILTER"/>
+
+		<sec:intercept-url pattern="/widgetDisplay.jspx*" access="hasIpAddress('127.0.0.1/24') OR hasIpAddress('::1/128')"/>
+	
+		<sec:intercept-url pattern="/login*" access="hasRole('ROLE_ANONYMOUS')" />
+		<sec:intercept-url pattern="/organization/**" access="hasRole('ACCESS_ORGANIZATION_TAB')" />
+		<sec:intercept-url pattern="/system/**" access="hasRole('ACCESS_SYSTEM_TAB')" />
+ -->
+
+	</sec:http>
+	
+	<sec:authentication-manager alias="authenticationManager">
+		<sec:authentication-provider
+			user-service-ref="authenticationService">
+			<sec:password-encoder ref="passwordEncoder" />
+		</sec:authentication-provider>
+		<sec:authentication-provider ref="socialAuthenticationProvider" />
+	</sec:authentication-manager>
+		
+	<bean id="socialAuthenticationProvider" class="org.opentides.social.security.SocialAuthenticationProvider"/>
+
+	<bean id="httpRequestAccessDecisionManager"
+		class="org.springframework.security.access.vote.AffirmativeBased">
+		<property name="allowIfAllAbstainDecisions">
+			<value>false</value>
+		</property>
+		<property name="decisionVoters">
+			<list>
+				<ref bean="roleVoter" />
+				<ref bean="authenticatedVoter" />
+				<ref bean="expressionVoter" />
+			</list>
+		</property>
+	</bean>
+	
+	<!-- to keep track of last login and last login error -->
+	<bean id="loginListener" class="org.opentides.listener.LoginListener" autowire="byName" />
+	
+	<bean id="logoutHandler" class="org.opentides.listener.LogoutListener" autowire="byName">
+		<property name="defaultTargetUrl" value="/login?login_error=logout" />
+	</bean>
+	
+<!-- 	
+	<bean id="promptChangePasswordHandler" class="com.attache.web.security.PromptChangePasswordHandler">
+		<property name="promptEnabled" value="${change-password-prompt}" />
+	</bean>
+-->	
+	<bean id="roleVoter" class="org.springframework.security.access.vote.RoleVoter">
+		<property name="rolePrefix" value="ROLE_" />
+	</bean>
+
+	<bean id="authenticatedVoter"
+		class="org.springframework.security.access.vote.AuthenticatedVoter" />
+
+	<bean id="expressionVoter"
+		class="org.springframework.security.web.access.expression.WebExpressionVoter" />
+
+	<bean id="passwordEncoder"
+		class="org.springframework.security.authentication.encoding.ShaPasswordEncoder">
+		<constructor-arg value="256" />
+	</bean>
+
+	<bean id="authenticationService"
+		class="org.opentides.persistence.user.AuthenticationDaoJdbcImpl">
+		<property name="dataSource">
+			<ref bean="dataSource" />
+		</property>
+		<property name="usersByUsernameQuery">
+			<value>SELECT username,password,enabled FROM USERS WHERE username=?
+			</value>
+		</property>
+		<property name="authoritiesByUsernameQuery">
+			<value>SELECT u.username,authority from USERS as u 
+					inner join USER_GROUP g on u.userid=g.user_id 
+					inner join USER_AUTHORITY a on g.group_id = a.usergroup_id
+					where u.username=?</value>
+		</property>
+	</bean>
+	
+	<bean id="authorities" class="org.opentides.bean.MapDBFactoryBean">
+		<property name="systemCodesDao" ref="systemCodesDao" />
+		<property name="systemCodesCategory" value="SYSTEM_PERMISSION"/>
+		<property name="sourceMap">
+			<map merge="true">
+				<!-- Value should start with 4 segment numerical scheme
+				     For Example: 01.00.00.00 which refers to 4 levels of access rights.
+				     Recommended convention as follows:
+				     	<TAB>.<PAGE>.<ACTION>.<FIELD>
+				-->
+				<!-- DASHBOARD TAB -->
+				<entry key="ACCESS_DASHBOARD_TAB">
+					<value>01.00.00.00 Access Dashboard Tab</value>
+				</entry>
+				
+				<!-- SAMPLES TAB -->
+				<entry key="ACCESS_SAMPLE_TAB">
+					<value>02.00.00.00 Access Samples Tab</value>
+				</entry>
+
+				<!-- NINJA -->
+				<entry key="MANAGE_NINJA_PAGE">
+					<value>02.01.00.00 Manage Ninja Page</value>
+				</entry>
+				<entry key="SEARCH_NINJA">
+					<value>02.01.01.00 Search Ninja</value>
+				</entry>
+				<entry key="VIEW_NINJA">
+					<value>02.01.02.00 View Ninja</value>
+				</entry>
+				<entry key="ADD_NINJA">
+					<value>02.01.03.00 Add Ninja</value>
+				</entry>
+				<entry key="EDIT_NINJA">
+					<value>02.01.04.00 Edit Ninja</value>
+				</entry>
+				<entry key="DELETE_NINJA">
+					<value>02.01.05.00 Delete Ninja</value>
+				</entry>
+				
+				<!-- ... Add all tabs in here ... -->	
+				
+				<!-- ORGANIZATION TAB -->
+				<entry key="ACCESS_ORGANIZATION_TAB">
+					<value>10.00.00.00 Access Organization Tab</value>
+				</entry>
+				
+				<!-- DIVISION -->
+				<entry key="MANAGE_DIVISION_PAGE">
+					<value>10.01.00.00 Manage Division Page</value>
+				</entry>
+				<entry key="SEARCH_DIVISION">
+					<value>10.01.01.00 Search Division</value>
+				</entry>
+				<entry key="VIEW_DIVISION">
+					<value>10.01.02.00 View Division</value>
+				</entry>
+				<entry key="ADD_DIVISION">
+					<value>10.01.03.00 Add Division</value>
+				</entry>
+				<entry key="EDIT_DIVISION_MEMBERS">
+					<value>10.01.04.00 Edit Division Members</value>
+				</entry>
+				<entry key="DELETE_DIVISION">
+					<value>10.01.05.00 Delete Division</value>
+				</entry>
+		
+				<!-- USERS -->
+				<entry key="MANAGE_USER_PAGE">
+					<value>10.02.00.00 Manage Users Page</value>
+				</entry>
+				<entry key="SEARCH_USER">
+					<value>10.02.01.00 Search Users</value>
+				</entry>
+				<entry key="VIEW_USER">
+					<value>10.02.02.00 View Users</value>
+				</entry>
+				<entry key="ADD_USER">
+					<value>10.02.03.00 Add User</value>
+				</entry>
+				<entry key="EDIT_USER_PROFILE">
+					<value>10.02.04.00 Edit User Profile</value>
+				</entry>
+				<entry key="MARK_USER_INACTIVE">
+					<value>10.02.05.00 Mark User Inactive</value>
+				</entry>
+				<entry key="CHANGE_ASSIGNMENT">
+					<value>10.02.06.00 Change Assignment</value>
+				</entry>
+				<entry key="CHANGE_PASSWORD">
+					<value>10.02.07.00 Change Password</value>
+				</entry>
+				<entry key="DELETE_USER">
+					<value>10.02.08.00 Delete User</value>
+				</entry>
+				
+				<!-- ROLES -->
+				<entry key="MANAGE_USERGROUP_PAGE">
+					<value>10.03.00.00 Manage Roles</value>
+				</entry>
+				<entry key="SEARCH_USERGROUP">
+					<value>10.03.01.00 Search Role</value>
+				</entry>
+				<entry key="VIEW_USERGROUP">
+					<value>10.03.02.00 View Role</value>
+				</entry>
+				<entry key="ADD_USERGROUP">
+					<value>10.03.03.00 Add Role</value>
+				</entry>
+				<entry key="EDIT_USERGROUP">
+					<value>10.03.04.00 Edit Role</value>
+				</entry>
+				<entry key="DELETE_USERGROUP">
+					<value>10.03.05.00 Delete Role</value>
+				</entry>
+				
+				<!-- SYSTEM -->				
+				<entry key="ACCESS_SYSTEM_TAB">
+					<value>11.00.00.00 Access System Tab</value>
+				</entry>				
+				
+				<!-- SYSTEM CODES -->
+				<entry key="MANAGE_ANNOUNCEMENT_PAGE">
+					<value>11.01.00.00 Manage Announcements</value>
+				</entry>
+				<entry key="ADD_OWN_ANNOUNCEMENT">
+					<value>11.01.01.00 Add Own Announcements</value>
+				</entry>
+				<entry key="EDIT_OWN_ANNOUNCEMENT">
+					<value>11.01.02.00 Edit Own Announcements</value>
+				</entry>
+				<entry key="DELETE_OWN_ANNOUNCEMENT">
+					<value>11.01.03.00 Delete Own Announcements</value>
+				</entry>
+				<entry key="CAN_MANAGE_ALL_ANNOUNCEMENT">
+					<value>11.01.04.00 Can Manage All Announcements</value>
+				</entry>
+				
+				<!-- SYSTEM CODES -->
+				<entry key="MANAGE_SYSTEM_CODES_PAGE">
+					<value>11.02.00.00 Manage System Codes</value>
+				</entry>
+				<entry key="SEARCH_SYSTEM_CODES">
+					<value>11.02.01.00 Search System Codes</value>
+				</entry>
+				<entry key="VIEW_SYSTEM_CODES">
+					<value>11.02.02.00 View System Codes</value>
+				</entry>
+				<entry key="ADD_SYSTEM_CODES">
+					<value>11.02.03.00 Add System Codes</value>
+				</entry>
+				<entry key="EDIT_SYSTEM_CODES">
+					<value>11.02.04.00 Edit System Codes</value>
+				</entry>
+				<entry key="DELETE_SYSTEM_CODES">
+					<value>11.02.05.00 Delete System Codes</value>
+				</entry>
+
+				<!-- REPORTS -->				
+				<entry key="MANAGE_REPORTS_PAGE">
+					<value>11.03.00.00 Manage Reports</value>
+				</entry>
+				
+				<!-- WIDGETS -->				
+				<entry key="MANAGE_WIDGETS_PAGE">
+					<value>11.04.00.00 Manage Widgets</value>
+				</entry>
+				
+				<!-- USER DEFINED FIELDS -->				
+				<entry key="MANAGE_USER_DEFINED_FIELD_PAGE">
+					<value>11.05.00.00 Manage User Defined Fields</value>
+				</entry>
+
+				<!-- MONITOR -->
+				<entry key="MONITOR_SYSTEM_PAGE">
+					<value>11.06.00.00 Monitor System</value>
+				</entry>				
+				
+				<!-- USER SESSION -->
+				<entry key="VIEW_USER_SESSION_PAGE">
+					<value>11.07.00.00 User Session Page</value>
+				</entry>				
+				<entry key="VIEW_SESSION">
+					<value>11.07.01.00 View User Session</value>
+				</entry>
+				<entry key="FORCE_LOGOUT">
+					<value>11.07.02.00 Force User Logout</value>
+				</entry>
+				
+				
+				<!-- AUDIT LOG -->
+				<entry key="SEARCH_AUDIT_LOG_PAGE">
+					<value>11.08.00.00 Search Audit Log</value>
+				</entry>					
+				<entry key="VIEW_AUDIT_LOG">
+					<value>11.08.01.00 View Audit Log</value>
+				</entry>
+				<entry key="SEARCH_AUDIT_LOG">
+					<value>11.08.02.00 Search Audit Log</value>
+				</entry>
+					
+				<!-- FEEDBACK MODULE -->
+				<entry key="VIEW_FEEDBACK_PAGE">
+					<value>11.09.00.00 View Feedback Page</value>
+				</entry>
+				<entry key="VIEW_ALL_FEEDBACK">
+					<value>11.09.01.00 View All Feedback</value>
+				</entry>
+				<entry key="EDIT_FEEDBACK">
+					<value>11.09.02.00 Edit Feedback</value>
+				</entry>
+				<entry key="DELETE_FEEDBACK">
+					<value>11.09.03.00 Delete Feedback</value>
+				</entry>
+				<entry key="CAN_HANDLE_FEEDBACK">
+					<value>11.09.04.00 Can Handle Feedback</value>
+				</entry>
+				
+				<entry key="VIEW_TOOL_TIP_PAGE">
+					<value>11.10.00.00 View Tool-Tip Page</value>
+				</entry>
+				<entry key="ADD_TOOL_TIP_PAGE">
+					<value>11.10.01.00 Add New Tool-Tip</value>
+				</entry>
+				<entry key="UPDATE_TOOL_TIP_PAGE">
+					<value>11.10.02.00 Update Tool-Tip</value>
+				</entry>
+				<entry key="DELETE_TOOL_TIP_PAGE">
+					<value>11.10.03.00 Delete Tool-Tip</value>
+				</entry>
+				
+				<entry key="VIEW_FORM_INSTRUCTION_PAGE">
+					<value>11.11.00.00 View Instructions Page</value>
+				</entry>
+				<entry key="ADD_FORM_INSTRUCTION">
+					<value>11.11.01.00 Add New Instruction</value>
+				</entry>
+				<entry key="UPDATE_FORM_INSTRUCTION">
+					<value>11.11.02.00 Update Instruction</value>
+				</entry>
+				<entry key="DELETE_FORM_INSTRUCTION">
+					<value>11.11.03.00 Delete Instruction</value>
+				</entry>
+
+				<!-- GENERAL FUNCTIONS -->
+				<entry key="GENERAL_FEATURES">
+					<value>98.00.00.00 General Features</value>
+				</entry>
+				<entry key="ACCOUNT_PROFILE_PAGE">
+					<value>98.01.00.00 Account Profile Page</value>
+				</entry>
+				<entry key="VIEW_ACCOUNT_PROFILE">
+					<value>98.01.01.00 View Account Profile</value>
+				</entry>
+				<entry key="EDIT_USER_PHOTO">
+					<value>98.01.02.00 Edit User Photo</value>
+				</entry>
+				<entry key="LOGIN_USER">
+					<value>98.01.03.00 Login User</value>
+				</entry>
+				<entry key="LOGOUT_USER">
+					<value>98.01.04.00 Logout User</value>
+				</entry>
+				<entry key="CHANGE_PROFILE">
+					<value>98.01.05.00 Change Own Account Profile</value>
+				</entry>				
+				<entry key="CHANGE_PASSWORD">
+					<value>98.01.06.00 Change Own Password</value>
+				</entry>
+
+				<!-- RECORD LEVEL ACCESS RIGHTS -->				
+				<entry key="ACCESS_RIGHTS">
+					<value>99.00.00.00 Record Level Access Rights</value>
+				</entry>
+				<entry key="ACCESS_ALL">
+					<value>99.01.00.00 Access All Cases</value>
+				</entry>
+				<entry key="ACCESS_DIVISION">
+					<value>99.03.00.00 Access Records by Division</value>
+				</entry>
+				<entry key="ACCESS_OWN">
+					<value>99.04.00.00 Access Own Records Only</value>
+				</entry>
+			</map>
+		</property>
+	</bean>
+
+</beans>

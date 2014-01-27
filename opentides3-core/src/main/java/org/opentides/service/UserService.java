@@ -22,7 +22,7 @@ package org.opentides.service;
 import java.util.List;
 
 import org.opentides.bean.user.BaseUser;
-import org.scribe.model.Token;
+import org.opentides.bean.user.UserCredential;
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.session.SessionInformation;
@@ -67,18 +67,49 @@ public interface UserService extends BaseCrudService<BaseUser> {
 	  */
 	 public void forceLogout(String username);
 	 
+	 /**
+	  * Check if the user with the specified username is locked out.
+	  *  
+	  * @param username username of the user
+	  * @param maxAttempts maximum number of attempts
+	  * @param lockOutTime lockout time in seconds
+	  * 
+	  * @return
+	  */
+	 public boolean isUserLockedOut(String username, long maxAttempts, long lockOutTime);
+	 
+	 /**
+	  * Update the details of the user when login failed. <p>This should increment the failed
+	  * login count and update the last failed login timestamp </p>
+	  * 
+	  * @param username username of the user
+	  * @param timestamp the last failed login timestamp
+	  */
+	 public void updateFailedLogin(String username, long timestamp);
+	 
+	 /**
+	  * Unlock a locked-out user
+	  * @param username
+	  */
+	 public void unlockUser(String username);
+	 
+	 /**
+	  * 
+	  * @param name
+	  * @return
+	  */
+	 public List<BaseUser> findUsersLikeLastName(String name, int maxResults);
+	 
+	 /**
+	  * Find all users with authority
+	  * @param authority
+	  * @return
+	  */
+	 public List<BaseUser> findAllUsersWithAuthority(String authority);
+	 
 	 public BaseUser getCurrentUser();
 
 	 public void registerUser(BaseUser baseUser, boolean sendEmail);
-	 public void registerFacebookAccount(BaseUser baseUser, String facebookAccessToken);
-	 public void registerGoogleAccount(BaseUser baseUser, String googleAccessToken);
-	 public void registerTwitterAccount(BaseUser user, String appId, String clientSecret, Token accessToken);
 	 
-	 public BaseUser getUserByFacebookId(String facebookId);
-	 public BaseUser getUserByFacebookAccessToken(String facebookAccessToken);
-	 public BaseUser getUserByGoogleId(String googleId);
-	 public BaseUser getUserByGoogleAccessToken(String googleAccessToken);
-	 public BaseUser getUserByTwitterId(String twitterId);
-	 public BaseUser getUserByTwitterAccessToken(String appId, String clientSecret, Token token);
-
+	 public UserCredential generateFakeCredentials();
 }

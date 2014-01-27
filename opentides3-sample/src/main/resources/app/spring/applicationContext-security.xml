@@ -11,22 +11,19 @@
 	<sec:http pattern="/font/**" security="none"/>
 	<sec:http pattern="/register**" security="none"/>
 	
-	<sec:http pattern="/facebook/connect**" security="none"/>
-	<sec:http pattern="/facebook/callback**" security="none"/>
-	<sec:http pattern="/twitter/connect**" security="none"/>
-	<sec:http pattern="/twitter/callback**" security="none"/>
-	<sec:http pattern="/google/connect**" security="none"/>
-	<sec:http pattern="/google/callback**" security="none"/>
+	<sec:http pattern="/facebook/**" security="none"/>
+	<sec:http pattern="/twitter/**" security="none"/>
+	<sec:http pattern="/google/**" security="none"/>
 	
     <sec:global-method-security secured-annotations="enabled"/>
 
 	<sec:http auto-config='false' use-expressions="true"
 		access-decision-manager-ref="httpRequestAccessDecisionManager">
-		<sec:intercept-url pattern="/"  access="permitAll"/>
+		<sec:intercept-url pattern="/login"  access="permitAll"/>
 
-		<sec:form-login login-page="/"
+		<sec:form-login login-page="/login"
 			default-target-url="/"
-			authentication-failure-url="/?login_error=authentication-failed" login-processing-url="/login"/>
+			authentication-failure-url="/login?login_error=authentication-failed" />
 
 		<sec:logout logout-url="/logout" logout-success-url="/" />
 		<sec:intercept-url pattern="/**" access="isAuthenticated()" />
@@ -62,7 +59,7 @@
 		<sec:authentication-provider ref="socialMediaAuthenticationProvider" />
 	</sec:authentication-manager>
 		
-	<bean id="socialMediaAuthenticationProvider" class="org.opentides.security.SocialMediaAuthenticationProvider"/>
+	<bean id="socialMediaAuthenticationProvider" class="org.opentides.social.security.SocialAuthenticationProvider"/>
 
 	<bean id="httpRequestAccessDecisionManager"
 		class="org.springframework.security.access.vote.AffirmativeBased">

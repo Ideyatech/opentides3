@@ -8,7 +8,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
-<%@ taglib prefix="app" uri="http://www.ideyatech.com/tides"%>
+<%@ taglib prefix="tides" uri="http://www.ideyatech.com/tides"%>
+<%@ taglib prefix="app" tagdir="/WEB-INF/tags"%>
 
 <app:header pageTitle="label.%%%%" active="%%%%"/>
 
@@ -49,7 +50,7 @@
 			<div class="status" data-display-pagelinks="false" data-display-summary="true" data-summary-message='
 				<spring:message code="message.displaying-x-of-y" arguments="#start,#end,#total,records"/>
 			'>
-				<app:status results="${results}" />
+				<tides:status results="${results}" />
 			</div>
 		</div>
 		
@@ -66,7 +67,7 @@
 					</thead>
 					<tbody>
 						<script type="text/template" class="template">
-	                		<tr data-id="{{id}}">
+	                		<tr id="%%%%-row-{{id}}" data-id="{{id}}">
 								<!-- Define template here -->
 								<td>
 									<i class='icon-pencil edit-action' data-id='{{id}}' data-title="<spring:message code="label.edit" />"></i>
@@ -89,7 +90,7 @@
 		</div>
 
 		<div class="paging clearfix">
-			<app:paging results="${results}"/>
+			<tides:paging results="${results}"/>
 		</div>
 	</div>
 	
@@ -122,10 +123,10 @@
 
 </div>
 
-<app:footer>
+<tides:footer>
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$('body').tooltip({selector: '.edit-action, .remove-action'});
 		});
 	</script>
-</app:footer>
+</tides:footer>

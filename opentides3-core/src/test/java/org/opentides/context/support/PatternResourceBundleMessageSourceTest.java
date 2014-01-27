@@ -23,6 +23,12 @@ public class PatternResourceBundleMessageSourceTest {
 		assertEquals("Ninja Message1", ms.getMessage("ninja.message1", null, Locale.getDefault()));
 	}
 	
+	@Test
+	public void testSetBaseNamesAll() {
+		ms.setBasenames("classpath*:languages/*messages.properties");
+		assertEquals("Ninja Message1", ms.getMessage("ninja.message1", null, Locale.getDefault()));
+	}
+	
 	@Test(expected = NoSuchMessageException.class)
 	public void testSetBaseNamesNoMessageFound() {
 		ms.setBasenames("classpath:languages/*messages.properties");

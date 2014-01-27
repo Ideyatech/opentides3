@@ -547,3 +547,53 @@ input[type="search"], input[type="tel"], input[type="color"],
 .combobox .select2-search-choice+.select2-search-field {
 	display: none !important;
 }
+
+/* Uploading of File */
+
+.ot-upload-file #dropzone {
+    background-color: #F0F0F0;
+    border: 1px dotted #CCCCCC;
+    font-weight: bold;
+    height: 50px;
+    line-height: 50px;
+    margin: 10px 0;
+    text-align: center;
+    width: 100%;
+}
+.ot-upload-file #dropzone:hover {
+    background: #E0E0E0;
+}
+
+.ot-upload-file table.ot-image-list p.name {
+	word-break: break-all;
+}
+/**************************/
+/* SOCIAL INTEGRATION CSS */
+/**************************/
+#account-settings-body #my-accounts .col-1 {
+	width: 40px;
+}
+
+#account-settings-body #my-accounts .icon-facebook-sign,
+#account-settings-body #my-accounts .icon-twitter-sign,
+#account-settings-body #my-accounts .icon-google-sign {
+	color: #aaa;
+}
+
+.icon-social-font {
+	font-size: 150px;
+}
+
+.icon-facebook-sign.connected {
+	color: #006dcc !important;
+}
+.icon-twitter-sign.connected {
+	color: #49afcd !important;
+}
+.icon-google-sign.connected {
+	color: #da4f49 !important;
+}
+
+.icon-google-sign:before {
+    content: "\f0d4";
+}

@@ -154,9 +154,10 @@ public class BaseEntityDaoJpaImpl<T extends BaseEntity,ID extends Serializable>
 		String queryString = getJpqlQuery(name);
 		Query queryObject = getEntityManager().createQuery(queryString);
 		if (params != null) {
-			int i=0;
+			int i=1;
 			for (Object obj:params) {
-				queryObject.setParameter(i, obj);				
+				queryObject.setParameter(i, obj);
+				i++;
 			}
 		}
 		if (start > -1) 
@@ -377,7 +378,7 @@ public class BaseEntityDaoJpaImpl<T extends BaseEntity,ID extends Serializable>
 		_log.debug("Saving object " + obj.getClass());
 		setAuditUserId(obj);
 		_log.debug("User ID is " + obj.getAuditUserId());
-		if (obj.isNew())
+		if (obj.isNew()) 
 			getEntityManager().persist(obj);
 		else {
 			getEntityManager().merge(obj);

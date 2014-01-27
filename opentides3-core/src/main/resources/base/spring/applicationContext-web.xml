@@ -3,12 +3,12 @@
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:p="http://www.springframework.org/schema/p"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
-						http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd                 
+						http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd                 
 						http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
 						http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd">
 
-	<!-- The controllers are autodetected POJOs labeled with the @Controller
+	<!-- The controllers are autodetected POJOs labeled with the @Controller 
 		annotation. -->
 	<context:component-scan base-package="org.opentides.web"
 		use-default-filters="false">
@@ -16,7 +16,7 @@
 			type="annotation" />
 	</context:component-scan>
 
-	<!-- Turns on support for mapping requests to Spring MVC @Controller methods
+	<!-- Turns on support for mapping requests to Spring MVC @Controller methods 
 		Also registers default Formatters and Validators for use across all @Controllers -->
 	<mvc:annotation-driven conversion-service="applicationConversionService">
 		<mvc:message-converters>
@@ -49,14 +49,14 @@
 		</property>
 	</bean>
 
-	<!-- Handles HTTP GET requests for /resources/** by efficiently serving
+	<!-- Handles HTTP GET requests for /resources/** by efficiently serving 
 		up static resources -->
 	<mvc:resources location="/base/css/,/app/css/" mapping="/css/**" />
 	<mvc:resources location="/base/js/,/app/js/" mapping="/js/**" />
 	<mvc:resources location="/base/img/,/app/img/" mapping="/img/**" />
 	<mvc:resources location="/base/font/,/app/font/" mapping="/font/**" />
-
-	<!-- Allows for mapping the DispatcherServlet to "/" by forwarding static
+	
+	<!-- Allows for mapping the DispatcherServlet to "/" by forwarding static 
 		resource requests to the container's default Servlet -->
 	<!-- <mvc:default-servlet-handler /> -->
 
@@ -86,9 +86,9 @@
 		class="org.springframework.web.servlet.theme.CookieThemeResolver"
 		p:cookieName="theme" p:defaultThemeName="default" />
 
-	<!-- This bean resolves specific types of exceptions to corresponding logical
-		- view names for error views. The default behaviour of DispatcherServlet
-		- is to propagate all exceptions to the servlet container: this will happen
+	<!-- This bean resolves specific types of exceptions to corresponding logical 
+		- view names for error views. The default behaviour of DispatcherServlet 
+		- is to propagate all exceptions to the servlet container: this will happen 
 		- here with all other types of exceptions. -->
 	<bean class="org.opentides.web.AlertingExceptionResolver"
 		p:defaultErrorView="uncaughtException">
@@ -103,7 +103,7 @@
 		</property>
 	</bean>
 
-	<!-- Selects a static view for rendering without the need for an explicit
+	<!-- Selects a static view for rendering without the need for an explicit 
 		controller -->
 	<!-- <mvc:view-controller path="/" view-name="index" /> -->
 	<mvc:view-controller path="/uncaughtException" />
@@ -131,40 +131,6 @@
 	<!-- Application Startup Listener -->
 	<bean id="startupListener" class="org.opentides.listener.ApplicationStartupListener">
 		<property name="propertyName" value="${property.name}" />
-	</bean>
-
-	<!-- Add system properties through spring XML configuration. -->
-	<bean
-		class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
-		<property name="targetObject">
-			<bean
-				class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
-				<property name="targetClass" value="java.lang.System" />
-				<property name="targetMethod" value="getProperties" />
-			</bean>
-		</property>
-		<property name="targetMethod" value="putAll" />
-		<property name="arguments">
-			<util:properties>
-				<prop key="facebook.domainUrl">http://localhost:8080/Opentides/</prop>
-				<prop key="facebook.appID">443772175710131</prop>
-				<prop key="facebook.clientSecret">5264d6fbef180542cc2d41190366d547</prop>
-				<prop key="facebook.callback">http://localhost:8080/Opentides/facebook/callback</prop>
-				<prop key="facebook.apiClass">org.scribe.builder.api.FacebookApi</prop>
-
-				<prop key="google.domainUrl">http://localhost:8080/Opentides/</prop>
-				<prop key="google.appID">403711571000.apps.googleusercontent.com</prop>
-				<prop key="google.clientSecret">nzW9HyRqJJSn5-JeMdoPPYNh</prop>
-				<prop key="google.callback">http://localhost:8080/Opentides/google/callback</prop>
-				<prop key="google.apiClass">org.opentides.social.bean.Google2Api</prop>
-
-				<prop key="twitter.domainUrl">http://127.0.0.1:8080/Opentides/</prop>
-				<prop key="twitter.appID">TilpFfrcjfa2E0tEoeK9A</prop>
-				<prop key="twitter.clientSecret">LvD44MHWgGMl1lkLYUavmwD0V0ujl6HkecpymwYiutU</prop>
-				<prop key="twitter.callback">http://127.0.0.1:8080/Opentides/twitter/callback</prop>
-				<prop key="twitter.apiClass">org.scribe.builder.api.TwitterApi</prop>
-			</util:properties>
-		</property>
 	</bean>
 
 </beans>

@@ -18,8 +18,6 @@
  */
 package org.opentides.dao.impl;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -62,27 +60,25 @@ public class SystemCodesDaoJpaImpl extends BaseEntityDaoJpaImpl<SystemCodes, Lon
 	 * Returns all the available categories.
 	 * @return
 	 */
-	public List<SystemCodes> getAllCategories() {
-		Map<String, Object> map = new HashMap<String, Object>();
-		List<SystemCodes> list = findByNamedQuery("jpql.systemcodes.findAllCategories", map);
-		if (list == null || list.size() == 0)
-			return null;
-		return list;
+	@SuppressWarnings("unchecked")
+	public List<String> getAllCategories() {
+		String queryString = getJpqlQuery("jpql.systemcodes.findAllCategories");
+		Query queryObject = getEntityManager().createQuery(queryString);
+		
+		return queryObject.getResultList();
 	}
 
 	/** 
      * Selects all available categories except for the
      * specified ones 
      */
-	public List<SystemCodes> getAllCategoriesExcept(String... categories) {
-		Map<String, Object> map = new HashMap<String, Object>();
-		List<String> categoryList = new ArrayList<String>();
-		Collections.addAll(categoryList, categories);
-		map.put("categories", categoryList);
-		List<SystemCodes> list = findByNamedQuery("jpql.systemcodes.findAllCategoriesExcept", map);
-		if (list == null || list.size() == 0)
-			return new ArrayList<SystemCodes>();
-		return list;
+	@SuppressWarnings("unchecked")
+	public List<String> getAllCategoriesExcept(String... categories) {
+		String queryString = getJpqlQuery("jpql.systemcodes.findAllCategoriesExcept");
+		Query queryObject = getEntityManager().createQuery(queryString);
+		queryObject.setParameter("categories", categories);
+		
+		return queryObject.getResultList();
 	}
 
 	/* (non-Javadoc)

@@ -32,9 +32,9 @@
 	</bean>
 
 	<!-- Aspect Oriented and Annotation Transaction Declaration -->
-
+	
 	<tx:annotation-driven transaction-manager="transactionManager" order="9"/>
-
+	
 	<tx:advice id="txAdvice">
 		<tx:attributes>
 			<tx:method name="get*" read-only="true" />
@@ -51,13 +51,14 @@
 		<aop:advisor pointcut-ref="openTidesServicePointCut"
 			advice-ref="txAdvice" order="10"/>
 	</aop:config>
-
+	
 	<!-- Property file containing custom JPQL queries -->
 	<bean id="jpqlProperties"
 		class="org.springframework.beans.factory.config.PropertiesFactoryBean">
 		<property name="locations">
 			<list>
 				<value>classpath:base/jpql/core.properties</value>
+				<value>classpath:social/jpql/social.properties</value>
 				<value>${jpql.custom.properties}</value>
 			</list>
 		</property>
@@ -105,12 +106,12 @@
 			</map>
 		</property>
 	</bean>
-
+	
 	<!-- Multipart Resolver -->
     <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
         <property name="maxUploadSize" value="${fileupload.max_size}"/>
     </bean>
-
+    
     <!-- Velocity Engine -->
     <bean id="velocityEngine"
 		class="org.springframework.ui.velocity.VelocityEngineFactoryBean">

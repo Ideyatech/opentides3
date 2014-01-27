@@ -35,6 +35,7 @@ import org.apache.log4j.Logger;
 import org.hibernate.CallbackException;
 import org.hibernate.EmptyInterceptor;
 import org.hibernate.type.Type;
+import org.opentides.bean.AuditLog;
 import org.opentides.bean.BaseEntity;
 import org.opentides.dao.impl.AuditLogDaoImpl;
 import org.opentides.util.CrudUtil;
@@ -65,7 +66,7 @@ public class AuditLogInterceptor extends EmptyInterceptor {
                           String[] propertyNames, 
                           Type[] types) 
             throws CallbackException { 
-        if (entity instanceof BaseEntity) {
+        if (entity instanceof BaseEntity && !(entity instanceof AuditLog)) {
         	synchronized(inserts) {
         		inserts.add((BaseEntity)entity);
         	}
@@ -79,7 +80,7 @@ public class AuditLogInterceptor extends EmptyInterceptor {
 	@Override
 	public void onDelete(Object entity, Serializable id, Object[] state,
 			String[] propertyNames, Type[] types) {
-        if (entity instanceof BaseEntity) {
+        if (entity instanceof BaseEntity && !(entity instanceof AuditLog)) {
         	synchronized(deletes) {
         		deletes.add((BaseEntity)entity);
         	}
@@ -94,7 +95,7 @@ public class AuditLogInterceptor extends EmptyInterceptor {
                                 String[] propertyNames, 
                                 Type[] types) 
             throws CallbackException { 
-        if (entity instanceof BaseEntity) {
+        if (entity instanceof BaseEntity && !(entity instanceof AuditLog)) {
         	EntityManager em = null;
         	try {
         		BaseEntity auditable = (BaseEntity) entity;

@@ -26,6 +26,7 @@ import org.springframework.validation.Validator;
 
 public class UserGroupValidator implements Validator {
 
+	@SuppressWarnings("rawtypes")
 	public boolean supports(Class clazz) {
 		return UserGroup.class.isAssignableFrom(clazz);
 	}

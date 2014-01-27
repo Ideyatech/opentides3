@@ -19,6 +19,8 @@
 
 package org.opentides.dao;
 
+import org.opentides.bean.AuditLog;
+
 
 
 /**
@@ -26,18 +28,6 @@ package org.opentides.dao;
  * 
  * @author allantan 
  */
-public interface AuditLogDao {
-
-//	public List<AuditLog> findAll(int start, int total);
-	
-//	public long countAll();
-	
-//	public long countByExample(AuditLog example);
-		
-//	public List<AuditLog> findByExample(AuditLog example, int start, int total);
-	
-//	public List<AuditLog> findByNamedQuery(final String name, final Map<String,Object> params);
-
-//	public List<AuditLog> findByNamedQuery(final String name, final Map<String,Object> params, int start, int total);
+public interface AuditLogDao extends BaseEntityDao<AuditLog, Long> {
 
 }

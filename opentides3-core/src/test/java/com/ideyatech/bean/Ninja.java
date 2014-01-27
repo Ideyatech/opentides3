@@ -27,12 +27,10 @@ import org.opentides.annotation.field.TextField;
 import org.opentides.annotation.field.Validation;
 import org.opentides.bean.BaseEntity;
 import org.opentides.bean.Comment;
-import org.opentides.bean.PhotoInfo;
+import org.opentides.bean.Commentable;
+import org.opentides.bean.ImageInfo;
+import org.opentides.bean.ImageUploadable;
 import org.opentides.bean.SystemCodes;
-import org.opentides.bean.Tag;
-import org.opentides.bean.impl.Commentable;
-import org.opentides.bean.impl.Photoable;
-import org.opentides.bean.impl.Taggable;
 import org.opentides.util.StringUtil;
 import org.opentides.web.json.Views;
 import org.springframework.web.multipart.MultipartFile;
@@ -47,7 +45,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 @Entity  
 @Table(name="NINJA")
 @Auditable
-public class Ninja extends BaseEntity implements Commentable, Taggable, Photoable {
+public class Ninja extends BaseEntity implements Commentable, ImageUploadable {
 	
 private static final long serialVersionUID = -4142599915292096152L;
 	
@@ -455,46 +453,49 @@ private static final long serialVersionUID = -4142599915292096152L;
 		return name.trim();
 	}
 	
-	// Photoable requirements
+	// ImageUploadable requirements
 	
 	@OneToMany(cascade=CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinTable(name = "NINJA_PHOTO", 
 			joinColumns = { @JoinColumn(name = "NINJA_ID", referencedColumnName = "ID") }, 
 			inverseJoinColumns = @JoinColumn(name = "PHOTO_ID")
 	)
-	private List<PhotoInfo> photos;
-	private transient MultipartFile photo;
+	private List<ImageInfo> images;
+	private transient MultipartFile image;
 	
 	@Override
-	public List<PhotoInfo> getPhotos() {
-		return photos;
+	public List<ImageInfo> getImages() {
+		return images;
+	}
+	
+	public void setImages(List<ImageInfo> images) {
+		this.images = images;
 	}
 	
 	@Override
-	public void setPhotos(List<PhotoInfo> photos) {
-		this.photos = photos;
+	public MultipartFile getImage() {
+		return image;
 	}
 	
 	@Override
-	public MultipartFile getPhoto() {
-		return photo;
+	public ImageInfo getPrimaryImage() {
+		return null;
 	}
 	
-	@Override
-	public void setPhoto(MultipartFile photo) {
-		this.photo = photo;
+	public void setImage(MultipartFile image) {
+		this.image = image;
 	}
 	
-	public void addPhoto(PhotoInfo photoInfo){
-		synchronized (photoInfo) {
-			if (photos == null){
-				photos = new ArrayList<PhotoInfo>();
+	public void addImage(ImageInfo imageInfo){
+		synchronized (imageInfo) {
+			if (images == null){
+				images = new ArrayList<ImageInfo>();
 			}
-			photos.add(photoInfo);
+			images.add(imageInfo);
 		}
 	}
 	
-	// End of Photoable requirements
+	// End of ImageUploadable requirements
 	
 	// Commentable requirements
 	
@@ -515,42 +516,6 @@ private static final long serialVersionUID = -4142599915292096152L;
 		this.comments = comments;
 	}
 	
-	// End of Commentable requirements 
-	
-	// Taggable requirements
-	
-	@OneToMany(cascade=CascadeType.PERSIST, fetch = FetchType.LAZY)
-	@JoinTable(name = "NINJA_TAG", 
-			joinColumns = { @JoinColumn(name = "NINJA_ID", referencedColumnName = "ID") }, 
-			inverseJoinColumns = @JoinColumn(name = "TAG_ID")
-	)
-	private List<Tag> tags;
-
-	@Column(name="CS_TAGS")
-	@JsonView(Views.FormView.class)
-	private String csTags;
-
-	@Override
-	public List<Tag> getTags() {
-		return tags;
-	}
-	
-	@Override
-	public void setTags(List<Tag> tags) {
-		this.tags = tags;
-	}
-	
-	@Override
-	public String getCsTags() {
-		return csTags;
-	}
-	
-	@Override
-	public void setCsTags(String csTags) {
-		this.csTags = csTags;
-	}
-	
-	
-	// End of Taggable requirements 
+ 	// End of Commentable requirements 
 	
 }

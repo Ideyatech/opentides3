@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+	<USERGROUP id="1" name="Group 1" description="This is group 1" />
+	<USERGROUP id="2" name="Group 2" description="This is group 2" />
+	<USERGROUP id="3" name="Group 3" description="This is group 3" />
+	<USERGROUP id="4" name="Group 4" description="This is group 4" />
+	
+	<USER_AUTHORITY id="1" username="username1" authority="CAN_UPDATE_SOMETHING" usergroup_id="1" />
+	<USER_AUTHORITY id="2" username="username2" authority="CAN_EDIT_SOMETHING" usergroup_id="1" />
+	<USER_AUTHORITY id="3" username="username3" authority="CAN_DELETE_SOMETHING" usergroup_id="1" />
+</dataset>

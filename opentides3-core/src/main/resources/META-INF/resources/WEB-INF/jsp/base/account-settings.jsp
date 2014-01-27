@@ -2,7 +2,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
-<%@ taglib prefix="app" uri="http://www.ideyatech.com/tides"%>
+<%@ taglib prefix="tides" uri="http://www.ideyatech.com/tides"%>
+<%@ taglib prefix="app" tagdir="/WEB-INF/tags"%>
 
 <app:header pageTitle="label.account-settings" active="account-settings">
 
@@ -50,9 +51,9 @@
 			<form:form commandName="user" method="POST" enctype="multipart/form-data" action="/account-settings/basic-info">
 				<div class="message-container"></div>
 				
-				<app:input path="firstName" label="label.user.first-name" required="true"/>
-				<app:input path="lastName" label="label.user.last-name" required="true"/>
-				<app:input path="emailAddress" label="label.user.email" required="true"/>
+				<tides:input path="firstName" label="label.user.first-name" required="true"/>
+				<tides:input path="lastName" label="label.user.last-name" required="true"/>
+				<tides:input path="emailAddress" label="label.user.email" required="true"/>
 				<br/>
 		    	<input type="submit" class="btn btn-info" data-submit="save" value="<spring:message code="label.account-settings.save-basic-info" />" />
 				
@@ -63,15 +64,15 @@
 			<h3><spring:message code="label.account-settings.change-password"/></h3>
 			<form:form commandName="user" method="POST" enctype="multipart/form-data" action="/account-settings/change-password">
 				<div class="message-container"></div>
-				<app:input path="credential.newPassword" label="label.user.password" type="password" required="true" />
-				<app:input path="credential.confirmPassword" label="label.user.confirm-password" type="password" required="true" />
+				<tides:input path="credential.newPassword" label="label.user.password" type="password" required="true" />
+				<tides:input path="credential.confirmPassword" label="label.user.confirm-password" type="password" required="true" />
 				<br/>
 		    	<input type="submit" class="btn btn-info" data-submit="save" value="<spring:message code="label.account-settings.change-password"/>" />
 				
 			</form:form>
 		</div>
 		
-		<div id="my-accounts" class="span4">
+		<%-- <div id="my-accounts" class="span4">
 			<h3><spring:message code="label.account-settings.my-accounts"/></h3>
 			<table class="table">
 				<tr>
@@ -120,23 +121,24 @@
 					</td>
 				</tr>
 			</table>
-		</div>
+		</div> --%>
 
 	</div>
 	<hr/>
 	<div id="profile-picture" class="row-fluid">
 		<h3><spring:message code="label.account-settings.profile-picture"/></h3>
 		<div class="media">
-			<img class="img-polaroid pull-left" src="${home}/user/photo?id=${user.id}&size=xs" />
-			<img class="img-polaroid pull-left" src="${home}/user/photo?id=${user.id}&size=s" />
-			<img class="img-polaroid pull-left" src="${home}/user/photo?id=${user.id}&size=m" />
-			<img class="img-polaroid pull-left" src="${home}/user/photo?id=${user.id}&size=l" />
+			<img class="img-polaroid pull-left" src="${home}/image/${user.primaryPhoto.id}" />
 			<div class="media-body">
 				<div class="control-group">
-					<button class="btn btn-info upload-photo" data-url="${home}/user/photo/upload?id=${user.id}"><i class="icon-picture"></i> <spring:message code="photo.change-photo" /></button>
+					<button class="btn btn-info upload-photo" data-url="${home}/image/upload?imageId=${user.primaryPhoto.id}&className=User&classId=${user.id}">
+						<i class="icon-picture"></i> <spring:message code="photo.change-photo" />
+					</button>
 				</div>
 				<div class="control-group">
-					<button class="btn adjust-photo" data-url="${home}/user/photo/adjust?id=${user.id}"><i class="icon-move"></i> <spring:message code="photo.edit-thumbnail" /></button>
+					<button class="btn adjust-photo" data-url="${home}/image/adjust?imageId=${user.primaryPhoto.id}&className=User&classId=${user.id}">
+						<i class="icon-move"></i> <spring:message code="photo.edit-thumbnail" />
+					</button>
 				</div>
 			</div>
 		</div>
@@ -147,7 +149,7 @@
 
 </div>
 
-<app:footer>
+<tides:footer>
 	<script type="text/javascript">
 		$(document).ready(function() {
 			opentides3.jsonForm($('#basic-info form'));
@@ -156,4 +158,4 @@
 		.on("click", '.adjust-photo', opentides3.showAdjustPhoto)
 		.on("click", '.upload-photo', opentides3.showUploadPhoto);;
 	</script>
-</app:footer>
+</tides:footer>

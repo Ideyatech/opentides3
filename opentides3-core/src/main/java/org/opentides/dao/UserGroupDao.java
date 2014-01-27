@@ -18,6 +18,7 @@
  */
 package org.opentides.dao;
 
+import java.util.List;
 import java.util.Set;
 
 import org.opentides.bean.user.UserAuthority;
@@ -63,4 +64,17 @@ public interface UserGroupDao extends BaseEntityDao<UserGroup, Long> {
 	 * @return
 	 */
 	public boolean removeUserAuthority(UserAuthority authority);
+	
+	/**
+	 * Get Old Default User Group 
+	 * @return
+	 */
+	public List<UserGroup> getOldDefaultUserGroups(Long ... groupIds);
+	
+	/**
+	 * Get Default User group
+	 * @return
+	 */
+	public UserGroup getDefaultUserGroup();
+	
 }

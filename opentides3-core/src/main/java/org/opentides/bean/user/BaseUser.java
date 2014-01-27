@@ -29,6 +29,8 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -45,10 +47,11 @@ import org.opentides.annotation.Auditable;
 import org.opentides.annotation.PrimaryField;
 import org.opentides.annotation.SearchableFields;
 import org.opentides.bean.BaseEntity;
-import org.opentides.bean.PhotoInfo;
-import org.opentides.bean.impl.Photoable;
+import org.opentides.bean.ImageInfo;
+import org.opentides.bean.ImageUploadable;
 import org.opentides.util.StringUtil;
 import org.opentides.web.json.Views;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.annotation.JsonView;
@@ -57,7 +60,8 @@ import com.fasterxml.jackson.annotation.JsonView;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "USER_PROFILE")
 @Auditable
-public class BaseUser extends BaseEntity implements Photoable {
+@Inheritance(strategy = InheritanceType.JOINED)
+public class BaseUser extends BaseEntity implements ImageUploadable {
 
 	private static final long serialVersionUID = 7634675501487373408L;
 	
@@ -118,26 +122,21 @@ public class BaseUser extends BaseEntity implements Photoable {
 	@JsonView(Views.DisplayView.class)
 	private Long failedLoginCount;
 	
-	@Column(name="FACEBOOK_ID")
-	private String facebookId;
+	@Column(name="LAST_FAILED_LOGIN_MILLIS")
+	@JsonView(Views.DisplayView.class)
+	private Long lastFailedLoginMillis;
 	
-	@Column(name="FACEBOOK_ACCESS_TOKEN")
-	private String facebookAccessToken;
+	// ImageUploadable requirements
+	@OneToMany(cascade=CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinTable(name = "USER_PHOTO", 
+			joinColumns = { @JoinColumn(name = "USER_ID", referencedColumnName = "ID") }, 
+			inverseJoinColumns = @JoinColumn(name = "PHOTO_ID")
+	)
+	@JsonView(Views.FormView.class)
+	private List<ImageInfo> images;
 	
-	@Column(name="GOOGLE_ID")
-	private String googleId;
-	
-	@Column(name="GOOGLE_ACCESS_TOKEN")
-	private String googleAccessToken;
-
-	@Column(name="TWITTER_ID")
-	private String twitterId;
-	
-	@Column(name="TWITTER_ACCESS_TOKEN")
-	private String twitterAccessToken;
-	
-	@Column(name="TWITTER_SECRET")
-	private String twitterSecret;
+	@Transient
+	private transient MultipartFile photo;
 
 	public BaseUser() {
 		super();
@@ -236,6 +235,12 @@ public class BaseUser extends BaseEntity implements Photoable {
 		return name;
 	}
 	
+	/**
+	 * Checks if this user has the given permission.
+	 * 
+	 * @param permission the permission to check
+	 * @return true if user has the given permission, false otherwise
+	 */
 	public boolean hasPermission(String permission) {
 		for (UserGroup group : groups) {
 			for (UserAuthority userRole : group.getAuthorities()) {
@@ -247,6 +252,10 @@ public class BaseUser extends BaseEntity implements Photoable {
 		return false;
 	}
 	
+	/**
+	 * Get all authorities of the user
+	 * @return a list of {@link UserAuthority} objects
+	 */
 	public List<UserAuthority> getAuthorities() {
 		List<UserAuthority> permissions = new ArrayList<UserAuthority>();
 		for (UserGroup group : groups) {
@@ -563,103 +572,76 @@ public class BaseUser extends BaseEntity implements Photoable {
 		this.failedLoginCount = failedLoginCount;
 	}
 	
-	public String getFacebookId() {
-		return facebookId;
+	/**
+	 * Increment login count by 1
+	 */
+	public void incrementFailedLoginCount() {
+		if(this.failedLoginCount == null) {
+			this.failedLoginCount = 0l;
+		}
+		this.failedLoginCount ++;
 	}
 	
-	public void setFacebookId(String facebookId) {
-		this.facebookId = facebookId;
+	/**
+	 * Set failedLoginCount to 0
+	 */
+	public void resetFailedLoginCount() {
+		this.failedLoginCount = 0l;
 	}
 	
-	public String getFacebookAccessToken() {
-		return facebookAccessToken;
+	/**
+	 * @return the lastFailedLoginMillis
+	 */
+	public Long getLastFailedLoginMillis() {
+		return lastFailedLoginMillis;
 	}
-	
-	public void setFacebookAccessToken(String facebookAccessToken) {
-		this.facebookAccessToken = facebookAccessToken;
+
+	/**
+	 * @param lastFailedLoginMillis the lastFailedLoginMillis to set
+	 */
+	public void setLastFailedLoginMillis(Long lastFailedLoginMillis) {
+		this.lastFailedLoginMillis = lastFailedLoginMillis;
 	}
-	
-	public String getGoogleId() {
-		return googleId;
-	}
-	
-	public void setGoogleId(String googleId) {
-		this.googleId = googleId;
-	}
-	
-	public String getGoogleAccessToken() {
-		return googleAccessToken;
-	}
-	
-	public void setGoogleAccessToken(String googleAccessToken) {
-		this.googleAccessToken = googleAccessToken;
-	}
-	
-	public String getTwitterId() {
-		return twitterId;
-	}
-	
-	public void setTwitterId(String twitterId) {
-		this.twitterId = twitterId;
-	}
-	
-	public String getTwitterAccessToken() {
-		return twitterAccessToken;
-	}
-	
-	public void setTwitterAccessToken(String twitterAccessToken) {
-		this.twitterAccessToken = twitterAccessToken;
-	}
-	
-	public String getTwitterSecret() {
-		return twitterSecret;
-	}
-	
-	public void setTwitterSecret(String twitterSecret) {
-		this.twitterSecret = twitterSecret;
-	}
-	
-	// Photoable requirements
-	
-	@OneToMany(cascade=CascadeType.ALL, fetch = FetchType.LAZY)
-	@JoinTable(name = "USER_PHOTO", 
-			joinColumns = { @JoinColumn(name = "USER_ID", referencedColumnName = "ID") }, 
-			inverseJoinColumns = @JoinColumn(name = "PHOTO_ID")
-	)
-	private List<PhotoInfo> photos;
-	
-	@Transient
-	private transient MultipartFile photo;
-	
+
 	@Override
-	public List<PhotoInfo> getPhotos() {
-		return photos;
+	public List<ImageInfo> getImages() {
+		return images;
 	}
 	
 	@Override
-	public void setPhotos(List<PhotoInfo> photos) {
-		this.photos = photos;
-	}
-	
-	@Override
-	public MultipartFile getPhoto() {
+	public MultipartFile getImage() {
 		return photo;
 	}
 	
 	@Override
+	public ImageInfo getPrimaryImage() {
+		if(!CollectionUtils.isEmpty(this.images)) {
+			for(ImageInfo imageInfo : this.images) {
+				if(imageInfo.getIsPrimary()) {
+					return imageInfo;
+				}
+			}
+		}
+		return null;
+	}
+	
+	public void setPhotos(List<ImageInfo> photos) {
+		this.images = photos;
+	}
+	
 	public void setPhoto(MultipartFile photo) {
 		this.photo = photo;
 	}
 	
-	public void addPhoto(PhotoInfo photoInfo){
+	public void addImage(ImageInfo photoInfo){
 		synchronized (photoInfo) {
-			if (photos == null){
-				photos = new ArrayList<PhotoInfo>();
+			if (images == null){
+				images = new ArrayList<ImageInfo>();
 			}
-			photos.add(photoInfo);
+			images.add(photoInfo);
 		}
 	}
 	
-	// End of Photoable requirements
+	// End of ImageUploadable requirements
 	
 }
