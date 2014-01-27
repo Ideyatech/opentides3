@@ -45,7 +45,6 @@
 					p:dateFormat="${date.format}" />
 				<ref bean="stringToBaseEntityConverter" />
 				<ref bean="stringToSystemCodesConverter" />
-				<ref bean="stringArrayToListOfTagsConverter"/>
 			</set>
 		</property>
 	</bean>
@@ -134,4 +133,6 @@
 		<property name="propertyName" value="${property.name}" />
 	</bean>
 
+	<!-- Add system properties through spring XML configuration. -->
+	
 </beans>

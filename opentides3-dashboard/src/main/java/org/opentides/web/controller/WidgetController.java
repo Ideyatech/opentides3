@@ -70,6 +70,14 @@ public class WidgetController extends BaseCrudController<Widget> {
 		return object;
 	}
 	
+	@Override
+	protected void onLoadSearch(Widget command, BindingResult bindingResult,
+			Model uiModel, HttpServletRequest request,
+			HttpServletResponse response) {
+		
+		uiModel.addAttribute("results", search(command, request));
+	}
+	
 	@InitBinder
 	protected void registerEditor(WebDataBinder binder) throws Exception {
 		binder.registerCustomEditor(Date.class, "lastCacheUpdate", new CustomDateEditor(new SimpleDateFormat("MMM dd, yyyy hh:mm:ss"), true));

@@ -16,7 +16,7 @@
 <div id="widget-body">
 
 <ul class="breadcrumb">
-  <li><a href="${home}"><spring:message code="label.home"/></a> <span class="divider">/</span></li>
+  <li><a href="${home}/"><spring:message code="label.home"/></a> <span class="divider">/</span></li>
   <li><spring:message code="label.widget"/></li>
 </ul>
 

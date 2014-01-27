@@ -4,12 +4,17 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+import org.opentides.web.json.Views;
+
+import com.fasterxml.jackson.annotation.JsonView;
+
 @Entity
 @Table(name = "FILE_INFO")
 public class FileInfo extends BaseEntity {
 
 	private static final long serialVersionUID = -6814443831130229864L;
 
+	@JsonView(Views.SearchView.class)
 	@Column(name = "FILENAME", nullable = false)
 	private String filename;
 

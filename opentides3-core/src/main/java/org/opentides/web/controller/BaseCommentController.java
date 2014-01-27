@@ -120,8 +120,8 @@ public abstract class BaseCommentController<T extends BaseEntity> {
 		}
 		
 		if(command.getFile() != null && !command.getFile().isEmpty()) {
-//			FileInfo attachment = fileUploadService.upload(command.getFile(), new FileInfo());
-//			command.addFile(attachment);
+			FileInfo attachment = fileUploadService.upload(command.getFile());
+			command.addFile(attachment);
 		}
 
 		command.setAuthor(userService.getCurrentUser());

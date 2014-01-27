@@ -18,28 +18,62 @@
  */
 package org.opentides.service.impl;
 
+import java.io.File;
+import java.util.Iterator;
 import java.util.List;
 
 import org.opentides.bean.FileInfo;
 import org.opentides.dao.FileInfoDao;
 import org.opentides.service.FileInfoService;
+import org.opentides.util.FileUtil;
+import org.opentides.util.StringUtil;
 import org.springframework.stereotype.Service;
-
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author allantan
- *
+ * 
  */
-@Service(value="FileInfoService")
+@Service(value = "fileInfoService")
 public class FileInfoServiceImpl extends BaseCrudServiceImpl<FileInfo>
-                implements FileInfoService {
-        
-        public List<FileInfo> getFileInfoByFullPath(String path) {
-                List<FileInfo> list = ((FileInfoDao)getDao()).findFileInfoByFullPath(path);
-                if (list == null || list.size() < 1)
-                        return null;
-                return ((FileInfoDao)getDao()).findFileInfoByFullPath(path);
-        }
+		implements FileInfoService {
 
-        
+	public List<FileInfo> getFileInfoByFullPath(String path) {
+		List<FileInfo> list = ((FileInfoDao) getDao())
+				.findFileInfoByFullPath(path);
+		if (list == null || list.size() < 1)
+			return null;
+		return ((FileInfoDao) getDao()).findFileInfoByFullPath(path);
+	}
+
+	@Transactional
+	@Override
+	public boolean deletePhysicalFile(String path) {
+		List<FileInfo> fileInfos = this.getFileInfoByFullPath(path);
+		Iterator<FileInfo> fileIterator = fileInfos.iterator();
+		while(fileIterator.hasNext()) {
+			FileInfo fileInfo = fileIterator.next();
+			delete(fileInfo.getId());
+		}
+		//No exception so delete the physical file
+		File file = new File(path);
+		boolean isDeleted = false;
+		isDeleted = file.delete();
+		if(!isDeleted) {
+			throw new RuntimeException("File cannot be deleted.");
+		}
+		return isDeleted;
+	}
+
+	@Override
+	public byte[] convertToByteArray(FileInfo fileInfo) {
+		if(fileInfo!=null && !StringUtil.isEmpty(fileInfo.getFullPath())){
+			File file = new File(fileInfo.getFullPath());
+			
+			return FileUtil.readFileAsBytes(file);
+		}
+		
+		return null;
+	}
+
 }

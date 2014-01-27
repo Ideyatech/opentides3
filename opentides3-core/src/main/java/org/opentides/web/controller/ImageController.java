@@ -1,15 +1,20 @@
 package org.opentides.web.controller;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.opentides.annotation.Valid;
 import org.opentides.bean.AjaxUpload;
@@ -23,6 +28,7 @@ import org.opentides.service.BaseCrudService;
 import org.opentides.service.FileUploadService;
 import org.opentides.service.ImageInfoService;
 import org.opentides.util.CrudUtil;
+import org.opentides.util.FileUtil;
 import org.opentides.util.ImageUtil;
 import org.opentides.util.NamingUtil;
 import org.opentides.util.StringUtil;
@@ -35,6 +41,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.Assert;
+import org.springframework.util.ResourceUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -67,7 +74,11 @@ public class ImageController {
 	
 	@Autowired
 	@Qualifier("defaultFileUploadService")
-	protected FileUploadService fileUploadService;
+	protected FileUploadService defaultFileUploadService;
+
+	@Autowired
+	@Qualifier("amazonS3FileUploadService")
+	protected FileUploadService amazonFileUploadService;
 	
 	@Autowired
 	protected BeanFactory beanFactory;
@@ -81,6 +92,32 @@ public class ImageController {
 	@Value("#{applicationSettings.imageAdjustPage}")
 	protected String adjustPhoto = "";	
 
+	@Value("#{applicationSettings['amazon.s3.use']}")
+	private String useAmazon;
+	
+	@Value("#{applicationSettings['defaultImageLocation']}")
+	private String defaultImageLocation;
+	
+	public byte[] defaultImage(HttpServletRequest request) {
+		if(StringUtil.isEmpty(defaultImageLocation))
+			return ImageUtil.getDefaultImage();
+		else {
+			HttpSession session = request.getSession();
+			ServletContext sc = session.getServletContext();
+			InputStream is = sc.getResourceAsStream(defaultImageLocation);
+			byte[] barray;
+			
+			try {
+				barray = IOUtils.toByteArray(is);
+			} catch (IOException e) {
+				e.printStackTrace();
+				return ImageUtil.getDefaultImage();
+			}
+			
+			return barray;
+		}
+	}
+	
 	/**
 	 * 
 	 * @param modelMap
@@ -97,16 +134,28 @@ public class ImageController {
 			@PathVariable("id") Long id,
 			@RequestParam(value="c", required=false) String c,
 			HttpServletRequest request, HttpServletResponse response) throws IOException {
-				
+
+		ImageInfo info = imageInfoService.load(id);
+		
 		byte[] barray = null;
 		OutputStream outputStream = response.getOutputStream();
 
 		try {
-			ImageInfo info = imageInfoService.load(id);
 			if(info == null) {
-				barray = ImageUtil.getDefaultImage();
+				barray = defaultImage(request);
 			} else {
-				barray = ImageUtil.loadImage(getImagePath(info), c);
+				
+				if(!"full".equals(c)) {
+					if(StringUtil.isEmpty(c))
+						if(!StringUtil.isEmpty(info.getCommand()))
+							c = info.getCommand();
+				}
+				
+				if("true".equals(useAmazon)) {
+					barray = ImageUtil.loadImage(new URL(info.getFullPath()), c);
+				} else {
+					barray = ImageUtil.loadImage(getImagePath(info), c);
+				}
 			}
 			if (barray != null) {
 				response.setContentType("image/png");
@@ -131,14 +180,14 @@ public class ImageController {
 	 */
 	@RequestMapping(value = "/", method = RequestMethod.GET, produces = "image/png")
 	public String loadEmpty(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		byte [] byteArray = ImageUtil.getDefaultImage();
+		
 		response.setContentType("image/png");
 		response.setHeader("Cache-Control", "public");
 		
 		OutputStream outputStream = null;
 		try {
 			outputStream = response.getOutputStream();
-			outputStream.write(byteArray);
+			outputStream.write(defaultImage(request));
 		} catch (Exception e) {
 			_log.error("Failed to load default image.", e);
 		} finally {
@@ -235,10 +284,11 @@ public class ImageController {
 		ImageInfo currentImage = imageInfoService.load(id);
 		try {
 			String command = ImageUtil.createCropCommand(newWidth, newHeight, topLeftX, topLeftY);
-			ImageUtil.cropImage(getImagePath(currentImage), command, resizedWidth, replaceOriginal);
-			String newCommand = (!StringUtil.isEmpty(currentImage.getCommand()) ? currentImage.getCommand() + "_" : "" )
-					+ command;
-			currentImage.setCommand(newCommand);
+			if(!"true".equals(useAmazon))
+				ImageUtil.cropImage(getImagePath(currentImage), command, resizedWidth, replaceOriginal);
+			/*String newCommand = (!StringUtil.isEmpty(currentImage.getCommand()) ? currentImage.getCommand() + "_" : "" )
+					+ command;*/
+			currentImage.setCommand(command);
 			imageInfoService.save(currentImage);
 			messages.addAll(CrudUtil.buildSuccessMessage(currentImage, "upload-photo", request.getLocale(), messageSource));
 		} catch (IOException e) {
@@ -283,6 +333,7 @@ public class ImageController {
 			@RequestParam(value = "className", required = false) String className, 
 			@RequestParam(value = "classId", required = false) Long id,
 			@RequestParam(value = "isPrimary", required = false) boolean isPrimary,
+			@RequestParam(value = "folderName", required = false) String folderName,
 			BindingResult result, HttpServletRequest request) {
 		
 		BaseEntity entity = null;
@@ -310,8 +361,15 @@ public class ImageController {
 			model.put("messages", messages);
 			return model;
 		}
-				
-		FileInfo f = fileUploadService.upload(image.getAttachment());
+		
+		FileInfo f;
+		
+		if("true".equals(useAmazon)) {
+			f = amazonFileUploadService.upload(image.getAttachment(), folderName);
+		} else {
+			f = defaultFileUploadService.upload(image.getAttachment());
+		}
+		
 		ImageInfo imageInfo = new ImageInfo(f);
 		imageInfo.setIsPrimary(isPrimary);
 		imageInfoService.save(imageInfo);
@@ -333,7 +391,7 @@ public class ImageController {
 		
 		messages.addAll(CrudUtil.buildSuccessMessage(imageInfo, "upload-photo", request.getLocale(), messageSource));
 		model.put("messages", messages);
-		model.put("imageId", imageInfo.getId());
+		model.put("attachmentId", imageInfo.getId());
 		return model;
 	}
 

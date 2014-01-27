@@ -43,6 +43,7 @@ import org.opentides.util.StringUtil;
 import org.opentides.web.json.Views;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonView;
 
 /**
@@ -110,6 +111,7 @@ public class Widget extends BaseEntity implements ImageUploadable {
 	@Column(name = "IS_USER_DEFINED")
 	private Boolean isUserDefined;
 	
+	@JsonManagedReference
 	@OneToMany(cascade=CascadeType.ALL, mappedBy="widget", fetch = FetchType.LAZY)
     private List<UserWidgets> userWidget;
 	

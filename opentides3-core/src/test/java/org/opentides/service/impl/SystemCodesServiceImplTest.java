@@ -4,7 +4,9 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -108,6 +110,60 @@ public class SystemCodesServiceImplTest {
 		
 		assertFalse(systemCodesService.isDuplicateKey(sample));
 		verify(systemCodesDao).countDuplicate(sample);
+	}
+	
+	@Test
+	public void testIsParentValid() throws Exception {
+		Map<String, SystemCodes> testCodes = getTestSystemCodes();
+		when(systemCodesDao.loadBySystemCodesByKey("PARENT_1")).thenReturn(testCodes.get("PARENT_1"));
+		when(systemCodesDao.loadBySystemCodesByKey("PARENT_2")).thenReturn(testCodes.get("PARENT_2"));
+		when(systemCodesDao.loadBySystemCodesByKey("PARENT_3")).thenReturn(testCodes.get("PARENT_3"));
+		when(systemCodesDao.loadBySystemCodesByKey("PARENT_4")).thenReturn(testCodes.get("PARENT_4"));
+		
+		SystemCodes systemCodes1 = testCodes.get("PARENT_1");
+		SystemCodes systemCodes3 = testCodes.get("PARENT_3");
+		systemCodes1.setParent(systemCodes3);
+		assertFalse(systemCodes1.isParentValid());
+		
+		SystemCodes parent5 = new SystemCodes();
+		parent5.setKey("PARENT_5");
+		systemCodes1.setParent(parent5);
+		assertTrue(systemCodes1.isParentValid());
+		
+		SystemCodes parent6 = new SystemCodes();
+		parent6.setKey("CASE_STATUS");
+		SystemCodes parent7 = new SystemCodes();
+		parent7.setKey("CASE_ACTION");
+		parent6.setParent(parent7);
+		parent7.setParent(parent6);
+		assertFalse(parent6.isParentValid());
+		
+	}
+	
+	private Map<String, SystemCodes> getTestSystemCodes() throws Exception {
+		Map<String, SystemCodes> maps = new HashMap<>();
+		SystemCodes systemCodes1 = new SystemCodes();
+		systemCodes1.setKey("PARENT_1");
+		systemCodes1.setParent(null);
+		
+		SystemCodes systemCodes2 = new SystemCodes();
+		systemCodes2.setKey("PARENT_2");
+		systemCodes2.setParent(systemCodes1);
+		
+		SystemCodes systemCodes3 = new SystemCodes();
+		systemCodes3.setKey("PARENT_3");
+		systemCodes3.setParent(systemCodes2);
+		
+		SystemCodes systemCodes4 = new SystemCodes();
+		systemCodes4.setKey("PARENT_4");
+		systemCodes4.setParent(systemCodes1);
+		
+		maps.put("PARENT_1", systemCodes1);
+		maps.put("PARENT_2", systemCodes2);
+		maps.put("PARENT_3", systemCodes3);
+		maps.put("PARENT_4", systemCodes4);
+		
+		return maps;
 	}
 
 }

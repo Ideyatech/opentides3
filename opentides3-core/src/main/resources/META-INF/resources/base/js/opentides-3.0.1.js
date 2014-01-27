@@ -434,7 +434,7 @@ var opentides3 = (function() {
 	$.fn.bindForm = function(json) {
 		return this.each(function() {
 			var form = $(this);
-			form.clearForm();
+			form.clearOTForm();
 
 			form.find('textarea, input[type="text"], input[type="hidden"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"],input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"]')
 					.each(function() {
@@ -449,6 +449,22 @@ var opentides3 = (function() {
 									rowTable = opentides3.template($('script#filesForDownload').html(), data);
 								$this.parent().append($this.clone().val(imageIds[i].id));
 								$("#ot-image-list tbody").append(rowTable);
+							} 
+						}
+					}
+					$this.remove();
+				//for file upload
+				} else if(name && $this.is(":hidden") && ($this.attr('name') == "files" || $this.hasClass("ot-files"))){
+					var fileIds = opentides3.getValue(json, name);
+					if(fileIds.length > 0) {
+						for(var i = 0; i < fileIds.length; i++) {
+							if(fileIds[i].id !== undefined) {
+								var data = {"attachmentId" : fileIds[i].id, "attachmentName" : fileIds[i].filename}, 
+									rowTable = opentides3.template($('script#filesForDownload').html(), data);
+								
+								newRow = $this.clone().val(fileIds[i].id).attr("id", "hidden-attachment-"+fileIds[i].id);
+								$this.parent().append(newRow);
+								$("#ot-attachment-list tbody").append(rowTable);
 							} 
 						}
 					}
@@ -497,14 +513,23 @@ var opentides3 = (function() {
 
 	/**
 	 * Clears all the input of the form.
+	 * **removed by aj. conflict with jquery clear form
 	 */
-	$.fn.clearForm = function() {
+	$.fn.clearOTForm = function() {
 		return this.each(function() {
-			$(this).find(
-					'input:text, input:password, input:file, select, textarea')
-					.val('');
-			$(this).find('input:radio, input:checkbox').prop('checked', false)
-					.prop('selected', false);
+			$('.ot-select2').select2('data', null);
+			$('.date').datepicker();
+			
+			//removes dynamically binded entities
+			$('.removeable-pill').remove();
+			
+			//clears uploaded files
+			$('#ot-attachment-list tbody').html('');
+			
+			$(':checkbox, :radio').prop('checked', false);
+			$(':input', this).not(':checkbox, :radio, :button, :submit')
+							 .val('')
+							 .prop('selected', false);
 		});
 	};
 
@@ -704,7 +729,7 @@ var opentides3 = (function() {
 									if (typeof (json.command) === 'object'
 											&& json.command.id > 0) {
 										// successfully saved
-										firstForm.clearForm();
+										firstForm.clearOTForm();
 										if (button.data('submit') !== 'save-and-new') {
 											// hide modal
 											if (form.hasClass('modal'))
@@ -867,7 +892,8 @@ var opentides3 = (function() {
 					// attach clear button functions
 					searchForms.find('[data-submit="clear"]').on("click",
 						function() {
-							$(this).closest('form').clearForm();
+							
+							$(this).closest('form').clearOTForm();
 							return false;
 						});
 				});

@@ -54,7 +54,7 @@
 		
 		<ul class="pager">
 			<li class="previous">
-				<a href="${home}">&larr; Previous (Welcome)</a>
+				<a href="${home}/">&larr; Previous (Welcome)</a>
 			</li>
 			<li class="next">
 				<a href="${home}/overview">Next (Tatiana) &rarr;</a>

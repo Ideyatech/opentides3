@@ -1,3 +1,5 @@
+#set( $symbol_pound = '#' )
+#set( $symbol_dollar = '$' )
 <!DOCTYPE html>
 
 <%@ attribute name="pageTitle" type="java.lang.String"%>
@@ -8,14 +10,14 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 
-<c:set var="home" value="${pageContext.request.contextPath}" scope="application" />
+<c:set var="home" value="${symbol_dollar}{pageContext.request.contextPath}" scope="application" />
 <c:set var="ot_version" value="3.0" scope="application" />
 <jsp:useBean id="currentUser" class="org.opentides.util.SecurityUtil" scope="request"/>
 <spring:theme code="client_name" var="client_name" scope="application" />
 <spring:theme code="logo" var="logo" />
 <spring:theme code="favicon" var="favicon" />
 
-<html lang="${pageContext.response.locale}">
+<html lang="${symbol_dollar}{pageContext.response.locale}">
 
 <head>
 
@@ -23,15 +25,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <c:choose>
-    	<c:when test="${not empty pageTitle}">
-			<title>${client_name} - <spring:message code="${pageTitle}" /></title>
+    	<c:when test="${symbol_dollar}{not empty pageTitle}">
+			<title>${symbol_dollar}{client_name} - <spring:message code="${symbol_dollar}{pageTitle}" /></title>
     	</c:when>
     	<c:otherwise>
-    		<title>${client_name}</title>
+    		<title>${symbol_dollar}{client_name}</title>
     	</c:otherwise>
     </c:choose>
     
-    <link rel="shortcut icon" type="image/x-icon" href="<c:url value='${favicon}'/>" />
+    <link rel="shortcut icon" type="image/x-icon" href="<c:url value='${symbol_dollar}{favicon}'/>" />
     <link rel="stylesheet" type="text/css" href="<c:url value='/css/bootstrap.min.css'/>" />
     <link rel="stylesheet" type="text/css" href="<c:url value='/css/bootstrap-responsive.min.css'/>" />
 	<link rel="stylesheet" type="text/css" href="<c:url value='/css/footable-0.1.css'/>" />
@@ -64,23 +66,23 @@
 
 </head>
  
-<body class="${pageType}">
+<body class="${symbol_dollar}{pageType}">
 
-	<c:if test="${pageType != 'modal-page'}">
+	<c:if test="${symbol_dollar}{pageType != 'modal-page'}">
     	<div class='notifications top-right'></div>
 		<div id="wrap">
 	</c:if>
 	
 	<c:choose>
-		<c:when test="${pageType eq 'modal-page'}">
+		<c:when test="${symbol_dollar}{pageType eq 'modal-page'}">
 			<!-- Do nothing -->
 		</c:when>
-		<c:when test="${pageType eq 'anonymous-page'}">
+		<c:when test="${symbol_dollar}{pageType eq 'anonymous-page'}">
 			<div id="hd" class="navbar navbar-inverse">
 				<div class="navbar-inner">
 					<div class="container">
-						<a class="brand" href="${home}">
-							<img class="logo" src="<c:url value='${logo}'/>"/>
+						<a class="brand" href="${symbol_dollar}{home}">
+							<img class="logo" src="<c:url value='${symbol_dollar}{logo}'/>"/>
 						</a>
 					</div>
 				</div>
@@ -95,56 +97,56 @@
 							data-target=".nav-collapse"> <span class="icon-bar"></span> <span
 							class="icon-bar"></span> <span class="icon-bar"></span>
 						</a>
-						<a class="brand" href="${home}">
-							<img class="logo" src="<c:url value='${logo}'/>"/>
+						<a class="brand" href="${symbol_dollar}{home}">
+							<img class="logo" src="<c:url value='${symbol_dollar}{logo}'/>"/>
 						</a>
 						<div class="nav-collapse collapse">
 							<ul class="nav">
-								<li class="${active eq 'home' ? 'active' : ''}">
-									<a href="${home}">
+								<li class="${symbol_dollar}{active eq 'home' ? 'active' : ''}">
+									<a href="${symbol_dollar}{home}">
 										<spring:message code="label.home"/>
 									</a>
 								</li>
-								<li class="${active eq 'users' ? 'active' : ''}">
-									<a href="${home}/organization/users/">
+								<li class="${symbol_dollar}{active eq 'users' ? 'active' : ''}">
+									<a href="${symbol_dollar}{home}/organization/users/">
 										<spring:message code="label.user"/>
 									</a>
 								</li>
-								<li class="${active eq 'system-codes' ? 'active' : ''}">
-									<a href="${home}/system/system-codes/">
+								<li class="${symbol_dollar}{active eq 'system-codes' ? 'active' : ''}">
+									<a href="${symbol_dollar}{home}/system/system-codes/">
 										<spring:message code="label.system-codes"/>
 									</a>
 								</li>
-								<li class="${active eq 'usergroups' ? 'active' : ''}">
-									<a href="${home}/organization/usergroups/">
+								<li class="${symbol_dollar}{active eq 'usergroups' ? 'active' : ''}">
+									<a href="${symbol_dollar}{home}/organization/usergroups/">
 										<spring:message code="label.usergroup"/>
 									</a>
 								</li>
-								<li class="${active eq 'account-settings' ? 'active' : ''} hidden-desktop">
-									<a href="${home}/account-settings/"> 
+								<li class="${symbol_dollar}{active eq 'account-settings' ? 'active' : ''} hidden-desktop">
+									<a href="${symbol_dollar}{home}/account-settings/"> 
 										<spring:message code="label.account-settings"/>
 									</a>
 								</li>
 								<li class="hidden-desktop">
-									<a href="${home}/logout"> 
+									<a href="${symbol_dollar}{home}/logout"> 
 										<spring:message code="label.logout"/>
 									</a>
 								</li>
 							</ul>
 						</div>
 						<div class="btn-group pull-right hidden-tablet hidden-phone">
-							<a class="btn dropdown-toggle btn-inverse" data-toggle="dropdown" href="#">
-								${currentUser.user.username} <span class="caret"></span>
+							<a class="btn dropdown-toggle btn-inverse" data-toggle="dropdown" href="${symbol_pound}">
+								${symbol_dollar}{currentUser.user.username} <span class="caret"></span>
 							</a>
 							<ul class="dropdown-menu">
-								<li class="${active eq 'account-settings' ? 'active' : ''}">
-									<a href="${home}/account-settings/">
+								<li class="${symbol_dollar}{active eq 'account-settings' ? 'active' : ''}">
+									<a href="${symbol_dollar}{home}/account-settings/">
 										<spring:message code="label.account-settings"/>
 									</a>
 								</li>
 								<li class="divider"></li>
 								<li>
-									<a href='${home}/logout'>
+									<a href='${symbol_dollar}{home}/logout'>
 										<spring:message code="label.logout"/>
 									</a>
 								</li>

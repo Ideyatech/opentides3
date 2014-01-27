@@ -105,6 +105,14 @@
 			</props>
 		</property>
 	</bean>
+	
+	<!-- Task Executor -->
+	<bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+		<property name="corePoolSize" value="5" />
+		<property name="maxPoolSize" value="10" />
+		<property name="queueCapacity" value="25" />
+		<property name="waitForTasksToCompleteOnShutdown" value="true" />
+	</bean>
 
 	<!-- Selects a static view for rendering without the need for an explicit 
 		controller -->
@@ -137,5 +145,43 @@
 	</bean>
 
 	<!-- Add system properties through spring XML configuration. -->
+	
+	
+	<bean id="contentTypes" class="java.util.HashMap">
+		<constructor-arg>
+			<map key-type="java.lang.String" value-type="java.lang.String">
+				<entry key=".pdf"> 
+	            	<value>application/pdf</value> 
+		        </entry>  
+		        <entry key=".doc"> 
+		            <value>application/msword</value> 
+		        </entry>  
+		        <entry key=".odt"> 
+		            <value>application/vnd.oasis.opendocument.text</value> 
+		        </entry>  
+		        <entry key=".xls"> 
+		            <value>application/vnd.ms-excel</value> 
+		        </entry>  
+		        <entry key=".png"> 
+		            <value>image/png</value> 
+		        </entry>  
+		        <entry key=".gif"> 
+		            <value>image/gif</value> 
+		        </entry>  
+		        <entry key=".jpeg"> 
+		            <value>image/jpeg</value> 
+		        </entry>  
+		        <entry key=".jpg"> 
+		            <value>image/jpeg</value> 
+		        </entry>  
+		        <entry key=".gz"> 
+		            <value>application/x-gzip</value> 
+		        </entry>  
+		        <entry key=".zip"> 
+		            <value>application/zip</value> 
+		        </entry> 
+			</map>
+		</constructor-arg>
+	</bean>
 	
 </beans>

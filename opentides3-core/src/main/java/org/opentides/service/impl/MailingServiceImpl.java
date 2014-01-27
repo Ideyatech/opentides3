@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.Map;
 import java.util.Properties;
 
+import javax.annotation.PostConstruct;
 import javax.mail.Authenticator;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -23,9 +24,16 @@ import org.apache.velocity.app.VelocityEngine;
 import org.opentides.service.MailingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.task.TaskExecutor;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 
+/**
+ * 
+ * @author AJ
+ *
+ */
 @Service
 public class MailingServiceImpl implements MailingService {
 	
@@ -34,14 +42,23 @@ public class MailingServiceImpl implements MailingService {
 	@Autowired
 	private VelocityEngine velocityEngine;
 	
+	@Autowired(required = false)
+	private TaskExecutor taskExecutor;
+	
 	@Value("#{applicationSettings['mail.server.username']}")
 	private String adminEmail;
+	
 	@Value("#{applicationSettings['mail.server.password']}")
 	private String adminPassword;
+	
 	@Value("#{applicationSettings['mail.server.domain']}")
 	private String host;
+	
 	@Value("#{applicationSettings['mail.server.port']}")
 	private String port;
+	
+	@Value("#{applicationSettings['application.name']}")
+	private String applicationName;
 	
 	@Override
 	public void sendEmail(String[] toEmail, String subject, String template,
@@ -64,7 +81,7 @@ public class MailingServiceImpl implements MailingService {
 		MimeBodyPart htmlPart = new MimeBodyPart();
 
 		try {
-			message.setFrom(new InternetAddress(adminEmail, "Opentides"));
+			message.setFrom(new InternetAddress(adminEmail, applicationName));
 			for (String addr : toEmail) {
 				message.addRecipient(RecipientType.TO,
 						new InternetAddress(addr));
@@ -79,7 +96,7 @@ public class MailingServiceImpl implements MailingService {
 			multipart.addBodyPart(htmlPart);
 			message.setContent(multipart);
 
-			Transport.send(message);
+			send(message);
 			
 		} catch (AddressException e) {
 			_log.error("Failed to send email.", e);
@@ -89,6 +106,31 @@ public class MailingServiceImpl implements MailingService {
 			_log.error("Failed to send email.", e);
 		}
 		
+	}
+	
+	@PostConstruct
+	public void postInit() {
+		if(taskExecutor == null) {
+			//set default taskExecutor
+			taskExecutor = new ThreadPoolTaskExecutor();
+			((ThreadPoolTaskExecutor)taskExecutor).setCorePoolSize(5);
+			((ThreadPoolTaskExecutor)taskExecutor).setMaxPoolSize(10);
+			((ThreadPoolTaskExecutor)taskExecutor).setQueueCapacity(25);
+			((ThreadPoolTaskExecutor)taskExecutor).setWaitForTasksToCompleteOnShutdown(true);
+		}
+	}
+	
+	private void send(final Message message) {
+		taskExecutor.execute(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					Transport.send(message);
+				} catch (MessagingException e) {
+					_log.error("Failed to send email.", e);
+				}
+			}
+		});
 	}
 	
 }

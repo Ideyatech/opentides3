@@ -19,6 +19,9 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Cache;
@@ -30,6 +33,8 @@ import org.opentides.annotation.GenerateService;
 import org.opentides.annotation.PrimaryField;
 import org.opentides.web.json.Views;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonView;
 
 /**
@@ -42,31 +47,36 @@ import com.fasterxml.jackson.annotation.JsonView;
 @Entity
 @Table(name = "SYSTEM_CODES")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@Auditable(label="System Codes")
+@Auditable(label = "System Codes")
+@JsonInclude(Include.NON_NULL)
 public class SystemCodes extends BaseEntity implements Serializable {
 
 	private static final long serialVersionUID = -4142599915292096152L;
 	private static final int CATEGORY_LIST_LENGTH = 52;
 
 	@JsonView(Views.SearchView.class)
-	@Column(name = "KEY_", unique = true, nullable=false)
+	@Column(name = "KEY_", unique = true, nullable = false)
 	private String key;
 
 	@PrimaryField
 	@JsonView(Views.SearchView.class)
-	@Column(name = "VALUE_", nullable=false)
+	@Column(name = "VALUE_", nullable = false)
 	private String value;
-	
+
 	@JsonView(Views.SearchView.class)
-	@Column(name="CATEGORY_", nullable=false)
+	@Column(name = "CATEGORY_", nullable = false)
 	private String category;
 
 	@JsonView(Views.FormView.class)
-	@Column(name="NUMBER_VALUE")
+	@Column(name = "NUMBER_VALUE")
 	private Long numberValue;
-	
-	@Column(name="SORT_ORDER")
+
+	@Column(name = "SORT_ORDER")
 	private Integer sortOrder;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "PARENT_", referencedColumnName = "KEY_")
+	private SystemCodes parent;
 
 	public SystemCodes() {
 	}
@@ -111,7 +121,7 @@ public class SystemCodes extends BaseEntity implements Serializable {
 	 *            the key to set
 	 */
 	public void setKey(String key) {
-		this.key = key.trim();
+		this.key = key.trim().toUpperCase();
 	}
 
 	/**
@@ -141,7 +151,7 @@ public class SystemCodes extends BaseEntity implements Serializable {
 	 *            the category to set
 	 */
 	public void setCategory(String category) {
-		this.category = category;
+		this.category = category.trim().toUpperCase();
 	}
 
 	/**
@@ -152,7 +162,8 @@ public class SystemCodes extends BaseEntity implements Serializable {
 	}
 
 	/**
-	 * @param sortOrder the sortOrder to set
+	 * @param sortOrder
+	 *            the sortOrder to set
 	 */
 	public final void setSortOrder(Integer sortOrder) {
 		this.sortOrder = sortOrder;
@@ -171,6 +182,22 @@ public class SystemCodes extends BaseEntity implements Serializable {
 	 */
 	public synchronized void setNumberValue(Long numberValue) {
 		this.numberValue = numberValue;
+	}
+
+	/**
+	 * @return the parent
+	 */
+	public SystemCodes getParent() {
+		return parent;
+	}
+
+	/**
+	 * @param parent
+	 *            the parent to set
+	 * @throws Exception
+	 */
+	public void setParent(SystemCodes parent) {
+		this.parent = parent;
 	}
 
 	@Override
@@ -200,15 +227,41 @@ public class SystemCodes extends BaseEntity implements Serializable {
 
 	/**
 	 * Displays the value in truncated form.
+	 * 
 	 * @return
 	 */
 	public String getTruncatedValue() {
-		if (value ==null) 
+		if (value == null)
 			return null;
 		if (value.length() > CATEGORY_LIST_LENGTH) {
 			return value.substring(0, CATEGORY_LIST_LENGTH - 4) + "...";
 		}
 		return value;
+	}
+
+	/**
+	 * Check if the parents is null and not equal to itself.
+	 * 
+	 * @param parent
+	 * @return
+	 */
+	public boolean isParentValid() {
+		SystemCodes parent = this.getParent();
+		while (parent != null) {
+			if (this.key.equals(parent.getKey())) {
+				return false;
+			}
+			parent = parent.getParent();
+		}
+		return true;
+	}
+
+	@JsonView(Views.SearchView.class)
+	public String getParentKey() {
+		if (this.parent != null) {
+			return this.parent.getKey();
+		}
+		return "";
 	}
 
 }

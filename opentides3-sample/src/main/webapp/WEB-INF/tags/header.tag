@@ -80,7 +80,7 @@
 			<div id="hd" class="navbar navbar-inverse">
 				<div class="navbar-inner">
 					<div class="container">
-						<a class="brand" href="${home}">
+						<a class="brand" href="${home}/">
 							<img class="logo" src="<c:url value='${logo}'/>"/>
 						</a>
 					</div>
@@ -96,13 +96,13 @@
 							data-target=".nav-collapse"> <span class="icon-bar"></span> <span
 							class="icon-bar"></span> <span class="icon-bar"></span>
 						</a>
-						<a class="brand" href="${home}">
+						<a class="brand" href="${home}/">
 							<img class="logo" src="<c:url value='${logo}'/>"/>
 						</a>
 						<div class="nav-collapse collapse">
 							<ul class="nav">
 								<li class="${active eq 'home' ? 'active' : ''}">
-									<a href="${home}">
+									<a href="${home}/">
 										<spring:message code="label.home"/>
 									</a>
 								</li>
@@ -116,11 +116,6 @@
 										<spring:message code="label.system-codes"/>
 									</a>
 								</li>
-								<li class="${active eq 'widget' ? 'active' : ''}">
-									<a href="${home}/widget/">
-										<spring:message code="label.widget"/>
-									</a>
-								</li>
 								<li class="${active eq 'usergroups' ? 'active' : ''}">
 									<a href="${home}/organization/usergroups/">
 										<spring:message code="label.usergroup"/>
@@ -129,6 +124,11 @@
 								<li class="${active eq 'audit-log' ? 'active' : ''}">
 									<a href="${home}/audit-log/">
 										<spring:message code="label.audit-log"/>
+									</a>
+								</li>
+								<li class="${active eq 'widget' ? 'active' : ''}">
+									<a href="${home}/widget/">
+										<spring:message code="label.widget"/>
 									</a>
 								</li>
 								<li class="${active eq 'ninja' ? 'active' : ''}">

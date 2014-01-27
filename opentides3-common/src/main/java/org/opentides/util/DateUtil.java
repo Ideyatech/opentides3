@@ -120,4 +120,37 @@ public class DateUtil {
 	    result.getTime();
 	    return result.getTime();
 	}
+	
+	/**
+	 * Computes for days ago or ahead given the date and the count. Set to negative if operation will
+	 * be computing for a past date
+	 * @param count
+	 * @param date
+	 * @return
+	 */
+	public static Date getDateFrom(int count, Date date){
+		
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+		
+		calendar.add(Calendar.DAY_OF_MONTH, count);
+		return calendar.getTime();
+	}
+	
+	/**
+	 * returns the specified day of the week given the week number and year
+	 * @param day: 0 = sun, 1 = mon, 2 = tue, 3 = wed, 4 = thur, 5 = fri, 6 = sat
+	 * @param week
+	 * @param year
+	 * @return
+	 */
+	public static Date getDayOfTheWeek(int day, int week, int year){
+		Calendar calendar = Calendar.getInstance();
+		calendar.clear();
+		calendar.set(Calendar.WEEK_OF_YEAR, week);
+		calendar.set(Calendar.YEAR, year);
+		calendar.add(Calendar.DATE, day);
+		
+		return calendar.getTime();
+	}
 }

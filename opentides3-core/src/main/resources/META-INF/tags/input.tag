@@ -9,7 +9,7 @@
 <%@ attribute name="path" required="true" type="java.lang.String" %>
 <%@ attribute name="label" required="true" type="java.lang.String" %>
 <%@ attribute name="required" required="false" type="java.lang.Boolean" %>
-<%@ attribute name="datepicker" required="false" type="java.lang.Boolean" %>
+<%@ attribute name="textarea" required="false" type="java.lang.Boolean" %>
 <%@ attribute name="type" required="false" type="java.lang.String" %>
 <%@ attribute name="placeholder" required="false" type="java.lang.String" %>
 <%@ attribute name="cssClass" required="false" type="java.lang.String" %>
@@ -34,7 +34,6 @@
 	<div class="controls">
 	
 		<div class="
-			${datepicker ? 'date' : ''}
 			${not empty prependText or not empty prependIcon ? 'input-prepend': ''}
 			${not empty appendText or not empty appendIcon ? 'input-append': ''}">
 			
@@ -45,13 +44,25 @@
 				<span class="add-on"><i class="${prependIcon}"></i></span>
 			</c:if>
 		
-			<form:input path="${path}"
+			<c:choose>
+				<c:when test="${textarea}">
+					<form:textarea path="${path}"
 				
-				type="${empty type ? 'text': type }"
-				placeholder="${placeholder}"
-				cssClass="${cssClass}"
+						type="${empty type ? 'text': type }"
+						placeholder="${placeholder}"
+						cssClass="${cssClass}"
+						
+						/>
+				</c:when>
+				<c:otherwise>
+					<form:input path="${path}"
 				
-				/>
+						type="${empty type ? 'text': type }"
+						placeholder="${placeholder}"
+						cssClass="${cssClass}"
+						/>
+				</c:otherwise>
+			</c:choose>
 			
 			<c:if test="${not empty appendText}">
 				<span class="add-on">${appendText}</span>
@@ -64,14 +75,3 @@
 	</div>
 	
 </div>
-
-<c:if test="${datepicker}">
-	<script type="text/javascript">
-		$(document).ready(function() {
-			$('#${path}').datepicker();
-			$('#${path}').siblings().on("click", function(){
-				$('#${path}').focus();
-			});
-		});
-	</script>
-</c:if>

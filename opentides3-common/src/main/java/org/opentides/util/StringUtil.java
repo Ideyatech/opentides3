@@ -249,6 +249,16 @@ public class StringUtil {
 		}
     	return doub;
     }
+    
+    public static Float convertToFloat(String str, Float defValue) {
+		Float value = null;
+		try {
+			value = Float.parseFloat(str);
+		} catch (NumberFormatException nfe) {
+			// do nothing...
+		}
+		return value;
+    }
 
     /**
      * generates an alphanumeric string based on specified length.

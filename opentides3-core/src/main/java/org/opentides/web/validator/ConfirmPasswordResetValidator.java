@@ -20,6 +20,7 @@ package org.opentides.web.validator;
 
 import org.opentides.bean.user.PasswordReset;
 import org.opentides.util.StringUtil;
+import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
@@ -29,6 +30,7 @@ import org.springframework.validation.Validator;
  * @author allanctan
  *
  */
+@Component
 public class ConfirmPasswordResetValidator implements Validator {
 	/* (non-Javadoc)
 	 * @see org.springframework.validation.Validator#supports(java.lang.Class)

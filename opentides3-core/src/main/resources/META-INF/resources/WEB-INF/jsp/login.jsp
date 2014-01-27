@@ -21,7 +21,7 @@
 	</div>
 	<div class="modal-footer">
 		<small class="pull-left"><spring:message code="message.signup-help" /> <a href="#" data-url="${home}/register" class="show-signup"><spring:message code="message.signup-now" /></a></small>
-		<small class="pull-right"><a href="#"><spring:message code="message.forgot-your-password" /></a></small>
+		<small class="pull-right"><a href="${home}/request-reset-password" class="show-forgot-password"><spring:message code="message.forgot-your-password" /></a></small>
 	</div>
 </div>
 

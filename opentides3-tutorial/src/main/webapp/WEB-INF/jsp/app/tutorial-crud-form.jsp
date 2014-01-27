@@ -84,6 +84,7 @@
 						</code>
 					</div>
 				</li>
+				<li>Search for the <span class="code-emphasize">Close Button</span> under <span class="code-emphasize">Form Actions</span>, set the value for <span class="code-emphasize">data-dismiss</span> to <span class="code-emphasize">data-dismiss</span>page</li>
 			</ol>
 		</section>
 		
