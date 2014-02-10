@@ -82,20 +82,20 @@ public class SystemCodes extends BaseEntity implements Serializable {
 	}
 
 	public SystemCodes(String key) {
-		this.key = key;
+		setKey(key);
 	}
 
 	public SystemCodes(String category, String key, String value) {
-		this.category = category;
-		this.key = key;
-		this.value = value;
+		setCategory(category);
+		setKey(key);
+		setValue(value);
 	}
 
 	public SystemCodes(String category, String key, String value,
 			boolean skipAudit) {
-		this.category = category;
-		this.key = key;
-		this.value = value;
+		setCategory(category);
+		setKey(key);
+		setValue(value);
 		this.setSkipAudit(skipAudit);
 	}
 
