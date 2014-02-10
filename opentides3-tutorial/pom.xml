@@ -13,13 +13,15 @@
 		<artifactId>core</artifactId>
 		<version>3.0.1-SNAPSHOT</version>
 	</dependency>
-	
+
+    <!--
 	<dependency>
 		<groupId>org.opentides</groupId>
 		<artifactId>social</artifactId>
 		<version>3.0.1-SNAPSHOT</version>
 	</dependency>
-	
+    -->
+
 	<!-- Servlet -->
 	<dependency>
 		<groupId>javax.servlet</groupId>
@@ -61,7 +63,7 @@
 				<downloadJavadocs>true</downloadJavadocs>
 			</configuration>
 		</plugin>
-		
+
 		<plugin>
 			<groupId>org.apache.tomcat.maven</groupId>
             <artifactId>tomcat7-maven-plugin</artifactId>

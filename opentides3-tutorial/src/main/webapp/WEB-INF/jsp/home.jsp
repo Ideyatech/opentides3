@@ -36,15 +36,15 @@
 			We tried our best to make this as user friendly as possible for you.
 		</p>
 		<p class="lead">
-			In the following pages, you'll learn and understand the basic fundamentals of <span class="code-emphasize">Open-Tides 3</span>. 
-			Ranging from creating CRUD pages into simply adding icons, we'll tackle them all!
+			In the following pages, you'll learn and understand the fundamentals of <span class="code-emphasize">Open-Tides 3</span>,
+			ranging from creating CRUD pages to adding customizations, we'll tackle them all!
 		</p>
 		<p class="lead">
 			The tutorial will consist of 3 parts; <span class="code-emphasize">Setting up</span>, <span class="code-emphasize">Basic</span> and <span class="code-emphasize">Other topics</span>
 			We'll also develop a simple application alongside each topics covered.
 			This project will be your exercise and a playground to explore.
 			
-			Don't worry, sample codes will be provided along the way. Goodluck! <i class="icon-thumbs-up-alt"></i>
+			Don't worry, sample codes will be provided along the way. Good luck! <i class="icon-thumbs-up-alt"></i>
 		</p>
 		
 		<ul class="pager">

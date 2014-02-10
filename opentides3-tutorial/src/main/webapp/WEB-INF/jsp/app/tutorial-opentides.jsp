@@ -13,7 +13,7 @@
 
 <div class="row-fluid">
 	<!-- NAVIGATION -->
-	<div class="span2"">
+	<div class="span2">
 		<div class="alert alert-info">
 			<strong>Open-Tides 3</strong> is used by more than 10,000 users worldwide.
 		</div>
@@ -28,7 +28,7 @@
 		<h1><i class="icon-book"></i> Open-Tides 3</h1>
 		<p class="lead">
 			Open-Tides 3 is a web foundation framework that can be used to quickly setup a web application using Spring MVC and JPA.
-			It is inspired by several frameworks such as Ruby on Rails, AppFuse, Grails, Hibernate and Spring. 
+			It is inspired by several frameworks such as Ruby on Rails, AppFuse, Grails, Hibernate and Spring.
 			It follows the Web Foundation Framework which promotes reusability of codes and code generation through scaffolding.
 		</p>	
 

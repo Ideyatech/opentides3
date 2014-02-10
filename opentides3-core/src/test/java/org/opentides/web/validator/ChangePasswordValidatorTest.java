@@ -1,10 +1,5 @@
 package org.opentides.web.validator;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -15,6 +10,11 @@ import org.opentides.dao.UserDao;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * JUnit test class for testing ChangePasswordValidator. This will verify the method
@@ -35,7 +35,7 @@ public class ChangePasswordValidatorTest {
 	public void init() {
 		MockitoAnnotations.initMocks(this);
 		changePasswordValidator = new ChangePasswordValidator();
-		changePasswordValidator.setCoreUserDao(userDao);
+		//changePasswordValidator.setCoreUserDao(userDao);
 	}
 	@Test
 	public void testValidateObjectPassedTheValidation() {
