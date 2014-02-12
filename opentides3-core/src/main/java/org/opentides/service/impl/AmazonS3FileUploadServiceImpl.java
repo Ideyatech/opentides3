@@ -61,7 +61,7 @@ public class AmazonS3FileUploadServiceImpl implements FileUploadService {
 			filePath +=	folderName + "/";
 		}
 		
-		if(retainFilename) {
+		if(!retainFilename) {
 			filePath += new UUID();
 			filePath +=	"_";
 		}
