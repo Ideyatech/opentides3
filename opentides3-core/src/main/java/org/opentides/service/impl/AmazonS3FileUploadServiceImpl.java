@@ -1,6 +1,7 @@
 package org.opentides.service.impl;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 
 import org.opentides.bean.FileInfo;
@@ -48,7 +49,7 @@ public class AmazonS3FileUploadServiceImpl implements FileUploadService {
 	 * 
 	 */
 	@Override
-	public FileInfo upload(MultipartFile multipartFile, String folderName) {
+	public FileInfo upload(MultipartFile multipartFile, String folderName, boolean retainFilename) {
 		
 		AWSCredentials myCredentials = new BasicAWSCredentials(accessKey, secretKey);
 		
@@ -60,8 +61,10 @@ public class AmazonS3FileUploadServiceImpl implements FileUploadService {
 			filePath +=	folderName + "/";
 		}
 		
-		filePath += new UUID();
-		filePath +=	StringUtil.generateRandomString(5) + "_";
+		if(retainFilename) {
+			filePath += new UUID();
+			filePath +=	"_";
+		}
 		filePath +=	multipartFile.getOriginalFilename();
 		
 		Upload upload = null;
@@ -96,10 +99,78 @@ public class AmazonS3FileUploadServiceImpl implements FileUploadService {
 		return fileInfo;
 		
 	}
+	
+	/**
+	 * Generated filePath format will be as follows.
+	 * 
+	 * {bucketName}/{folderName}/{uuid}_{originalFileName}.{originalFileExtension}
+	 * 
+	 */
+	@Override
+	public FileInfo upload(File file, String folderName, boolean retainFilename) {
+		
+		AWSCredentials myCredentials = new BasicAWSCredentials(accessKey, secretKey);
+		
+		TransferManager tm = new TransferManager(myCredentials);
+
+		String filePath = "";
+		
+		if(!StringUtil.isEmpty(folderName)) {
+			filePath +=	folderName + "/";
+		}
+		
+		if(retainFilename) {
+			filePath += new UUID();
+			filePath +=	"_";
+		}
+		filePath +=	file.getName();
+		
+		Upload upload = null;
+		
+		upload = tm.upload(bucketName, filePath, file);
+		
+		try {
+			upload.waitForCompletion();
+		} catch (AmazonServiceException e) {
+			e.printStackTrace();
+		} catch (AmazonClientException e) {
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
+		//set the newly uploaded file to public
+		tm.getAmazonS3Client().setObjectAcl(bucketName, filePath, CannedAccessControlList.PublicRead);
+		
+		FileInfo fileInfo = new FileInfo();
+		fileInfo.setFilename(file.getName());
+		fileInfo.setFileSize(Long.valueOf(file.length()));
+		fileInfo.setOriginalFileName(file.getName());
+		
+		fileInfo.setFullPath("http://" + bucketName + amazonURL.replace("http://", ".") + "/" + filePath);
+		
+		return fileInfo;
+		
+	}
+	
+	@Override
+	public FileInfo upload(MultipartFile multipartFile, String folderName) {
+		return upload(multipartFile, folderName, false);
+	}
 
 	@Override
 	public FileInfo upload(MultipartFile multipartFile) {
 		return upload(multipartFile, "misc");
+	}
+	
+	@Override
+	public FileInfo upload(File file, String folderName) {
+		return upload(file, folderName, false);
+	}
+
+	@Override
+	public FileInfo upload(File file) {
+		return upload(file, "misc");
 	}
 
 }

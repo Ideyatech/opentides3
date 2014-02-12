@@ -32,12 +32,6 @@ public class DefaultFileUploadServiceImpl implements FileUploadService {
 	
 	@Override
 	@Transactional
-	public FileInfo upload(MultipartFile file) {
-		return upload(file, uploadPath);
-	}
-	
-	@Override
-	@Transactional
 	public FileInfo upload(MultipartFile file, String destination) {
 		FileInfo fileInfo = new FileInfo();
 		fileInfo.setFilename(file.getOriginalFilename());
@@ -80,5 +74,73 @@ public class DefaultFileUploadServiceImpl implements FileUploadService {
 		return fileInfo;
 	}
 	
+	@Override
+	@Transactional
+	public FileInfo upload(File file, String destination) {
+		FileInfo fileInfo = new FileInfo();
+		fileInfo.setFilename(file.getName());
+		fileInfo.setFileSize(Long.valueOf(file.length()));
+		fileInfo.setOriginalFileName(file.getName());
+		
+		File directory = FileUtil.createDirectory(destination);
+		String subdir = (new StringBuilder())
+				.append(directory.getAbsoluteFile()).append(File.separator)
+				.append(DateUtil.convertShortDate(new Date())).toString();
+		File subDirectory = FileUtil.createDirectory(subdir);
+		String filePath = (new StringBuilder())
+				.append(subDirectory.getAbsoluteFile())
+				.append(File.separator)
+				.append(file.getName()).toString();
+		
+		Long fileCnt = Long.valueOf(1L);
+		
+		while (fileInfoService.getFileInfoByFullPath(filePath) != null) {
+			
+			String newFilePath;
+			newFilePath = (new StringBuilder())
+					.append(subDirectory.getAbsoluteFile())
+					.append(File.separator).append(fileCnt.toString())
+					.append("_")
+					.append(file.getName()).toString();
+			fileCnt++;
+			filePath = newFilePath;
+		}
+
+		File uploadFile = new File(filePath);
+		fileInfo.setFullPath(filePath);
+		
+		//TODO Copy file to disk
+		/*try {
+			FileUtil.copyFile(file, uploadFile);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}*/
+		
+		return fileInfo;
+	}
+
+	@Override
+	public FileInfo upload(MultipartFile multipartFile, String destination,
+			boolean retainFilename) {
+		return upload(multipartFile, destination);
+	}
+	
+	@Override
+	@Transactional
+	public FileInfo upload(MultipartFile multipartFile) {
+		return upload(multipartFile, uploadPath);
+	}
+	
+	@Override
+	public FileInfo upload(File file, String destination,
+			boolean retainFilename) {
+		return upload(file, destination);
+	}
+	
+	@Override
+	@Transactional
+	public FileInfo upload(File file) {
+		return upload(file, uploadPath);
+	}
 	
 }
