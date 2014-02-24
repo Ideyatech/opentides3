@@ -47,13 +47,13 @@
 
 <script type="text/javascript">
 	$(document).ready(function() {
-		$('#ot-${path}').datepicker({
+		$('*[id="ot-${path}"]').datepicker({
 			format: "${empty format ? 'mm/dd/yyyy' : format}",
 			autoclose : ${empty autoClose ? false : true},
 			todayBtn : true
 		});
-		$('#ot-${path}').siblings().on("click", function(){
-			$('#ot3-${path}').focus();
+		$('*[id="ot-${path}"]').siblings().on("click", function(){
+			$('*[id="ot-${path}"]').focus();
 		});
 	});
 </script>
