@@ -37,7 +37,7 @@ public class CrudUtilTest {
 	public void testBuildCreateMessage() throws ParseException {
 		SystemCodes sc = new SystemCodes("category","key","value");
 		String expected = "<p class='add-message'>Added new System Codes with Value:<span class='primary-field'>value</span> " +
-				"with the following: Key=<span class='field-value'>key</span> and Category=<span class='field-value'>category</span> </p>";
+				"with the following: Key=<span class='field-value'>KEY</span> and Category=<span class='field-value'>CATEGORY</span> </p>";
 		Assert.assertEquals(expected,
 				CrudUtil.buildCreateMessage(sc));
 		
@@ -46,7 +46,7 @@ public class CrudUtilTest {
 		String cDate = DateUtil.dateToString(sc.getCreateDate(), "EEE, dd MMM yyyy HH:mm:ss z");
 		String expected2 = "<p class='add-message'>Added new System Codes with Value:<span class='primary-field'>value</span> " +
 				"with the following: " +
-				"Key=<span class='field-value'>key</span> and Category=<span class='field-value'>category</span> </p>";
+				"Key=<span class='field-value'>KEY</span> and Category=<span class='field-value'>CATEGORY</span> </p>";
 		Assert.assertEquals(expected2,
 				CrudUtil.buildCreateMessage(sc));
 		
@@ -56,7 +56,7 @@ public class CrudUtilTest {
 		sc3.setCreateDate(date);		
 		String expected3 = "<p class='add-message'>Added new System Codes with Value:<span class='primary-field'>value</span> " +
 				"with the following: " +
-				"Key=<span class='field-value'>key</span> and Category=<span class='field-value'>category</span> </p>";
+				"Key=<span class='field-value'>KEY</span> and Category=<span class='field-value'>CATEGORY</span> </p>";
 		Assert.assertEquals(expected3,
 				CrudUtil.buildCreateMessage(sc3));
 	}
@@ -69,9 +69,9 @@ public class CrudUtilTest {
 		SystemCodes samesc = new SystemCodes("categoryold","keyold","value");	
 		SystemCodes emptysc = new SystemCodes("categorynew","keynew","");
 		String expected = "<p class='change-message'>Changed System Codes with Value:<span class='primary-field'>value</span> " +
-				"with the following: Key from <span class='field-value-from'>keyold</span> to <span class='field-value-to'>keynew</span> " +
-				"and Category from <span class='field-value-from'>categoryold</span> " +
-				"to <span class='field-value-to'>categorynew</span> </p>";
+				"with the following: Key from <span class='field-value-from'>KEYOLD</span> to <span class='field-value-to'>KEYNEW</span> " +
+				"and Category from <span class='field-value-from'>CATEGORYOLD</span> " +
+				"to <span class='field-value-to'>CATEGORYNEW</span> </p>";
 		Assert.assertEquals(expected,
 				CrudUtil.buildUpdateMessage(oldsc, newsc));
 		String expected2 = "<p class='change-message'>Changed System Codes with Value:<span class='primary-field'>value</span> " +
@@ -104,8 +104,8 @@ public class CrudUtilTest {
 		oldUser.setFavorites(oldFaves);
 		newUser.setFavorites(newFaves);
 		
-		String expected = "<p class='change-message'>Changed User Criteria with the following: added Favorites <span class='field-values-added'>[keynew:valuenew]</span> " +
-				"and removed Favorites <span class='field-values-removed'>[keyold:valueold]</span> </p>";
+		String expected = "<p class='change-message'>Changed User Criteria with the following: added Favorites <span class='field-values-added'>[KEYNEW:valuenew]</span> " +
+				"and removed Favorites <span class='field-values-removed'>[KEYOLD:valueold]</span> </p>";
 		Assert.assertEquals(expected,
 				CrudUtil.buildUpdateMessage(oldUser, newUser));
 	}
@@ -128,7 +128,7 @@ public class CrudUtilTest {
 		sametc.setLastName("Ken");
 		
 		String expected = "<p class='change-message'>Changed Ninja with Name:<span class='primary-field'>Samurai Ken</span> with the following: " +
-				"Status from <span class='field-value-from'>keyold:old</span> to <span class='field-value-to'>keynew:new</span> </p>";
+				"Status from <span class='field-value-from'>KEYOLD:old</span> to <span class='field-value-to'>KEYNEW:new</span> </p>";
 		Assert.assertEquals(expected,
 				CrudUtil.buildUpdateMessage(oldtc, newtc));
 		Assert.assertEquals("",

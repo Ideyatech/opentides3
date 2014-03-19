@@ -164,4 +164,6 @@
 			advice-ref="txAdvice" />
 	</aop:config>
 	
+	<util:properties id="applicationSettings" location="classpath:application-settings-test.properties" />
+	
 </beans>
