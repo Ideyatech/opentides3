@@ -20,13 +20,12 @@ package org.opentides.util;
 
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.opentides.util.imageutil.Image;
-import org.opentides.util.imageutil.ImageLoader;
+import org.opentides.util.image.Image;
+import org.opentides.util.image.ImageLoader;
 
 /**
  * @author allantan
