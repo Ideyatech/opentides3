@@ -1,9 +1,27 @@
+/*
+   Licensed to the Apache Software Foundation (ASF) under one
+   or more contributor license agreements.  See the NOTICE file
+   distributed with this work for additional information
+   regarding copyright ownership.  The ASF licenses this file
+   to you under the Apache License, Version 2.0 (the
+   "License"); you may not use this file except in compliance
+   with the License.  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing,
+   software distributed under the License is distributed on an
+   "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+   KIND, either express or implied.  See the License for the
+   specific language governing permissions and limitations
+   under the License.    
+ */
+
 package org.opentides.web.controller;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,27 +39,24 @@ import org.opentides.bean.AjaxUpload;
 import org.opentides.bean.BaseEntity;
 import org.opentides.bean.FileInfo;
 import org.opentides.bean.ImageInfo;
+import org.opentides.bean.ImageUploadable;
 import org.opentides.bean.MessageResponse;
 import org.opentides.bean.MessageResponse.Type;
-import org.opentides.bean.ImageUploadable;
 import org.opentides.service.BaseCrudService;
 import org.opentides.service.FileUploadService;
 import org.opentides.service.ImageInfoService;
 import org.opentides.util.CrudUtil;
-import org.opentides.util.FileUtil;
 import org.opentides.util.ImageUtil;
 import org.opentides.util.NamingUtil;
 import org.opentides.util.StringUtil;
 import org.opentides.web.validator.ImageValidator;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.Assert;
-import org.springframework.util.ResourceUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -55,6 +70,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * Generic class for handling Image functionalities.
+ * To extend this controller, simply extend and implement doLoad method.
  * 
  * @author AJ
  * @author allanctan
@@ -70,15 +86,10 @@ public class ImageController {
 	protected ImageInfoService imageInfoService;
 	
 	@Autowired
-	protected ImageValidator imagwValidator;
+	protected ImageValidator imageValidator;
 	
 	@Autowired
-	@Qualifier("defaultFileUploadService")
 	protected FileUploadService defaultFileUploadService;
-
-	@Autowired
-	@Qualifier("amazonS3FileUploadService")
-	protected FileUploadService amazonFileUploadService;
 	
 	@Autowired
 	protected BeanFactory beanFactory;
@@ -91,14 +102,16 @@ public class ImageController {
 	
 	@Value("#{applicationSettings.imageAdjustPage}")
 	protected String adjustPhoto = "";	
-
-	@Value("#{applicationSettings['amazon.s3.use']}")
-	private String useAmazon;
 	
 	@Value("#{applicationSettings['defaultImageLocation']}")
 	private String defaultImageLocation;
 	
-	public byte[] defaultImage(HttpServletRequest request) {
+	/**
+	 * Loads the default image 
+	 * @param request
+	 * @return
+	 */
+	private final byte[] defaultImage(HttpServletRequest request) {
 		if(StringUtil.isEmpty(defaultImageLocation))
 			return ImageUtil.getDefaultImage();
 		else {
@@ -110,7 +123,7 @@ public class ImageController {
 			try {
 				barray = IOUtils.toByteArray(is);
 			} catch (IOException e) {
-				e.printStackTrace();
+				_log.error("Failed to load default image ["+defaultImageLocation+"].",e);
 				return ImageUtil.getDefaultImage();
 			}
 			
@@ -151,11 +164,7 @@ public class ImageController {
 							c = info.getCommand();
 				}
 				
-				if("true".equals(useAmazon)) {
-					barray = ImageUtil.loadImage(new URL(info.getFullPath()), c);
-				} else {
-					barray = ImageUtil.loadImage(getImagePath(info), c);
-				}
+				barray = ImageUtil.loadImage(getImagePath(info), c);
 			}
 			if (barray != null) {
 				response.setContentType("image/png");
@@ -284,11 +293,10 @@ public class ImageController {
 		ImageInfo currentImage = imageInfoService.load(id);
 		try {
 			String command = ImageUtil.createCropCommand(newWidth, newHeight, topLeftX, topLeftY);
-			if(!"true".equals(useAmazon))
-				ImageUtil.cropImage(getImagePath(currentImage), command, resizedWidth, replaceOriginal);
-			/*String newCommand = (!StringUtil.isEmpty(currentImage.getCommand()) ? currentImage.getCommand() + "_" : "" )
-					+ command;*/
-			currentImage.setCommand(command);
+			ImageUtil.cropImage(getImagePath(currentImage), command, resizedWidth, replaceOriginal);
+			String newCommand = (!StringUtil.isEmpty(currentImage.getCommand()) ? currentImage.getCommand() + "_" : "" )
+					+ command;
+			currentImage.setCommand(newCommand);
 			imageInfoService.save(currentImage);
 			messages.addAll(CrudUtil.buildSuccessMessage(currentImage, "upload-photo", request.getLocale(), messageSource));
 		} catch (IOException e) {
@@ -362,13 +370,7 @@ public class ImageController {
 			return model;
 		}
 		
-		FileInfo f;
-		
-		if("true".equals(useAmazon)) {
-			f = amazonFileUploadService.upload(image.getAttachment(), folderName);
-		} else {
-			f = defaultFileUploadService.upload(image.getAttachment());
-		}
+		FileInfo f = defaultFileUploadService.upload(image.getAttachment());
 		
 		ImageInfo imageInfo = new ImageInfo(f);
 		imageInfo.setIsPrimary(isPrimary);
@@ -397,7 +399,7 @@ public class ImageController {
 
 	@InitBinder
 	protected void initBinder(WebDataBinder binder){
-		binder.setValidator(imagwValidator);
+		binder.setValidator(imageValidator);
 	}
 	
 }

@@ -39,7 +39,7 @@ import org.opentides.bean.AuditableField;
 import org.opentides.bean.BaseEntity;
 import org.opentides.bean.MessageResponse;
 import org.opentides.bean.SystemCodes;
-import org.opentides.exception.CodeGenerationException;
+import org.opentides.exception.InvalidImplementationException;
 import org.springframework.context.MessageSource;
 import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
@@ -405,7 +405,7 @@ public class CrudUtil {
 				}
 				return retrieveObjectValue(ivalue,property.substring(props[0].length()+1));
 			} catch (Exception e) {
-				throw new CodeGenerationException("Failed to retrieve value for "+property, e);
+				throw new InvalidImplementationException("Failed to retrieve value for "+property, e);
 			} 
 		} else {
 			// let's get the object value directly
@@ -422,7 +422,7 @@ public class CrudUtil {
 					return method.invoke(obj);					
 				}
 			} catch (Exception e) {
-				throw new CodeGenerationException("Failed to retrieve value for "+property, e);
+				throw new InvalidImplementationException("Failed to retrieve value for "+property, e);
 			} 
 		}
 	}
@@ -466,7 +466,7 @@ public class CrudUtil {
 				Object ivalue = method.invoke(obj);
 				return retrieveObjectType(ivalue,property.substring(props[0].length()+1));
 			} catch (Exception e) {
-				throw new CodeGenerationException("Failed to retrieve value for "+property, e);
+				throw new InvalidImplementationException("Failed to retrieve value for "+property, e);
 			} 
 		} else {
 			// let's get the object value directly
@@ -474,7 +474,7 @@ public class CrudUtil {
 				Method method = obj.getClass().getMethod(NamingUtil.toGetterName(property));
 				return method.getReturnType();
 			} catch (Exception e) {
-				throw new CodeGenerationException("Failed to retrieve value for "+property, e);
+				throw new InvalidImplementationException("Failed to retrieve value for "+property, e);
 			} 
 		}
 	}

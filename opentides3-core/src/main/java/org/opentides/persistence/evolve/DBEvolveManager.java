@@ -26,7 +26,7 @@ import javax.persistence.NoResultException;
 import org.apache.log4j.Logger;
 import org.opentides.bean.Sequence;
 import org.opentides.dao.SequenceDao;
-import org.opentides.exception.CodeGenerationException;
+import org.opentides.exception.InvalidImplementationException;
 import org.opentides.service.UserGroupService;
 import org.opentides.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,7 +87,7 @@ public class DBEvolveManager {
 		for (int i=0; i<(evolveList.size()-1); i++) {
 			if (evolveList.get(i).getVersion() == evolveList.get(i+1).getVersion()) {
 				// we have a duplicate version... exit
-				throw new CodeGenerationException(
+				throw new InvalidImplementationException(
 						"Duplicate version number ["+evolveList.get(i).getVersion() +
 						"] detected on evolve script for "+evolveList.get(i).getClass().getName() + 
 						" and " + evolveList.get(i+1).getClass().getName());

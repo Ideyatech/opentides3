@@ -5,23 +5,15 @@
 <%@ taglib prefix="tides" uri="http://www.ideyatech.com/tides"%>
 <%@ taglib prefix="app" tagdir="/WEB-INF/tags"%>
 
-<app:header pageTitle="label.user" active="users">
-
-	<!-- REQUIRED FOR INTRO/TUTORIAL -->
-    <link rel="stylesheet" type="text/css" href="<c:url value='/css/bootstro.min.css'/>" />
-	<script type="text/javascript" src="<c:url value='/js/bootstro.min.js'/>"></script>
+<app:header pageTitle="label.user" active="users" />
 	
-</app:header>
-
 <div id="user-body">
 
-<ul class="breadcrumb bootstro" 
-	data-bootstro-title="Breadcrumb Navigation"
-	data-bootstro-content="You are at Home / User. This is where you can manage the users of your system."
-	data-bootstro-step="0" data-bootstro-placement="bottom" >
+
+<ul class="breadcrumb">
   <li><a href="${home}/"><spring:message code="label.home"/></a> <span class="divider">/</span></li>
   <li><spring:message code="label.user"/></li>
-</ul>	
+</ul>
 
 <div id="search-body" class="${search}">
 
@@ -52,43 +44,28 @@
 	<div id="results-panel" class="span9">
 	
 		<div id="message-panel" class="row-fluid">
-			<button id="user-add" class="btn btn-info add-action bootstro"
-				data-bootstro-title="Add Button"
-				data-bootstro-content="To add more users to your system, click here."
-				data-bootstro-step="4" data-bootstro-placement="left"
-				>
+			<button id="user-add" class="btn btn-info add-action">
                	<i class="icon-plus-sign icon-white"></i>
                	<spring:message code="label.user.add" />
                </button>
-            <div class="status bootstro" data-summary-message='
-            	<spring:message code="message.displaying-x-of-y" arguments="#start,#end,#total,records"/>'
-            		data-bootstro-title="Search Details"
-					data-bootstro-content="Details about your search will be displayed in this area."
-					data-bootstro-step="3" data-bootstro-placement="bottom"
-            	>
+            <div class="status" data-summary-message='
+            	<spring:message code="message.displaying-x-of-y" arguments="#start,#end,#total,records"/>'>
             	<tides:status results="${results}" />
             </div>
 	    </div>
 	    
 	    <div class="clear"></div>
 	    
-	    <div class="table-wrapper-2 overflow-hidden bootstro"
-		    data-bootstro-title="Results Panel"
-			data-bootstro-content="This is where your search results will appear. Right now, there are no search filters so we are displaying all users."
-			data-bootstro-step="2" data-bootstro-placement="bottom">
+	    <div class="table-wrapper-2 overflow-hidden">
 			<div class="table-wrapper">
 	        	<table id="user-results" class="footable table-bordered table-striped table-hover table-condensed" data-page="${results.currPage}" >
 					<thead>
 		               	<tr class="table-header">
 		                   	<th data-class="expand" data-field-name="completeName"><spring:message code="label.user.name"/></th>
-		                   	<th data-class="expand" data-field-name="completeName"><spring:message code="label.user.photo"/></th>
 		                	<th data-field-name="emailAddress"><spring:message code="label.user.email"/></th>
 		               		<th data-hide="phone" data-field-name="displayGroups"><spring:message code="label.user.groups"/></th>
 		               		<th data-hide="phone" data-field-name="credential.enabled"><spring:message code="label.user.active"/></th>
-		                	<th class="bootstro" data-field-name="ot3-controls"
-		                		data-bootstro-title="Controls Column"
-								data-bootstro-content="You can edit or delete a user by clicking the icons under this column."
-								data-bootstro-step="5" data-bootstro-placement="left">Controls</th>
+		                	<th data-field-name="ot3-controls">Controls</th>
 		                </tr>
 	           		</thead>
 	           		<tbody>
@@ -96,13 +73,9 @@
 	                		<tr id="user-row-{{id}}" data-id="{{id}}">
 								<td>
 									<a href="${home}/organization/users/view/{{id}}">
+									  	<img class="img-polaroid" src="${home}/image/{{primaryImage.id}}?c=32"/>
 										{{completeName}}
 									</a>
-								</td>
-								<td>
-									<div class="btn-group">
-									  <img class="img-polaroid" src="${home}/image/{{primaryImage.id}}?c=32"/>
-									</div>
 								</td>
 								<td>{{emailAddress}}</td>
 								<td>{{displayGroups}}</td>
@@ -117,11 +90,9 @@
 			            	<tr id="user-row-${record.id}" data-id="${record.id}">            
 			                	<td>
 			                		<a href="${home}/organization/users/view/${record.id}">
+									  	<img class="img-polaroid" src="${home}/image/${record.primaryImage.id}?c=32"/>
 										<c:out value="${record.completeName}" />
 									</a>
-								</td>
-								<td>
-								  <img class="img-polaroid" src="${home}/image/${record.primaryImage.id}?c=32"/>
 								</td>
 			                	<td><c:out value="${record.emailAddress}" /></td>
 			                	<td><c:out value="${record.displayGroups}" /></td>
@@ -169,6 +140,24 @@
 				<tides:select label="label.user.groups" path="groups" multiple="true"
 					items="${userGroupsList}" itemLabel="name" itemValue="id" select2="true" required="true"/>
 				<tides:checkbox label="label.user.active" path="credential.enabled"/>
+<!-- Start of Photo Gallery -->				
+    <!-- The fileinput-button span is used to style the file input field as button -->
+    <span class="btn btn-success fileinput-button">
+        <i class="glyphicon glyphicon-plus"></i>
+        <span>Add files...</span>
+        <!-- The file input field used as target for the file upload widget -->
+        <input id="fileupload" type="file" name="files[]" multiple>
+    </span>
+    <br>
+    <br>
+    <!-- The global progress bar -->
+    <div id="progress" class="progress">
+        <div class="progress-bar progress-bar-success"></div>
+    </div>
+    <!-- The container for the uploaded files -->
+    <div id="files" class="files"></div>
+
+<!-- End of Photo Gallery -->						
 				<br/>
 			</div>
 		 	<div class="modal-footer">
@@ -233,4 +222,13 @@
 	.on("click", '.adjust-photo', opentides3.showAdjustPhoto)
 	.on("click", '.upload-photo', opentides3.showUploadPhoto);
   </script>
+  
+  <!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
+  <script src="js/jquery.iframe-transport.js"></script>
+  <!-- The basic File Upload plugin -->
+  <script src="js/jquery.fileupload.js"></script>
+  <!-- The File Upload processing plugin -->
+  <script src="js/jquery.fileupload-process.js"></script>
+  <!-- The File Upload image preview & resize plugin -->
+  <script src="js/jquery.fileupload-image.js"></script>
 </tides:footer>

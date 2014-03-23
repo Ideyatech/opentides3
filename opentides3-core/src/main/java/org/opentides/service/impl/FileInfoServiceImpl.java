@@ -45,6 +45,11 @@ public class FileInfoServiceImpl extends BaseCrudServiceImpl<FileInfo>
 			return null;
 		return ((FileInfoDao) getDao()).findFileInfoByFullPath(path);
 	}
+	
+	@Override
+	public FileInfo getLatestFileInfoByFileId(String fileId) {
+		return ((FileInfoDao) getDao()).findLatestFileInfoByFileId(fileId);
+	}
 
 	@Transactional
 	@Override
@@ -75,5 +80,4 @@ public class FileInfoServiceImpl extends BaseCrudServiceImpl<FileInfo>
 		
 		return null;
 	}
-
 }

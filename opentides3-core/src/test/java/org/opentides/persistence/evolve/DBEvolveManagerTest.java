@@ -18,7 +18,11 @@
  */
 package org.opentides.persistence.evolve;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +34,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.opentides.bean.Sequence;
 import org.opentides.dao.SequenceDao;
-import org.opentides.exception.CodeGenerationException;
+import org.opentides.exception.InvalidImplementationException;
 import org.opentides.service.UserGroupService;
 import org.opentides.service.UserService;
 
@@ -124,7 +128,7 @@ public class DBEvolveManagerTest {
 		verify(userService, never()).setupAdminUser();
 	}
 	
-	@Test(expected = CodeGenerationException.class)
+	@Test(expected = InvalidImplementationException.class)
 	public void testEvolveDuplicateEvolve() {
 		Sequence dbVersion = new Sequence();
 		dbVersion.setKey("DB_VERSION");

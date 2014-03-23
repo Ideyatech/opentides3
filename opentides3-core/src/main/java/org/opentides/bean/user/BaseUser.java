@@ -141,6 +141,7 @@ public class BaseUser extends BaseEntity implements ImageUploadable {
 	public BaseUser() {
 		super();
 		this.setCredential(new UserCredential());
+		this.images = new ArrayList<ImageInfo>();
 		groups = new HashSet<UserGroup>();
 	}
 	
@@ -622,7 +623,7 @@ public class BaseUser extends BaseEntity implements ImageUploadable {
 				}
 			}
 		}
-		return null;
+		return new ImageInfo();
 	}
 	
 	public void setPhotos(List<ImageInfo> photos) {

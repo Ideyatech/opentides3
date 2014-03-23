@@ -29,6 +29,8 @@ import org.springframework.web.multipart.MultipartFile;
 public class AjaxUpload {
 	
 	private MultipartFile attachment;
+	
+	private String fileId;
 
 	/**
 	 * @return the attachment
@@ -43,5 +45,18 @@ public class AjaxUpload {
 	public final void setAttachment(MultipartFile attachment) {
 		this.attachment = attachment;
 	}
-	
+
+	/**
+	 * @return the fileId
+	 */
+	public final String getFileId() {
+		return fileId;
+	}
+
+	/**
+	 * @param fileId the fileId to set
+	 */
+	public final void setFileId(String fileId) {
+		this.fileId = fileId;
+	}
 }

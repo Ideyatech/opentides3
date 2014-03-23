@@ -37,6 +37,13 @@ public interface FileInfoService extends BaseCrudService<FileInfo> {
 	public List<FileInfo> getFileInfoByFullPath(String path);
 	
 	/**
+	 * Returns the latest fileInfo for the given file Id.
+	 *   - null if no fileId is found. 
+	 *   - latest version if multiple fileId is found.
+	 */
+	public FileInfo getLatestFileInfoByFileId(String fileId);
+	
+	/**
 	 * Delete the physical file
 	 * @param path
 	 * @return

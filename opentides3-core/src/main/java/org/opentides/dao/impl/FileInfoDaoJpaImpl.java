@@ -37,4 +37,11 @@ public class FileInfoDaoJpaImpl extends BaseEntityDaoJpaImpl<FileInfo, Long> imp
                 return result;
         }
 
+		@Override
+		public FileInfo findLatestFileInfoByFileId(String fileId) {
+            Map<String, Object> params = new HashMap<String, Object>();
+            params.put("fileId", fileId);            
+            return findSingleResultByNamedQuery("jpql.fileInfo.findLatestFileInfoByFileId", params);
+		}
+
 }

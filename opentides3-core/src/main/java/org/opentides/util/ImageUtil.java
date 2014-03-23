@@ -30,8 +30,8 @@ import javax.imageio.ImageIO;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
-import org.opentides.util.imageutil.Image;
-import org.opentides.util.imageutil.ImageLoader;
+import org.opentides.util.image.Image;
+import org.opentides.util.image.ImageLoader;
 
 /**
  * Static helper functions for image manipulation.

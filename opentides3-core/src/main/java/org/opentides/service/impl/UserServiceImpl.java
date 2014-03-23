@@ -44,11 +44,11 @@ import org.opentides.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Service;
 
@@ -94,7 +94,7 @@ public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 	 */
 	public String encryptPassword(String cleartext) {
 	    if (passwordEncoder!=null) {
-	        return passwordEncoder.encodePassword(cleartext, null);
+	        return passwordEncoder.encode(cleartext);
 	    } else
 	        return cleartext;
 	}
@@ -414,7 +414,7 @@ public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 		try {
 			decrypted = StringUtil.decrypt(passwd.getCipher());
 		} catch (Exception e) {
-			e.printStackTrace();
+			_log.error("Failed to decrypt password.",e);
 		}
 		if (StringUtil.isEmpty(decrypted)) {
 			_log.info("Failed attempt to confirm password reset due to wrong cipher key.["

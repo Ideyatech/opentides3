@@ -235,7 +235,10 @@ public class UrlUtil {
 	 *         	  - methodName - Either "POST" or "GET". Default is "POST"   
 	 *            - forwardCookie - if true, will forward cookies found on request object
 	 *            - IPAddress - if specified, this IP will be used for the request
-	 *        
+	 *  
+	 * Note: This method required commons httpclient which is NOT defined in this project's
+	 * POM. Please MANUALLY include httpclient in your application if you need this function.
+	 * 
 	 */
 	public static final UrlResponseObject getPage(final String queryURL,
 								  	   final HttpServletRequest request,
@@ -256,8 +259,6 @@ public class UrlUtil {
 				}
 			}
 		}
-		
-
 		if (param!=null && "GET".equals((String) param.get("methodName"))) {
 			httpMethodBase = new GetMethod(queryURL);
 		} else {

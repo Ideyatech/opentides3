@@ -35,7 +35,7 @@ import org.opentides.annotation.Protected;
 import org.opentides.bean.BaseEntity;
 import org.opentides.bean.user.SessionUser;
 import org.opentides.dao.BaseEntityDao;
-import org.opentides.exception.CodeGenerationException;
+import org.opentides.exception.InvalidImplementationException;
 import org.opentides.listener.ApplicationStartupListener;
 import org.opentides.util.CrudUtil;
 import org.opentides.util.SecurityUtil;
@@ -408,7 +408,7 @@ public class BaseEntityDaoJpaImpl<T extends BaseEntity,ID extends Serializable>
 	public final String getJpqlQuery(String key) {
 		String query = (String) jpqlProperties.get(key);
 		if (StringUtil.isEmpty(query)) {
-			throw new CodeGenerationException("Key ["+key+"] is not defined in custom jpql property file.");
+			throw new InvalidImplementationException("Key ["+key+"] is not defined in custom jpql property file.");
 		} else
 			return query;
 	}

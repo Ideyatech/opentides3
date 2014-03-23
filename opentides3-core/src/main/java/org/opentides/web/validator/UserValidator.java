@@ -67,7 +67,7 @@ public class UserValidator implements Validator {
 				e.rejectValue("emailAddress", "error.invalid-email-address",new Object[]{user.getEmailAddress()},"Email Address is invalid.");
 			}
 			if (isDuplicateEmail(user)) {
-				e.reject("error.duplicate-field", new Object[]{user.getEmailAddress(),"email"}, "Email address already exists.");
+				e.rejectValue("emailAddress","error.duplicate-field", new Object[]{user.getEmailAddress(),"email"}, "Email address already exists.");
 			}			
 		}
 
@@ -81,7 +81,7 @@ public class UserValidator implements Validator {
 		if (!StringUtil.isEmpty(user.getCredential().getNewPassword()) &&
 		    !StringUtil.isEmpty(user.getCredential().getConfirmPassword()) &&
 		    !user.getCredential().getNewPassword().equals(user.getCredential().getConfirmPassword())) {
-			e.reject("error.password-confirmation-did-not-match", "Password confirmation did not match.");
+			e.rejectValue("credential.confirmPassword","error.password-confirmation-did-not-match", "Password confirmation did not match.");
 		}
 	}
 

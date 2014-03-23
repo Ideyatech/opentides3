@@ -33,4 +33,11 @@ public interface FileInfoDao extends BaseEntityDao<FileInfo, Long> {
      */
     public List<FileInfo> findFileInfoByFullPath(String fullPath);
 
+    /**
+     * Finds for FileInfo reference for the given file id.
+     * @param fullPath
+     * @return
+     */
+    public FileInfo findLatestFileInfoByFileId(String fileId);
+
 }

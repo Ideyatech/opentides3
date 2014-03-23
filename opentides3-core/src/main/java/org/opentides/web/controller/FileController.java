@@ -1,56 +1,58 @@
 package org.opentides.web.controller;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.opentides.annotation.Valid;
 import org.opentides.bean.AjaxUpload;
-import org.opentides.bean.BaseEntity;
-import org.opentides.bean.FileInfo;
-import org.opentides.bean.MessageResponse;
-import org.opentides.bean.Uploadable;
-import org.opentides.service.BaseCrudService;
 import org.opentides.service.FileInfoService;
 import org.opentides.service.FileUploadService;
-import org.opentides.util.CrudUtil;
-import org.opentides.util.NamingUtil;
-import org.opentides.util.StringUtil;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
+ * Default controller for uploading and downloading of files.
+ * API calls are patterned and extended after Google Drive API. 
  * 
+ * Currently, the supported functions are:
+ * 
+ * insert      : POST /files
+ * get         : GET  /files/{fileId}
+ * update      : PUT  /files/{fileId}
+ *             : POST /files/{fileId}
+ * info        : GET  /files/{fileId}/info
+ * get version : GET  /files/{fileId}/v/{version}
+ * list        : GET  /files (?)
+ * delete      : DELETE /files/{fileId}
+ * archive     : POST /files/{fileId}/archive
+ * restore     : POST /files/{fileId}/restore
+ * purge       : POST /files/purge
+ *           
+ * Open Questions:
+ *    - How do we restrict file access per user or user group?
+ *    
  * @author Ronielson
- *
+ * @author allanctan
+ * 
  */
 
-@RequestMapping("/file")
+@RequestMapping("/files")
 @Controller
 public class FileController {
-
-	@Value("#{applicationSettings.imageUploadPage}")
-	protected String uploadPage = "";
 	
 	@Autowired
 	protected BeanFactory beanFactory;
@@ -59,17 +61,17 @@ public class FileController {
 	protected MessageSource messageSource;
 	
 	@Autowired
-	@Qualifier("defaultFileUploadService")
 	protected FileUploadService fileUploadService;
 	
 	@Autowired
 	protected FileInfoService fileInfoService;
-	
 
 	private Map<String, String> contentTypes = new HashMap<>();
 	
 	@Autowired(required = false)
 	private Map<String, String> additionalContentType;
+	
+	private static Logger _log = Logger.getLogger(BaseCrudController.class);
 	
 	public FileController(){
 		contentTypes.put(".pdf", "application/pdf");
@@ -78,96 +80,184 @@ public class FileController {
 		contentTypes.put(".xls", "application/vnd.ms-excel");
 		contentTypes.put(".png", "image/png");
 		contentTypes.put(".gif", "image/gif");
-		contentTypes.put(".jpeg", "image/jpeg");
+		contentTypes.put(".jpeg","image/jpeg");
 		contentTypes.put(".jpg", "image/jpeg");
-		contentTypes.put(".gz", "application/x-gzip");
+		contentTypes.put(".gz",  "application/x-gzip");
 		contentTypes.put(".zip", "application/zip");
 	}
-	
-	@PostConstruct
-	public void afterPropertiesSet(){
-		if(additionalContentType!=null){
-			contentTypes.putAll(contentTypes);
-		}
+
+	/**
+	 * This method handles uploading of files.
+	 * Returns the corresponding fileId for the newly uploaded file
+	 * 
+	 * insert      : POST /files/ 
+	 * 
+	 * Question: What if developer wants to upload to a specific location.
+	 * 
+	 * @param file
+	 * @param destination
+	 * @param result
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(method = RequestMethod.POST, produces = "application/json")
+	public @ResponseBody Map<String, Object> processUpload(
+			@Valid @ModelAttribute("file") AjaxUpload file,
+			@ModelAttribute("dest") String destination,
+			BindingResult result, HttpServletRequest request) {
+		_log.debug("Initiating file upload...");
+		return null;
 	}
 	
 	/**
-	 * Display the upload form
-	 * @param modelMap
+	 * This method handles downloading of files based on the given file id.
+	 * 
+	 * get         : GET  /files/{fileId}
 	 * @param id
-	 * @param classId
-	 * @param className
-	 * @return
+	 * @param request
+	 * @param response
+	 * @throws IOException
 	 */
-	//not yet finished
-	@RequestMapping(method = RequestMethod.GET, value="/upload")
-	public String displayUploadForm(ModelMap modelMap, 
-			@RequestParam(value="imageId", required = false) Long id,
-			@RequestParam(value="classId") Long classId,
-			@RequestParam(value="className") String className){
-		
-		modelMap.put("imageId", id);
-		modelMap.put("className", className);
-		modelMap.put("classId", classId);
-		return uploadPage;
-	}
-	
-	public Map<String, String> getContentTypes() {
-		return contentTypes;
-	}
-	
-	public void setContentTypes(Map<String, String> contentTypes){
-		this.contentTypes = contentTypes;
+	@RequestMapping(method = RequestMethod.GET, value="/{fileId}")
+	public void downloadLatestFile(@PathVariable("fileId") Long fileId, 
+			HttpServletRequest request, HttpServletResponse response) throws IOException {
+		_log.debug("Initiating download["+fileId+"]...");		 
 	}
 
+	/**
+	 * This method handles updating of files based on the given file id.
+	 * By default, all file updates are versioned. 
+	 * However, an override flag is available to overwrite the file.
+	 * 
+	 * update      : PUT  /files/{fileId}
+	 *             : POST /files/{fileId}
+	 * @param id
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping(method = {RequestMethod.PUT, RequestMethod.POST}, value="/{fileId}")
+	public void updateFile(
+			@Valid @ModelAttribute("file") AjaxUpload file,
+			@PathVariable("fileId") Long fileId,
+			@ModelAttribute("dest") String destination,
+			@ModelAttribute("overwrite") Boolean overwrite,
+			HttpServletRequest request, HttpServletResponse response) {
+		_log.debug("Updating file["+fileId+"]...");
+	}
 	
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@RequestMapping(method = RequestMethod.POST, value="/upload", produces = "application/json")
-	public @ResponseBody Map<String, Object>
-	processUpload(@Valid @ModelAttribute("file") AjaxUpload file,
-		@RequestParam(value = "className", required = false) String className, 
-		@RequestParam(value = "classId", required = false) Long id,
-		BindingResult result, HttpServletRequest request){
-		
-		BaseEntity entity = null;
-		BaseCrudService service = null;
-		
-		if(!StringUtil.isEmpty(className) && id != null) {
-			String attributeName = NamingUtil.toAttributeName(className);
-			String serviceBean = attributeName + "Service";
-			
-			service = (BaseCrudService) beanFactory.getBean(serviceBean);
-			Assert.notNull(service, "Entity " + attributeName
-					+ " is not associated with a service class [" + serviceBean
-					+ "]. Please check your configuration.");
-			
-			entity = service.load(id);
-			Assert.notNull(entity, "No " + className + " object found for the given ID [" + id + "]");
-			Assert.isAssignable(Uploadable.class, entity.getClass(), "Object is not Uploadable");
-		}
-		
+	/**
+	 * This method returns the file info details of a given file id.
+	 * This can be used to identify the file version and access permission.
+	 * 
+	 * info        : GET  /files/{fileId}/info
+	 * 
+	 * @param fileId
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(method = RequestMethod.GET, value="/{fileId}/info")
+	public @ResponseBody Map<String, Object> getInfo(@PathVariable("fileId") Long fileId, 
+			HttpServletRequest request, HttpServletResponse response) {
+		_log.debug("Retrieving file info["+fileId+"]...");
+		return null;		
+	}
+	 
+	/**
+	 * This method returns a specific versioned file for download based on the
+	 * given file id and version.
+	 * 
+	 * @param fileId
+	 * @param version
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping(method = RequestMethod.GET, value="/{fileId}/v/{version}")
+	public void downloadVersionedFile(@PathVariable("fileId") Long fileId, 
+			@PathVariable("version") Long version, 
+			HttpServletRequest request, HttpServletResponse response) throws IOException {
+		_log.debug("Initiating download["+fileId+"] of version ["+version+"]...");
+	}
+	
+	/**
+	 * This method deletes the files for the given fileId.
+	 * Delete also removes all version of the fileId. 
+	 * However, delete does not physically delete the file 
+	 * until a purge is executed.
+	 * 
+   	 * delete      : DELETE /files/{fileId}
+	 * 
+	 * @param fileId
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping(method = RequestMethod.DELETE, value="/{fileId}")
+	public void delete(@PathVariable("fileId") Long fileId, 
+			HttpServletRequest request, HttpServletResponse response) throws IOException {
+		_log.debug("Deleting file["+fileId+"]...");
+	}
+
+
+	/**
+	 * This method archives the files for the given fileId.
+	 * 
+	 * archive     : POST /files/{fileId}/archive
+	 * 
+	 * @param fileId
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping(method = {RequestMethod.POST, RequestMethod.PUT, RequestMethod.GET}, value="/{fileId}/archive")
+	public void archive(@PathVariable("fileId") Long fileId, 
+			HttpServletRequest request, HttpServletResponse response) throws IOException {
+		_log.debug("Archiving file["+fileId+"]...");
+	}
+	
+	/**
+	 * This method restores the files for the given fileId.
+	 * The file could be previously deleted or archived.
+	 * 
+	 * restore     : POST /files/{fileId}/restore
+	 * 
+	 * @param fileId
+	 */
+	@RequestMapping(method = {RequestMethod.POST, RequestMethod.PUT, RequestMethod.GET}, value="/{fileId}/restore")
+	public void restore(@PathVariable("fileId") Long fileId, 
+			HttpServletRequest request, HttpServletResponse response) throws IOException {
+		_log.debug("Restoring file["+fileId+"]...");
+	}
+
+	/**
+	 * This method purges all files that has been deleted.
+	 * A flag to include archived files is available.
+	 * 
+	 * purge       : POST /files/purge
+	 * 
+	 * @param fileId
+	 */
+	@RequestMapping(method = {RequestMethod.POST, RequestMethod.PUT, RequestMethod.GET}, value="/purge")
+	public void purge(@ModelAttribute("includeArchived") Boolean includeArchived, 
+			HttpServletRequest request, HttpServletResponse response) throws IOException {
+		_log.debug("Purging files...");
+	}
+	
+/*
+	@RequestMapping(method = RequestMethod.POST, value="/upload/{id}", produces = "application/json")
+	public @ResponseBody Map<String, Object> processUpload(
+			@Valid @ModelAttribute("file") AjaxUpload file,
+			@PathVariable("id") fileId,
+			BindingResult result, HttpServletRequest request) {
+
 		Map<String, Object> model = new HashMap<String, Object>();
 		List<MessageResponse> messages = new ArrayList<MessageResponse>();
 		
-		if(result.hasErrors()) {
-			messages.addAll(CrudUtil.convertErrorMessage(result,
-					request.getLocale(), messageSource));
-			model.put("messages", messages);
-			return model;
-		}
-		
-		
 		FileInfo fileInfo = fileUploadService.upload(file.getAttachment());
 		fileInfoService.save(fileInfo);
-		
-		if(entity != null) {
-			//Attach to entity
-			Uploadable uploadable = (Uploadable) entity;
-			
-			uploadable.addFile(fileInfo);
-			service.save(entity);
-		}
-		
+				
 		messages.addAll(CrudUtil.buildSuccessMessage(fileInfo, "upload-file", request.getLocale(), messageSource));
 		model.put("messages", messages);
 		model.put("attachmentId", fileInfo.getId());
@@ -175,6 +265,26 @@ public class FileController {
 		
 		return model;
 	}
+	
+	@RequestMapping(method = RequestMethod.POST, value="/upload", produces = "application/json")
+	public @ResponseBody Map<String, Object> processUpload(@Valid @ModelAttribute("file") AjaxUpload file,
+			@PathVariable("id", )
+		BindingResult result, HttpServletRequest request) {
+
+		Map<String, Object> model = new HashMap<String, Object>();
+		List<MessageResponse> messages = new ArrayList<MessageResponse>();
+		
+		FileInfo fileInfo = fileUploadService.upload(file.getAttachment());
+		fileInfoService.save(fileInfo);
+				
+		messages.addAll(CrudUtil.buildSuccessMessage(fileInfo, "upload-file", request.getLocale(), messageSource));
+		model.put("messages", messages);
+		model.put("attachmentId", fileInfo.getId());
+		model.put("attachmentName", fileInfo.getFilename());
+		
+		return model;
+	}
+
 	
 	@RequestMapping(method = RequestMethod.GET, value="/download/{id}")
 	public void downloadFile(@PathVariable("id") Long id, HttpServletRequest request, HttpServletResponse response) throws IOException{
@@ -196,6 +306,16 @@ public class FileController {
 			response.getOutputStream().write(b);
 		}
 	}
+	
+*/
+
+
+	@PostConstruct
+	public void afterPropertiesSet(){
+		if(additionalContentType!=null){
+			contentTypes.putAll(contentTypes);
+		}
+	}
 
 	public Map<String, String> getAdditionalContentType() {
 		return additionalContentType;
@@ -203,6 +323,14 @@ public class FileController {
 
 	public void setAdditionalContentType(Map<String, String> additionalContentType) {
 		this.additionalContentType = additionalContentType;
+	}
+	
+	public Map<String, String> getContentTypes() {
+		return contentTypes;
+	}
+	
+	public void setContentTypes(Map<String, String> contentTypes){
+		this.contentTypes = contentTypes;
 	}
 
 }

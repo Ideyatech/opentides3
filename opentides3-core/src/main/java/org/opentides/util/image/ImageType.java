@@ -1,5 +1,5 @@
 /*
-   Licensed to the Apache Software Foundation (ASF) under one
+\   Licensed to the Apache Software Foundation (ASF) under one
    or more contributor license agreements.  See the NOTICE file
    distributed with this work for additional information
    regarding copyright ownership.  The ASF licenses this file
@@ -15,31 +15,30 @@
    KIND, either express or implied.  See the License for the
    specific language governing permissions and limitations
    under the License.    
- */
-package org.opentides.service;
+*/
 
-import java.io.File;
+package org.opentides.util.image;
 
-import org.opentides.bean.FileInfo;
-import org.springframework.web.multipart.MultipartFile;
+import java.util.HashMap;
+import java.util.Map;
 
-/**
- * 
- * @author AJ
- *
- */
-public interface FileUploadService {
-	
-	public FileInfo upload(MultipartFile multipartFile);
-	
-	public FileInfo upload(MultipartFile multipartFile, String destination);
-	
-	public FileInfo upload(MultipartFile multipartFile, String destination, boolean retainFilename);
-	
-	public FileInfo upload(File file);
-	
-	public FileInfo upload(File file, String destination);
-	
-	public FileInfo upload(File file, String destination, boolean retainFilename);
-	
+public enum ImageType {
+	JPG, GIF, PNG, UNKNOWN;
+
+	private static final Map<String, ImageType> extensionMap = new HashMap<String, ImageType>();
+
+	public static ImageType getType(String ext) {
+		ext = ext.toLowerCase();
+		if (extensionMap.containsKey(ext)) {
+			return ((ImageType) extensionMap.get(ext));
+		}
+		return UNKNOWN;
+	}
+
+	static {
+		extensionMap.put("jpg", JPG);
+		extensionMap.put("jpeg", JPG);
+		extensionMap.put("gif", GIF);
+		extensionMap.put("png", PNG);
+	}
 }

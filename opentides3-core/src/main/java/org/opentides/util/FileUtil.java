@@ -35,7 +35,7 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 import org.opentides.bean.SortedProperties;
-import org.opentides.exception.CodeGenerationException;
+import org.opentides.exception.InvalidImplementationException;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -63,7 +63,7 @@ public class FileUtil {
 		} catch (FileNotFoundException fe) {
 			String msg = "Failed to find file [" + file.getAbsolutePath() + "].";
 			_log.error(msg, fe);
-			throw new CodeGenerationException(msg, fe);
+			throw new InvalidImplementationException(msg, fe);
 		}
 	}
     
@@ -84,7 +84,7 @@ public class FileUtil {
 		} catch (FileNotFoundException fe) {
 			String msg = "Failed to find file [" + filename + "].";
 			_log.error(msg, fe);
-			throw new CodeGenerationException(msg, fe);
+			throw new InvalidImplementationException(msg, fe);
 		}
 	}
 		
@@ -111,15 +111,15 @@ public class FileUtil {
 		} catch (NullPointerException npe) {
 			String msg = "Failed to find file [" + filename + "].";
 			_log.error(msg, npe);
-			throw new CodeGenerationException(msg, npe);
+			throw new InvalidImplementationException(msg, npe);
 		} catch (FileNotFoundException fe) {
 			String msg = "Failed to find file [" + filename + "].";
 			_log.error(msg, fe);
-			throw new CodeGenerationException(msg, fe);
+			throw new InvalidImplementationException(msg, fe);
 		} catch (IOException ioe) {
 			String msg = "Cannot access file [" + filename + "].";
 			_log.error(ioe, ioe);
-			throw new CodeGenerationException(msg, ioe);
+			throw new InvalidImplementationException(msg, ioe);
 		} finally {
 			if (reader!=null)
 				try {
@@ -143,7 +143,7 @@ public class FileUtil {
 		} catch (FileNotFoundException fe) {
 			String msg = "Failed to find file [" + file.getAbsolutePath() + "].";
 			_log.error(msg, fe);
-			throw new CodeGenerationException(msg, fe);
+			throw new InvalidImplementationException(msg, fe);
 		}
 	}
 
@@ -161,7 +161,7 @@ public class FileUtil {
 		} catch (FileNotFoundException fe) {
 			String msg = "Failed to find file [" + filename + "].";
 			_log.error(msg, fe);
-			throw new CodeGenerationException(msg, fe);
+			throw new InvalidImplementationException(msg, fe);
 		}
 	}
 
@@ -184,15 +184,15 @@ public class FileUtil {
 		} catch (NullPointerException npe) {
 			String msg = "Failed to find file [" + filename + "].";
 			_log.error(msg, npe);
-			throw new CodeGenerationException(msg, npe);
+			throw new InvalidImplementationException(msg, npe);
 		} catch (FileNotFoundException fe) {
 			String msg = "Failed to find file [" + filename + "].";
 			_log.error(msg, fe);
-			throw new CodeGenerationException(msg, fe);
+			throw new InvalidImplementationException(msg, fe);
 		} catch (IOException ioe) {
 			String msg = "Cannot access file [" + filename + "].";
 			_log.error(ioe, ioe);
-			throw new CodeGenerationException(msg, ioe);
+			throw new InvalidImplementationException(msg, ioe);
 		} finally {
 			try {
 				if (inStream != null)
@@ -221,7 +221,7 @@ public class FileUtil {
 		} catch (FileNotFoundException fe) {
 			String msg = "Failed to find file for backup [" + source.getAbsolutePath() + "].";
 			_log.error(msg, fe);
-			throw new CodeGenerationException(msg, fe);
+			throw new InvalidImplementationException(msg, fe);
 		}
 	}
 	
@@ -245,11 +245,11 @@ public class FileUtil {
 		} catch (NullPointerException npe) {
 			String msg = "Failed to copy file for backup [" + filename + "].";
 			_log.error(msg, npe);
-			throw new CodeGenerationException(msg, npe);
+			throw new InvalidImplementationException(msg, npe);
 		} catch (IOException ioe) {
 			String msg = "Cannot access file for backup [" + filename + "].";
 			_log.error(ioe, ioe);
-			throw new CodeGenerationException(msg, ioe);
+			throw new InvalidImplementationException(msg, ioe);
 		} finally {
 			try {
 				reader.close();
@@ -298,7 +298,7 @@ public class FileUtil {
 		} catch (IOException ioe) {
 			String msg = "Cannot access file [" + filename + "].";
 			_log.error(ioe, ioe);
-			throw new CodeGenerationException(msg, ioe);
+			throw new InvalidImplementationException(msg, ioe);
 		}
 	}
 
@@ -318,7 +318,7 @@ public class FileUtil {
 		} catch (IOException ioe) {
 			String msg = "Cannot access file [" + filename + "].";
 			_log.error(ioe, ioe);
-			throw new CodeGenerationException(msg, ioe);
+			throw new InvalidImplementationException(msg, ioe);
 		}
 	}
 

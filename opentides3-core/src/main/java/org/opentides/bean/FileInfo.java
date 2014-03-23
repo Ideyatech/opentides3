@@ -1,3 +1,21 @@
+/*
+   Licensed to the Apache Software Foundation (ASF) under one
+   or more contributor license agreements.  See the NOTICE file
+   distributed with this work for additional information
+   regarding copyright ownership.  The ASF licenses this file
+   to you under the Apache License, Version 2.0 (the
+   "License"); you may not use this file except in compliance
+   with the License.  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing,
+   software distributed under the License is distributed on an
+   "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+   KIND, either express or implied.  See the License for the
+   specific language governing permissions and limitations
+   under the License.    
+ */
 package org.opentides.bean;
 
 import javax.persistence.Column;
@@ -26,49 +44,137 @@ public class FileInfo extends BaseEntity {
 
 	@Column(name = "ORIGINAL_FILENAME")
 	private String originalFileName;
+	
+	@Column(name = "CONTENT_TYPE")
+	private String contentType;
+	
+	// immutable
+	@Column(name = "FILE_VERSION")
+	private Long fileVersion;
+	
+	// immutable
+	@Column(name = "FILE_ID")
+	private String fileId;
 
-	public String getFilename() {
-		return this.filename;
+	/**
+	 * Default constructor
+	 */
+	public FileInfo() {
+		
 	}
 
-	public void setFilename(String filename) {
-		this.filename = filename;
+	/**
+	 * File Version and File Id are Immutable attributes
+	 * 
+	 * @param fileVersion
+	 * @param fileId
+	 */
+	public FileInfo(Long fileVersion, String fileId) {
+		this.fileVersion = fileVersion;
+		this.fileId = fileId;
 	}
 
-	public final String getFileName() {
-		return this.filename;
-	}
-
-	public final void setFileName(String fileName) {
-		this.filename = fileName;
-	}
-
-	public final String getFullPath() {
-		return this.fullPath;
-	}
-
-	public final void setFullPath(String fullPath) {
-		this.fullPath = fullPath;
-	}
-
-	public final Long getFileSize() {
-		return this.fileSize;
-	}
-
-	public final void setFileSize(Long fileSize) {
-		this.fileSize = fileSize;
-	}
-
+	/**
+	 * Returns the filesize in KB
+	 * 
+	 * @return
+	 */
 	public Long getFileSizeInKB() {
 		return Long.valueOf(this.fileSize.longValue() / 1024L);
 	}
 
-	public String getOriginalFileName() {
-		return this.originalFileName;
+	/**
+	 * Increments the file version
+	 */
+	public synchronized final void incrementVersion() {
+		if (fileVersion == null) 
+			fileVersion = 1l;
+		else
+			fileVersion++;
 	}
 
+	/**
+	 * @return the filename
+	 */
+	public String getFilename() {
+		return filename;
+	}
+
+	/**
+	 * @param filename the filename to set
+	 */
+	public void setFilename(String filename) {
+		this.filename = filename;
+	}
+
+	/**
+	 * @return the fullPath
+	 */
+	public String getFullPath() {
+		return fullPath;
+	}
+
+	/**
+	 * @param fullPath the fullPath to set
+	 */
+	public void setFullPath(String fullPath) {
+		this.fullPath = fullPath;
+	}
+
+	/**
+	 * @return the fileSize
+	 */
+	public Long getFileSize() {
+		return fileSize;
+	}
+
+	/**
+	 * @param fileSize the fileSize to set
+	 */
+	public void setFileSize(Long fileSize) {
+		this.fileSize = fileSize;
+	}
+
+	/**
+	 * @return the originalFileName
+	 */
+	public String getOriginalFileName() {
+		return originalFileName;
+	}
+
+	/**
+	 * @param originalFileName the originalFileName to set
+	 */
 	public void setOriginalFileName(String originalFileName) {
 		this.originalFileName = originalFileName;
 	}
+
+	/**
+	 * @return the contentType
+	 */
+	public String getContentType() {
+		return contentType;
+	}
+
+	/**
+	 * @param contentType the contentType to set
+	 */
+	public void setContentType(String contentType) {
+		this.contentType = contentType;
+	}
+
+	/**
+	 * @return the fileVersion
+	 */
+	public Long getFileVersion() {
+		return fileVersion;
+	}
 	
+	/**
+	 * @return the fileId
+	 */
+	public final String getFileId() {
+		return fileId;
+	}
+
 }
