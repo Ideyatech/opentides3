@@ -1,0 +1,599 @@
+html,
+body {
+	height: 100%;
+	overflow-x: none;
+}
+
+textarea {
+	resize: none;
+}
+
+.overflow-hidden {
+	overflow: hidden;
+}
+
+.uppercase {
+	text-transform: uppercase;
+}
+
+.lowercase {
+	text-transform: lowercase;
+}
+
+.datepicker {
+	z-index:1151;
+}
+
+.notifications {
+	z-index: 999999;
+	top: 50px !important;
+	right: 50px !important;
+}
+
+
+#bd.container {
+	margin-top: 20px;
+}
+
+@media (min-width: 980px) {
+	#bd.container {
+		margin-top: 60px;
+	}
+}
+
+::selection {
+	background: #ffb7b7; /* Safari */
+}
+
+::-moz-selection {
+	background: #ffb7b7; /* Firefox */
+}
+
+#wrap {
+	min-height: 100%;
+	height: auto !important;
+	height: 100%;
+	margin: 0 auto -82px;
+}
+
+/* FOOTER */
+
+#push,
+#ft {
+	margin-top: 20px;
+	height: 60px;
+}
+
+#ft {
+	border-top: 1px solid #ddd;
+	background-color: #fefefe;
+}
+
+@media ( max-width : 767px) {
+	#ft {
+		margin-left: -20px;
+		margin-right: -20px;
+		padding-left: 20px;
+		padding-right: 20px;
+	}
+}
+
+#ft .container .credit {
+	margin: 20px 0;
+}
+
+/* LOGIN PAGE */
+
+@media (max-width: 767px) {
+	body.anonymous-page #hd {
+		margin-left: -20px;
+		margin-right: -20px;
+	}
+}
+
+body.anonymous-page .navbar-inner {
+	-webkit-border-radius: 0;
+	-moz-border-radius: 0;
+	border-radius: 0;
+}
+
+body.anonymous-page .logo {
+	margin: 10px !important;
+}
+
+body.anonymous-page #hd .brand {
+	float: none !important;
+	text-align: center;
+}
+
+.form-login {
+	position: relative !important;
+}
+
+.alternative-logins {
+	padding-top: 20px;
+	margin-top: 20px;
+	border-top: 1px solid #eee;
+}
+
+.alternative-logins button {
+	text-align: left;
+}
+
+.alternative-logins i {
+	margin: 0 10px 0 20px;
+}
+
+@media (min-width: 768px) {
+	.form-login form {
+		padding-right: 20px;
+	}
+	
+	.alternative-logins {
+		border-top: 0;
+		margin-top: 0;
+		border-left: 1px solid #eee;
+		padding: 40px 0 40px 30px;
+	}
+	
+	.form-login .modal-body {
+		padding: 30px;
+	}
+}
+
+
+/* HEADER */
+
+@media (max-width: 979px) {
+	#hd .navbar-inner {
+		text-align: center;
+		padding: 0 5px;
+	}
+	#hd .brand {
+		float: none;
+	}
+	#hd .nav-collapse {
+	}
+}
+
+@media (max-width: 979px) {
+	.navbar-fixed-top {
+		margin-bottom: 0;
+	}
+}
+
+@media (min-width: 1200px) {
+	.span9 {
+		width: 880px;
+		margin-left: 20px;
+	}
+}
+
+.logo {
+	margin: -20px 0;
+}
+
+/* SEARCH PANEL */
+
+#search-panel {
+	margin-left: 0;
+}
+
+#search-panel-inner {
+	top: 60px;
+	-webkit-border-radius: 6px;
+	-moz-border-radius: 6px;
+	border-radius: 6px;
+	-webkit-box-shadow: 0 1px 4px rgba(0,0,0,.065);
+	-moz-box-shadow: 0 1px 4px rgba(0,0,0,.065);
+	box-shadow: 0 1px 4px rgba(0,0,0,.065);
+	border: 1px solid #ccc;
+	margin: 0 -1px 10px -1px;
+	background: #fff;
+}
+
+#search-panel form {
+	border-top: 1px solid #ccc;
+	padding: 20px 20px 0 20px;
+	background-color: #fff;
+}
+
+#search-panel .navbar {
+	margin-bottom: 0;
+}
+
+#search-panel .navbar .navbar-inner {
+	-webkit-border-bottom-right-radius: 0;
+	-webkit-border-bottom-left-radius: 0;
+	-moz-border-radius-bottomright: 0;
+	-moz-border-radius-bottomleft: 0;
+	border-bottom-right-radius: 0;
+	border-bottom-left-radius: 0;
+	border: 0;
+}
+
+#search-panel .navbar .icon-search {
+	margin-left: -5px;
+	margin-right: 10px;
+}
+
+#search-panel .navbar .brand {
+	font-size: 15px;
+}
+
+.show-search-form {
+	margin-top: 7px !important;
+}
+
+.show-search-form i {
+	margin-right: 0;
+}
+
+.show-search-form .icon-chevron-up,
+.show-search-form.collapsed .icon-chevron-down {
+	display: block;
+}
+
+.show-search-form .icon-chevron-down,
+.show-search-form.collapsed .icon-chevron-up {
+	display: none;
+}
+
+@media (min-width: 1200px) {
+	#search-panel-inner {
+		width: 270px;
+	}
+}
+
+@media (max-width: 1199px) and (min-width: 980px) {
+	#search-panel-inner {
+		width: 220px;
+	}
+}
+
+@media (max-width: 979px) and (min-width: 768px) {
+	#search-panel-inner {
+		width: 170px;
+	}
+}
+
+@media (max-width: 979px) {
+	#search-panel-inner {
+		position: relative;
+		top: 0;
+	}
+}
+
+@media (max-width: 767px) {
+	.search-form.collapse {
+		height: 0;
+		overflow: hidden;
+	}
+}
+
+@media (min-width: 768px) {
+	.search-form.collapse {
+		height: auto !important;
+		overflow: visible !important;
+	}
+}
+
+/* MESSAGE PANEL */
+
+#message-panel .add-action {
+	margin-bottom: 10px;
+	float: right;
+}
+
+#message-panel .status {
+	float: left;
+	padding-top: 5px;
+}
+
+@media (max-width: 767px) {
+	#message-panel .add-action, #message-panel .status {
+		float: none;
+		width: 100%;
+	}
+	#message-panel .status {
+		padding: 0;
+		margin-bottom: 10px;
+	}
+}
+
+/* FORMS */
+
+.modal form {
+	margin-bottom: 0;
+}
+
+.required {
+	font-size: 10px;
+	text-transform: uppercase;
+	color: #999;
+	margin-left: 5px;
+	line-height: 0;
+}
+
+select, textarea, input[type="text"], input[type="password"],
+input[type="datetime"], input[type="datetime-local"], input[type="date"],
+input[type="month"], input[type="time"], input[type="week"],
+input[type="number"], input[type="email"], input[type="url"],
+input[type="search"], input[type="tel"], input[type="color"],
+.uneditable-input {
+	margin-bottom: 0;
+}
+
+/*
+   ADD/UPDATE HEADERS
+   This is a hack to fix Add/Update legends on page views
+*/
+
+.component legend.ot3-add,
+.component legend.ot3-update {
+	display: none;
+}
+
+.component legend:not(.ot3-add){
+	display: block;
+}
+
+.component legend.ot3-add.hide,
+.component legend.ot3-update.hide {
+	display: none;
+}
+
+/* RESULT TABLE */
+
+.edit-action, .remove-action, .adjust-photo, .upload-photo {
+	cursor: pointer;
+}
+
+.table-wrapper-2.overflow-hidden .table-wrapper {
+	width: 200%;
+}
+
+.table-wrapper-2.overflow-hidden table {
+	width: 50%;
+}
+
+.table-wrapper-2:not(.overflow-hidden) table {
+	width: 100% !important;
+}
+
+/* CHECKBOXES */
+
+.control-group.checkbox-wrapper label {
+	background: #f0f0f0;
+	padding: 5px 5px 5px 40px;
+	width: 175px;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+}
+
+.control-group.checkbox-wrapper input[type="checkbox"]:checked + label {
+	background: #dff0d8;
+}
+
+.control-group.checkbox-wrapper label:hover {
+	background: #e0e0e0;
+}
+
+.control-group.checkbox-wrapper input[type="checkbox"] {
+	position: absolute;
+	margin-left: 10px;
+	margin-top: 8px;
+}
+
+/* RADIO BUTTONS */
+
+.control-group.radio-wrapper span label {
+	display: inline-block;
+	padding: 4px 12px;
+	margin-bottom: 0;
+	margin-left: -1px;
+	font-size: 14px;
+	line-height: 20px;
+	color: #333333;
+	text-align: center;
+	text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75);
+	vertical-align: middle;
+	cursor: pointer;
+	background-color: #f5f5f5;
+	background-image: -moz-linear-gradient(top, #ffffff, #e6e6e6);
+	background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), to(#e6e6e6));
+	background-image: -webkit-linear-gradient(top, #ffffff, #e6e6e6);
+	background-image: -o-linear-gradient(top, #ffffff, #e6e6e6);
+	background-image: linear-gradient(to bottom, #ffffff, #e6e6e6);
+	background-repeat: repeat-x;
+	border: 1px solid #cccccc;
+	border-color: #e6e6e6 #e6e6e6 #bfbfbf;
+	border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+	border-bottom-color: #b3b3b3;
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffffff', endColorstr='#ffe6e6e6', GradientType=0);
+	filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+	-webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+	-moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.control-group.radio-wrapper span:first-child label {
+	margin-left: 0;
+	-webkit-border-bottom-left-radius: 4px;
+	border-bottom-left-radius: 4px;
+	-webkit-border-top-left-radius: 4px;
+	border-top-left-radius: 4px;
+	-moz-border-radius-bottomleft: 4px;
+	-moz-border-radius-topleft: 4px;
+}
+
+.control-group.radio-wrapper span:last-child label {
+	-webkit-border-top-right-radius: 4px;
+	border-top-right-radius: 4px;
+	-webkit-border-bottom-right-radius: 4px;
+	border-bottom-right-radius: 4px;
+	-moz-border-radius-topright: 4px;
+	-moz-border-radius-bottomright: 4px;
+}
+
+.control-group.radio-wrapper input[type='radio'] {
+	display: none;
+}
+
+.control-group.radio-wrapper input[type='radio']:checked + label {
+	background-image: none;
+	outline: 0;
+	-webkit-box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
+	-moz-box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
+	box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
+	color: #333333;
+	background-color: #e6e6e6;
+}
+
+/* WALLPAPER */
+
+.wallpaper {
+	z-index: -2; 
+	height: 100%; 
+	width: 100%; 
+	position: absolute; 
+	top: 0; 
+	left: 0; 
+	background: url('../img/wallpaper.jpg') bottom center no-repeat;
+	-webkit-background-size: cover; 
+	-moz-background-size: cover;
+	-o-background-size: cover; 
+	background-size: cover;
+}
+
+.wallpaper-grid {
+	z-index: -1; 
+	height: 100%; 
+	width: 100%; 
+	position: fixed; 
+	top: 0; 
+	left: 0;
+	background: url('../img/grid.png') repeat;
+}
+
+/* PHOTO */
+
+.img-polaroid + .dropdown-toggle {
+	padding: 7px 7px 6px 6px;
+	border-left: 0;
+}
+
+#original-image {
+	max-width: 100%;
+	visibility: hidden;
+}
+
+.original-image-wrapper {
+	background: #000;
+}
+
+.original-image-wrapper > div {
+	margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+	.current-image-wrapper {
+		text-align: center;
+	}
+}
+
+/* COMBOBOX */
+
+.combobox .select2-choices {
+	-webkit-border-radius: 4px !important;
+	-moz-border-radius: 4px !important;
+	border-radius: 4px !important;
+}
+
+.combobox .select2-search-choice {
+	border: 0 !important;
+	margin: 0 !important;
+	padding: 10px 5px 9px 5px !important;
+	width: 100% !important;
+	-webkit-border-radius: 0 !important;
+	-moz-border-radius: 0 !important;
+	border-radius: 0 !important;
+	-webkit-background-clip: padding-box !important;
+	-moz-background-clip: padding !important;
+	background-clip: padding-box !important;
+	-webkit-touch-callout: none !important;
+	-webkit-user-select: none !important;
+	-khtml-user-select: none !important;
+	-moz-user-select: none !important;
+	-ms-user-select: none !important;
+	user-select: none !important;
+	background-color: #fff !important;
+	background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0, #eeeeee), color-stop(0.5, white)) !important;
+	background-image: -webkit-linear-gradient(center bottom, #eeeeee 0%, white 50%) !important;
+	background-image: -moz-linear-gradient(center bottom, #eeeeee 0%, white 50%) !important;
+	background-image: -o-linear-gradient(bottom, #eeeeee 0%, #ffffff 50%) !important;
+	background-image: -ms-linear-gradient(top, #ffffff 0%, #eeeeee 50%) !important;
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr = '#ffffff', endColorstr = '#eeeeee', GradientType = 0) !important;
+	background-image: linear-gradient(top, #ffffff 0%, #eeeeee 50%) !important;
+}
+
+.combobox .select2-search-choice .select2-search-choice-close{
+	left: initial !important;
+	right: 15px !important;
+	top: 10px;
+}
+
+.combobox .select2-search-choice+.select2-search-field {
+	display: none !important;
+}
+
+/* Uploading of File */
+
+.ot-upload-file #dropzone {
+    background-color: #F0F0F0;
+    border: 1px dotted #CCCCCC;
+    font-weight: bold;
+    height: 50px;
+    line-height: 50px;
+    margin: 10px 0;
+    text-align: center;
+    width: 100%;
+}
+.ot-upload-file #dropzone:hover {
+    background: #E0E0E0;
+}
+
+.ot-upload-file table.ot-image-list p.name {
+	word-break: break-all;
+}
+/**************************/
+/* SOCIAL INTEGRATION CSS */
+/**************************/
+#account-settings-body #my-accounts .col-1 {
+	width: 40px;
+}
+
+#account-settings-body #my-accounts .icon-facebook-sign,
+#account-settings-body #my-accounts .icon-twitter-sign,
+#account-settings-body #my-accounts .icon-google-sign {
+	color: #aaa;
+}
+
+.icon-social-font {
+	font-size: 150px;
+}
+
+.icon-facebook-sign.connected {
+	color: #006dcc !important;
+}
+.icon-twitter-sign.connected {
+	color: #49afcd !important;
+}
+.icon-google-sign.connected {
+	color: #da4f49 !important;
+}
+
+.icon-google-sign:before {
+    content: "\f0d4";
+}
