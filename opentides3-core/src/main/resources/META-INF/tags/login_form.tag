@@ -2,7 +2,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
-<%@ attribute name="supportRememberMe" required="false" type="java.util.Boolean"%>
+<%@ attribute name="supportRememberMe" required="false" type="java.lang.Boolean"%>
 <%@ attribute name="cssClass" required="false" type="java.lang.String"%>
 
 <form class="${cssClass}" method="POST"
