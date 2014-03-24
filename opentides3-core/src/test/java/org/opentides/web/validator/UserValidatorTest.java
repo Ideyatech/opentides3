@@ -194,7 +194,7 @@ public class UserValidatorTest {
 		Mockito.verify(userDao).loadByEmailAddress("test@test.com");
 		
 		assertTrue(errors.hasErrors());
-		assertEquals(2, errors.getGlobalErrorCount());
+		assertEquals(1, errors.getGlobalErrorCount());
 		int errorCheck = 0;
 		for(ObjectError error : errors.getGlobalErrors()) {
 			if(error.getCode().equals("error.duplicate-field")) {
@@ -202,7 +202,7 @@ public class UserValidatorTest {
 			}
 		}
 		//The code for both errors should be error.duplicate-field
-		assertEquals(2, errorCheck);
+		assertEquals(1, errorCheck);
 		
 	}
 	
