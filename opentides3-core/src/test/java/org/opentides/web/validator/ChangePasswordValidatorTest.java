@@ -2,6 +2,7 @@ package org.opentides.web.validator;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -26,7 +27,8 @@ import static org.junit.Assert.assertTrue;
  */
 public class ChangePasswordValidatorTest {
 	
-	private ChangePasswordValidator changePasswordValidator;
+	@InjectMocks
+	private ChangePasswordValidator changePasswordValidator = new ChangePasswordValidator();
 	
 	@Mock 
 	private UserDao userDao;
@@ -34,8 +36,6 @@ public class ChangePasswordValidatorTest {
 	@Before
 	public void init() {
 		MockitoAnnotations.initMocks(this);
-		changePasswordValidator = new ChangePasswordValidator();
-		//changePasswordValidator.setCoreUserDao(userDao);
 	}
 	@Test
 	public void testValidateObjectPassedTheValidation() {

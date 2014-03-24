@@ -5,21 +5,21 @@
 	<artifactId>opentides3</artifactId>
 	<name>Opentides 3 Parent</name>
 	<groupId>org.opentides</groupId>
-	<version>3.0.1-SNAPSHOT</version>
-	
+	<version>3.1.0</version>
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java-version>1.7</java-version>
 		<junit-version>4.8.2</junit-version>
 	</properties>
-	
+
 	<modules>
 		<module>opentides3-common</module>
 		<module>opentides3-template</module>
 		<module>opentides3-codegen</module>
 		<module>opentides3-core</module>
 	</modules>
-	
+
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -30,38 +30,47 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
-	
+
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-         		<version>3.0</version>
+				<version>3.0</version>
 				<configuration>
 					<source>${java-version}</source>
 					<target>${java-version}</target>
 				</configuration>
 			</plugin>
-			
+
 			<plugin>
-			<groupId>org.apache.tomcat.maven</groupId>
-            <artifactId>tomcat7-maven-plugin</artifactId>
-            <version>2.1</version>
-			<configuration>
-				<url>${tomcat-url}</url>
-				<path>${tomcat-path}</path>
-				<username>${tomcat-username}</username>
-				<password>${tomcat-password}</password>
-			</configuration>
-			<dependencies>
-				<dependency>
-					<groupId>mysql</groupId>
-					<artifactId>mysql-connector-java</artifactId>
-					<version>5.1.21</version>
-				</dependency>
-			</dependencies>
-		</plugin>
+				<groupId>org.apache.tomcat.maven</groupId>
+				<artifactId>tomcat7-maven-plugin</artifactId>
+				<version>2.1</version>
+				<configuration>
+					<url>${tomcat-url}</url>
+					<path>${tomcat-path}</path>
+					<username>${tomcat-username}</username>
+					<password>${tomcat-password}</password>
+				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>mysql</groupId>
+						<artifactId>mysql-connector-java</artifactId>
+						<version>5.1.21</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>2.5</version>
+				<configuration>
+					<tagNameFormat>v@{project.version}</tagNameFormat>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
-	
+
 </project>

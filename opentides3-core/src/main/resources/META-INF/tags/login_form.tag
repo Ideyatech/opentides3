@@ -2,51 +2,49 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
-<%@ attribute name="userNamePlaceHolder" required="false" type="java.lang.String" %>
-<%@ attribute name="loginLabel" required="false" type="java.lang.String" %>
-<%@ attribute name="rememberMeLabel" required="false" type="java.lang.String" %>
-<%@ attribute name="cssClass" required="false" type="java.lang.String" %>
+<%@ attribute name="supportRememberMe" required="false" type="java.util.Boolean"%>
+<%@ attribute name="cssClass" required="false" type="java.lang.String"%>
 
-<!-- Initialize Login Label. -->
-<c:set var="btnLoginLabel" value="label.login"/>
-<c:if test="${not empty loginLabel}">
-	<c:set var="btnLoginLabel" value="${loginLabel}" />
-</c:if>
+<form class="${cssClass}" method="POST"
+	action="<c:url value='j_spring_security_check'/>">
 
-<!-- Initialize Remember Me Label. -->
-<c:set var="btnRememberMeLabel" value="label.remember-me"/>
-<c:if test="${not empty rememberMeLabel}">
-	<c:set var="btnRememberMeLabel" value="${rememberMeLabel}" />
-</c:if>
-
-<form class="${cssClass}" method="POST" action="<c:url value='j_spring_security_check'/>">
-				
 	<c:if test="${not empty param.login_error}">
 		<div class="alert alert-error">
 			<a class="close" data-dismiss="alert" href="#">&times;</a>
-			<spring:message code='error.${param.login_error}' /> 
+			<spring:message code='error.${param.login_error}' />
 			${SPRING_SECURITY_LAST_EXCEPTION.message}
 		</div>
 	</c:if>
 
-	<h4><spring:message code='label.login' /></h4>
-	<hr/>
-	
+	<h4>
+		<spring:message code='label.login' />
+	</h4>
+	<hr />
+
 	<div class="control-group">
-		<input class="input-block-level" type="text" name="j_username" placeholder='<spring:message code="${userNamePlaceHolder}" text="${userNamePlaceHolder}"/>' autofocus="autofocus">
+		<div class="input-prepend">
+			<span class="add-on"><i class="icon-user"></i></span> <input
+				class="input-block-level" type="text" name="j_username" 
+				placeholder="<spring:message code='label.username' />"
+				autofocus="autofocus">
+		</div>
 	</div>
 	<div class="control-group">
-		<input class="input-block-level" type="password" name="j_password" placeholder="Password">
+		<div class="input-prepend">
+			<span class="add-on"><i class="icon-lock"></i></span> <input
+				class="input-block-level" type="password" name="j_password" placeholder="Password">
+		</div>
 	</div>
-	
+
+<c:if test="${supportRememberMe}">
 	<div class="control-group">
-		<label class="checkbox">
-			<input type="checkbox" checked>
-			<small><spring:message code="${btnRememberMeLabel}" /></small>
+		<label class="checkbox"> <input type="checkbox" checked>
+			<small><spring:message code="label.remember-me" /></small>
 		</label>
 	</div>
-	
-	<input type="submit" class="btn btn-info btn-block btn-large" value="<spring:message code="${btnLoginLabel}" />"/>
-	
+</c:if>
+
+	<input type="submit" class="btn btn-primary btn-block btn-large"
+		value="<spring:message code="label.login-action" />" />
+
 </form>
-			
