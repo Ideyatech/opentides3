@@ -61,7 +61,7 @@ public abstract class BaseEntity implements Serializable {
      * Primary key using ID.
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ID")
     @JsonView(Views.SearchView.class)    
     private Long id;

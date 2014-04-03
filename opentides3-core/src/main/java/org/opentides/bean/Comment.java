@@ -18,12 +18,12 @@ import org.opentides.util.TimeUtil;
 import org.springframework.web.multipart.MultipartFile;
 
 @Entity
-@Table(name = "COMMENT")
+@Table(name = "COMMENT_")
 public class Comment extends BaseEntity implements Uploadable {
 	
 	private static final long serialVersionUID = -7263338041829245226L;
 	
-	@Column(name = "TEXT", length = 2000)
+	@Column(name = "TEXT_", length = 2000)
 	private String text;
 	
 	@OneToOne(fetch=FetchType.LAZY)
