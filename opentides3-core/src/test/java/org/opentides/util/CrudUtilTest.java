@@ -155,7 +155,7 @@ public class CrudUtilTest {
     	sc.setKey("PH");
 		Assert.assertEquals(" where obj.key = 'PH'", CrudUtil
 				.buildJpaQueryString(sc, true));
-		Assert.assertEquals(" where obj.key like '%PH%'", CrudUtil
+		Assert.assertEquals(" where obj.key like '%PH%' escape '\\'", CrudUtil
 				.buildJpaQueryString(sc, false));
  
     	sc.setValue("Philippines");
@@ -163,7 +163,7 @@ public class CrudUtilTest {
 				" where obj.key = 'PH' and obj.value = 'Philippines'",
        						CrudUtil.buildJpaQueryString(sc, true));
 		Assert.assertEquals(
-						" where obj.key like '%PH%' and obj.value like '%Philippines%'",
+						" where obj.key like '%PH%' escape '\\' and obj.value like '%Philippines%' escape '\\'",
        						CrudUtil.buildJpaQueryString(sc, false));
 
        	
@@ -186,7 +186,7 @@ public class CrudUtilTest {
 				" where obj.value = 'Phil%'",
        						CrudUtil.buildJpaQueryString(sc, true));
 		Assert.assertEquals(
-				" where obj.value like '%Phil\\%%'",
+				" where obj.value like '%Phil\\%%' escape '\\'",
        						CrudUtil.buildJpaQueryString(sc, false));
 
 		// handle '
@@ -196,7 +196,7 @@ public class CrudUtilTest {
 				" where obj.value = 'Phil''s'",
        						CrudUtil.buildJpaQueryString(sc, true));
 		Assert.assertEquals(
-				" where obj.value like '%Phil''s%'",
+				" where obj.value like '%Phil''s%' escape '\\'",
        						CrudUtil.buildJpaQueryString(sc, false));
 
 		// handle (\)
@@ -206,7 +206,7 @@ public class CrudUtilTest {
 				" where obj.value = 'Phil''s\\\\Jay'",
        						CrudUtil.buildJpaQueryString(sc, true));
 		Assert.assertEquals(
-				" where obj.value like '%Phil''s\\\\\\\\Jay%'",
+				" where obj.value like '%Phil''s\\\\\\\\Jay%' escape '\\'",
        						CrudUtil.buildJpaQueryString(sc, false));
 		
 		// handle (_)
@@ -216,7 +216,7 @@ public class CrudUtilTest {
 				" where obj.value = 'Phil_Jay'",
        						CrudUtil.buildJpaQueryString(sc, true));
 		Assert.assertEquals(
-				" where obj.value like '%Phil\\_Jay%'",
+				" where obj.value like '%Phil\\_Jay%' escape '\\'",
        						CrudUtil.buildJpaQueryString(sc, false));
     }
     
@@ -234,7 +234,7 @@ public class CrudUtilTest {
 
 		Assert
 				.assertEquals(
-						" where obj.firstName like '%Test%' and obj.credential.username like '%testname%' and obj.credential.enabled = true",
+						" where obj.firstName like '%Test%' escape '\\' and obj.credential.username like '%testname%' escape '\\' and obj.credential.enabled = true",
 					CrudUtil.buildJpaQueryString(user, false));
 
 		Assert
@@ -258,7 +258,7 @@ public class CrudUtilTest {
 
 		Assert
 				.assertEquals(
-						" where obj.firstName like '%Test%' and obj.credential.id = 123",
+						" where obj.firstName like '%Test%' escape '\\' and obj.credential.id = 123",
 					CrudUtil.buildJpaQueryString(user, false));
 
 		Assert.assertEquals(

@@ -294,7 +294,8 @@ public class CrudUtil {
 						clause.append(property)
 							.append(" like '%")
 							.append(StringUtil.escapeSql(ret.toString(), true))
-							.append("%'");
+							.append("%'")
+							.append(" escape '\\'");
 						count++;
 					}
 				}else if(SystemCodes.class.isAssignableFrom(ret.getClass())) {
