@@ -25,11 +25,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.opentides.bean.SystemCodes;
+import org.opentides.web.json.ResponseView;
+import org.opentides.web.json.Views;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * This is the controller class for {@link SystemCodes}. It extends the
@@ -67,6 +71,18 @@ public class SystemCodesCrudController extends BaseCrudController<SystemCodes> {
 	@ModelAttribute("parentList")
 	public List<SystemCodes> parentList() {
 		return systemCodesService.findAll();
+	}
+	
+	/**
+	 * Find system codes by category
+	 * 
+	 * @param category the category to search
+	 * @return
+	 */
+	@RequestMapping(value = "/findByCategory")
+	@ResponseView(Views.SearchView.class)
+	public @ResponseBody List<SystemCodes> findByCategory(@RequestParam("category") String category) {
+		return systemCodesService.findSystemCodesByCategory(category);
 	}
 	
 	/* (non-Javadoc)
