@@ -23,6 +23,8 @@ import org.dbunit.ext.mysql.MySqlDataTypeFactory;
 import org.dbunit.operation.DatabaseOperation;
 import org.junit.Before;
 import org.junit.Test;
+import org.opentides.bean.SortField;
+import org.opentides.bean.SortField.OrderFlow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.test.context.ContextConfiguration;
@@ -295,6 +297,96 @@ public class BaseEntityDAOJpaImplIntegrationTest extends AbstractJUnit4SpringCon
 				
 				Long result = ninjaDAO.countAll();
 				assertEquals(new Long(5l), result);
+				
+			}
+		});
+	}
+	
+	@Test
+	public void testMultisortAsc() {
+		final Ninja ninja1 = new Ninja();
+		ninja1.setFirstName("Richard");
+		ninja1.setLastName("Naruto");
+		ninja1.setGender("Male");
+		ninja1.setEmail("richard@buendia.com");
+		
+		final Ninja ninja2 = new Ninja();
+		ninja2.setFirstName("Gino");
+		ninja2.setLastName("Naruto");
+		ninja2.setGender("Male");
+		ninja2.setEmail("richard@santos.com");
+		
+		transactionTemplate.execute(new TransactionCallbackWithoutResult() {
+			@Override
+			protected void doInTransactionWithoutResult(TransactionStatus status) {
+				ninjaDAO.saveEntityModel(ninja1);
+				ninjaDAO.saveEntityModel(ninja2);
+				
+				Ninja sample = new Ninja();
+				sample.setLastName("Naruto");
+				
+				List<SortField> sortFields = new ArrayList<SortField>();
+				sortFields.add(new SortField("lastName", OrderFlow.ASC));
+				sortFields.add(new SortField("firstName", OrderFlow.ASC));
+				sample.setSortFields(sortFields);
+				
+				Long count = ninjaDAO.countByExample(sample);
+				assertEquals(new Long(3l), count);
+				
+				List<Ninja> result = ninjaDAO.findByExample(sample);
+				assertEquals(3, result.size());
+				
+				Ninja n1 = result.get(0);
+				Ninja n2 = result.get(1);
+				Ninja n3 = result.get(2);
+				assertEquals("Gino", n1.getFirstName());
+				assertEquals("Richard", n2.getFirstName());
+				assertEquals("Uzumaki", n3.getFirstName());
+				
+			}
+		});
+	}
+	
+	@Test
+	public void testMultisortDesc() {
+		final Ninja ninja1 = new Ninja();
+		ninja1.setFirstName("Richard");
+		ninja1.setLastName("Naruto");
+		ninja1.setGender("Male");
+		ninja1.setEmail("richard@buendia.com");
+		
+		final Ninja ninja2 = new Ninja();
+		ninja2.setFirstName("Gino");
+		ninja2.setLastName("Naruto");
+		ninja2.setGender("Male");
+		ninja2.setEmail("richard@santos.com");
+		
+		transactionTemplate.execute(new TransactionCallbackWithoutResult() {
+			@Override
+			protected void doInTransactionWithoutResult(TransactionStatus status) {
+				ninjaDAO.saveEntityModel(ninja1);
+				ninjaDAO.saveEntityModel(ninja2);
+				
+				Ninja sample = new Ninja();
+				sample.setLastName("Naruto");
+				
+				List<SortField> sortFields = new ArrayList<SortField>();
+				sortFields.add(new SortField("lastName", OrderFlow.ASC));
+				sortFields.add(new SortField("firstName", OrderFlow.DESC));
+				sample.setSortFields(sortFields);
+				
+				Long count = ninjaDAO.countByExample(sample);
+				assertEquals(new Long(3l), count);
+				
+				List<Ninja> result = ninjaDAO.findByExample(sample);
+				assertEquals(3, result.size());
+				
+				Ninja n1 = result.get(2);
+				Ninja n2 = result.get(1);
+				Ninja n3 = result.get(0);
+				assertEquals("Gino", n1.getFirstName());
+				assertEquals("Richard", n2.getFirstName());
+				assertEquals("Uzumaki", n3.getFirstName());
 				
 			}
 		});

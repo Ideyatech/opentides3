@@ -30,9 +30,11 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.opentides.annotation.Protected;
 import org.opentides.bean.BaseEntity;
+import org.opentides.bean.SortField;
 import org.opentides.bean.user.SessionUser;
 import org.opentides.dao.BaseEntityDao;
 import org.opentides.exception.InvalidImplementationException;
@@ -474,12 +476,25 @@ public class BaseEntityDaoJpaImpl<T extends BaseEntity,ID extends Serializable>
 	 * @return
 	 */
 	protected String appendOrderToExample(T example) {
-		String clause="";
-		//for search list ordering
-		if(!StringUtil.isEmpty(example.getOrderOption()) && !StringUtil.isEmpty(example.getOrderFlow())){
-			clause=" ORDER BY "+ example.getOrderOption() +" "+ example.getOrderFlow() +"";
+		StringBuffer clause = new StringBuffer();
+		//User List<SortField> if available
+		if(!CollectionUtils.isEmpty(example.getSortFields())) {
+			clause.append(" ORDER BY ");
+			int count = 0;
+			for(SortField sortField : example.getSortFields()) {
+				clause.append(" " + sortField.getFieldName() + " " + sortField.getOrderFlow());
+				if(count < example.getSortFields().size() - 1) {
+					clause.append(", ");
+				}
+				count++;
+			}
+		} else {
+			//for search list ordering
+			if(!StringUtil.isEmpty(example.getOrderOption()) && !StringUtil.isEmpty(example.getOrderFlow())){
+				clause.append(" ORDER BY "+ example.getOrderOption() +" "+ example.getOrderFlow() +"");
+			}
 		}
-		return clause;
+		return clause.toString();
 	}
 	
 	/**

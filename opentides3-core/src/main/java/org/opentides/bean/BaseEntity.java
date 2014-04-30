@@ -20,6 +20,7 @@ package org.opentides.bean;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.EntityListeners;
@@ -34,6 +35,7 @@ import javax.persistence.Version;
 
 import org.apache.log4j.Logger;
 import org.opentides.bean.user.SessionUser;
+import org.opentides.persistence.listener.EntityCreatedByListener;
 import org.opentides.persistence.listener.EntityDateListener;
 import org.opentides.util.SecurityUtil;
 import org.opentides.web.json.Views;
@@ -47,7 +49,7 @@ import com.fasterxml.jackson.annotation.JsonView;
  * @author allantan
  */
 @MappedSuperclass
-@EntityListeners({ EntityDateListener.class })
+@EntityListeners({ EntityDateListener.class, EntityCreatedByListener.class })
 public abstract class BaseEntity implements Serializable {
     
 	private static final long serialVersionUID = 6411733051595827829L;
@@ -134,6 +136,12 @@ public abstract class BaseEntity implements Serializable {
      */
     @Transient
     private transient String orderOption;
+    
+    /**
+     * List containing the different ordering
+     */
+    @Transient
+    private List<SortField> sortFields;
     
     /**
      * Temporary variable to disable filtering of records.
@@ -438,6 +446,14 @@ public abstract class BaseEntity implements Serializable {
         // TODO: Add validation to ensure orderOption refers to valid fields.
         this.orderOption = orderOption;
     }
+    
+    public List<SortField> getSortFields() {
+		return sortFields;
+	}
+    
+    public void setSortFields(List<SortField> sortFields) {
+		this.sortFields = sortFields;
+	}
 
 	/**
 	 * @return the disableProtection
