@@ -228,10 +228,7 @@ public class BaseCrudServiceImpl<T extends BaseEntity> extends
 		} else {
 			try {
 				Long id = Long.parseLong(sid);
-				if (filter)
-					return dao.loadEntityModel(id, filter, false);
-				else
-					return dao.loadEntityModel(id);
+				return dao.loadEntityModel(id, filter, false);
 			} catch (NumberFormatException nfe) {
 				throw new InvalidImplementationException("id parameter is not numeric.");
 			}
@@ -253,10 +250,7 @@ public class BaseCrudServiceImpl<T extends BaseEntity> extends
 	public T load(Long id, boolean filter, boolean bypassSecurity) {
 		if (!bypassSecurity)
 			checkAccess("VIEW");		
-		if (filter)
-			return dao.loadEntityModel(id, filter, false);
-		else
-			return dao.loadEntityModel(id);
+		return dao.loadEntityModel(id, filter, false);
 	}
 	
 	/**
