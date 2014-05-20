@@ -24,6 +24,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -277,8 +279,10 @@ public class BaseEntityDaoJpaImpl<T extends BaseEntity,ID extends Serializable>
 		whereClause = doSQLAppend(whereClause, filterClause);
 		if (_log.isDebugEnabled()) 
 			_log.debug("QBE >> "+whereClause+orderClause);
-		Query query = getEntityManager().createQuery("select (obj) from " + 
-        		getEntityBeanType().getName() + " obj "+ whereClause + orderClause);
+		String sql = "select (obj) from " + 
+        		getEntityBeanType().getName() + " obj "+ whereClause + orderClause;
+		Query query = getEntityManager().createQuery(sql);
+		setQueryParameters(query, sql, example);		
 		if (start > -1) 
 			query.setFirstResult(start);
 		if (total > -1)
@@ -315,8 +319,11 @@ public class BaseEntityDaoJpaImpl<T extends BaseEntity,ID extends Serializable>
 		whereClause = doSQLAppend(whereClause, append);
 		whereClause = doSQLAppend(whereClause, filterClause);
 		if (_log.isDebugEnabled()) _log.debug("Count QBE >> "+whereClause);
-		return (Long) getEntityManager().createQuery("select count(obj) from " + 
-				getEntityBeanType().getName() + " obj " + whereClause).getSingleResult();
+		String sql = "select count(obj) from " + 
+				getEntityBeanType().getName() + " obj " + whereClause;
+		Query query = getEntityManager().createQuery(sql);
+		setQueryParameters(query, sql, example);
+		return (Long) query.getSingleResult();
 	}
 	
 	/**
@@ -559,6 +566,29 @@ public class BaseEntityDaoJpaImpl<T extends BaseEntity,ID extends Serializable>
 	private void setAuditUserId(T obj) {
 		if (obj.getAuditUserId()==null)
 			obj.setUserId();			
+	}
+	
+	/**
+	 * Set any query parameters defined in the SQL.
+	 * @param query
+	 * @param sql
+	 * @param obj
+	 */
+	private void setQueryParameters(Query query, String sql, T obj) {
+		if(_log.isDebugEnabled()) {
+			_log.debug("Processing sql query [" + sql + "]");
+		}
+		Pattern pattern = Pattern.compile(":(\\w*)");
+		Matcher matcher = pattern.matcher(sql);
+		while(matcher.find()) {
+			String paramName = matcher.group(1);
+			Object value = CrudUtil.retrieveObjectValue(obj, paramName);
+			if(_log.isDebugEnabled()) {
+				if(value != null)
+					_log.debug("Setting parameter [" + paramName + "] with value [" + value + "]");
+			}
+			query.setParameter(paramName, value);
+		}
 	}
 
 	/**
