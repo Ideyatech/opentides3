@@ -112,6 +112,7 @@ public class DBEvolveManager {
 				_log.info("Executing evolve version ["+evolve.getVersion()+"] - "+evolve.getDescription());
 				evolve.execute();
 				// if successful, update current db version
+			    version = sequenceDao.loadSequenceByKey("DB_VERSION");
 				version.setValue(Long.valueOf(evolve.getVersion()));
 				sequenceDao.saveEntityModel(version);
 				_log.info("Evolve version  ["+evolve.getVersion()+"] successful.");
