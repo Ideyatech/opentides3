@@ -88,22 +88,23 @@ public class DatabaseUtil {
      */
     private static void initialize() {
         try { 
-//        	if (emf == null || !emf.isOpen()) {
+        	if (emf == null || !emf.isOpen()) {
             	Properties propertiesMap = XMLPersistenceUtil.getProperties(persistenceFile, persistenceUnitName);        	
-//            	if (StringUtil.isEmpty(jndiName)) {
+            	if (StringUtil.isEmpty(jndiName)) {
     	            propertiesMap.put("javax.persistence.jdbc.driver", driverClassName);
             		propertiesMap.put("javax.persistence.jdbc.url", url);
             		propertiesMap.put("javax.persistence.jdbc.user", username);
             		propertiesMap.put("javax.persistence.jdbc.password", password);
-//           	} else {
-//            		propertiesMap.put("hibernate.connection.datasource", jndiName);
+            	} else {
+            		LOGGER.debug("Connecting to JNDI [" + jndiName + "]");
+            		propertiesMap.put("hibernate.connection.datasource", jndiName);
 // For Eclipselink only
 //            		propertiesMap.put("eclipselink.session.customizer", 
 //            				"org.opentides.persistence.config.JPAEclipseLinkSessionCustomizer");
-//            		propertiesMap.put("javax.persistence.nonJtaDataSource", jndiName);
-//               	}
+            		propertiesMap.put("javax.persistence.nonJtaDataSource", jndiName);
+               	}
             	emf = Persistence.createEntityManagerFactory(persistenceUnitName, propertiesMap);
-//        	}
+        	}
         	entityManager = emf.createEntityManager();        	
         } catch (Throwable ex) {
             // Make sure you log the exception, as it might be swallowed
