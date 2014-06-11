@@ -10,6 +10,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ attribute name="path" required="true" type="java.lang.String" %>
 <%@ attribute name="selectValue" required="false" type="java.lang.String" %>
+<%@ attribute name="selectLabel" required="false" type="java.lang.String" %>
 <%@ attribute name="label" required="true" type="java.lang.String" %>
 <%@ attribute name="cssClass" required="false" type="java.lang.String" %>
 <%@ attribute name="items" required="false" type="java.util.Collection" %>
@@ -33,6 +34,9 @@
 
 	$(document).ready(function() {
 		<c:choose>
+		<c:when test="${not empty selectValue && not empty selectLabel}">
+			$.extend(comboBoxTags, {'${path}' : [<c:forEach items="${items}" var="item">{id : "${item[selectValue]}", text : "${item[selectLabel]}" },</c:forEach>]});
+		</c:when>
 		<c:when test="${not empty selectValue}">
 			$.extend(comboBoxTags, {'${path}' : [<c:forEach items="${items}" var="item">"${item[selectValue]}",</c:forEach>]});
 		</c:when>
