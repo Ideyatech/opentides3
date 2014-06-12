@@ -75,6 +75,7 @@ public class SystemCodes extends BaseEntity implements Serializable {
 	private Integer sortOrder;
 
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonView(Views.FormView.class)
 	@JoinColumn(name = "PARENT_", referencedColumnName = "KEY_")
 	private SystemCodes parent;
 
