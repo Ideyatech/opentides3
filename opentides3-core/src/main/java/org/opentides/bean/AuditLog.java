@@ -24,7 +24,6 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
-import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -77,8 +76,7 @@ public class AuditLog extends BaseEntity {
      * Message about the actions done.
      */
     @JsonView(Views.SearchView.class)
-    @Lob
-    @Column(name = "MESSAGE", nullable = false, updatable = false)
+    @Column(name = "MESSAGE", nullable = false, updatable = false, length = 4000)
     private String message;
         
     /**
