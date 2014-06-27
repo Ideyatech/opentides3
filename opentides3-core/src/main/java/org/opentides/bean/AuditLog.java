@@ -109,9 +109,15 @@ public class AuditLog extends BaseEntity {
 
     @Transient
 	private transient Date startDate;
+    
+    @Transient
+    private Date startDateForSearch;
 	
     @Transient
 	private transient Date endDate;
+    
+    @Transient
+    private Date endDateForSearch;
 	
 	@Transient
 	private transient String logAction;
@@ -355,6 +361,22 @@ public class AuditLog extends BaseEntity {
 		if(getCreateDate() != null)
 			return new SimpleDateFormat("MMM. dd, yyyy hh:mm aa").format(getCreateDate());
 		return "";
+	}
+	
+	public void setStartDateForSearch(Date startDateForSearch) {
+		this.startDateForSearch = startDateForSearch;
+	}
+	
+	public Date getStartDateForSearch() {
+		return startDateForSearch;
+	}
+	
+	public void setEndDateForSearch(Date endDateForSearch) {
+		this.endDateForSearch = endDateForSearch;
+	}
+	
+	public Date getEndDateForSearch() {
+		return endDateForSearch;
 	}
 	
 }

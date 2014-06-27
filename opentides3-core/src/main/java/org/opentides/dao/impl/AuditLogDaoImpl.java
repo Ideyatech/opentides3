@@ -19,6 +19,8 @@
 
 package org.opentides.dao.impl;
 
+import java.util.Date;
+
 import javax.persistence.EntityManager;
 
 import org.apache.commons.lang.time.DateUtils;
@@ -103,25 +105,24 @@ public class AuditLogDaoImpl extends BaseEntityDaoJpaImpl<AuditLog, Long> implem
 			append.append(" and ");
 		}
 		append.append(" obj.message is not null ");
-		append.append(" and ");
-		append.append(" obj.message <> '' ");
+		//append.append(" and ");
+		//append.append(" obj.message <> '' ");
 		if (example.getStartDate() != null){
 			if (!StringUtil.isEmpty(append.toString())){
 				append.append(" and ");
 			}
-			String startDate = DateUtil.dateToString(example.getStartDate(), "yyyy-MM-dd");
-			append.append(" obj.createDate >= '");
-			append.append(startDate + "'");
+			Date startDateNoTime = DateUtil.removeTime(example.getStartDate());
+			example.setStartDateForSearch(startDateNoTime);
+			append.append(" obj.createDate >= :startDateForSearch ");
 		}
 		
 		if (example.getEndDate() != null){
 			if (!StringUtil.isEmpty(append.toString())){
 				append.append(" and ");
-			}			
-			String endDate = DateUtil.dateToString(
-								DateUtils.addDays(example.getEndDate(), 1), "yyyy-MM-dd");
-			append.append(" obj.createDate <= '");
-			append.append(endDate + "'");
+			}
+			Date endDateNoTime = DateUtil.removeTime(DateUtils.addDays(example.getEndDate(), 1));
+			example.setEndDateForSearch(endDateNoTime);
+			append.append(" obj.createDate <= :endDateForSearch ");
 		}
 
 		if(!StringUtil.isEmpty(example.getLogAction())){

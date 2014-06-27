@@ -99,11 +99,12 @@ public class DateUtil {
      * @param date
      * @return
      */
-    @SuppressWarnings("deprecation")
 	public static boolean hasTime(Date date) {
     	if (date == null)
     		return false;
-    	return (date.getHours() + date.getMinutes() +date.getSeconds() > 0);
+    	Calendar cal = Calendar.getInstance();
+    	cal.setTime(date);
+    	return (cal.get(Calendar.HOUR_OF_DAY) + cal.get(Calendar.MINUTE) + cal.get(Calendar.SECOND) + cal.get(Calendar.MILLISECOND) > 0);
     }
     
     /**
@@ -152,5 +153,20 @@ public class DateUtil {
 		calendar.add(Calendar.DATE, day);
 		
 		return calendar.getTime();
+	}
+	
+	/**
+	 * Remove time field from the date
+	 * @param date
+	 * @return
+	 */
+	public static Date removeTime(Date date) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		return cal.getTime();
 	}
 }
