@@ -82,6 +82,9 @@ public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 	@Value("#{applicationSettings['confirm.password.reset.url']}")
 	private String confirmURL;
 
+	@Value("#{'domain.url'}")
+	private String domainURL;
+
 	@Autowired
 	public void setUserDao(UserDao userDao) {
 		this.dao = userDao;
@@ -365,8 +368,8 @@ public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 		Map<String, Object> dataMap = new HashMap<String, Object>();
 		dataMap.put("address", emailAddress);
 		dataMap.put("confirmationCode", token);
-		dataMap.put("confirmURL", confirmURL);
-		dataMap.put("link", confirmURL + "?cipher=" + cipher);
+		dataMap.put("confirmURL", domainURL + confirmURL);
+		dataMap.put("link", domainURL + confirmURL + "?cipher=" + cipher);
 		mailingService.sendEmail(new String[] {emailAddress}, "Information regarding your password reset", "password_reset.vm", dataMap);
 	}
 
