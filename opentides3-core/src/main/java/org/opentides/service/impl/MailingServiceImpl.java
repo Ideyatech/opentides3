@@ -91,7 +91,10 @@ public class MailingServiceImpl implements MailingService {
 			@SuppressWarnings("deprecation")
 			String body = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, "/" + template, templateVariables);
 			
-			htmlPart.setContent(body, "text/html");
+			// Setting header to utf-8
+			htmlPart.setHeader("Content-Type", "text/html; charset=\"utf-8\"");
+			htmlPart.setContent(body, "text/html; charset=\"utf-8\"");
+			htmlPart.setHeader("Content-Transfer-Encoding", "quoted-printable");
 
 			multipart.addBodyPart(htmlPart);
 			message.setContent(multipart);
