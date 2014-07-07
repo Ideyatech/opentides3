@@ -120,6 +120,7 @@ public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 			user.setCredential(cred);
 			user.setEmailAddress("admin@opentides.com");
 			user.setFirstName("Administrator");
+			user.setLastName("Administrator");
 			
 			UserGroup userGroup = userGroupDao.loadUserGroupByName("Administrator");
 			user.addGroup(userGroup);

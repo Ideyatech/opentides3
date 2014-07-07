@@ -146,6 +146,7 @@ public class ImageController {
 			ModelMap modelMap,
 			@PathVariable("id") Long id,
 			@RequestParam(value="c", required=false) String c,
+			@RequestParam(value="replaceOld", required=false) Boolean replaceOld,
 			HttpServletRequest request, HttpServletResponse response) throws IOException {
 
 		ImageInfo info = imageInfoService.load(id);
@@ -163,8 +164,11 @@ public class ImageController {
 						if(!StringUtil.isEmpty(info.getCommand()))
 							c = info.getCommand();
 				}
-				
-				barray = ImageUtil.loadImage(getImagePath(info), c);
+				boolean replaceCache = false;
+				if(replaceOld != null) {
+					replaceCache = replaceOld;
+				}
+				barray = ImageUtil.loadImage(getImagePath(info), c, replaceCache);
 			}
 			if (barray != null) {
 				response.setContentType("image/png");

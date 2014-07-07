@@ -66,7 +66,22 @@ public class ImageUtil {
 	 * @return
 	 */
 	public static byte[] loadImage(String fullPath, String command) {
+		return loadImage(fullPath, command, false);
+	}
+	
+	/**
+	 * Loads the image from cache if available.
+	 * 
+	 * @param fullPath
+	 * @param overrideOld
+	 * 
+	 * @return
+	 */
+	public static byte[] loadImage(String fullPath, String command, boolean overrideOld) {
 		try {
+			if(overrideOld) {
+				replaceCachedImages(fullPath);
+			}
 			String processedPath = processPath(fullPath, command);			
 			File file = new File(processedPath);
 			File oFile = new File(fullPath);

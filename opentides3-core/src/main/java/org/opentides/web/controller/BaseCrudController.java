@@ -265,6 +265,7 @@ public abstract class BaseCrudController<T extends BaseEntity> {
 	 * 			messages - list of MessageResponse
 	 */
 	@RequestMapping(method = RequestMethod.POST, produces = "application/json")
+	@ResponseView(Views.FormView.class)
 	public final @ResponseBody
 	Map<String, Object> create(@FormBind(name = "formCommand") T command,
 			BindingResult bindingResult, Model uiModel,
@@ -296,6 +297,7 @@ public abstract class BaseCrudController<T extends BaseEntity> {
 	 */
 	@RequestMapping(value = "{id}", method = { RequestMethod.PUT,
 			RequestMethod.POST }, produces = "application/json")
+	@ResponseView(Views.FormView.class)
 	public final @ResponseBody
 	Map<String, Object> update(@FormBind(name = "formCommand") T command,
 			@PathVariable("id") Long id, BindingResult bindingResult,
@@ -768,6 +770,9 @@ public abstract class BaseCrudController<T extends BaseEntity> {
 				.getSimpleName());
 		String serviceBean = attributeName + "Service";
 		String validatorBean = attributeName + "Validator";
+		if(_log.isDebugEnabled()) {
+			_log.debug("Retrieving service for " + serviceBean);
+		}
 
 		if (this.service == null && beanFactory.containsBean(serviceBean))
 			this.service = (BaseCrudService<T>) beanFactory
