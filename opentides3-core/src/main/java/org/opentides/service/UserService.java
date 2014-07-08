@@ -133,4 +133,6 @@ public interface UserService extends BaseCrudService<BaseUser> {
 	public boolean confirmPasswordReset(String emailAddress, String token);
 
 	public void requestPasswordReset(String emailAddress);
+	
+	public List<SessionInformation> getAllLoggedUsersPagenation(int start, int total);
 }

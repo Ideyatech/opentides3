@@ -462,4 +462,20 @@ public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 		return true;
 	}
 	
+	@Override
+	public List<SessionInformation> getAllLoggedUsersPagenation(int start, int total) {
+        List<SessionInformation> results = new ArrayList<SessionInformation>();
+       
+        for(Object prince: sessionRegistry.getAllPrincipals()) {
+            for (SessionInformation si : sessionRegistry.getAllSessions(prince,
+                    false)) {
+                results.add(si);
+            }
+        }
+        if(results.size()>total) {
+            return results.subList(start, total);
+        }
+        return results;
+    }
+	
 }
