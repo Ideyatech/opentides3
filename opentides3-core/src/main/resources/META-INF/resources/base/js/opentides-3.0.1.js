@@ -1052,7 +1052,7 @@ var opentides3 = (function() {
 				}
 				html = html +
 						"<li class='ot3-nextPage'><a href='javascript:void(0)' data-page='" + (json['currPage'] + 1) + "'>&rsaquo;</a></li>" + // next page
-						"<li class='ot3-lastPage'><a href='javascript:void(0)' data-page='" + json['endPage'] + "'>&raquo;</a></li>" + // last page
+						"<li class='ot3-lastPage'><a href='javascript:void(0)' data-page='" + json['totalPages'] + "'>&raquo;</a></li>" + // last page
 						"</ul></div>";
 				$(elem).html(html);
 				// set active page
