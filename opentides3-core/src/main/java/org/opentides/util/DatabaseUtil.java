@@ -123,6 +123,7 @@ public class DatabaseUtil {
 	 * @param driverClass the driverClass to set
 	 */
 	public final void setDriverClassName(String driverClass) {
+		LOGGER.info("Setting Driver Class Name to " + driverClass);
 		DatabaseUtil.driverClassName = driverClass;
 	}
 
@@ -130,6 +131,7 @@ public class DatabaseUtil {
 	 * @param url the url to set
 	 */
 	public final void setUrl(String url) {
+		LOGGER.info("Setting URL to " + url);
 		DatabaseUtil.url = url;
 	}
 
@@ -137,6 +139,7 @@ public class DatabaseUtil {
 	 * @param username the username to set
 	 */
 	public final void setUsername(String username) {
+		LOGGER.info("Setting Username to " + username);
 		DatabaseUtil.username = username;
 	}
 
@@ -144,6 +147,7 @@ public class DatabaseUtil {
 	 * @param password the password to set
 	 */
 	public final void setPassword(String password) {
+		LOGGER.info("Setting password to " + password);
 		DatabaseUtil.password = password;
 	}
 	
@@ -156,6 +160,7 @@ public class DatabaseUtil {
 	 */
 	
 	public final void setJndiName(String jndiName) {
+		LOGGER.info("Setting JNDI Name to " + jndiName);
 		DatabaseUtil.jndiName = jndiName;
 	}
 	
@@ -165,6 +170,7 @@ public class DatabaseUtil {
 	 * @param persistenceUnitName the persistenceUnitName to set
 	 */
 	public final void setPersistenceUnitName(String persistenceUnitName) {
+		LOGGER.info("Setting Persistence Unit Name to " + persistenceUnitName);
 		DatabaseUtil.persistenceUnitName = persistenceUnitName;
 	}
 	
@@ -173,6 +179,7 @@ public class DatabaseUtil {
 	 * @param persistenceFile
 	 */
 	public final void setPersistenceFile(String persistenceFile) {
+		LOGGER.info("Setting Persistence file to " + persistenceFile);
 		DatabaseUtil.persistenceFile = persistenceFile;
 	}
 	
