@@ -177,11 +177,10 @@ public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 		if (userObj instanceof SessionUser) {
 			SessionUser sessionUser = (SessionUser) userObj;
 			String username = sessionUser.getUsername();
-			String completeName = sessionUser.getCompleteName() + " ["
-					+ username + "] ";
 			UserDao userDao = (UserDao) getDao();
 			// also add log to audit history log
 			BaseUser user = userDao.loadByUsername(username);
+			String completeName = user.getCompleteName() + " ["+ username + "] ";
 			// force the audit user details
 			user.setAuditUserId(user.getId());
 			user.setAuditUsername(username);
