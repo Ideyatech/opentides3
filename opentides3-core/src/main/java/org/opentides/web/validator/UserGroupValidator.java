@@ -33,10 +33,10 @@ public class UserGroupValidator implements Validator {
 
 	public void validate(Object object, Errors errors) {
 		UserGroup userGroup = (UserGroup) object;
-		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "name", "error.usergroup.name.required", "User Group Name is required");
-		ValidationUtils.rejectIfEmpty(errors, "description", "error.usergroup.description.required", "User Group Description is required");
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "name", "error.required", new Object[]{"Name"});
+		ValidationUtils.rejectIfEmpty(errors, "description", "error.required", new Object[]{"Description"});
 		if (userGroup.getAuthorities() == null || userGroup.getAuthorities().size() < 1){
-			errors.reject("error.usergroup.must.have.role", "User Group must have a role");
+			errors.reject("error.role-required");
 		}
 	}
 
