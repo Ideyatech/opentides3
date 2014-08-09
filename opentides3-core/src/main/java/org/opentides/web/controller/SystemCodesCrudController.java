@@ -18,6 +18,7 @@
  */
 package org.opentides.web.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -61,16 +62,6 @@ public class SystemCodesCrudController extends BaseCrudController<SystemCodes> {
 	@ModelAttribute("categoryList")
 	public List<String> categoryList() {
 		return systemCodesService.getAllCategories();
-	}
-	
-	/**
-	 * Method stub that returns a list of all system codes.
-	 * 
-	 * @return list of system codes
-	 */
-	@ModelAttribute("parentList")
-	public List<SystemCodes> parentList() {
-		return systemCodesService.findAll();
 	}
 	
 	/**
