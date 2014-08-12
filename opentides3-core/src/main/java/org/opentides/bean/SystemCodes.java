@@ -78,6 +78,10 @@ public class SystemCodes extends BaseEntity implements Serializable {
 	@JsonView(Views.FormView.class)
 	@JoinColumn(name = "PARENT_", referencedColumnName = "KEY_")
 	private SystemCodes parent;
+	
+	@JsonView(Views.SearchView.class)
+	@Column(name = "PARENT_", insertable = false, updatable = false)
+	private String parentKey;
 
 	public SystemCodes() {
 	}
@@ -257,12 +261,12 @@ public class SystemCodes extends BaseEntity implements Serializable {
 		return true;
 	}
 
-	@JsonView(Views.SearchView.class)
 	public String getParentKey() {
-		if (this.parent != null) {
-			return this.parent.getKey();
-		}
-		return "";
+		return this.parentKey;
+	}
+	
+	public void setParentKey(String parentKey) {
+		this.parentKey = parentKey;
 	}
 
 }
