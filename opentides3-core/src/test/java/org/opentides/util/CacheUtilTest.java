@@ -96,6 +96,7 @@ public class CacheUtilTest {
 		auditableFields.add(new AuditableField("numberValue"));
 		auditableFields.add(new AuditableField("sortOrder"));
 		auditableFields.add(new AuditableField("parent"));
+		auditableFields.add(new AuditableField("parentKey"));
 		return auditableFields;
 	}
 
