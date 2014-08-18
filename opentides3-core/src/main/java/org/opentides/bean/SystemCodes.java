@@ -262,6 +262,9 @@ public class SystemCodes extends BaseEntity implements Serializable {
 	}
 
 	public String getParentKey() {
+		if(this.parentKey == null) {
+			return "";
+		}
 		return this.parentKey;
 	}
 	
