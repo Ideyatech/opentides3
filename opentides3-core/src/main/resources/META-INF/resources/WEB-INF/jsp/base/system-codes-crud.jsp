@@ -130,6 +130,7 @@
 				<tides:combobox path="category" label="label.system-codes.category" items="${categoryList}"/>
 				<tides:input path="key" label="label.system-codes.key" />
 				<tides:input path="value" label="label.system-codes.value" />
+				<tides:input path="numberValue" label="label.system-codes.number-value" />
 				<tides:combobox path="parent" selectValue="key" label="label.system-codes.parent" items="${parentList}"/>
 			</div>
 			<div class="modal-footer">
