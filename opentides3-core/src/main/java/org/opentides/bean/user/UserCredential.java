@@ -77,7 +77,7 @@ public class UserCredential extends BaseEntity {
 		this.user = user;
 	}
 	public UserCredential() {
-		enabled=false;
+		enabled=true;
 	}
 
 	/**
