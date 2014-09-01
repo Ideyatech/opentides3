@@ -20,6 +20,7 @@ package org.opentides.bean;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 
 import org.opentides.web.json.Views;
@@ -55,6 +56,9 @@ public class FileInfo extends BaseEntity {
 	// immutable
 	@Column(name = "FILE_ID")
 	private String fileId;
+	
+	@Column(name = "IS_ARCHIVED")
+	private Boolean isArchived;
 
 	/**
 	 * Default constructor
@@ -175,6 +179,21 @@ public class FileInfo extends BaseEntity {
 	 */
 	public final String getFileId() {
 		return fileId;
+	}
+	
+	public Boolean getIsArchived() {
+		return isArchived;
+	}
+	
+	public void setIsArchived(Boolean isArchived) {
+		this.isArchived = isArchived;
+	}
+	
+	@PrePersist
+    public void prePersist() {
+        if(this.isArchived==null) {
+            this.isArchived = false;
+        }
 	}
 
 }
