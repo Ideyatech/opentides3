@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.opentides.bean.AuditLog;
+import org.opentides.bean.BaseEntity;
 import org.opentides.dao.AuditLogDao;
 import org.opentides.service.AuditLogService;
 import org.springframework.stereotype.Service;
@@ -80,6 +81,11 @@ public class AuditLogServiceImpl extends BaseCrudServiceImpl<AuditLog> implement
 	public void sortByDate(List<AuditLog> logs) {
 		Collections.sort(logs, new CreateDateComparator());
 		
+	}
+	
+	@Override
+	public void logEvent(String message, BaseEntity entity, boolean separateEm) {
+		getAuditLogDao().logEvent(message, entity, separateEm);
 	}
 	
 	public AuditLogDao getAuditLogDao() {

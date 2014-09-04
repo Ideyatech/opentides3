@@ -20,6 +20,7 @@
 package org.opentides.dao;
 
 import org.opentides.bean.AuditLog;
+import org.opentides.bean.BaseEntity;
 
 
 
@@ -29,5 +30,7 @@ import org.opentides.bean.AuditLog;
  * @author allantan 
  */
 public interface AuditLogDao extends BaseEntityDao<AuditLog, Long> {
+	
+	public void logEvent(String message, BaseEntity entity, boolean separateEm);
 
 }
