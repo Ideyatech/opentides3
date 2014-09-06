@@ -20,7 +20,9 @@ package org.opentides.bean;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.Column;
 import javax.persistence.EntityListeners;
@@ -149,7 +151,9 @@ public abstract class BaseEntity implements Serializable {
     @Transient
     private transient Boolean disableProtection;
     
-
+    @Transient
+    private Map<String, Object> hints;
+    
     /**
      * Setter method of id.
      * 
@@ -470,5 +474,20 @@ public abstract class BaseEntity implements Serializable {
 	public final void setDisableProtection(Boolean disableProtection) {
 		this.disableProtection = disableProtection;
 	} 
+	
+	public Map<String, Object> getHints() {
+		return hints;
+	}
+	
+	public void setHints(Map<String, Object> hints) {
+		this.hints = hints;
+	}
+	
+	public void addHint(String hintName, Object value) {
+		if(this.hints == null) {
+			this.hints = new HashMap<String, Object>();
+		}
+		hints.put(hintName, value);
+	}
 		
 }

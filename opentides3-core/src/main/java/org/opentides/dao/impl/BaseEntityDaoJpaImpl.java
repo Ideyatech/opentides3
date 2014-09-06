@@ -282,7 +282,8 @@ public class BaseEntityDaoJpaImpl<T extends BaseEntity,ID extends Serializable>
 		String sql = "select (obj) from " + 
         		getEntityBeanType().getName() + " obj "+ whereClause + orderClause;
 		Query query = getEntityManager().createQuery(sql);
-		setQueryParameters(query, sql, example);		
+		setQueryParameters(query, sql, example);
+		setHints(example, query);
 		if (start > -1) 
 			query.setFirstResult(start);
 		if (total > -1)
@@ -323,6 +324,7 @@ public class BaseEntityDaoJpaImpl<T extends BaseEntity,ID extends Serializable>
 				getEntityBeanType().getName() + " obj " + whereClause;
 		Query query = getEntityManager().createQuery(sql);
 		setQueryParameters(query, sql, example);
+		setHints(example, query);
 		return (Long) query.getSingleResult();
 	}
 	
@@ -588,6 +590,14 @@ public class BaseEntityDaoJpaImpl<T extends BaseEntity,ID extends Serializable>
 					_log.debug("Setting parameter [" + paramName + "] with value [" + value + "]");
 			}
 			query.setParameter(paramName, value);
+		}
+	}
+	
+	private void setHints(T obj, Query query) {
+		if(obj.getHints() != null) {
+			for(String hint : obj.getHints().keySet()) {
+				query.setHint(hint, obj.getHints().get(hint));
+			}
 		}
 	}
 
