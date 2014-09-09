@@ -23,6 +23,7 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -82,6 +83,9 @@ public class SystemCodes extends BaseEntity implements Serializable {
 	@JsonView(Views.SearchView.class)
 	@Column(name = "PARENT_", insertable = false, updatable = false)
 	private String parentKey;
+	
+	@Transient
+	private String parentString;
 
 	public SystemCodes() {
 	}
@@ -270,6 +274,14 @@ public class SystemCodes extends BaseEntity implements Serializable {
 	
 	public void setParentKey(String parentKey) {
 		this.parentKey = parentKey;
+	}
+	
+	public String getParentString() {
+		return parentString;
+	}
+	
+	public void setParentString(String parentString) {
+		this.parentString = parentString;
 	}
 
 }
