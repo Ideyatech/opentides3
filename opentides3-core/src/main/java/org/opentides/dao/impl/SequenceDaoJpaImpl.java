@@ -60,6 +60,21 @@ public class SequenceDaoJpaImpl extends BaseEntityDaoJpaImpl<Sequence, Long>
 			return code.getValue();
 		}
 	}
+	
+	@Override
+	public Long incrementValue(String key, int step, boolean threadSafe) {
+		if(threadSafe) {
+			return incrementValue(key, step);
+		} else {
+			Sequence code = loadSequenceByKey(key);
+			if (code == null)
+				code = new Sequence(key,0l);
+			code.setSkipAudit(true); // no need to audit auto-generated keys
+			code.incrementValue(step);
+			this.saveEntityModel(code);
+			return code.getValue();
+		}
+	}
 
 	/*
 	 * (non-Javadoc)
