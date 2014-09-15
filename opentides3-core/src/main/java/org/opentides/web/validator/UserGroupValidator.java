@@ -20,12 +20,19 @@
 package org.opentides.web.validator;
 
 import org.opentides.bean.user.UserGroup;
+import org.opentides.service.UserGroupService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
+@Component
 public class UserGroupValidator implements Validator {
 
+	@Autowired
+	private UserGroupService userGroupService;
+	
 	@SuppressWarnings("rawtypes")
 	public boolean supports(Class clazz) {
 		return UserGroup.class.isAssignableFrom(clazz);
@@ -38,6 +45,12 @@ public class UserGroupValidator implements Validator {
 		if (userGroup.getAuthorities() == null || userGroup.getAuthorities().size() < 1){
 			errors.reject("error.role-required");
 		}
+		UserGroup lookFor = new UserGroup();
+        lookFor.setName(userGroup.getName());
+        long count = userGroupService.countByExample(userGroup,true);
+        if(count>=1){
+            errors.reject("error.user-group.duplicate", new Object[]{userGroup.getName()},userGroup.getName());
+        }
 	}
 
 }
