@@ -283,5 +283,17 @@ public class SystemCodes extends BaseEntity implements Serializable {
 	public void setParentString(String parentString) {
 		this.parentString = parentString;
 	}
+	
+	@JsonView(Views.SearchView.class)
+	public String getParentKeyString() {
+		//if parentString is not null, this is for insert/update else search
+		if(parentString != null) {
+			//use parentString for displaying parent after insert
+			return parentString;
+		} else {
+			//use parentKey for search
+			return parentKey == null ? "" : parentKey;
+		}
+	}
 
 }
