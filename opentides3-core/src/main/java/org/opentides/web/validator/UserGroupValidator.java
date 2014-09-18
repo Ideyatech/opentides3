@@ -41,16 +41,14 @@ public class UserGroupValidator implements Validator {
 	public void validate(Object object, Errors errors) {
 		UserGroup userGroup = (UserGroup) object;
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "name", "error.required", new Object[]{"Name"});
-		ValidationUtils.rejectIfEmpty(errors, "description", "error.required", new Object[]{"Description"});
-		if (userGroup.getAuthorities() == null || userGroup.getAuthorities().size() < 1){
-			errors.reject("error.role-required");
+		if(userGroup.getIsNew()) {
+			UserGroup lookFor = new UserGroup();
+	        lookFor.setName(userGroup.getName());
+	        long count = userGroupService.countByExample(userGroup,true);
+	        if(count>=1){
+	            errors.reject("error.user-group.duplicate", new Object[]{userGroup.getName()},userGroup.getName());
+	        }
 		}
-		UserGroup lookFor = new UserGroup();
-        lookFor.setName(userGroup.getName());
-        long count = userGroupService.countByExample(userGroup,true);
-        if(count>=1){
-            errors.reject("error.user-group.duplicate", new Object[]{userGroup.getName()},userGroup.getName());
-        }
 	}
 
 }
