@@ -32,6 +32,16 @@ public interface SequenceDao extends BaseEntityDao<Sequence, Long> {
 	public Long incrementValue(String key, int step, boolean threadSafe);
 	
 	/**
+	 * 
+	 * @param key
+	 * @param step
+	 * @param retryCount
+	 * @param maxRetry
+	 * @return
+	 */
+	public Long incrementValue(String key, int step, int retryCount, int maxRetry);
+	
+	/**
 	 * Get sequence by key
 	 * @param key
 	 * @return
