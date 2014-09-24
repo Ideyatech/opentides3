@@ -20,6 +20,7 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -46,10 +47,13 @@ import com.fasterxml.jackson.annotation.JsonView;
 @GenerateService
 @GenerateDao
 @Entity
-@Table(name = "SYSTEM_CODES")
+@Table(name = "SYSTEM_CODES", 
+	indexes= {	@Index(columnList="CATEGORY_"),
+			 	@Index(columnList="CREATEDATE")})
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Auditable(label = "System Codes")
 @JsonInclude(Include.NON_NULL)
+
 public class SystemCodes extends BaseEntity implements Serializable {
 
 	private static final long serialVersionUID = -4142599915292096152L;
@@ -282,6 +286,18 @@ public class SystemCodes extends BaseEntity implements Serializable {
 	
 	public void setParentString(String parentString) {
 		this.parentString = parentString;
+	}
+	
+	@JsonView(Views.SearchView.class)
+	public String getParentKeyString() {
+		//if parentString is not null, this is for insert/update else search
+		if(parentString != null) {
+			//use parentString for displaying parent after insert
+			return parentString;
+		} else {
+			//use parentKey for search
+			return parentKey == null ? "" : parentKey;
+		}
 	}
 
 }

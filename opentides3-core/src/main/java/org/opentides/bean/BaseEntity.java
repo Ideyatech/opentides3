@@ -90,6 +90,12 @@ public abstract class BaseEntity implements Serializable {
     @Column(name = "CREATEDBY")
     private String createdBy;
     
+    /**
+     *  ID for multi-tenancy.
+     */
+    @Column(name = "TENANT_ID")
+    private Long tenantId;
+    
     @Version
     @Column(name = "VERSION")
     private Long version;
@@ -292,6 +298,19 @@ public abstract class BaseEntity implements Serializable {
         this.auditUsername = auditUsername;
     }
     
+	/**
+	 * @return the tenantId
+	 */
+	public Long getTenantId() {
+		return tenantId;
+	}
+
+	/**
+	 * @param tenantId the tenantId to set
+	 */
+	public void setTenantId(Long tenantId) {
+		this.tenantId = tenantId;
+	}
 
 	/**
 	 * @return the version
