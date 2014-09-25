@@ -810,13 +810,19 @@ public abstract class BaseCrudController<T extends BaseEntity> {
 		int page = StringUtil.convertToInt(request.getParameter("p"), 1);
 		long startTime = System.currentTimeMillis();
 		results.setCurrPage(page);
-		results.setTotalResults(this.countAction(command));
+		if(command != null && command.getExactMatch() != null && command.getExactMatch()) {
+			results.setTotalResults(this.countAction(command, command.getExactMatch()));
+		} else {
+			results.setTotalResults(this.countAction(command));
+		}
 		int start = results.getStartIndex();
 		int total = results.getPageSize();
 		if (pageSize > 0) {
 			if (command == null) {
 				// no command, let's search everything
 				results.addResults(service.findAll(start, total));
+			} else if (command.getExactMatch() != null && command.getExactMatch()) {
+				results.addResults(service.findByExample(command, true, start, total));
 			} else {
 				// let's do a query by example
 				results.addResults(service.findByExample(command, start, total));
@@ -825,7 +831,9 @@ public abstract class BaseCrudController<T extends BaseEntity> {
 			if (command == null) {
 				// no command, let's search everything
 				results.addResults(service.findAll());
-			} else {
+			} else if (command.getExactMatch() != null && command.getExactMatch()) {
+				results.addResults(service.findByExample(command, true));
+			}  else {
 				// let's do a query by example
 				results.addResults(service.findByExample(command));
 			}
@@ -841,11 +849,15 @@ public abstract class BaseCrudController<T extends BaseEntity> {
 	 * @return the count
 	 */
 	protected long countAction(T command) {
+		return countAction(command, false);
+	}
+	
+	protected long countAction(T command, boolean isExactMatch) {
 		if (command == null) {
 			// no command, let's search everything
 			return service.countAll();
 		} else {
-			return service.countByExample(command);
+			return service.countByExample(command, isExactMatch);
 		}
 	}
 

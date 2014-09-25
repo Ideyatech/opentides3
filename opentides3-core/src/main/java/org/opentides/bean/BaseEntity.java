@@ -155,6 +155,12 @@ public abstract class BaseEntity implements Serializable {
     private Map<String, Object> hints;
     
     /**
+     * Transient property to determine if search is for exact match (=) or not (like)
+     */
+    @Transient
+    private Boolean exactMatch;
+    
+    /**
      * Setter method of id.
      * 
      * @param id primary key
@@ -488,6 +494,14 @@ public abstract class BaseEntity implements Serializable {
 			this.hints = new HashMap<String, Object>();
 		}
 		hints.put(hintName, value);
+	}
+	
+	public Boolean getExactMatch() {
+		return exactMatch;
+	}
+	
+	public void setExactMatch(Boolean exactMatch) {
+		this.exactMatch = exactMatch;
 	}
 		
 }
