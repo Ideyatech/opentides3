@@ -163,7 +163,7 @@ public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 				user.setAuditUsername(username);
 				user.setSkipAudit(false);
 				String message = completeName + " has logged-in";
-				AuditLogDaoImpl.logEvent(message, user);
+//				AuditLogDaoImpl.logEvent(message, user);
 			}
 		}
 	}
@@ -188,7 +188,7 @@ public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 			user.setAuditUserId(user.getId());
 			user.setAuditUsername(username);
 			String message = completeName + " has logged-out.";
-			AuditLogDaoImpl.logEvent(message, user);
+//			AuditLogDaoImpl.logEvent(message, user);
 		}
 	}
 
