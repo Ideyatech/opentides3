@@ -46,6 +46,39 @@ public class AuditLogDaoImpl extends BaseEntityDaoJpaImpl<AuditLog, Long> implem
 	
 	private static Logger _log = Logger.getLogger(AuditLogDaoImpl.class);
 	
+	@Override
+	public void logEvent(String message, BaseEntity entity, boolean separateEm) {
+		if(separateEm) {
+			logEvent(message, entity);
+		} else {
+			Long userId = entity.getAuditUserId();
+			String username = entity.getAuditUsername();
+			
+			if (ApplicationStartupListener.isApplicationStarted()) {
+				if (userId==null) {
+					_log.error("No userId specified for audit logging on object ["+entity.getClass().getName()
+							+ "] for message ["+message+"]. Retrieving user from interceptor.");
+					SessionUser user = SecurityUtil.getSessionUser();
+					userId = user.getId();
+					username = user.getUsername();
+				} 
+			} else {
+				userId = new Long(0);
+				username = "System Evolve";
+			}
+			
+			AuditLog record = 
+		            new AuditLog(
+		            			message, 
+		            			entity.getId(), 
+		            			entity.getClass(), 
+		                        entity.getReference(),
+		                        userId,
+		                        username);
+			saveEntityModel(record);
+		}
+	}
+	
 	/**
 	 * Saves the log event into the database.
 	 * @param shortMessage

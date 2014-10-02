@@ -136,7 +136,7 @@ public class AuditLogInterceptor extends EmptyInterceptor {
 	        				auditMessage = entity.getAuditMessage();
 	        			}
 	        			
-//	        			AuditLogDaoImpl.logEvent(auditMessage, entity);	
+	        			AuditLogDaoImpl.logEvent(auditMessage, entity);	
 	        		}
 	        	}
         	}
@@ -150,7 +150,7 @@ public class AuditLogInterceptor extends EmptyInterceptor {
 	        			}else{
 	        				auditMessage = entity.getAuditMessage();
 	        			}	        			
-//	        			AuditLogDaoImpl.logEvent(auditMessage, entity);       				
+	        			AuditLogDaoImpl.logEvent(auditMessage, entity);       				
 	        		}
 	        	}        	
         	}
@@ -165,8 +165,8 @@ public class AuditLogInterceptor extends EmptyInterceptor {
 	        			}else{
 	        				auditMessage = entity.getAuditMessage();
 	        			}
-//	        			if (!StringUtil.isEmpty(auditMessage))
-//	        				AuditLogDaoImpl.logEvent(auditMessage, entity);	
+	        			if (!StringUtil.isEmpty(auditMessage))
+	        				AuditLogDaoImpl.logEvent(auditMessage, entity);	
 	        		}
                	}
         	}
