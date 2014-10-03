@@ -584,7 +584,18 @@ public class BaseEntityDaoJpaImpl<T extends BaseEntity,ID extends Serializable>
 		Matcher matcher = pattern.matcher(sql);
 		while(matcher.find()) {
 			String paramName = matcher.group(1);
-			Object value = CrudUtil.retrieveObjectValue(obj, paramName);
+			Object value = null;
+			try {
+				value = CrudUtil.retrieveObjectValue(obj, paramName);
+			} catch(InvalidImplementationException e) {
+				/*
+				 * TODO will just catch the InvalidImplementationException to handle problem with
+				 * parameter values that contains ":". Think of a better way to handle this scenario. 
+				 */
+				_log.error("Error encountered while retrieving parameter. "
+						+ "Please check your implementation for appendClauseToExample method. ");
+				continue;
+			}
 			if(_log.isDebugEnabled()) {
 				if(value != null)
 					_log.debug("Setting parameter [" + paramName + "] with value [" + value + "]");
