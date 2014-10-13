@@ -106,7 +106,7 @@ public class UserGroupCrudController extends BaseCrudController<UserGroup> {
 	 */
 	@Override
 	protected void postCreate(UserGroup command) {
-		if(command.getIsDefault())
+		if(command.getIsDefault() != null && command.getIsDefault())
 			((UserGroupService) getService()).removeOldDefaultUserGroup(command.getId());
 	}
 

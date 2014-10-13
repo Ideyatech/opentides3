@@ -19,6 +19,8 @@
 
 package org.opentides.web.validator;
 
+import java.util.List;
+
 import org.opentides.bean.user.UserGroup;
 import org.opentides.service.UserGroupService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,14 +43,19 @@ public class UserGroupValidator implements Validator {
 	public void validate(Object object, Errors errors) {
 		UserGroup userGroup = (UserGroup) object;
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "name", "error.required", new Object[]{"Name"});
-		if(userGroup.getIsNew()) {
-			UserGroup lookFor = new UserGroup();
-	        lookFor.setName(userGroup.getName());
-	        long count = userGroupService.countByExample(userGroup,true);
-	        if(count>=1){
-	            errors.reject("error.user-group.duplicate", new Object[]{userGroup.getName()},userGroup.getName());
-	        }
-		}
+		UserGroup lookFor = new UserGroup();
+        lookFor.setName(userGroup.getName());
+        List<UserGroup> groups = userGroupService.findByExample(lookFor);
+        if(groups != null && !groups.isEmpty()) {
+        	if(userGroup.isNew()) {
+        		errors.reject("error.user-group.duplicate", new Object[]{userGroup.getName()},userGroup.getName());
+        	} else {
+        		UserGroup found = groups.get(0);
+        		if(!found.getId().equals(userGroup.getId())) {
+        			errors.reject("error.user-group.duplicate", new Object[]{userGroup.getName()},userGroup.getName());
+        		}
+        	}
+        }
 	}
 
 }
