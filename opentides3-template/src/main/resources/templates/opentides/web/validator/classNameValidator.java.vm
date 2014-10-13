@@ -1,4 +1,4 @@
-package ${package};
+package ${bean.package_}.web.validator;
 
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
@@ -22,18 +22,18 @@ import org.opentides.util.ValidatorUtil;
 ## End of outer if statement
 
 
-import $modelPackage.$className;
+import ${bean.modelPackage}.${bean.className};
 
-public class ${className}Validator implements Validator {
+public class ${bean.className}Validator implements Validator {
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	public boolean supports(Class clazz) {
-		return ${className}.class.isAssignableFrom(clazz);
+		return ${bean.className}.class.isAssignableFrom(clazz);
 	}
 
 	public void validate(Object clazz, Errors errors) {
 #if ( $count != 0 )
-		${className} ${modelName} = (${className}) clazz;
+		${bean.className} ${bean.modelName} = (${bean.className}) clazz;
 #end
 #foreach( $field in $fields )
 #if ( $field.isRequiredField )

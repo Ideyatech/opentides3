@@ -153,9 +153,7 @@ public class ClassProcessor extends AbstractProcessor {
 	public boolean process(Set<? extends TypeElement> annotations,
 			RoundEnvironment env) {
 		
-		//TODO There's a problem here that causes maven to not build. Commenting out for the mean time. - AJ
-		
-		/*for (TypeElement te : annotations) {
+		for (TypeElement te : annotations) {
 			for (Element e : env.getElementsAnnotatedWith(te)) {
 				if (e.getKind() == ElementKind.CLASS) {
 					String annotation = te.toString();
@@ -178,7 +176,7 @@ public class ClassProcessor extends AbstractProcessor {
 					}
 				}				
 			}
-		}*/
+		}
 		return true;
 	}
 
