@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.opentides.bean.SystemCodes;
 import org.opentides.service.SystemCodesService;
+import org.opentides.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -67,15 +68,11 @@ public class SystemCodesValidator implements Validator {
 			errors.reject("error.parent-invalid", new Object[]{"\"" + systemCodes.getKey() + "\"", "\"" + systemCodes.getParent().getKey() + "\""}, "\"" + systemCodes.getKey() + "\" conflicts with \"" + systemCodes.getParent().getKey() + "\". Please try a different one.");
 		}
 		
-		if(systemCodes.getParentString() != null && systemCodes.getParentString() != "") {
-			SystemCodes parent = new SystemCodes();
-			parent.setValue(systemCodes.getParentString());
-			
-			List<SystemCodes> parentList= systemCodesService.findByExample(parent);
-			
-			if(parentList.size()<=0) {
-				errors.reject("error.parent-does-not-exist",new Object[]{parent.getValue()}, parent.getValue() +" does not exist, please choose a valid Parent.");
-			}
+		if(!StringUtil.isEmpty(systemCodes.getParentString())) {
+			SystemCodes parent = systemCodesService.findByKey(systemCodes.getParentString());
+            if(parent == null) {
+                errors.reject("error.parent-does-not-exist",new Object[]{systemCodes.getParentString()}, systemCodes.getParentString() +" does not exist, please choose a valid Parent.");
+            }
 		}
 
 	}

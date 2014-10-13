@@ -23,6 +23,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.EntityListeners;
@@ -159,6 +160,15 @@ public abstract class BaseEntity implements Serializable {
     
     @Transient
     private Map<String, Object> hints;
+    
+    /**
+     * Transient property to determine if search is for exact match (=) or not (like)
+     */
+    @Transient
+    private Boolean exactMatch;
+    
+    @Transient
+    private Set<String> aliasMapping;
     
     /**
      * Setter method of id.
@@ -508,5 +518,21 @@ public abstract class BaseEntity implements Serializable {
 		}
 		hints.put(hintName, value);
 	}
-		
+	
+	public Boolean getExactMatch() {
+		return exactMatch;
+	}
+	
+	public void setExactMatch(Boolean exactMatch) {
+		this.exactMatch = exactMatch;
+	}
+	
+	public Set<String> getAliasMapping() {
+		return aliasMapping;
+	}
+	
+	public void setAliasMapping(Set<String> aliasMapping) {
+		this.aliasMapping = aliasMapping;
+	}
+	
 }

@@ -271,6 +271,7 @@ public class BaseEntityDaoJpaImpl<T extends BaseEntity,ID extends Serializable>
 	@Override	
 	@SuppressWarnings("unchecked")
 	public final List<T> findByExample(final T example, boolean exactMatch, int start, int total) {
+		String joinClause = appendJoinToExample(example);
 		String whereClause = CrudUtil.buildJpaQueryString(example, exactMatch);
 		String orderClause = " " + appendOrderToExample(example);
 		String filterClause = this.buildSecurityFilterClause(example);
@@ -280,7 +281,7 @@ public class BaseEntityDaoJpaImpl<T extends BaseEntity,ID extends Serializable>
 		if (_log.isDebugEnabled()) 
 			_log.debug("QBE >> "+whereClause+orderClause);
 		String sql = "select (obj) from " + 
-        		getEntityBeanType().getName() + " obj "+ whereClause + orderClause;
+        		getEntityBeanType().getName() + " obj " + joinClause + whereClause + orderClause;
 		Query query = getEntityManager().createQuery(sql);
 		setQueryParameters(query, sql, example);
 		setHints(example, query);
@@ -507,6 +508,15 @@ public class BaseEntityDaoJpaImpl<T extends BaseEntity,ID extends Serializable>
 	}
 	
 	/**
+	 * For overriding the default join JPA use for entities.
+	 * @param example
+	 * @return
+	 */
+	protected String appendJoinToExample(T example) {
+		return "";
+	}
+	
+	/**
 	 * Private helper to build clause for security based filtering restriction 
 	 * @param example
 	 * @return
@@ -584,7 +594,18 @@ public class BaseEntityDaoJpaImpl<T extends BaseEntity,ID extends Serializable>
 		Matcher matcher = pattern.matcher(sql);
 		while(matcher.find()) {
 			String paramName = matcher.group(1);
-			Object value = CrudUtil.retrieveObjectValue(obj, paramName);
+			Object value = null;
+			try {
+				value = CrudUtil.retrieveObjectValue(obj, paramName);
+			} catch(InvalidImplementationException e) {
+				/*
+				 * TODO will just catch the InvalidImplementationException to handle problem with
+				 * parameter values that contains ":". Think of a better way to handle this scenario. 
+				 */
+				_log.error("Error encountered while retrieving parameter. "
+						+ "Please check your implementation for appendClauseToExample method. ");
+				continue;
+			}
 			if(_log.isDebugEnabled()) {
 				if(value != null)
 					_log.debug("Setting parameter [" + paramName + "] with value [" + value + "]");

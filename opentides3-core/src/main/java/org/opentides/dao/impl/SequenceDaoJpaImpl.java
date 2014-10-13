@@ -21,6 +21,8 @@ package org.opentides.dao.impl;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.persistence.OptimisticLockException;
+
 import org.opentides.bean.Sequence;
 import org.opentides.dao.SequenceDao;
 import org.springframework.stereotype.Repository;
@@ -59,6 +61,43 @@ public class SequenceDaoJpaImpl extends BaseEntityDaoJpaImpl<Sequence, Long>
 			this.saveEntityModel(code);
 			return code.getValue();
 		}
+	}
+	
+	@Override
+	public Long incrementValue(String key, int step, boolean threadSafe) {
+		if(threadSafe) {
+			return incrementValue(key, step);
+		} else {
+			Sequence code = loadSequenceByKey(key);
+			if (code == null)
+				code = new Sequence(key,0l);
+			code.setSkipAudit(true); // no need to audit auto-generated keys
+			code.incrementValue(step);
+			this.saveEntityModel(code);
+			return code.getValue();
+		}
+	}
+	
+	@Override
+	public Long incrementValue(String key, int step, int retryCount,
+			int maxRetry) {
+		Sequence code = loadSequenceByKey(key);
+		if (code == null)
+			code = new Sequence(key,0l);
+		code.setSkipAudit(true); // no need to audit auto-generated keys
+		code.incrementValue(step);
+		try {
+			this.saveEntityModel(code);
+		} catch (OptimisticLockException ole) {
+			if(retryCount > maxRetry) {
+				throw new RuntimeException(
+					"Maximum retry count reached while generating sequence number for " + key);
+			} else {
+				int curRetryCount = retryCount + 1;
+				return incrementValue(key, step, curRetryCount, maxRetry);
+			}
+		}
+		return code.getValue();
 	}
 
 	/*

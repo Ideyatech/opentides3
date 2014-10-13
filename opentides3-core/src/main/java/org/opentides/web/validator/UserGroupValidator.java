@@ -19,13 +19,22 @@
 
 package org.opentides.web.validator;
 
+import java.util.List;
+
 import org.opentides.bean.user.UserGroup;
+import org.opentides.service.UserGroupService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
+@Component
 public class UserGroupValidator implements Validator {
 
+	@Autowired
+	private UserGroupService userGroupService;
+	
 	@SuppressWarnings("rawtypes")
 	public boolean supports(Class clazz) {
 		return UserGroup.class.isAssignableFrom(clazz);
@@ -34,10 +43,19 @@ public class UserGroupValidator implements Validator {
 	public void validate(Object object, Errors errors) {
 		UserGroup userGroup = (UserGroup) object;
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "name", "error.required", new Object[]{"Name"});
-		ValidationUtils.rejectIfEmpty(errors, "description", "error.required", new Object[]{"Description"});
-		if (userGroup.getAuthorities() == null || userGroup.getAuthorities().size() < 1){
-			errors.reject("error.role-required");
-		}
+		UserGroup lookFor = new UserGroup();
+        lookFor.setName(userGroup.getName());
+        List<UserGroup> groups = userGroupService.findByExample(lookFor);
+        if(groups != null && !groups.isEmpty()) {
+        	if(userGroup.isNew()) {
+        		errors.reject("error.user-group.duplicate", new Object[]{userGroup.getName()},userGroup.getName());
+        	} else {
+        		UserGroup found = groups.get(0);
+        		if(!found.getId().equals(userGroup.getId())) {
+        			errors.reject("error.user-group.duplicate", new Object[]{userGroup.getName()},userGroup.getName());
+        		}
+        	}
+        }
 	}
 
 }

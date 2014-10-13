@@ -18,7 +18,6 @@
  */
 package org.opentides.web.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -26,8 +25,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.opentides.bean.SystemCodes;
+import org.opentides.util.StringUtil;
 import org.opentides.web.json.ResponseView;
 import org.opentides.web.json.Views;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -45,6 +47,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping("/system/system-codes")
 @Controller 
 public class SystemCodesCrudController extends BaseCrudController<SystemCodes> {
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(SystemCodesCrudController.class);
 
 	/**
 	 * Post construct that initializes the crud page to {@code "/base/system-codes-crud"}.
@@ -64,6 +68,29 @@ public class SystemCodesCrudController extends BaseCrudController<SystemCodes> {
 		return systemCodesService.getAllCategories();
 	}
 	
+	@Override
+	protected void preCreate(SystemCodes command, BindingResult bindingResult,
+			Model uiModel, HttpServletRequest request,
+			HttpServletResponse response) {
+		setParent(command);
+	}
+	
+	@Override
+	protected void preUpdate(SystemCodes command, BindingResult bindingResult,
+			Model uiModel, HttpServletRequest request,
+			HttpServletResponse response) {
+		setParent(command);
+	}
+	
+	private void setParent(SystemCodes command) {
+		if(!StringUtil.isEmpty(command.getParentString())) {
+			SystemCodes parent = systemCodesService.findByKey(command.getParentString());
+			if(parent != null) {
+				command.setParent(parent);
+			}
+		}
+	}
+	
 	/**
 	 * Find system codes by category
 	 * 
@@ -73,6 +100,7 @@ public class SystemCodesCrudController extends BaseCrudController<SystemCodes> {
 	@RequestMapping(value = "/findByCategory")
 	@ResponseView(Views.SearchView.class)
 	public @ResponseBody List<SystemCodes> findByCategory(@RequestParam("category") String category) {
+		LOGGER.debug("Find System Codes for category {}", category);
 		return systemCodesService.findSystemCodesByCategory(category);
 	}
 	

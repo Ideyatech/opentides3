@@ -27,9 +27,13 @@ import javax.servlet.http.HttpServletResponse;
 import org.opentides.bean.user.UserAuthority;
 import org.opentides.bean.user.UserGroup;
 import org.opentides.service.UserGroupService;
+import org.opentides.web.validator.UserGroupValidator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -42,6 +46,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller 
 @RequestMapping("/organization/usergroups")
 public class UserGroupCrudController extends BaseCrudController<UserGroup> {
+	
+	@Autowired
+	private UserGroupValidator userGroupValidator;
+	
+	@InitBinder("formCommand")
+    protected void transactionInitBinder(WebDataBinder binder) {
+        binder.setValidator(userGroupValidator);
+    }
 
 	/**
 	 * Post construct that initializes the crud page to {@code "/base/system-codes-crud"}.
@@ -94,7 +106,7 @@ public class UserGroupCrudController extends BaseCrudController<UserGroup> {
 	 */
 	@Override
 	protected void postCreate(UserGroup command) {
-		if(command.getIsDefault())
+		if(command.getIsDefault() != null && command.getIsDefault())
 			((UserGroupService) getService()).removeOldDefaultUserGroup(command.getId());
 	}
 
@@ -103,7 +115,7 @@ public class UserGroupCrudController extends BaseCrudController<UserGroup> {
 	 */
 	@Override
 	protected void postUpdate(UserGroup command) {
-		if(command.getIsDefault())
+		if(command.getIsDefault() != null && command.getIsDefault())
 			((UserGroupService) getService()).removeOldDefaultUserGroup(command.getId());
 	}
 
