@@ -39,7 +39,7 @@ import org.opentides.processor.param.ParamReader;
 import org.opentides.processor.param.ParamReaderFactory;
 
 /**
- * Code generation processor for creating source codes in class level.
+ * Code generation processor for creating source codes in field level.
  * 
  * @author allantan
  */
@@ -65,7 +65,7 @@ public class AttributeProcessor extends AbstractProcessor {
 		for (TypeElement te : annotations) {
 			for (Element e : env.getElementsAnnotatedWith(te)) {
 				if (e.getKind() == ElementKind.FIELD) {
-					String annotation = te.toString();
+					String annotation = te.getSimpleName().toString();					
 					String attributeName = e.toString();
 					displayMessage("Processing: " + attributeName
 							+ " for annotation " + annotation);

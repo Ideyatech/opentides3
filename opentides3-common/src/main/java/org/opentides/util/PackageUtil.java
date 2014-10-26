@@ -36,6 +36,8 @@ public class PackageUtil {
 
 	private static Set<String> templateJars = new HashSet<String>();
 	
+	private static Set<String> templateFolders = new HashSet<String>();
+	
 	/**
 	 * Converts a file path into the package name.
 	 * Conversion is sensitive to path separator of the OS.
@@ -92,6 +94,8 @@ public class PackageUtil {
 						templateJars.add(name.substring(5,excIndex));
 					else
 						templateJars.add(name.substring(5));
+				} else {
+					templateFolders.add(name);
 				}
 				// load the property file
 				inputStream = url.openStream();
@@ -114,6 +118,13 @@ public class PackageUtil {
 	 */
 	public static final Set<String> getTemplateJars() {
 		return templateJars;
+	}
+
+	/**
+	 * @return the templateFolders
+	 */
+	public static Set<String> getTemplateFolders() {
+		return templateFolders;
 	}
 
 }

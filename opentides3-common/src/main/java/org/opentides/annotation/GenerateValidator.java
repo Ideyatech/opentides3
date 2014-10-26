@@ -17,45 +17,20 @@
    under the License.    
  */
 
-package org.opentides.annotation.field;
+package org.opentides.annotation;
 
-import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Generates an validation codes
- * <b>Sample Usage:</b><br />
- * &emsp;&emsp;&emsp;<code>@Validation (label = "textFieldLabel", requiredField = "true")</code><br />
- * @author allanctan
+ * Generates the Validator class 
+ * based on open-tides framework
+ *  
+ * @author allanctan 
  */
-@Target(ElementType.FIELD)
+@Target(ElementType.TYPE)
 @Retention(RetentionPolicy.SOURCE)
-@Documented
-public @interface Validation {
-	
-	boolean isRequired() default false;
-	
-	boolean isEmailFormat() default false;
-	
-	boolean isNumberFormat() default false;
-	
-	boolean isMoneyFormat() default false;
-	
-	boolean isDateFormat() default false;
-	
-	boolean rejectPastDate() default false;
-	
-	boolean rejectFutureDate() default false;	
-	
-	String regex() default "";
-	
-	long maxLength() default -1;
-	
-	long maxAllowValue() default -1;
-	
-	long minAllowValue() default -1;
-	
+public @interface GenerateValidator {
 }

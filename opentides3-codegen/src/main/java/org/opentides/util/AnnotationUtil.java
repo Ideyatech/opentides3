@@ -17,11 +17,10 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 
 import org.apache.log4j.Logger;
-import org.opentides.annotation.field.CheckBox;
-import org.opentides.annotation.field.DropDown;
+import org.opentides.annotation.field.Checkbox;
+import org.opentides.annotation.field.Dropdown;
 import org.opentides.annotation.field.RadioButton;
 import org.opentides.bean.AnnotationDefinition;
-import org.opentides.bean.FieldDefinition;
 
 /**
  * @author allantan
@@ -56,23 +55,11 @@ public class AnnotationUtil {
 			}			
 		}
 		
-		AnnotationDefinition annotationDefn = new AnnotationDefinition(te.toString());
+		AnnotationDefinition annotationDefn = new AnnotationDefinition(te.getSimpleName().toString());
 		annotationDefn.setParams(params);
 		return annotationDefn;
 	}
 	
-	public static void buildListDefinition(FieldDefinition field, 
-			AnnotationDefinition annotation) {
-		Map<String, Object> params = annotation.getParams();
-		if (params.get("category") != null && 
-			!StringUtil.isEmpty(params.get("category").toString())) {
-			field.setCategory(params.get("category").toString());
-		} else if(params.get("options") != null && 
-			!StringUtil.isEmpty(params.get("options").toString()) ){
-			field.setOptions(params.get("options").toString().split(","));			
-		}
-	}
-
     /**
      * Checks if the field is a list field (e.g. dropdown, radio button).
      *
@@ -80,8 +67,8 @@ public class AnnotationUtil {
      * @return
      */
     public static final boolean isListField(Field field) {
-        if (field.isAnnotationPresent(DropDown.class)
-                || field.isAnnotationPresent(CheckBox.class)
+        if (field.isAnnotationPresent(Dropdown.class)
+                || field.isAnnotationPresent(Checkbox.class)
                 || field.isAnnotationPresent(RadioButton.class)) {
             return true;
         } else {
@@ -111,37 +98,4 @@ public class AnnotationUtil {
         }
         return false;
     }
-
-    /**
-     * @param clazz
-     *            - bean class to check the titleField
-     * @param isObject
-     *            - determine if the titleField to retrieve is an
-     *            objectTitleField or not.
-     * @return
-     */
-    /*
-    public static String getTitleField(Class<?> clazz) {
-        try {
-            for (Field field : clazz.getDeclaredFields()) {
-                if (isAnnotatedWith("titleField", field)) {
-                    if (SystemCodes.class.isAssignableFrom(field.getType())) {
-                        return field.getName() + ".value";
-                    } else if (BaseEntity.class.isAssignableFrom(field.getType())) {
-                        return field.getName()
-                                + "."
-                                + AnnotationUtil.getTitleField(field
-                                .getType());
-                    } else
-                        return field.getName();
-                }
-            }
-        } catch (Exception e) {
-            // do nothing
-            _log.debug("Unable to find annotation attribute titleField for class ["
-                    + clazz.getName());
-        }
-        return "";
-    }
-    */
 }

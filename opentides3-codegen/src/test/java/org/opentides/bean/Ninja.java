@@ -1,63 +1,34 @@
-package com.ideyatech.bean;
+package org.opentides.bean;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
-import org.opentides.annotation.Auditable;
+import org.opentides.annotation.GenerateCrudController;
+import org.opentides.annotation.GenerateDao;
+import org.opentides.annotation.GenerateService;
 import org.opentides.annotation.GenerateValidator;
-import org.opentides.annotation.PrimaryField;
 import org.opentides.annotation.field.Checkbox;
 import org.opentides.annotation.field.DatePicker;
-import org.opentides.annotation.field.DisplayOnly;
-import org.opentides.annotation.field.MultiRecord;
+import org.opentides.annotation.field.Dropdown;
 import org.opentides.annotation.field.TextArea;
 import org.opentides.annotation.field.TextField;
 import org.opentides.annotation.field.Validation;
-import org.opentides.bean.BaseEntity;
-import org.opentides.bean.Comment;
-import org.opentides.bean.Commentable;
-import org.opentides.bean.ImageInfo;
-import org.opentides.bean.ImageUploadable;
-import org.opentides.bean.SystemCodes;
-import org.opentides.util.StringUtil;
-import org.opentides.web.json.Views;
-import org.springframework.web.multipart.MultipartFile;
-
-import com.fasterxml.jackson.annotation.JsonView;
 //import org.opentides.annotation.Secure;
 
 /**
  * This is the master class for testing all annotations
  * and code generation supported by opentides3.
  */ 
-@Entity  
-@Table(name="NINJA")
-@Auditable
+@GenerateCrudController
 @GenerateValidator
-public class Ninja extends BaseEntity implements Commentable, ImageUploadable {
+@GenerateDao
+@GenerateService
+public class Ninja {
 	
-private static final long serialVersionUID = -4142599915292096152L;
 	
 	// Label: specified
 	// Validation: required
 	// Use: crud, search criteria
 	@Validation(isRequired=true, maxLength=128)
-	@Column(name = "FIRST_NAME", nullable=false)
-	@JsonView(Views.FormView.class)
 	@TextField(label="Name", isSearchCriteria=true)
 	private String firstName;
 
@@ -67,8 +38,6 @@ private static final long serialVersionUID = -4142599915292096152L;
 	// Use: crud, search criteria
 	@Validation(isRequired=true)
 	@TextField(isSearchCriteria=true)
-	@Column(name = "LAST_NAME", nullable=false)
-	@JsonView(Views.FormView.class)
 	private String lastName;
 
 	// TextField
@@ -77,8 +46,6 @@ private static final long serialVersionUID = -4142599915292096152L;
 	// Use: crud, search criteria, search results
 	@Validation(isRequired=true, isEmailFormat=true)
 	@TextField(label="Email Address", isSearchCriteria=true, isSearchResult=true)
-	@Column(name="EMAIL", nullable=false)	
-	@JsonView(Views.SearchView.class)
 	private String email;
 
 	// TextArea
@@ -90,24 +57,19 @@ private static final long serialVersionUID = -4142599915292096152L;
 	private String description;
 	
 	@Validation(isNumberFormat=true, maxAllowValue=65, minAllowValue=18)
-	@JsonView(Views.SearchView.class)
 	private Integer age;
 	
 	// Display only
 	// Label: specified
 	// Use: read-only (score is system generated)
-	@DisplayOnly
-	@JsonView(Views.SearchView.class)
 	private Long score;
 	
 	// Date Picker
 	// Label: specified
 	// Validation: today or past date
 	// Use: crud
-	@Validation(isRequired=true, rejectFutureDate=true)
+	@Validation(isRequired=false, rejectFutureDate=true)
 	@DatePicker
-	@Temporal(TemporalType.TIMESTAMP)
-	@JsonView(Views.SearchView.class)
 	private Date joinDate;
 	
 	// Label: specified
@@ -116,26 +78,18 @@ private static final long serialVersionUID = -4142599915292096152L;
 	// Secured to authz only
 	@Checkbox
 	//@Secure
-	@JsonView(Views.SearchView.class)
 	private Boolean active;
-	
-	// 
-	private transient Clan mainClan;
-	
-	private transient Set<Clan> subClans;
 	
 	// Dropdown
 	// Validation: required
 	// Default to STATUS_NEW	
 	// Secured to authz only
-	@JsonView(Views.FormView.class)
-	@JoinColumn(name = "STATUS_ID")	
+	@Dropdown(category="STATUS")
 	private SystemCodes status;
-
+	
 	// Hidden
 	// Validation: only himself can view/edit
 	// Use: secret
-	@JsonView(Views.FormView.class)
 	private String secretCode;
 	
 	// Dropdown (list of all ninjago)
@@ -147,26 +101,24 @@ private static final long serialVersionUID = -4142599915292096152L;
 	// Multiselect
 	// Label: Specified
 	// Validation: none
-	@JsonView(Views.FormView.class)
-	@ManyToMany(fetch=FetchType.LAZY, cascade={CascadeType.MERGE, CascadeType.REFRESH})
-	@JoinTable(name="NINJA_SKILLS",
-	joinColumns = { 
-			@JoinColumn(name="NINJA_ID", referencedColumnName="ID") 
-	},
-	inverseJoinColumns = {
-			@JoinColumn(name="SKILLS_ID")
-	})
-	@Checkbox()
-	private Set<SystemCodes> skillSet;
-	
+//	@JsonView(Views.FormView.class)
+//	@ManyToMany(fetch=FetchType.LAZY, cascade={CascadeType.MERGE, CascadeType.REFRESH})
+//	@JoinTable(name="NINJA_SKILLS",
+//	joinColumns = { 
+//			@JoinColumn(name="NINJA_ID", referencedColumnName="ID") 
+//	},
+//	inverseJoinColumns = {
+//			@JoinColumn(name="SKILLS_ID")
+//	})
+//	private Set<SystemCodes> skillSet;
+//	
 	// Radiobutton
 	// Searchable
+	@Dropdown(options={"Male", "Female"})
 	@Validation(isRequired=true)
-	@JsonView(Views.FormView.class)
 	private String gender;
 	
 	// Future date
-	@Temporal(TemporalType.TIMESTAMP)	
 	private Date nextFight;
 	
 	// Currency
@@ -290,47 +242,19 @@ private static final long serialVersionUID = -4142599915292096152L;
 		this.active = active;
 	}
 
-	/**
-	 * @return the mainClan
-	 */
-	public final Clan getMainClan() {
-		return mainClan;
-	}
-
-	/**
-	 * @param mainClan the mainClan to set
-	 */
-	public final void setMainClan(Clan mainClan) {
-		this.mainClan = mainClan;
-	}
-
-	/**
-	 * @return the subClans
-	 */
-	public final Set<Clan> getSubClans() {
-		return subClans;
-	}
-
-	/**
-	 * @param subClans the subClans to set
-	 */
-	public final void setSubClans(Set<Clan> subClans) {
-		this.subClans = subClans;
-	}
-
-	/**
-	 * @return the status
-	 */
-	public final SystemCodes getStatus() {
-		return status;
-	}
-
-	/**
-	 * @param status the status to set
-	 */
-	public final void setStatus(SystemCodes status) {
-		this.status = status;
-	}
+//	/**
+//	 * @return the status
+//	 */
+//	public final SystemCodes getStatus() {
+//		return status;
+//	}
+//
+//	/**
+//	 * @param status the status to set
+//	 */
+//	public final void setStatus(SystemCodes status) {
+//		this.status = status;
+//	}
 
 	/**
 	 * @return the secretCode
@@ -363,16 +287,16 @@ private static final long serialVersionUID = -4142599915292096152L;
 	/**
 	 * @return the skillSet
 	 */
-	public final Set<SystemCodes> getSkillSet() {
-		return skillSet;
-	}
-
-	/**
-	 * @param skillSet the skillSet to set
-	 */
-	public final void setSkillSet(Set<SystemCodes> skillSet) {
-		this.skillSet = skillSet;
-	}
+//	public final Set<SystemCodes> getSkillSet() {
+//		return skillSet;
+//	}
+//
+//	/**
+//	 * @param skillSet the skillSet to set
+//	 */
+//	public final void setSkillSet(Set<SystemCodes> skillSet) {
+//		this.skillSet = skillSet;
+//	}
 
 	/**
 	 * @return the gender
@@ -444,81 +368,81 @@ private static final long serialVersionUID = -4142599915292096152L;
 		this.attachment = attachment;
 	}
 	
-	@JsonView(Views.SearchView.class)
-	@PrimaryField(label="Name")
-	public final String getCompleteName() {
-		String name = "";
-		if (!StringUtil.isEmpty(getFirstName())) {
-			name += getFirstName() + " ";
-		}
-		if (!StringUtil.isEmpty(getLastName())) {
-			name += getLastName() + " ";
-		}
-		return name.trim();
-	}
-	
-	// ImageUploadable requirements
-	
-	@OneToMany(cascade=CascadeType.ALL, fetch = FetchType.LAZY)
-	@JoinTable(name = "NINJA_PHOTO", 
-			joinColumns = { @JoinColumn(name = "NINJA_ID", referencedColumnName = "ID") }, 
-			inverseJoinColumns = @JoinColumn(name = "PHOTO_ID")
-	)
-	private List<ImageInfo> images;
-	private transient MultipartFile image;
-	
-	@Override
-	public List<ImageInfo> getImages() {
-		return images;
-	}
-	
-	public void setImages(List<ImageInfo> images) {
-		this.images = images;
-	}
-	
-	@Override
-	public MultipartFile getImage() {
-		return image;
-	}
-	
-	@Override
-	public ImageInfo getPrimaryImage() {
-		return null;
-	}
-	
-	public void setImage(MultipartFile image) {
-		this.image = image;
-	}
-	
-	public void addImage(ImageInfo imageInfo){
-		synchronized (imageInfo) {
-			if (images == null){
-				images = new ArrayList<ImageInfo>();
-			}
-			images.add(imageInfo);
-		}
-	}
-	
-	// End of ImageUploadable requirements
-	
-	// Commentable requirements
-	
-	@OneToMany(cascade=CascadeType.ALL, fetch = FetchType.LAZY)
-	@JoinTable(name = "NINJA_COMMENT", 
-			joinColumns = { @JoinColumn(name = "NINJA_ID", referencedColumnName = "ID") }, 
-			inverseJoinColumns = @JoinColumn(name = "COMMENT_ID")
-	)
-	private List<Comment> comments;
-
-	@Override
-	public List<Comment> getComments() {
-		return comments;
-	}
-	
-	@Override
-	public void setComments(List<Comment> comments) {
-		this.comments = comments;
-	}
+//	@JsonView(Views.SearchView.class)
+//	@PrimaryField(label="Name")
+//	public final String getCompleteName() {
+//		String name = "";
+//		if (!StringUtil.isEmpty(getFirstName())) {
+//			name += getFirstName() + " ";
+//		}
+//		if (!StringUtil.isEmpty(getLastName())) {
+//			name += getLastName() + " ";
+//		}
+//		return name.trim();
+//	}
+//	
+//	// ImageUploadable requirements
+//	
+//	@OneToMany(cascade=CascadeType.ALL, fetch = FetchType.LAZY)
+//	@JoinTable(name = "NINJA_PHOTO", 
+//			joinColumns = { @JoinColumn(name = "NINJA_ID", referencedColumnName = "ID") }, 
+//			inverseJoinColumns = @JoinColumn(name = "PHOTO_ID")
+//	)
+//	private List<ImageInfo> images;
+//	private transient MultipartFile image;
+//	
+//	@Override
+//	public List<ImageInfo> getImages() {
+//		return images;
+//	}
+//	
+//	public void setImages(List<ImageInfo> images) {
+//		this.images = images;
+//	}
+//	
+//	@Override
+//	public MultipartFile getImage() {
+//		return image;
+//	}
+//	
+//	@Override
+//	public ImageInfo getPrimaryImage() {
+//		return null;
+//	}
+//	
+//	public void setImage(MultipartFile image) {
+//		this.image = image;
+//	}
+//	
+//	public void addImage(ImageInfo imageInfo){
+//		synchronized (imageInfo) {
+//			if (images == null){
+//				images = new ArrayList<ImageInfo>();
+//			}
+//			images.add(imageInfo);
+//		}
+//	}
+//	
+//	// End of ImageUploadable requirements
+//	
+//	// Commentable requirements
+//	
+//	@OneToMany(cascade=CascadeType.ALL, fetch = FetchType.LAZY)
+//	@JoinTable(name = "NINJA_COMMENT", 
+//			joinColumns = { @JoinColumn(name = "NINJA_ID", referencedColumnName = "ID") }, 
+//			inverseJoinColumns = @JoinColumn(name = "COMMENT_ID")
+//	)
+//	private List<Comment> comments;
+//
+//	@Override
+//	public List<Comment> getComments() {
+//		return comments;
+//	}
+//	
+//	@Override
+//	public void setComments(List<Comment> comments) {
+//		this.comments = comments;
+//	}
 	
  	// End of Commentable requirements 
 }

@@ -20,22 +20,24 @@
 package org.opentides.processor;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Messager;
 import javax.annotation.processing.RoundEnvironment;
+import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
@@ -56,7 +58,7 @@ import org.opentides.util.PackageUtil;
  * 
  * @author allantan
  */
-
+@SupportedAnnotationTypes(value = "org.opentides.annotation.*")
 public class ClassProcessor extends AbstractProcessor {
 
 	private static Logger _log = Logger.getLogger(ClassProcessor.class
@@ -101,42 +103,40 @@ public class ClassProcessor extends AbstractProcessor {
 	 */
 	public void cloneTemplates(String templateFolder, Map<String, Object> params) {
 		Set<String> templateJars = PackageUtil.getTemplateJars();
-		for (String jarName : templateJars) {
-			// traverse the jar files
-		  	// Reference - jarName: /Users/allantan/.m2/repository/org/opentides/opentides3-template/3.0.1-SNAPSHOT/opentides3-template-3.0.1-SNAPSHOT.jar
-			JarFile jarFile = null;
-			try {
-				jarFile = new JarFile(jarName);
-				for (Enumeration<JarEntry> e = jarFile.entries(); e.hasMoreElements();) {
-					JarEntry jarEntry = e.nextElement();
-					// Reference - templateName: templates/opentides/dao/classNameDao.java.vm
-					// Reference - outputFile: com/ideyatech/dao/SystemCodesDao.java
-					BufferedWriter bw = null;
-					String templateName = jarEntry.getName();
+		List<String> templates = new ArrayList<String>();
+		if (templateJars.isEmpty()) {
+			// process folders
+			templates = CloningUtil.getFolderTemplates();
+		} else {
+			// process jars
+			templates = CloningUtil.getJarTemplates();
+		}
+		
+		for (String templateName : templates) {
+			BufferedWriter bw = null;
+			if (templateName.startsWith(templateFolder) && 
+					templateName.endsWith(".vm") &&
+					!templateName.endsWith("_.vm") ) {				
+				try {
 					String outputFile = PackageUtil.toPackageName(CloningUtil.getOutputName(templateName, params));
-					if (templateName.startsWith(templateFolder) && 
-							templateName.endsWith(".vm") &&
-							!templateName.endsWith("_.vm") ) {
-						try {
-							displayMessage("    Generating " + outputFile + "...");
-							JavaFileObject gen = processingEnv.getFiler().createSourceFile(outputFile);				
-							bw = new BufferedWriter(gen.openWriter());			
-							CloningUtil.mergeVmTemplate(templateName, params, bw);
-							displayMessage("    Success.");
-						} catch (IOException ex) {
-							_log.log(Level.SEVERE,"Failed to generate source for ["+templateName+"].",ex);
-						} finally {
-							bw.close();
-						}
+					File file = new File(outputFile);
+					if (file.exists()) {
+						displayMessage("    Skipping " + outputFile + "... File already exist.");
+						continue;								
+					}
+					displayMessage("    Generating " + outputFile + "...");
+					JavaFileObject gen = processingEnv.getFiler().createSourceFile(outputFile);				
+					bw = new BufferedWriter(gen.openWriter());			
+					CloningUtil.mergeVmTemplate(templateName, params, bw);
+					displayMessage("    Success.");
+				} catch (IOException ex) {
+					_log.log(Level.SEVERE,"Failed to generate source for ["+templateName+"].",ex);
+				} finally {
+					try {
+						bw.close();
+					} catch (IOException e) {
 					}
 				}
-			} catch (IOException e1) {
-				_log.log(Level.SEVERE,"Failed to read template jar files.",e1);				
-			} finally {
-				try {
-					if (jarFile != null) jarFile.close();
-				} catch (IOException e) {
-				}				
 			}
 		}
 	}
@@ -156,7 +156,7 @@ public class ClassProcessor extends AbstractProcessor {
 		for (TypeElement te : annotations) {
 			for (Element e : env.getElementsAnnotatedWith(te)) {
 				if (e.getKind() == ElementKind.CLASS) {
-					String annotation = te.toString();
+					String annotation = te.getSimpleName().toString();
 					displayMessage("Processing: "
 							+ e.toString() + " for annotation " + annotation);
 					Map<String, Object> params = new HashMap<String, Object>();
@@ -172,6 +172,8 @@ public class ClassProcessor extends AbstractProcessor {
 					}
 					String[] templates = templateMap.get(annotation);
 					for (String template:templates) {
+//						for (String name: params.keySet())
+//							displayMessage(name);
 						cloneTemplates(PackageUtil.toFolderName(template),params);
 					}
 				}				
@@ -188,16 +190,6 @@ public class ClassProcessor extends AbstractProcessor {
 		Messager messager = processingEnv.getMessager();
 		_log.log(Level.INFO,  message);
 		messager.printMessage(Diagnostic.Kind.NOTE, message);		
-	}
-
-	/**
-	 * Reads the supported annotation types from template definition file.  
-	 * 
-	 * @see javax.annotation.processing.AbstractProcessor#getSupportedAnnotationTypes()
-	 */
-	@Override
-	public Set<String> getSupportedAnnotationTypes() {
-		return templateMap.keySet();
 	}
 	
 	@Override

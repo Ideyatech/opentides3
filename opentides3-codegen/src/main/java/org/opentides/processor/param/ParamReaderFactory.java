@@ -33,18 +33,18 @@ public class ParamReaderFactory {
 	 * @return
 	 */
 	public static ParamReader getReader(String annotation) {
-		if ("org.opentides.annotation.GenerateCrudController".equals(annotation)) {
+		if ("GenerateCrudController".equals(annotation)) {
 			return new ClassParamReader();
-		} else if ("org.opentides.annotation.GenerateCrudPages".equals(annotation)) {
+		} else if ("GenerateCrudPages".equals(annotation)) {
 			return new ClassParamReader();
-		} else if ("org.opentides.annotation.GenerateDao".equals(annotation)) {
+		} else if ("GenerateDao".equals(annotation)) {
 			return new ClassParamReader();
-		} else if ("org.opentides.annotation.GenerateService".equals(annotation)) {
+		} else if ("GenerateService".equals(annotation)) {
 			return new ClassParamReader();
-		} else if ("org.opentides.annotation.field.CheckBox".equals(annotation)) {
-			return new CheckBoxParamReader();
-		} 
-		
-		return null;
+		} else if("GenerateValidator".equals(annotation)) {
+			return new ClassParamReader();
+		} else {
+			return new FieldParamReader();
+		} 		
 	}
 }

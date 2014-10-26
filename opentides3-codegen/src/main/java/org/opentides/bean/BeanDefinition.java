@@ -70,7 +70,6 @@ public class BeanDefinition implements Definition {
 	}
 	
 	public boolean containsDate() {
-		System.out.println("Listing fields in containsDate...");
 		for (FieldDefinition field:fields) {
 			System.out.println("Field =" + field.getType() +":" + field.getFieldName());
 			if ("java.util.Date".equals(field.getType()))
@@ -86,7 +85,7 @@ public class BeanDefinition implements Definition {
 		}
 		return false;		
 	}
-	
+		
 	public boolean containsByOptions() {
 		for (FieldDefinition field:fields) {
 			if (field.isByOptions())
@@ -94,7 +93,6 @@ public class BeanDefinition implements Definition {
 		}
 		return false;
 	}
-	
 	
 	public boolean containsByCategory() {
 		for (FieldDefinition field:fields) {

@@ -18,11 +18,19 @@
  */
 package org.opentides.util;
 
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.Set;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -119,5 +127,76 @@ public class CloningUtil {
 							.replace("modelName", bean.getModelName())
 							.replaceAll(".java.vm$", "").replaceAll(".vm$", "");
 		return outputName;
+	}
+	
+	/**
+	 * Helper method that retrieves all templates available inside the template 
+	 * jar file.
+	 * @return
+	 */
+	public static List<String> getJarTemplates() {
+		List<String> templates = new ArrayList<String>();
+		Set<String> templateJars = PackageUtil.getTemplateJars();
+		for (String jarName : templateJars) {
+			// traverse the jar files
+		  	// Reference - jarName: /Users/allantan/.m2/repository/org/opentides/opentides3-template/3.0.1-SNAPSHOT/opentides3-template-3.0.1-SNAPSHOT.jar
+			JarFile jarFile = null;
+			try {
+				jarFile = new JarFile(jarName);
+				for (Enumeration<JarEntry> e = jarFile.entries(); e.hasMoreElements();) {
+					JarEntry jarEntry = e.nextElement();
+					// Reference - templateName: templates/opentides/dao/classNameDao.java.vm
+					// Reference - outputFile: com/ideyatech/dao/SystemCodesDao.java
+					BufferedWriter bw = null;
+					String templateName = jarEntry.getName();
+					if (templateName.endsWith(".vm"))
+						templates.add(templateName);
+				}
+			} catch (IOException e1) {
+				_log.log(Level.SEVERE,"Failed to read template jar files.",e1);				
+			} finally {
+				try {
+					if (jarFile != null) jarFile.close();
+				} catch (IOException e) {
+				}				
+			}
+		}	
+		return templates;
+	}
+	
+	/**
+	 * Helper method that retrieves all the templates available from a 
+	 * given folder location.
+	 * @return
+	 */
+	public static List<String> getFolderTemplates() {
+		List<String> templates = new ArrayList<String>();
+		Set<String> templateFolders = PackageUtil.getTemplateFolders();
+		for (String folderName : templateFolders) {
+			// traverse the jar files
+		  	// Reference - jarName: /Users/allantan/.m2/repository/org/opentides/opentides3-template/3.0.1-SNAPSHOT/opentides3-template-3.0.1-SNAPSHOT.jar
+			File folderFile = new File(folderName);
+			File folder = folderFile.getParentFile();
+			if (folder!=null && folder.isDirectory()) {
+				walkFiles(folder, folderFile.getParent() + File.separatorChar, ".vm", templates);
+			}
+		}	
+		return templates;		
+	}
+	
+	/**
+	 * Internal helper function to recursively list all files in the folder.
+	 * @param folder
+	 * @param limit
+	 */
+	private static void walkFiles(File folder, String prefix, String suffix, List<String> templates) {
+		if (folder.isDirectory()) {
+			File[] files = folder.listFiles();
+			for (File file:files) 
+				walkFiles(file, prefix, suffix, templates);
+		} else if (folder.getName().endsWith(suffix)) {
+			String path = folder.getAbsolutePath().replace(prefix, "");
+			templates.add(path);
+		}
 	}
 }

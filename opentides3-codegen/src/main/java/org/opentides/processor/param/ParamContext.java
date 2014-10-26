@@ -39,7 +39,13 @@ public class ParamContext {
 	 */
 	public static void addDefinition(Definition defn) {
 		if (defnHolder.containsKey(defn.toString())) {
-			throw new CodeGenerationException("Attempt to overwrite definition: " + defn.toString());
+			if (FieldDefinition.class.isAssignableFrom(defn.getClass())) {
+				FieldDefinition fd = (FieldDefinition) defn;
+				FieldDefinition d = (FieldDefinition) defnHolder.get(defn.toString());
+				for (String key:fd.getAnnotations().keySet()) {
+					d.addAnnotation(fd.getAnnotations().get(key));
+				}
+			}
 		} else
 			defnHolder.put(defn.toString(), defn);		
 	}

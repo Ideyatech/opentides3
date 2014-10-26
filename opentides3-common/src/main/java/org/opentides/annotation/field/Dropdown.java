@@ -16,7 +16,6 @@
    specific language governing permissions and limitations
    under the License.    
  */
-
 package org.opentides.annotation.field;
 
 import java.lang.annotation.Documented;
@@ -26,55 +25,53 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Generates an input checkbox.
+ * Generates a select dropdown field.<p>
  * <b>Sample Usage:</b><br />
- * &emsp;&emsp;&emsp;<code>@Checkbox (label = "checkBoxLabel", requiredField = "true")</code><br />
+ * &emsp;&emsp;&emsp;<code>@DropDown (label = "dropdownFieldLabel", requiredField = "true")</code><br />
  * @author allanctan
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.SOURCE)
 @Documented
-public @interface CheckBox {
-
+public @interface Dropdown {
 	/**
 	 * Refers to the name identifier of the field; default value is <code><b>null</b></code>.
-	 * 
 	 */
 	String label() default "";
 	
 	/**
 	 * Refers to the SystemCodes values used to populate the list with; default value is <code><b>null</b></code>.<br>
-	 * The <code>category</code> element takes precedence over the <code>options</code> element when both 
-	 * are present.
+	 * The <code>category</code> element takes precedence over the <code>options</code> element when both are present.
 	 * @see SystemCodes
 	 */
 	String category() default "";
 	
 	/**
-	 * Refers to the hardcoded values used to populate the list with; default value is <code><b>null</b></code>. <br>
-	 * Values are enclosed in { } and separated by commas.<br>
-	 * The <code>category</code> element takes precedence over the <code>options</code> element when both 
-	 * are present.<p>
+	 * Refers to the hardcoded values used to populate the list with; default value is <code><b>null</b></code>. Values are enclosed in { } and separated by commas.<br>
+	 * The <code>category</code> element takes precedence over the <code>options</code> element when both are present.<p>
 	 * <b>Example:</b><br />
-	 * &emsp;&emsp;&emsp;<code>@CheckBox (options = {"apple", "banana", "cherry"})</code>
+	 * &emsp;&emsp;&emsp;<code>@DropDown (options = {"apple", "banana", "cherry"})</code>
 	 */
 	String[] options() default "";
 
 	/**
 	 * Refers to the parameters to be added; default value is <code><b>null</b></code>.
-	 * 
 	 */	
 	String[] springParams() default "";
 	
 	/**
 	 * Determines if the field is included as a search criteria; default value is <code><b>false</b></code>.
-	 * 
 	 */
-	boolean isSearchable() default false;
-		
+	boolean searchable() default false;
+	
+	/**
+	 * Determines if the field is required and cannot be null; default value is <code><b>false</b></code>. This is used as reference when deleting an entry.
+	 */
+	boolean requiredField() default false;
+	
 	/**
 	 * Determines if the field is included in the table view; default value is <code><b>false</b></code>.
-	 * 
 	 */
-	boolean isListed() default false;
+	boolean listed() default false;	
+
 }

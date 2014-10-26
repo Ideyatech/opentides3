@@ -3,15 +3,15 @@
  */
 package org.opentides.bean;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.opentides.util.NamingUtil;
 import org.opentides.util.StringUtil;
 
 /**
  * This bean contains the definition of a field. 
- * A FieldDefinition is associated to a BeanDefinition and contains an 
+ * A FieldDefinition is associated to a BeanDefinition and contains 
  * AnnotationDefinition.
  * 
  * @author allantan
@@ -29,12 +29,8 @@ public class FieldDefinition implements Definition {
 	private String getterName;
 	
 	private String setterName;
-	
-	private String category;
-	
-	private String[] options;
 
-	private Set<AnnotationDefinition> annotations = new HashSet<AnnotationDefinition>();
+	private Map<String, AnnotationDefinition> annotations = new HashMap<String, AnnotationDefinition>();
 
 	/**
 	 * Constructor with initial values
@@ -55,13 +51,13 @@ public class FieldDefinition implements Definition {
 		if (StringUtil.isEmpty(label)) 
 			this.label = NamingUtil.toLabel(fieldName);
 		else 
-			this.label = label;
+			this.label = label.replaceAll("\"", "");
 		this.getterName = NamingUtil.toGetterName(fieldName);
 		this.setterName = NamingUtil.toSetterName(fieldName);
 	}
 	
 	public final void addAnnotation(AnnotationDefinition annotationDefn) {
-		annotations.add(annotationDefn);
+		annotations.put(annotationDefn.getName(), annotationDefn);
 	}
 
 	/**
@@ -109,10 +105,38 @@ public class FieldDefinition implements Definition {
 	/**
 	 * @return the annotations
 	 */
-	public final Set<AnnotationDefinition> getAnnotations() {
+	public final Map<String, AnnotationDefinition> getAnnotations() {
 		return annotations;
 	}
-
+	
+	/**
+	 * Returns the attribute setting for the given annotation.
+	 * @param name
+	 * @return
+	 */
+	public final Object getAttribute(String attribute) {
+		for (String key:annotations.keySet()) {
+			AnnotationDefinition defn = annotations.get(key);
+			if (defn.getParams() != null && defn.getParams().containsKey(attribute)) 
+				return defn.getParams().get(attribute);			
+		}
+		return "";
+	}
+	
+	public final Boolean isByOptions() {
+		Object o = this.getAttribute("options");
+		if ( o instanceof String && StringUtil.isEmpty((String)o))
+			return new Boolean(false);
+		return new Boolean(true);
+	}
+	
+	public final Boolean isByCategory() {
+		Object o = this.getAttribute("category");
+		if (o instanceof String && StringUtil.isEmpty((String)o))
+			return new Boolean(false);
+		return new Boolean(true);		
+	}
+	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
@@ -159,48 +183,4 @@ public class FieldDefinition implements Definition {
 		return bean.toString() + "." + fieldName;
 	}
 
-	/**
-	 * @return the category
-	 */
-	public final String getCategory() {
-		return category;
-	}
-	
-	/**
-	 * Returns true if field options is by system codes category
-	 * @return
-	 */
-	public final boolean isByCategory() {
-		return !StringUtil.isEmpty(category);
-	}
-
-	/**
-	 * @param category the category to set
-	 */
-	public final void setCategory(String category) {
-		this.category = category;
-	}
-
-	/**
-	 * @return the options
-	 */
-	public final String[] getOptions() {
-		return options;
-	}
-
-	/**
-	 * @param options the options to set
-	 */
-	public final void setOptions(String[] options) {
-		this.options = options;
-	}
-	
-	/**
-	 * Returns true if field options is a hardcoded list
-	 * @return
-	 */
-	public final boolean isByOptions() {
-		return (options.length > 1);
-	}
-	
 }
