@@ -13,6 +13,7 @@ import org.opentides.service.impl.BaseCrudServiceImpl;
  * @author opentides
  *
  */
+ @Service(value = "${bean.modelName}Service")
 public class ${bean.className}ServiceImpl extends BaseCrudServiceImpl<${bean.className}>
 		implements ${bean.className}Service {
 		

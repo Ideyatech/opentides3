@@ -6,9 +6,9 @@ import org.springframework.validation.Validator;
 
 ## Set counter for email fields
 #set ( $count = 0)
-#foreach( $field in $fields )
+#foreach( $field in $bean.fields )
 ## Check if field is an email.
-#if ( ${field.isEmail} )
+#if (${field.getAttribute("isEmailFormat")} == true)
 #set ( $count = $count + 1 ) ## Add to count if there is an email field
 #end
 ## End of if statement.
@@ -35,13 +35,13 @@ public class ${bean.className}Validator implements Validator {
 #if ( $count != 0 )
 		${bean.className} ${bean.modelName} = (${bean.className}) clazz;
 #end
-#foreach( $field in $fields )
-#if ( $field.isRequiredField )
-		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "${field.fieldName}", "error.required", new Object[]{"#if ( $field.label != "" )${field.label}#else${field.fieldLabel}#end"});
+#foreach( $field in $bean.fields )
+#if ( ${field.getAttribute("isRequired")} == true)
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "${field.fieldName}", "error.required", new Object[]{"${field.label}"});
 #end
-#if ( $field.isEmail )
-		if (!StringUtil.isEmpty(${modelName}.${field.getterName}()) && !ValidatorUtil.isNumeric(${modelName}.${field.getterName}())) {
-			errors.reject("error.invalid-email-address", new Object[]{"#if ( $field.label != "" )${field.label}#else${field.fieldLabel}#end"}, "${field.fieldName}");
+#if ( ${field.getAttribute("isEmailFormat")} == true)
+		if (!StringUtil.isEmpty(${bean.modelName}.${field.getterName}()) && !ValidatorUtil.isEmail(${bean.modelName}.${field.getterName}())) {
+			errors.reject("error.invalid-email-address", new Object[]{${field.getAttribute("label")}}, "${field.fieldName}");
 		}
 #end
 #end

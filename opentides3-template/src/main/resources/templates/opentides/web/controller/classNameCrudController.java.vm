@@ -5,44 +5,22 @@ package ${bean.package_}.web.controller;
 
 import ${bean.modelPackage}.${bean.className};
 import org.opentides.controller.BaseCrudController;
-#if	( $bean.containsDate() )
-import java.util.Date;
-#end
-#if	( $bean.containsList() )
-import java.util.HashMap;
-import java.util.Map;
-#end
-#if ( $bean.containsByOptions() )
-import java.util.ArrayList;
-import java.util.List;
-#end
-#if ( $bean.containsDate() )
-import java.text.SimpleDateFormat;
-#end
-#if	( $bean.containsList() || $bean.containsDate() )
 
-import javax.servlet.http.HttpServletRequest;
-#end
 #if	( $bean.containsByCategory() )
-import org.opentides.bean.SystemCodes;
-import org.opentides.editor.SystemCodeEditor;
+import jorg.opentides.bean.SystemCodes;
 #end
-#if	( $bean.containsByObject() )
-import org.opentides.editor.BaseEntityEditor;	
-#foreach( $field in $objectFields )
-import ${field.objectPackage}.${field.objectClass};
-import ${field.objectPackage.replaceAll("bean","service")}.${field.objectClass}Service;
+
+#if	( $bean.containsByOptions() )
+import java.util.Arrays;
 #end
-#end
-#if ( $bean.containsDate() )
-import org.springframework.beans.propertyeditors.CustomDateEditor;
-#end
-#if	( $bean.containsList() )
-import org.springframework.validation.Errors;
-#end
-#if	( $bean.containsByCategory() || $bean.containsDate() )
-import org.springframework.web.bind.ServletRequestDataBinder;
-#end
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+
 
 /**
  * This is the controller class for ${bean.className}.
@@ -50,181 +28,34 @@ import org.springframework.web.bind.ServletRequestDataBinder;
  * @author opentides
  */
  
- 
 @RequestMapping("/${bean.formName}")
 @Controller
-public class ${bean.className}Controller extends BaseCrudController<${bean.className}> {
+public class ${bean.className}CrudController extends BaseCrudController<${bean.className}> {
 
 	@Autowired
 	${bean.className}Service ${bean.modelName}Service;
 	
-	
-	/**
-	 * Post construct that initializes the crud page to {@code "/base/${bean.formName}-crud"}.
-	 */
-	@PostConstruct
-	public void init() {
-		singlePage = "/base/${bean.formName}-crud";
-	}
-	
 #foreach( $field in ${bean.fields} )
-#if ( ${field.isByCategory} )
-		model.put("${field.fieldName}List", getSystemCodesByCategory("${field.categoryName}"));
+#if ( ${field.isByCategory()} == true )
 	/**
-	 * Method to return a list of ${field.fieldName}.
+	 * Method to return a list of ${field.fieldName} based on 
+	 * System Codes.
 	 * 
 	 * @return list of SystemCodes
 	 */
 	@ModelAttribute("${field.fieldName}List")
 	public List<SystemCodes> ${field.fieldName}List() {
-		return getSystemCodesByCategory("${field.categoryName}");
+		return getSystemCodesByCategory(${field.getAttribute("category")});
 	}
-
-#elseif ( ${field.isByOptions} )
-		List<String> ${field.fieldName} = new ArrayList<String>();
-#foreach( $item in ${field.options} )
-		${field.fieldName}.add("$item");
-#end
-		model.put("${field.fieldName}List", ${field.fieldName});
-#elseif( ${field.isByObject} )
-		model.put("${field.fieldName}List", ${field.objectName}Service.findAll());
-#end
-#end
-
+#elseif ( ${field.isByOptions()} == true )
 	/**
-	 * Method that adds to the model parameter {@code uiModel} the results {@code results} 
-	 * of {@link BaseCrudController } search method.
-	 */
-	@Override
-	protected void onLoadSearch(SystemCodes command, BindingResult bindingResult, 
-			Model uiModel, HttpServletRequest request,
-			HttpServletResponse response) {
-		uiModel.addAttribute("results", search(command, request));
-	}
-}
-
-	/**
-	 * Find system codes by category
+	 * Method to return a static list of ${field.fieldName}.
 	 * 
-	 * @param category the category to search
-	 * @return
+	 * @return list of SystemCodes
 	 */
-	@RequestMapping(value = "/findByCategory")
-	@ResponseView(Views.SearchView.class)
-	public @ResponseBody List<SystemCodes> findByCategory(@RequestParam("category") String category) {
-		return systemCodesService.findSystemCodesByCategory(category);
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.opentides.web.controller.BaseCrudController#onLoadSearch(org.opentides.bean.BaseEntity, org.springframework.validation.BindingResult, org.springframework.ui.Model, javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
-	 */
-
-}
-
-
-	@RequestMapping(method = RequestMethod.GET, value="{id}")
-	public final String displayDetails(@PathVariable("id") Long id, Model model){
-		
-		Ninja ninja = ninjaService.load(id);
-		
-		model.addAttribute("formCommand", ninja);
-		
-		return "app/ninja-details";
-	}
-
-}
-
-public class ${bean.className}Controller extends BaseCrudController<${bean.className}> {
-#foreach( $field in $objectFields )
-	private ${field.objectClass}Service ${field.objectName}Service;
-#end
-## Override referenceData when category/options is used as a parameter in field annotation.
-#if ( $containsList() )
-	
-	/* (non-Javadoc)
-	 * @see org.opentides.controller.BaseCrudController\#referenceData(javax.servlet.http.HttpServletRequest, java.lang.Object, org.springframework.validation.Errors)
-	 */
-	@SuppressWarnings("unchecked")
-	@Override
-	protected Map referenceData(HttpServletRequest request, Object command,
-			Errors errors) throws Exception {
-		Map<String, Object> model = new HashMap<String, Object>();
-#foreach( $field in $fields )
-#if ( ${field.isByCategory} )
-		model.put("${field.fieldName}List", getSystemCodesByCategory("${field.categoryName}"));
-#elseif ( ${field.isByOptions} )
-		List<String> ${field.fieldName} = new ArrayList<String>();
-#foreach( $item in ${field.options} )
-		${field.fieldName}.add("$item");
-#end
-		model.put("${field.fieldName}List", ${field.fieldName});
-#elseif( ${field.isByObject} )
-		model.put("${field.fieldName}List", ${field.objectName}Service.findAll());
-#end
-#end
-		return model;
-	}
-#end
-
-#if	( $initializing )
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.springframework.web.servlet.mvc.AbstractFormController\#formBackingObject(javax.servlet.http.HttpServletRequest)
-	 */
-	@Override
-	protected Object formBackingObject(HttpServletRequest request)
-			throws Exception {
-		String action = getAction(request);
-		if (READ.equals(action) || UPDATE.equals(action)) {
-			return getService().load(request.getParameter(ID));
-		} else {
-			${className} object = new ${className}();
-#foreach( $field in $fields )
-#if ($field.initializer)
-			object.${field.setterName}(${field.initializer});
-#end
-#end
-			return object;
-		}
-	}
-#end
-
-
-#if	( $bean.containsByCategory() || $bean.containsByObject() || $bean.containsDate() )
-	
-	/* (non-Javadoc)
-	 * @see org.springframework.web.servlet.mvc.BaseCommandController\#initBinder(javax.servlet.http.HttpServletRequest, org.springframework.web.bind.ServletRequestDataBinder)
-	 */
-	@Override
-	protected void initBinder(HttpServletRequest request,
-			ServletRequestDataBinder binder) throws Exception {
-#if	( $bean.containsByCategory() )			
-		binder.registerCustomEditor(SystemCodes.class, new SystemCodeEditor(this.getSystemCodesService()));
-#end
-#if	( $bean.containsByObject() )	
-#foreach( $field in $objectFields )
-		binder.registerCustomEditor(${field.objectClass}.class, new BaseEntityEditor(this.${field.objectName}Service));
-#end
-#end
-#if ( $bean.containsDate() )
-#foreach( $field in $fields )
-#if ( $field.isDate )
-		binder.registerCustomEditor(Date.class, "${field.fieldName}",
-				new CustomDateEditor(new SimpleDateFormat("${field.dateFormat}"), true));
-#end
-#end
-#end	
-	}
-#end
-
-#if	( $containsByObject )
-#foreach( $field in $objectFields )
-	/**
-	 * @param ${field.objectName} the ${field.objectName} to set
-	 */
-	public void set${field.objectClass}Service(${field.objectClass}Service ${field.objectName}Service) {
-		this.${field.objectName}Service = ${field.objectName}Service;
+	@ModelAttribute("${field.fieldName}List")
+	public List<String> ${field.fieldName}List() {
+		return Arrays.asList(${field.getAttribute("options")});
 	}
 #end
 #end
