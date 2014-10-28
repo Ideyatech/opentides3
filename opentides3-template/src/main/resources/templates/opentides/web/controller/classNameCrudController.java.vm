@@ -55,7 +55,7 @@ public class ${bean.className}CrudController extends BaseCrudController<${bean.c
 	 */
 	@ModelAttribute("${field.fieldName}List")
 	public List<String> ${field.fieldName}List() {
-		return Arrays.asList(${field.getAttribute("options")});
+		return Arrays.asList(new String[] ${field.getAttribute("options")});
 	}
 #end
 #end
