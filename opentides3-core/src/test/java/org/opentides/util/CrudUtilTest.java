@@ -276,7 +276,7 @@ public class CrudUtilTest {
     	SystemCodes sc = new SystemCodes("STATUS","ACTIVE","Active");
     	user.setStatus(sc);
 		Assert.assertEquals(
-						" where obj.status.key = 'ACTIVE' and obj.credential.enabled = false",
+						" where obj.status.key = 'ACTIVE' and obj.credential.enabled = true",
 					CrudUtil.buildJpaQueryString(user, false));
     }
     
@@ -290,7 +290,7 @@ public class CrudUtilTest {
     	supervisor.setId(125l);
     	user.setSupervisor(supervisor);
 		Assert.assertEquals(
-						" where obj.supervisor.id = 125 and obj.credential.enabled = false",
+						" where obj.supervisor.id = 125 and obj.credential.enabled = true",
 					CrudUtil.buildJpaQueryString(user, false));
     }    
     @Test 

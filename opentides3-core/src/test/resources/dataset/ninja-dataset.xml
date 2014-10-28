@@ -1,6 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dataset>
-	<BRANCH ID="1" NAME="Quezon City" />
-	<BRANCH ID="2" NAME="Pasig" />
-	<BRANCH ID="3" NAME="Cebu" />
+	<SYSTEM_CODES ID="1" CATEGORY_="SKILLS"
+			VALUE_="Knife Throwing" KEY_ = "SKILLS_KNIFE"
+			/>
+	
+	<SYSTEM_CODES ID="2" CATEGORY_="SKILLS"
+			VALUE_="Katana" KEY_ = "SKILLS_KATANA"
+			/>
+
+	<SYSTEM_CODES ID="3" CATEGORY_="SKILLS"
+			VALUE_="Ninja Star" KEY_ = "Ninja Star"
+			/>
+
+	<NINJA 	ID="1" ACTIVE="1" AGE="25" 
+			EMAIL="email1@email.com" 
+			FIRST_NAME = "Uzumaki" 
+			LAST_NAME = "Naruto"/>
+			
+	<NINJA 	ID="2" ACTIVE="1" AGE="30" 
+			EMAIL="email2@email.com" 
+			FIRST_NAME = "Master" 
+			LAST_NAME = "Ninja"/>
+			
+	<NINJA 	ID="3" ACTIVE="1" AGE="60" 
+			EMAIL="email3@email.com" 
+			FIRST_NAME = "Sensei" 
+			LAST_NAME = "Boss"/>
 </dataset>

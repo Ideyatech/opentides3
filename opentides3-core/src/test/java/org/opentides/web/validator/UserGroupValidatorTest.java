@@ -4,14 +4,30 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.opentides.bean.user.BaseUser;
 import org.opentides.bean.user.UserAuthority;
 import org.opentides.bean.user.UserGroup;
+import org.opentides.service.UserGroupService;
 import org.springframework.validation.BindException;
 
 public class UserGroupValidatorTest {
 
+	@InjectMocks
+	private UserGroupValidator userGroupValidator = new UserGroupValidator();
+	
+	@Mock
+	private UserGroupService usergroupService;
+	
+	@Before
+	public void init(){
+		MockitoAnnotations.initMocks(this);
+	}
+	
 	@Test
 	public void testSupports() {
 		assertTrue(new UserGroupValidator().supports(UserGroup.class));
@@ -32,7 +48,7 @@ public class UserGroupValidatorTest {
 		obj.addAuthority(auth2);
 		
 		BindException errors = new BindException(obj, "userGroup");
-		new UserGroupValidator().validate(obj, errors);
+		userGroupValidator.validate(obj, errors);
 		
 		assertTrue(errors.getAllErrors().size() == 0);
 		
@@ -45,9 +61,9 @@ public class UserGroupValidatorTest {
 		obj.setDescription("");
 		
 		BindException errors = new BindException(obj, "userGroup");
-		new UserGroupValidator().validate(obj, errors);
+		userGroupValidator.validate(obj, errors);
 		
-		assertEquals(3, errors.getAllErrors().size());
+		assertEquals(1, errors.getAllErrors().size());
 		
 	}
 

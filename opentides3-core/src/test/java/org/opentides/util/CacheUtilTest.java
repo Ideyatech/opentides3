@@ -65,6 +65,7 @@ public class CacheUtilTest {
 	private List<AuditableField> getNinjaExpectedAuditableFields() {
 		List<AuditableField> auditableFields = new ArrayList<>();
 		auditableFields.add(new AuditableField("id"));
+		auditableFields.add(new AuditableField("tenantId"));		
 		auditableFields.add(new AuditableField("firstName"));
 		auditableFields.add(new AuditableField("lastName"));
 		auditableFields.add(new AuditableField("email"));
@@ -90,6 +91,7 @@ public class CacheUtilTest {
 	private List<AuditableField> getSystemCodesExpectedAuditableFields() {
 		List<AuditableField> auditableFields = new ArrayList<>();
 		auditableFields.add(new AuditableField("id"));
+		auditableFields.add(new AuditableField("tenantId"));		
 		auditableFields.add(new AuditableField("key"));
 		auditableFields.add(new AuditableField("value"));
 		auditableFields.add(new AuditableField("category"));
@@ -129,6 +131,7 @@ public class CacheUtilTest {
 		persistentFields.add("createDate");
 		persistentFields.add("updateDate");
 		persistentFields.add("createdBy");
+		persistentFields.add("tenantId");
 		persistentFields.add("version");
 		persistentFields.add("firstName");
 		persistentFields.add("lastName");

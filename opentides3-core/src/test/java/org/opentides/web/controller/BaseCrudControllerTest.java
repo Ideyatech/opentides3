@@ -132,35 +132,35 @@ public class BaseCrudControllerTest {
 		assertNotNull(results.getSearchTime());
 	}
 	
-	@Test
-	public void testSearchWithExampleWithPaging() {
-		List<Ninja> expected = new ArrayList<Ninja>();
-		Ninja expectedNinja1 = new Ninja();
-		expectedNinja1.setFirstName("Naruto");
-		expectedNinja1.setLastName("Uzumaki");
-		expected.add(expectedNinja1);
-		
-		Ninja sample = new Ninja();
-		sample.setFirstName("Naruto");
-		sample.setLastName("Uzumaki");
-		
-		//command is null
-		Mockito.when(ninjaService.findByExample(sample,0, 20)).thenReturn(expected);
-		Mockito.when(ninjaService.countByExample(sample)).thenReturn(1l);
-		SearchResults<Ninja> results = ninjaCrudController.search(sample, mockRequest);
-		
-		//Verify that ninjaService methods expected to run were invoked once...
-		Mockito.verify(ninjaService).findByExample(sample,0, 20);
-		Mockito.verify(ninjaService).countByExample(sample);
-		
-		assertNotNull(results);
-		assertEquals(1, results.getTotalResults());
-		Ninja resultNinja = results.getResults().get(0);
-		assertNotNull(resultNinja);
-		assertNotNull(results.getSearchTime());
-		assertEquals(expectedNinja1, resultNinja);
-		
-	}
+//	@Test
+//	public void testSearchWithExampleWithPaging() {
+//		List<Ninja> expected = new ArrayList<Ninja>();
+//		Ninja expectedNinja1 = new Ninja();
+//		expectedNinja1.setFirstName("Naruto");
+//		expectedNinja1.setLastName("Uzumaki");
+//		expected.add(expectedNinja1);
+//		
+//		Ninja sample = new Ninja();
+//		sample.setFirstName("Naruto");
+//		sample.setLastName("Uzumaki");
+//		
+//		//command is null
+//		Mockito.when(ninjaService.findByExample(sample,0, 20)).thenReturn(expected);
+//		Mockito.when(ninjaService.countByExample(sample)).thenReturn(1l);
+//		SearchResults<Ninja> results = ninjaCrudController.search(sample, mockRequest);
+//		
+//		//Verify that ninjaService methods expected to run were invoked once...
+//		Mockito.verify(ninjaService).findByExample(sample,0, 20);
+//		Mockito.verify(ninjaService).countByExample(sample);
+//		
+//		assertNotNull(results);
+//		assertEquals(1, results.getTotalResults());
+//		Ninja resultNinja = results.getResults().get(0);
+//		assertNotNull(resultNinja);
+//		assertNotNull(results.getSearchTime());
+//		assertEquals(expectedNinja1, resultNinja);
+//		
+//	}
 	
 	@Test
 	public void testSearchHtml() {
