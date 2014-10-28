@@ -63,7 +63,7 @@ public class ClassProcessorTest {
         fileManager = compiler.getStandardFileManager(collector, Locale.US, Charset.forName("UTF-8"));
     }
  
-//    @Test
+    @Test
     public void testCompilation() throws Exception {
         //the files to be compiled.
         String[] files = currentTestCase.getClassesToCompile();

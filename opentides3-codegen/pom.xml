@@ -104,7 +104,6 @@
 				<configuration>
 					<source>1.7</source>
 					<target>1.7</target>
-					<useIncrementalCompilation>no</useIncrementalCompilation>
 				</configuration>
 				<executions>
 					<execution>
@@ -113,9 +112,18 @@
 							<compilerArgument>-proc:none</compilerArgument>
 			              	<source>1.7</source>
 			              	<target>1.7</target>
-			              	<useIncrementalCompilation>no</useIncrementalCompilation>
 		              	</configuration>
 					</execution>
+					<execution>
+						<id>default-testCompile</id>
+						<configuration>
+							<compilerArgument>-proc:none</compilerArgument>
+			              	<source>1.7</source>
+			              	<target>1.7</target>
+			              	<useIncrementalCompilation>no</useIncrementalCompilation>
+		              	</configuration>
+					</execution>					
+					
 				</executions>
 			</plugin>
 		</plugins>
