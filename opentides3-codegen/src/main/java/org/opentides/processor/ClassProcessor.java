@@ -119,13 +119,8 @@ public class ClassProcessor extends AbstractProcessor {
 					!templateName.endsWith("_.vm") ) {				
 				try {
 					String outputFile = PackageUtil.toPackageName(CloningUtil.getOutputName(templateName, params));
-					File file = new File(outputFile);
-					if (file.exists()) {
-						displayMessage("    Skipping " + outputFile + "... File already exist.");
-						continue;								
-					}
 					displayMessage("    Generating " + outputFile + "...");
-					JavaFileObject gen = processingEnv.getFiler().createSourceFile(outputFile);				
+					JavaFileObject gen = processingEnv.getFiler().createSourceFile(outputFile);
 					bw = new BufferedWriter(gen.openWriter());			
 					CloningUtil.mergeVmTemplate(templateName, params, bw);
 					displayMessage("    Success.");

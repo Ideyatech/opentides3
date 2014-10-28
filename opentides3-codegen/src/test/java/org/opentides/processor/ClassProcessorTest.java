@@ -31,14 +31,14 @@ import org.junit.runners.Parameterized.Parameters;
  */
 @RunWith(Parameterized.class)
 public class ClassProcessorTest {
+	
     @Parameters
     public static Collection<Object[]> data() {
         LinkedList<Object[]> ret = new LinkedList<Object[]>();
- 
         ret.add(new Object[]{new SimpleVerifierCase()});
- 
         return ret;
     }
+    
     private static JavaCompiler compiler;
     private StandardJavaFileManager fileManager;
     private DiagnosticCollector<JavaFileObject> collector;
@@ -72,14 +72,11 @@ public class ClassProcessorTest {
             ByteArrayOutputStream stdoutStream = new ByteArrayOutputStream();
             OutputStreamWriter stdout = new OutputStreamWriter(stdoutStream);
  
- 
-            JavaCompiler.CompilationTask task = compiler.getTask(stdout, fileManager, collector, null, null, fileManager.getJavaFileObjects(files));
- 
+            JavaCompiler.CompilationTask task = compiler.getTask(stdout, fileManager, collector, null, null, fileManager.getJavaFileObjects(files)); 
             Boolean result = task.call();
- 
-            String stdoutS = new String(stdoutStream.toByteArray());
- 
+            
             //perform the verifications.
+            String stdoutS = new String(stdoutStream.toByteArray());
             currentTestCase.test(collector.getDiagnostics(), stdoutS, result);
         } finally {
 //            CompilerTestUtils.cleanClassFiles(0, files);

@@ -104,18 +104,11 @@
 				<configuration>
 					<source>1.7</source>
 					<target>1.7</target>
+					<useIncrementalCompilation>no</useIncrementalCompilation>
 				</configuration>
 				<executions>
 					<execution>
 						<id>default-compile</id>
-						<configuration>
-							<compilerArgument>-proc:none</compilerArgument>
-			              	<source>1.7</source>
-			              	<target>1.7</target>
-		              	</configuration>
-					</execution>
-					<execution>
-						<id>default-test-compile</id>
 						<configuration>
 							<compilerArgument>-proc:none</compilerArgument>
 			              	<source>1.7</source>
