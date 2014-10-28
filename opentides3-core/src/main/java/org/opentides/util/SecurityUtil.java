@@ -32,8 +32,14 @@ import org.springframework.security.core.context.SecurityContextHolder;
  */
 public class SecurityUtil {
 	
-	private static Logger _log = Logger.getLogger(SecurityUtil.class);
+	private static final Logger _log = Logger.getLogger(SecurityUtil.class);
 		
+	/**
+	 * Hide the constructor.
+	 */
+	private SecurityUtil() {		
+	}
+	
 	/**
 	 * Static helper to retrieve currently logged user.
 	 * @return

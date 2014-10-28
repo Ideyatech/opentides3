@@ -53,7 +53,7 @@ public class ImageValidatorTest {
 	
 	@Test
 	public void testValidateInvalidFileSize() {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		for(int i = 0; i < 1024 * 1024 * 10; i++) {
 			sb.append("-");
 		}

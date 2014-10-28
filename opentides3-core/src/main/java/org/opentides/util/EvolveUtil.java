@@ -20,8 +20,14 @@ import org.opentides.bean.BaseEntity;
  */
 public class EvolveUtil {
 	
-	private static Logger _log = Logger.getLogger(EvolveUtil.class);
+	private static final Logger _log = Logger.getLogger(EvolveUtil.class);
 	private static Map<List<String>, SQLQuery> queryCache = new HashMap<List<String>, SQLQuery>();
+	
+	/**
+	 * Hide the constructor.
+	 */
+	private EvolveUtil() {		
+	}
 	
 	public static void importCSV(String filename, String tableName, Session session) 
 			throws Exception{
@@ -99,9 +105,9 @@ public class EvolveUtil {
 		if (queryCache.containsKey(headers)) {
 			query = queryCache.get(headers);
 		} else {
-			StringBuffer baseQuery = new StringBuffer(100);
+			StringBuilder baseQuery = new StringBuilder(100);
 			baseQuery.append("INSERT INTO ").append(tableName).append("(");
-			StringBuffer valueQuery = new StringBuffer(30);
+			StringBuilder valueQuery = new StringBuilder(30);
 			int count = 0;
 			for (String column : headers) {
 				if (count++ > 0) {

@@ -26,7 +26,7 @@ import org.springframework.stereotype.Service;
 public class WidgetServiceImpl extends BaseCrudServiceImpl<Widget> implements
 		WidgetService {
 	
-	private static Logger _log = Logger.getLogger(WidgetServiceImpl.class);
+	private static final Logger _log = Logger.getLogger(WidgetServiceImpl.class);
 	
 	private String widgetColumn;
 	

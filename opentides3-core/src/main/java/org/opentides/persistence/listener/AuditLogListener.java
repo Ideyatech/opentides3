@@ -31,7 +31,7 @@ import org.opentides.util.DatabaseUtil;
 
 public class AuditLogListener {
 
-	private static Logger _log = Logger.getLogger(AuditLogListener.class);
+	private static final Logger _log = Logger.getLogger(AuditLogListener.class);
 	
 	private static boolean autoLoadObjects = true;
 

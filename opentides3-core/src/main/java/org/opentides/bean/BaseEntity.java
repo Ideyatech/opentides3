@@ -60,7 +60,7 @@ public abstract class BaseEntity implements Serializable {
 	/**
      * Class logger.
      */
-    private static Logger _log = Logger.getLogger(BaseEntity.class);
+    private static final Logger _log = Logger.getLogger(BaseEntity.class);
     
     /**
      * Primary key using ID.

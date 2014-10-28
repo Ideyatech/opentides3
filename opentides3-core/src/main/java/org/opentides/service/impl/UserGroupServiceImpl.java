@@ -38,7 +38,7 @@ import org.springframework.stereotype.Service;
 public class UserGroupServiceImpl extends BaseCrudServiceImpl<UserGroup>
 		implements UserGroupService {
 
-	private static Logger _log = Logger.getLogger(UserGroupService.class);
+	private static final Logger _log = Logger.getLogger(UserGroupService.class);
 
 	@Resource(name="authorities")
 	private Map<String, String> authorities;

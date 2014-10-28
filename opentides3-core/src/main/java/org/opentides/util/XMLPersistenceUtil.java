@@ -35,8 +35,14 @@ import org.dom4j.io.SAXReader;
  * @author allantan
  */
 public class XMLPersistenceUtil {
-	private static Logger _log = Logger.getLogger(XMLPersistenceUtil.class);	
+	private static final Logger _log = Logger.getLogger(XMLPersistenceUtil.class);	
 
+	/**
+	 * Hide the constructor.
+	 */
+	private XMLPersistenceUtil() {		
+	}
+	
 	@SuppressWarnings("unchecked")
 	public static Properties getProperties (String persistenceFile, String persistenceUnit) {
 		Properties properties = new Properties();

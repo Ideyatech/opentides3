@@ -48,8 +48,14 @@ import org.opentides.bean.UrlResponseObject;
  */
 public class UrlUtil {
 	
-	private static Logger _log = Logger.getLogger(UrlUtil.class);
+	private static final Logger _log = Logger.getLogger(UrlUtil.class);
 	private static final int CONNECTION_TIMEOUT = 15000;
+	
+	/**
+	 * Hide the constructor.
+	 */
+	private UrlUtil() {		
+	}
 	
 	/**
 	 * Checks if the given url starts with protocol (e.g.

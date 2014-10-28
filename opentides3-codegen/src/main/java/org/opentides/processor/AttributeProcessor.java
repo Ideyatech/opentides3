@@ -47,7 +47,7 @@ import org.opentides.processor.param.ParamReaderFactory;
 @SupportedAnnotationTypes(value = "org.opentides.annotation.field.*")
 public class AttributeProcessor extends AbstractProcessor {
 
-	private static Logger _log = Logger.getLogger(AttributeProcessor.class
+	private static final Logger _log = Logger.getLogger(AttributeProcessor.class
 			.getName());
 
 	/* (non-Javadoc)

@@ -71,7 +71,7 @@ public class FileController {
 	@Autowired(required = false)
 	private Map<String, String> additionalContentType;
 	
-	private static Logger _log = Logger.getLogger(BaseCrudController.class);
+	private static final Logger _log = Logger.getLogger(BaseCrudController.class);
 	
 	public FileController(){
 		contentTypes.put(".pdf", "application/pdf");

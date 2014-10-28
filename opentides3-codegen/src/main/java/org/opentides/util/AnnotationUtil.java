@@ -27,7 +27,7 @@ import org.opentides.bean.AnnotationDefinition;
  *
  */
 public class AnnotationUtil {
-    private static Logger _log = Logger.getLogger(AnnotationUtil.class);
+    private static final Logger _log = Logger.getLogger(AnnotationUtil.class);
 	/**
 	 * Hides the constructor. This is a singleton.
 	 */

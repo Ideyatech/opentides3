@@ -59,7 +59,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class BaseEntityDaoJpaImpl<T extends BaseEntity,ID extends Serializable> 
 		implements BaseEntityDao<T, ID>  {
 	
-	private static Logger _log = Logger.getLogger(BaseEntityDaoJpaImpl.class);
+	private static final Logger _log = Logger.getLogger(BaseEntityDaoJpaImpl.class);
 
 	@Autowired
     private Properties jpqlProperties;
@@ -486,7 +486,7 @@ public class BaseEntityDaoJpaImpl<T extends BaseEntity,ID extends Serializable>
 	 * @return
 	 */
 	protected String appendOrderToExample(T example) {
-		StringBuffer clause = new StringBuffer();
+		StringBuilder clause = new StringBuilder();
 		//User List<SortField> if available
 		if(!CollectionUtils.isEmpty(example.getSortFields())) {
 			clause.append(" ORDER BY ");

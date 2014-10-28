@@ -52,7 +52,7 @@ import org.opentides.util.StringUtil;
 public class AuditLogInterceptor extends EmptyInterceptor {
 	private static final long serialVersionUID = 582549003254963262L;
 	
-	private static Logger _log = Logger.getLogger(AuditLogInterceptor.class);
+	private static final Logger _log = Logger.getLogger(AuditLogInterceptor.class);
 	
     private Set<BaseEntity> inserts      = Collections.synchronizedSet(new HashSet<BaseEntity>()); 
     private Set<BaseEntity> updates      = Collections.synchronizedSet(new HashSet<BaseEntity>()); 

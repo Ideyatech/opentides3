@@ -192,7 +192,7 @@ public class UserGroup extends BaseEntity{
 	}
 
 	public String getVerticalTitle() {
-		StringBuffer vert = new StringBuffer(); 
+		StringBuilder vert = new StringBuilder(); 
 		for (int i=0; i<name.length(); i++) {
 			vert.append(name.charAt(i)).append("<br/>");
 		}

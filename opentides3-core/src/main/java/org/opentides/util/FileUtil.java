@@ -44,8 +44,14 @@ import org.springframework.web.multipart.MultipartFile;
  */
 public class FileUtil {
 
-	private static Logger _log = Logger.getLogger(FileUtil.class);
+	private static final Logger _log = Logger.getLogger(FileUtil.class);
 
+	/**
+	 * Hide the constructor.
+	 */
+	private FileUtil() {		
+	}
+	
 	/**
 	 * Helper class to read certain file and return contents as string. 
 	 * 
@@ -103,7 +109,7 @@ public class FileUtil {
 		try {
 			reader = new BufferedReader(new InputStreamReader(is));
 			String line = null;
-			StringBuffer ret = new StringBuffer();
+			StringBuilder ret = new StringBuilder();
 			while ((line = reader.readLine()) != null) {
 				ret.append(line + System.getProperty("line.separator"));
 			}
@@ -237,7 +243,7 @@ public class FileUtil {
 									 String filename) {
 		try {
 			String line = null;
-			StringBuffer ret = new StringBuffer();
+			StringBuilder ret = new StringBuilder();
 			while ((line = reader.readLine()) != null) {
 				writer.append(line+"\n");
 			}

@@ -47,7 +47,7 @@ import org.opentides.bean.BaseEntity;
  */
 public class CacheUtil {
 	
-    private static Logger _log = Logger.getLogger(CacheUtil.class);
+    private static final Logger _log = Logger.getLogger(CacheUtil.class);
     
     private static final List<String> excludeFields = new ArrayList<String>();
 
@@ -71,6 +71,13 @@ public class CacheUtil {
 		excludeFields.add("createdBy");
 		excludeFields.add("version");
 	}
+	
+	/**
+	 * Hide the constructor.
+	 */
+	private CacheUtil() {		
+	}
+	
 	/**
 	 * Helper method to retrieve a readable name for a given class.
 	 * This method tries to access static method named readableName and returns its value if exist.

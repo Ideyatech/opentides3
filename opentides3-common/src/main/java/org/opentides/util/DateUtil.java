@@ -25,6 +25,12 @@ import java.util.TimeZone;
 
 public class DateUtil {
 	
+	/**
+	 * Hide the constructor.
+	 */
+	private DateUtil() {		
+	}
+	
 	public static String dateToString(Date obj, String format) {
     	if (obj == null)
     		return "";

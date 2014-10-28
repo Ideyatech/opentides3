@@ -53,7 +53,7 @@ public class DBEvolveManager {
 	@Autowired
 	private UserGroupService userGroupService;
 	
-	private static Logger _log = Logger.getLogger(DBEvolveManager.class);
+	private static final Logger _log = Logger.getLogger(DBEvolveManager.class);
 
 	@Transactional
 	public void evolve() {

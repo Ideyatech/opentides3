@@ -37,7 +37,7 @@ import org.springframework.ui.velocity.VelocityEngineUtils;
 @Service
 public class MailingServiceImpl implements MailingService {
 	
-	private static Logger _log = Logger.getLogger(MailingServiceImpl.class);
+	private static final Logger _log = Logger.getLogger(MailingServiceImpl.class);
 	
 	@Autowired
 	private VelocityEngine velocityEngine;

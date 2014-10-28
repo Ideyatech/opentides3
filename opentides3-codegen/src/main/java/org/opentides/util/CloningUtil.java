@@ -49,7 +49,7 @@ import org.opentides.bean.BeanDefinition;
  */
 public class CloningUtil {
 	
-	private static Logger _log = Logger.getLogger(CloningUtil.class.getName());
+	private static final Logger _log = Logger.getLogger(CloningUtil.class.getName());
 	
 	public static final String ENCODING = "utf-8";
 	
@@ -57,7 +57,6 @@ public class CloningUtil {
 	 * Hides the constructor. This is a singleton.
 	 */
 	private CloningUtil() {
-		
 	}
 	
 	/**

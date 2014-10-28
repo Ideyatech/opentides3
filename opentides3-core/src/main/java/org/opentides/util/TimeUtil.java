@@ -27,6 +27,12 @@ import java.util.Date;
 public class TimeUtil {
 
 	/**
+	 * Hide the constructor.
+	 */
+	private TimeUtil() {		
+	}
+	
+	/**
 	 * 
 	 * Displays a user friendly time format similar to social network.
 	 * 

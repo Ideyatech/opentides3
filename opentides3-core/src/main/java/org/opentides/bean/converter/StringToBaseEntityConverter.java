@@ -46,7 +46,7 @@ import org.springframework.stereotype.Component;
 public class StringToBaseEntityConverter implements 
 		ConditionalGenericConverter, BeanFactoryAware {
 
-	private static Logger _log = Logger.getLogger(StringToBaseEntityConverter.class);
+	private static final Logger _log = Logger.getLogger(StringToBaseEntityConverter.class);
 
 	@Autowired
 	private BeanFactory beanFactory;

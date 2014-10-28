@@ -39,6 +39,12 @@ public class PackageUtil {
 	private static Set<String> templateFolders = new HashSet<String>();
 	
 	/**
+	 * Hide the constructor.
+	 */
+	private PackageUtil() {		
+	}
+	
+	/**
 	 * Converts a file path into the package name.
 	 * Conversion is sensitive to path separator of the OS.
 	 * For example: templates/org/ideyatech/model -> template.org.ideyatech.model

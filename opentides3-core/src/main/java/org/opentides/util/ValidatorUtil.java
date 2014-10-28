@@ -28,6 +28,13 @@ import java.util.regex.Pattern;
  *
  */
 public class ValidatorUtil {
+	
+	/**
+	 * Hide the constructor.
+	 */
+	private ValidatorUtil() {		
+	}
+	
 	/**
 	 * Checks for valid email address
 	 * @param email

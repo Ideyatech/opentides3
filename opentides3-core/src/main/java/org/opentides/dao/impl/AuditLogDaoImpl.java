@@ -46,7 +46,7 @@ import org.springframework.stereotype.Repository;
 @Repository("auditLogDao")
 public class AuditLogDaoImpl extends BaseEntityDaoJpaImpl<AuditLog, Long> implements AuditLogDao {	
 	
-	private static Logger _log = Logger.getLogger(AuditLogDaoImpl.class);
+	private static final Logger _log = Logger.getLogger(AuditLogDaoImpl.class);
 	
 	@Override
 	public void logEvent(String message, BaseEntity entity, boolean separateEm) {

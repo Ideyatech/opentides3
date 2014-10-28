@@ -78,7 +78,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 public abstract class BaseCrudController<T extends BaseEntity> {
 
-	private static Logger _log = Logger.getLogger(BaseCrudController.class);
+	private static final Logger _log = Logger.getLogger(BaseCrudController.class);
 
 	/**
 	 * This is the page size for the search results table. This defaults to 20 results per table.

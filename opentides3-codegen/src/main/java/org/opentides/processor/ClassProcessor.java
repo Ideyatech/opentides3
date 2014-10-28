@@ -61,7 +61,7 @@ import org.opentides.util.PackageUtil;
 @SupportedAnnotationTypes(value = "org.opentides.annotation.*")
 public class ClassProcessor extends AbstractProcessor {
 
-	private static Logger _log = Logger.getLogger(ClassProcessor.class
+	private static final Logger _log = Logger.getLogger(ClassProcessor.class
 			.getName());
 
 	public static final String ENCODING = "utf-8";

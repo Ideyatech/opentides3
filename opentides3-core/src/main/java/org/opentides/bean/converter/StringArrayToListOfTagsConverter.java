@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
 @Component("stringArrayToListOfTagsConverter")
 public class StringArrayToListOfTagsConverter implements ConditionalGenericConverter {
 	
-	private static Logger log = Logger.getLogger(StringArrayToListOfTagsConverter.class);
+	private static final Logger log = Logger.getLogger(StringArrayToListOfTagsConverter.class);
 
 	@Override
 	public Set<ConvertiblePair> getConvertibleTypes() {

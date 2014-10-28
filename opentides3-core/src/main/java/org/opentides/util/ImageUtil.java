@@ -46,7 +46,7 @@ import org.opentides.util.image.ImageLoader;
  */
 public class ImageUtil {
 
-	private static Logger _log = Logger.getLogger(ImageUtil.class);
+	private static final Logger _log = Logger.getLogger(ImageUtil.class);
 	
 	// Default image is 1x1 png
 	private static final byte[] DEFAULT_IMAGE = StringUtil.convertHexToArray(
@@ -58,7 +58,12 @@ public class ImageUtil {
 	// default dimension of large image
 	private static int DEFAULT_SIZE  = 64;
  
-
+	/**
+	 * Hide the constructor.
+	 */
+	private ImageUtil() {		
+	}
+	
 	/**
 	 * Loads the image from cache if available.
 	 * 

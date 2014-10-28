@@ -80,7 +80,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class ImageController {
 	
-	private static Logger _log = Logger.getLogger(ImageController.class);
+	private static final Logger _log = Logger.getLogger(ImageController.class);
 
 	@Autowired
 	protected ImageInfoService imageInfoService;

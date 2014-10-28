@@ -37,7 +37,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ApplicationStartupListener implements ApplicationListener<ContextRefreshedEvent> {
 
-	private static Logger _log = Logger
+	private static final Logger _log = Logger
 			.getLogger(ApplicationStartupListener.class);
 
 	private static boolean applicationStarted = false;

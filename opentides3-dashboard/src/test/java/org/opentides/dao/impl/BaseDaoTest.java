@@ -37,7 +37,7 @@ import org.springframework.transaction.support.TransactionTemplate;
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 public class BaseDaoTest extends AbstractJUnit4SpringContextTests {
 	
-	private static Logger LOGGER = Logger.getLogger(BaseDaoTest.class);
+	private static final Logger LOGGER = Logger.getLogger(BaseDaoTest.class);
 	
 	@Autowired
 	private DataSource dataSource;

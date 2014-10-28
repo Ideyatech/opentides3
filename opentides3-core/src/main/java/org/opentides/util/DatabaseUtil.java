@@ -83,6 +83,12 @@ public class DatabaseUtil {
      */
     private static EntityManagerFactory emf;
 
+	/**
+	 * Hide the constructor.
+	 */
+	private DatabaseUtil() {		
+	}
+	
     /**
      * Static initializer to establish database connection.
      */

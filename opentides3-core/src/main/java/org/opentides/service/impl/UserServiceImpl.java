@@ -56,7 +56,7 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 		UserService {
 
-	private static Logger _log = Logger.getLogger(UserServiceImpl.class);
+	private static final Logger _log = Logger.getLogger(UserServiceImpl.class);
 	
 	@Autowired
 	private MailingService mailingService;

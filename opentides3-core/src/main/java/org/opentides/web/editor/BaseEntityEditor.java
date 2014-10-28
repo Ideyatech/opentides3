@@ -33,7 +33,7 @@ import org.opentides.util.StringUtil;
  */
 public class BaseEntityEditor extends PropertyEditorSupport {
 	
-	private static Logger _log = Logger.getLogger(BaseEntityEditor.class);
+	private static final Logger _log = Logger.getLogger(BaseEntityEditor.class);
 	
 	private BaseCrudService<? extends BaseEntity> entityService;
 

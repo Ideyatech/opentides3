@@ -43,7 +43,7 @@ import org.springframework.stereotype.Service;
 public class UserWidgetsServiceImpl extends BaseCrudServiceImpl<UserWidgets> implements
 		UserWidgetsService {
 	
-	private static Logger _log = Logger.getLogger(UserWidgetsServiceImpl.class);
+	private static final Logger _log = Logger.getLogger(UserWidgetsServiceImpl.class);
 	
 	@Autowired
 	private UserService userService;

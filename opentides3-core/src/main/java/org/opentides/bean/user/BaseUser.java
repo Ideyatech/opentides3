@@ -436,7 +436,7 @@ public class BaseUser extends BaseEntity implements ImageUploadable {
 	 */
 	@JsonView(value=Views.SearchView.class) 
 	public final String getDisplayGroups() {
-		StringBuffer display = new StringBuffer();
+		StringBuilder display = new StringBuilder();
 		int count = 0;
 		for (UserGroup group:groups) {
 			if (count++ > 0)

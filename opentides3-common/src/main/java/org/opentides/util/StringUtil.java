@@ -30,6 +30,12 @@ public class StringUtil {
 	private static Random random = new Random((new Date()).getTime());
 	
 	/**
+	 * Hide the constructor.
+	 */
+	private StringUtil() {		
+	}
+	
+	/**
 	 * Checks if a given string is empty or null.
 	 * 
 	 * @param obj
@@ -429,7 +435,7 @@ public class StringUtil {
     	if (input==null) 
     		return null;
     	int count=0;
-    	StringBuffer out = new StringBuffer();
+    	StringBuilder out = new StringBuilder();
     	for (String word:input) {
     		if (count++ > 0)
     			out.append(separator);

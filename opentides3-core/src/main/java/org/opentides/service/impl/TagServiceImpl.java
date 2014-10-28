@@ -23,7 +23,7 @@ import org.springframework.stereotype.Service;
 public class TagServiceImpl extends BaseCrudServiceImpl<Tag>
                 implements TagService {
 	
-	private static Logger _log = Logger.getLogger(TagServiceImpl.class);
+	private static final Logger _log = Logger.getLogger(TagServiceImpl.class);
 	
 	@Autowired
 	public void setTagDao(TagDao tagDao) {

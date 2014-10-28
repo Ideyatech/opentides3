@@ -25,6 +25,12 @@ package org.opentides.util;
 public class NamingUtil {
 
 	/**
+	 * Hide the constructor.
+	 */
+	private NamingUtil() {		
+	}
+	
+	/**
 	 * Ensures that name starts with big letter.
 	 * For example:
 	 * input - fieldName; output - Field Name
@@ -37,7 +43,7 @@ public class NamingUtil {
 
     	String label = name.startsWith("get")?name.replaceFirst("get", ""):name;
 
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 		for (int i=0; i<label.length();i++) {
 			if (i==0) {
 				// capitalize first character
@@ -100,7 +106,7 @@ public class NamingUtil {
 	public static String toElementName(String name) {
 		if (StringUtil.isEmpty(name))
 			return "";
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 		int startIndex = 0;
 		for (int i=0; i<name.length();i++) {
 			if (name.charAt(i) >= 'A' && name.charAt(i)<= 'Z') {

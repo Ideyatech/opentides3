@@ -55,11 +55,17 @@ import org.springframework.validation.ObjectError;
  */
 public class CrudUtil {
 	
-    private static Logger _log = Logger.getLogger(CrudUtil.class);
+    private static final Logger _log = Logger.getLogger(CrudUtil.class);
     
 	private static final String SQL_PARAM = ":([^\\s]+)"; 
 	private static final Pattern SQL_PARAM_PATTERN = Pattern.compile(
 			SQL_PARAM, Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
+	
+	/**
+	 * Hide the constructor.
+	 */
+	private CrudUtil() {		
+	}
 	
     /**
      * Creates the logging message for new audit logs 
@@ -67,7 +73,7 @@ public class CrudUtil {
      * @return
      */
     public static String buildCreateMessage(BaseEntity obj) {
-		StringBuffer message = new StringBuffer();
+		StringBuilder message = new StringBuilder();
     	if (obj.getClass().isAnnotationPresent(Auditable.class)) {
 			AuditableField pf = CacheUtil.getPrimaryField(obj);    		
     		message.append("<p class='add-message'>Added new ");
@@ -104,7 +110,7 @@ public class CrudUtil {
     @SuppressWarnings({ "rawtypes", "unchecked" })
 	public static String buildUpdateMessage(BaseEntity oldObject, BaseEntity newObject) {
     	
-    	StringBuffer message = new StringBuffer("<p class='change-message'>Changed ");
+    	StringBuilder message = new StringBuilder("<p class='change-message'>Changed ");
     	AuditableField pf = CacheUtil.getPrimaryField(oldObject); 
     	message.append(buildPrimaryField(pf, oldObject))
     		   .append(" with the following: ");
@@ -212,7 +218,7 @@ public class CrudUtil {
      * @return
      */
     public static String buildDeleteMessage(BaseEntity obj) {
-    	StringBuffer message = new StringBuffer("<p class='delete-message'>Deleted ");
+    	StringBuilder message = new StringBuilder("<p class='delete-message'>Deleted ");
     	AuditableField pf = CacheUtil.getPrimaryField(obj);     	
     	message.append(buildPrimaryField(pf, obj))
     		   .append("</p>");
@@ -226,7 +232,7 @@ public class CrudUtil {
      * @return
      */
     private static String buildPrimaryField(AuditableField pf, BaseEntity obj) {
-    	StringBuffer message = new StringBuffer();
+    	StringBuilder message = new StringBuilder();
     	String shortName = CacheUtil.getReadableName(obj); 
     	message.append(shortName); // class name
     	Object value = retrieveNullableObjectValue(obj, pf.getFieldName());
@@ -279,7 +285,7 @@ public class CrudUtil {
     @SuppressWarnings("rawtypes")
 	public static String buildJpaQueryString(BaseEntity example, boolean exactMatch) {
 		int count = 0;
-		StringBuffer clause = new StringBuffer(" where ");
+		StringBuilder clause = new StringBuilder(" where ");
 		List<String> exampleFields = CacheUtil.getSearchableFields(example);
 		for (String property:exampleFields) {
 			// get the value
@@ -523,7 +529,7 @@ public class CrudUtil {
 			} else if (Collection.class.isAssignableFrom(valueObject.getClass())) {
 				Collection<Object> list = (Collection<Object>) valueObject;
 				int ctr=0;
-				StringBuffer buff = new StringBuffer();
+				StringBuilder buff = new StringBuilder();
 				for (Object item:list) {
 					if (ctr++>0)
 						buff.append(", ");

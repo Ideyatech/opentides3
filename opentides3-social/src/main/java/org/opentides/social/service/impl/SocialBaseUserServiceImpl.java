@@ -33,7 +33,7 @@ public class SocialBaseUserServiceImpl extends BaseCrudServiceImpl<SocialBaseUse
 	public static final String NAME = "socialBaseUserService";
 
 	@SuppressWarnings("unused")
-	private static Logger _log = Logger.getLogger(SocialBaseUserServiceImpl.class);
+	private static final Logger _log = Logger.getLogger(SocialBaseUserServiceImpl.class);
 
 	@Autowired
 	private SocialBaseUserDao socialBaseUserDao;
