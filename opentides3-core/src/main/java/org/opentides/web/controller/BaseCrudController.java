@@ -229,7 +229,7 @@ public abstract class BaseCrudController<T extends BaseEntity> {
 		uiModel.addAttribute("formCommand",
 				BeanUtils.instantiate(this.entityBeanType));
 		uiModel.addAttribute("searchCommand", command);
-		if (request.getParameterMap().size() > 0) {
+		if (!request.getParameterMap().isEmpty()) {
 			preSearch(command, bindingResult, uiModel, request, response);
 			SearchResults<T> results = search(command, request);
 			postSearch(command, results, bindingResult, uiModel, request,

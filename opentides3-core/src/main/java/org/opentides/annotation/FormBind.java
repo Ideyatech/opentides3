@@ -40,7 +40,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 @Documented
 public @interface FormBind {
 	
-	public enum Load { NEW, UPDATE };
+	public enum Load { 
+		NEW, 
+		UPDATE 
+	};
 
 	String name() default "";
 	Load mode() default Load.UPDATE;
