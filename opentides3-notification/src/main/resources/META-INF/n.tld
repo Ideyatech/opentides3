@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee web-jsptaglibrary_2_0.xsd"
+	version="2.0">
+	 <description>Opentides3 Notification Tag Files</description>
+	 <tlib-version>3.0</tlib-version>
+	 <short-name>n</short-name>
+	 <uri>http://www.ideyatech.com/n</uri>
+	 <tag-file>
+	    <name>notify</name>
+	    <path>/META-INF/tags/notify.tag</path>
+	 </tag-file>
+	 <tag-file>
+	    <name>notification</name>
+	    <path>/META-INF/tags/notification.tag</path>
+	 </tag-file>
+</taglib>

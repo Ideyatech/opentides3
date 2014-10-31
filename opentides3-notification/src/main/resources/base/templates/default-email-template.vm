@@ -1,0 +1,150 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Email - New Case</title>
+<style>
+#email-wrapper {
+	margin: 0 auto;
+	padding-bottom: 18px;
+	width: 100%;
+	background-color: #f4f4f4;
+	min-height: 50px;
+	position: relative;
+	font-family:Arial, Helvetica, sans-serif;
+	font-size: 12px;
+}
+#email-wrapper a,
+#email-wrapper a:active { 
+	color: #2F7194;
+	text-decoration: underline;
+}
+#email-wrapper a:hover {
+	text-decoration: none;
+}
+#email-wrapper .ribbon-daily,
+#email-wrapper .ribbon-daily img {
+	background:url(img/ribbon-daily.png) no-repeat transparent;
+	width: 32px;
+	height: 36px;
+	position: absolute;
+	top: 0;
+	right: 20px;
+}
+#email-wrapper .ribbon-immediate,
+#email-wrapper .ribbon-immediate img {
+	background:url(img/ribbon-immediate.png) no-repeat transparent;
+	width: 32px;
+	height: 36px;
+	position: absolute;
+	top: 0;
+	right: 20px;
+}
+#email-wrapper .goto-arrow {
+	background: url(img/goto-arrow.jpg) no-repeat transparent;
+	width: 8px;
+	height: 8px;
+	float: left;
+	margin-top: 4px;
+}
+#email-wrapper .header-title {
+	font-size: 18px;
+	padding: 12px 0 10px 20px;
+}
+#email-wrapper .semi-indent {
+	padding-left: 20px;
+}
+#email-wrapper .unbold {
+	font-weight: normal;
+}
+#email-wrapper .due {
+	color: #AD4A44;
+	font-weight: bold;
+}
+#email-wrapper .reminders {
+	color: #CAB92F;
+	font-weight: bold;
+}
+#email-wrapper .updates {
+	color: #3371A3;
+	font-weight: bold;
+}
+#email-wrapper .immediate {
+	color: #74c163;
+	font-weight: bold;
+}
+#email-wrapper .email-body {
+	background-color: #FFFFFF;
+    margin: 0 auto;
+    min-height: 50px;
+    width: 94%;
+}
+#email-wrapper .email-body table p,
+#email-wrapper .unsubscribe p { 
+	margin: 0;
+}
+#email-wrapper .email-body table {
+	width: 100%;
+	padding: 10px;
+}
+#email-wrapper .email-body table tr {
+	vertical-align: top;
+}
+#email-wrapper .email-body table td {
+	border-bottom: 1px solid #f4f4f4;
+	padding: 5px 0 10px;
+}
+#email-wrapper .email-body table .col-1 {
+	width: 75%;
+}
+#email-wrapper .email-body table .col-2 {
+	width: 25%;
+	text-align: right;
+}
+#email-wrapper .email-body .goto-cases {
+	font-weight: bold;
+	font-size: 14px;
+	text-decoration: none;
+}
+#email-wrapper .email-body a:hover.goto-cases  {
+	text-decoration: underline;
+}
+#email-wrapper .unsubscribe {
+	margin: 10px 20px 0;
+	color: #999;
+}
+</style>
+</head>
+
+<body>
+
+<table style="width: 100%;padding: 10px">
+	<tr>
+		<td bgcolor="#F4F4F4" style="background-color: #F4F4F4;">
+			<div id="wrapper" >
+				<div id="email-wrapper" bgcolor="#F4F4F4" style="background: #F4F4F4; margin:0 auto; padding-bottom: 18px; width: 100%; background-color: #F4F4F4; min-height: 50px; position: relative: font-family: Arial, Helvetica, sans-serif; font-size: 12px;"><!--START OF email-wrapper-->
+			    	<div class="ribbon-immediate"><img src="cid:image1" />#**#</div>
+			        <div class="header-title" style="font-size: 18px; padding: 12px 0 10px 20px;">${message-title}</div>
+			        
+			        <div class="email-body" style="background-color: #FFFFFF; margin: 0 auto;min-height: 50px;width: 94%;">
+			        	${message-body}
+			        </div>
+			   
+			        
+			        <div class="unsubscribe" style="margin: 10px 20px 0; color: #999">
+			        	<div style="float: left;">
+				        	<p style="margin: 0;">You are receiving this because you&#39;re subscribed to ${application-name}. </p>
+				            <p style="margin: 0;">Don&#39;t want these emails? <a href="${unsubscribe}">Unsubscribe here.</a></p>
+				        </div>
+				        <div style="float: right;">
+				        	<p style="margin: 0;"><img src="cid:image2" /></p>
+				        </div>
+			        </div>
+			        
+			    </div><!--END OF email-wrapper-->
+			</div>
+		</td>
+	</tr>
+</table>
+</body>
+</html>
