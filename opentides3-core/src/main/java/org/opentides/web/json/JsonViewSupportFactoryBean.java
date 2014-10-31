@@ -24,7 +24,7 @@ public class JsonViewSupportFactoryBean implements InitializingBean {
 	@Autowired
 	private RequestMappingHandlerAdapter adapter;
 	
-	private Logger _log = Logger.getLogger(JsonViewSupportFactoryBean.class);
+	private static final Logger _log = Logger.getLogger(JsonViewSupportFactoryBean.class);
 
 	@Override
 	public void afterPropertiesSet() throws Exception {

@@ -48,7 +48,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller 
 public class SystemCodesCrudController extends BaseCrudController<SystemCodes> {
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(SystemCodesCrudController.class);
+	private static final Logger _log = LoggerFactory.getLogger(SystemCodesCrudController.class);
 
 	/**
 	 * Post construct that initializes the crud page to {@code "/base/system-codes-crud"}.
@@ -100,7 +100,7 @@ public class SystemCodesCrudController extends BaseCrudController<SystemCodes> {
 	@RequestMapping(value = "/findByCategory")
 	@ResponseView(Views.SearchView.class)
 	public @ResponseBody List<SystemCodes> findByCategory(@RequestParam("category") String category) {
-		LOGGER.debug("Find System Codes for category {}", category);
+		_log.debug("Find System Codes for category {}", category);
 		return systemCodesService.findSystemCodesByCategory(category);
 	}
 	

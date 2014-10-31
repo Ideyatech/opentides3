@@ -37,7 +37,7 @@ import org.springframework.transaction.support.TransactionTemplate;
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 public class BaseDaoTest extends AbstractJUnit4SpringContextTests {
 	
-	private static final Logger LOGGER = Logger.getLogger(BaseDaoTest.class);
+	private static final Logger _log = Logger.getLogger(BaseDaoTest.class);
 	
 	@Autowired
 	private DataSource dataSource;
@@ -70,11 +70,11 @@ public class BaseDaoTest extends AbstractJUnit4SpringContextTests {
 		File datasetFile = new File(datasetPath);
 		if(datasetFile.exists()) {
 			config.setProperty(DatabaseConfig.PROPERTY_DATATYPE_FACTORY, new HsqldbDataTypeFactory());
-			LOGGER.debug("Dataset Path: " + datasetPath);
+			_log.debug("Dataset Path: " + datasetPath);
 			IDataSet dataSet = new FlatXmlDataSet(new FileInputStream(datasetFile));
 			DatabaseOperation.REFRESH.execute(dbUnitCon, dataSet);
 		} else {
-			LOGGER.info("No initial dataset loaded");
+			_log.info("No initial dataset loaded");
 		}
 		
 		transactionTemplate = new TransactionTemplate(transactionManager);

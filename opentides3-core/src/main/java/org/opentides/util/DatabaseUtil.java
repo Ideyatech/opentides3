@@ -35,7 +35,7 @@ import org.apache.log4j.Logger;
  */
 public class DatabaseUtil {
 	
-	private static final Logger LOGGER = Logger.getLogger(DatabaseUtil.class);
+x	private static final Logger _log = Logger.getLogger(DatabaseUtil.class);
 
     /**
      * Local entity manager to manage database sessions.
@@ -102,7 +102,7 @@ public class DatabaseUtil {
             		propertiesMap.put("javax.persistence.jdbc.user", username);
             		propertiesMap.put("javax.persistence.jdbc.password", password);
 //            	} else {
-//            		LOGGER.debug("Connecting to JNDI [" + jndiName + "]");
+//            		_log.debug("Connecting to JNDI [" + jndiName + "]");
 //				For Eclipselink only
 //            		propertiesMap.put("eclipselink.session.customizer", 
 //            				"org.opentides.persistence.config.JPAEclipseLinkSessionCustomizer");
@@ -114,7 +114,7 @@ public class DatabaseUtil {
         	entityManager = emf.createEntityManager();        	
         } catch (Throwable ex) {
             // Make sure you log the exception, as it might be swallowed
-            LOGGER.error("Initial EntityManager creation failed.", ex);
+            _log.error("Initial EntityManager creation failed.", ex);
             throw new ExceptionInInitializerError(ex);
         }	
     }
@@ -129,7 +129,7 @@ public class DatabaseUtil {
 	 * @param driverClass the driverClass to set
 	 */
 	public final void setDriverClassName(String driverClass) {
-		LOGGER.info("Setting Driver Class Name to " + driverClass);
+		_log.info("Setting Driver Class Name to " + driverClass);
 		DatabaseUtil.driverClassName = driverClass;
 	}
 
@@ -137,7 +137,7 @@ public class DatabaseUtil {
 	 * @param url the url to set
 	 */
 	public final void setUrl(String url) {
-		LOGGER.info("Setting URL to " + url);
+		_log.info("Setting URL to " + url);
 		DatabaseUtil.url = url;
 	}
 
@@ -145,7 +145,7 @@ public class DatabaseUtil {
 	 * @param username the username to set
 	 */
 	public final void setUsername(String username) {
-		LOGGER.info("Setting Username to " + username);
+		_log.info("Setting Username to " + username);
 		DatabaseUtil.username = username;
 	}
 
@@ -153,7 +153,7 @@ public class DatabaseUtil {
 	 * @param password the password to set
 	 */
 	public final void setPassword(String password) {
-		LOGGER.info("Setting password to " + password);
+		_log.info("Setting password to " + password);
 		DatabaseUtil.password = password;
 	}
 	
@@ -166,7 +166,7 @@ public class DatabaseUtil {
 	 */
 	
 	public final void setJndiName(String jndiName) {
-		LOGGER.info("Setting JNDI Name to " + jndiName);
+		_log.info("Setting JNDI Name to " + jndiName);
 		DatabaseUtil.jndiName = jndiName;
 	}
 	
@@ -176,7 +176,7 @@ public class DatabaseUtil {
 	 * @param persistenceUnitName the persistenceUnitName to set
 	 */
 	public final void setPersistenceUnitName(String persistenceUnitName) {
-		LOGGER.info("Setting Persistence Unit Name to " + persistenceUnitName);
+		_log.info("Setting Persistence Unit Name to " + persistenceUnitName);
 		DatabaseUtil.persistenceUnitName = persistenceUnitName;
 	}
 	
@@ -185,7 +185,7 @@ public class DatabaseUtil {
 	 * @param persistenceFile
 	 */
 	public final void setPersistenceFile(String persistenceFile) {
-		LOGGER.info("Setting Persistence file to " + persistenceFile);
+		_log.info("Setting Persistence file to " + persistenceFile);
 		DatabaseUtil.persistenceFile = persistenceFile;
 	}
 	
