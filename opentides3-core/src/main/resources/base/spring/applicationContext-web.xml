@@ -107,7 +107,7 @@
 	<bean id="messageSource"
 		class="org.opentides.context.support.PatternResourceBundleMessageSource"
 		p:cacheSeconds="${messages.cache.seconds}"
-		p:basenames="classpath:app/languages/*messages.properties,classpath:base/languages/*messages.properties" />
+		p:basenames="classpath:app/languages/*messages.properties,classpath*:base/languages/*messages.properties" />
 
 
 	<!-- Store preferred language configuration in a cookie -->

@@ -17,7 +17,7 @@
 	<bean id="entityManagerFactory"
 		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
 		<property name="dataSource" ref="dataSource" />
-		<property name="persistenceUnitName" value="opentidesPU" />
+		<property name="persistenceUnitName" value="${jpa.pu_name}" />
 		<property name="jpaVendorAdapter">
 			<bean
 				class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
@@ -57,8 +57,7 @@
 		class="org.springframework.beans.factory.config.PropertiesFactoryBean">
 		<property name="locations">
 			<list>
-				<value>classpath:base/jpql/core.properties</value>
-				<value>classpath:social/jpql/social.properties</value>
+				<value>classpath*:base/jpql/*.properties</value>
 				<value>${jpql.custom.properties}</value>
 			</list>
 		</property>
