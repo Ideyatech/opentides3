@@ -35,7 +35,7 @@ import org.apache.log4j.Logger;
  */
 public class DatabaseUtil {
 	
-x	private static final Logger _log = Logger.getLogger(DatabaseUtil.class);
+	private static final Logger _log = Logger.getLogger(DatabaseUtil.class);
 
     /**
      * Local entity manager to manage database sessions.
