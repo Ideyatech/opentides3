@@ -20,6 +20,7 @@
 		<module>opentides3-codegen</module>
 		<module>opentides3-core</module>
 		<module>opentides3-taglib</module>
+		<module>opentides3-notification</module>
 	</modules>
 
 	<dependencyManagement>
