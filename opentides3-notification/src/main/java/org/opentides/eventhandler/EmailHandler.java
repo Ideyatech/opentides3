@@ -19,8 +19,11 @@
 package org.opentides.eventhandler;
 
 import java.io.File;
+import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.AddressException;
@@ -28,12 +31,15 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 import org.apache.log4j.Logger;
+import org.apache.velocity.app.VelocityEngine;
+import org.opentides.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
+import org.springframework.ui.velocity.VelocityEngineUtils;
 
 /**
  * @author allantan
@@ -53,21 +59,55 @@ public class EmailHandler {
 	@Value("${mail.from-name}")
 	private String fromName;
 	
+	@Value("#{notificationSettings['mail.default-template']}")
+	private String mailVmTemplate;
+
+	
+	@Autowired
+	private VelocityEngine velocityEngine;
+	
 	private List<String> imagesPath;
 	
-	public void sendEmail(	String[] to, String[] cc, String[] bcc, 
+	public void sendEmail(String[] to, String subject, String body) {
+		sendEmail(to, new String[] {}, new String[] {}, "", subject, body, null);
+	}
+
+	public void sendEmail(String[] to, String[] cc, String[] bcc, String replyTo,
 							String subject, String body) {
+		sendEmail(to, cc, bcc, replyTo, subject, body, null);
+	}
+	
+	public void sendEmail(	String[] to, String[] cc, String[] bcc, String replyTo,
+							String subject, String body, File[] attachments) {
 		try {
 			MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 			MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage,true);
 			
-			mimeMessageHelper.setTo(toInetAddress(to));			
-			if(cc!=null) mimeMessageHelper.setCc(toInetAddress(cc));
-			if(bcc!=null) mimeMessageHelper.setBcc(toInetAddress(bcc));			
+			mimeMessageHelper.setTo(toInetAddress(to));	
+			InternetAddress[] ccAddresses = toInetAddress(cc);
+			if (ccAddresses!=null) mimeMessageHelper.setCc(ccAddresses);
+			InternetAddress[] bccAddresses = toInetAddress(bcc);			
+			if (bccAddresses!=null) mimeMessageHelper.setBcc(bccAddresses);
+			if (!StringUtil.isEmpty(replyTo)) mimeMessageHelper.setReplyTo(replyTo);
+			Map<String, Object> templateVariables = new HashMap<String, Object>();
+			
+			templateVariables.put("message-title", subject);
+			templateVariables.put("message-body",body);
+			
+			StringWriter writer = new StringWriter();
+			VelocityEngineUtils.mergeTemplate(velocityEngine, mailVmTemplate, "UTF-8", templateVariables, writer);
+			
 			mimeMessageHelper.setFrom(new InternetAddress(this.fromEmail,this.fromName));			
 			mimeMessageHelper.setSubject(subject);
-			mimeMessageHelper.setText(body, true);
-	
+			mimeMessageHelper.setText(writer.toString(), true);
+			
+			// check for attachment
+			if (attachments!= null && attachments.length > 0) {
+				for (File attachment:attachments) {
+					mimeMessageHelper.addAttachment(attachment.getName(), attachment);					
+				}				
+			}
+			
 			/**
 			 * The name of the identifier should be image
 			 * the number after the image name is the counter 
@@ -91,9 +131,20 @@ public class EmailHandler {
 	}
 	
 	public InternetAddress[] toInetAddress(String [] strings) throws AddressException {
-		InternetAddress [] internetAddress = new InternetAddress[strings.length];		
+		if (strings == null)
+			return null;
+		int count = 0;
 		for(int x = 0; x < strings.length; x++) {
-			internetAddress[x] = new InternetAddress(strings[x]);
+			if (StringUtil.isEmpty(strings[x]) || strings[x].trim().length()==0)
+				strings[x] = null;
+			else
+				count++;				
+		}
+		if (count==0) return null;
+		InternetAddress [] internetAddress = new InternetAddress[count];
+		for(int x = 0; x < strings.length; x++) {
+			if (strings[x] != null) 
+				internetAddress[x] = new InternetAddress(strings[x]);
 		}		
 		return internetAddress;
 	}

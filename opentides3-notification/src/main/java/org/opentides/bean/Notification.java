@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2013 the original author or authors.
+  * Copyright 2007-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,6 +48,7 @@ public class Notification extends BaseEntity {
 
 	public static enum Status {
 		NEW,
+		IN_PROCESS,
 		PROCESSED,
 		FAILED
 	}
@@ -68,15 +69,9 @@ public class Notification extends BaseEntity {
 	private Long eventGroupId;
 
 	/**
-	 * Reference to the type of event related to this notification.
-	 */
-	@JsonView(Views.SearchView.class)
-	@JoinColumn(name = "EVENT_ID")
-	private Event event;
-	
-	/**
 	 * Subject used in email subject field.
 	 */
+	@JsonView(Views.SearchView.class)
 	@Column(name="SUBJECT", length=1000)
 	private String subject;
 		
@@ -92,40 +87,53 @@ public class Notification extends BaseEntity {
 	 */
 	@JsonView(Views.SearchView.class)
 	@Column(name = "STATUS", nullable = false)
-	private Status status;
+	private String status;
 
 	/**
 	 * Type of notification
 	 */
 	@JsonView(Views.SearchView.class)
 	@Column(name = "MEDIUM", nullable = false)
-	private Medium medium;
+	private String medium;
 	
     /**
      * Primary key of object being notified.
-     */
-    @Column(name = "ENTITY_ID", nullable = false, updatable = false)
+     */	
+    @Column(name = "ENTITY_ID", updatable = false)
     private Long entityId;
     
     /**
      * Class type of object being notified.
      */
-    @JsonView(Views.SearchView.class)
     @SuppressWarnings({ "rawtypes" })
-    @Column(name = "ENTITY_CLASS", nullable = false, updatable = false)
+    @Column(name = "ENTITY_CLASS", updatable = false)
     private Class entityClass;
 
     /**
      * Email address or mobile number to receive the notification.
      */
+	@JsonView(Views.SearchView.class)    
     @Column(name = "RECEIPIENT_REF") 
     private String recipientReference;
+    
+	@JsonView(Views.SearchView.class)
+    @Column(name="EMAIL_REPLYTO")
+    private String emailReplyTo;
+    
+	@JsonView(Views.SearchView.class)
+    @Column(name="EMAIL_CC")
+    private String emailCC;
+	
+	@JsonView(Views.FullView.class)
+	@Column(name="ATTACHMENT")
+	private String attachment;
 
     /**
      * User to receive the notification.
      */
 	@ManyToOne(cascade = { CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.EAGER)    
     @JoinColumn(name = "USER_ID") 
+	@JsonView(Views.FullView.class)
     private BaseUser recipientUser;
 
     @Column(name="REMARKS", length=4000)
@@ -156,20 +164,6 @@ public class Notification extends BaseEntity {
 	}
 
 	/**
-	 * @return the event
-	 */
-	public Event getEvent() {
-		return event;
-	}
-
-	/**
-	 * @param event the event to set
-	 */
-	public void setEvent(Event event) {
-		this.event = event;
-	}
-
-	/**
 	 * @return the subject
 	 */
 	public String getSubject() {
@@ -180,7 +174,7 @@ public class Notification extends BaseEntity {
 	 * @param subject the subject to set
 	 */
 	public void setSubject(String subject) {
-		this.subject = subject;
+		this.subject = "[TMS] "+ subject;
 	}
 
 	/**
@@ -213,20 +207,6 @@ public class Notification extends BaseEntity {
 			display = display.substring(0, 70) + "...";
 		return display;
 	}
-	
-	/**
-	 * @return the status
-	 */
-	public Status getStatus() {
-		return status;
-	}
-
-	/**
-	 * @param status the status to set
-	 */
-	public void setStatus(Status status) {
-		this.status = status;
-	}
 
 	/**
 	 * @return the entityId
@@ -245,6 +225,7 @@ public class Notification extends BaseEntity {
 	/**
 	 * @return the entityClass
 	 */
+	@SuppressWarnings("rawtypes")
 	public Class getEntityClass() {
 		return entityClass;
 	}
@@ -252,21 +233,36 @@ public class Notification extends BaseEntity {
 	/**
 	 * @param entityClass the entityClass to set
 	 */
+	@SuppressWarnings("rawtypes")
 	public void setEntityClass(Class entityClass) {
 		this.entityClass = entityClass;
 	}
 
 	/**
+	 * @return the status
+	 */
+	public String getStatus() {
+		return status;
+	}
+
+	/**
+	 * @param status the status to set
+	 */
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	/**
 	 * @return the medium
 	 */
-	public Medium getMedium() {
+	public String getMedium() {
 		return medium;
 	}
 
 	/**
 	 * @param medium the medium to set
 	 */
-	public void setMedium(Medium medium) {
+	public void setMedium(String medium) {
 		this.medium = medium;
 	}
 
@@ -282,6 +278,34 @@ public class Notification extends BaseEntity {
 	 */
 	public void setRecipientReference(String recipientReference) {
 		this.recipientReference = recipientReference;
+	}
+
+	/**
+	 * @return the emailReplyTo
+	 */
+	public String getEmailReplyTo() {
+		return emailReplyTo;
+	}
+
+	/**
+	 * @param emailReplyTo the emailReplyTo to set
+	 */
+	public void setEmailReplyTo(String emailReplyTo) {
+		this.emailReplyTo = emailReplyTo;
+	}
+
+	/**
+	 * @return the emailCC
+	 */
+	public String getEmailCC() {
+		return emailCC;
+	}
+
+	/**
+	 * @param emailCC the emailCC to set
+	 */
+	public void setEmailCC(String emailCC) {
+		this.emailCC = emailCC;
 	}
 
 	/**
@@ -314,6 +338,20 @@ public class Notification extends BaseEntity {
 		if (medium.equals(Medium.SMS))
 			display.append("SMS to").append(recipientReference);
 		return display.toString();
+	}
+
+	/**
+	 * @return the attachment
+	 */
+	public String getAttachment() {
+		return attachment;
+	}
+
+	/**
+	 * @param attachment the attachment to set
+	 */
+	public void setAttachment(String attachment) {
+		this.attachment = attachment;
 	}
 
 	/**

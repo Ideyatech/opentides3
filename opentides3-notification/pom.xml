@@ -1,22 +1,28 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>notification</artifactId>
-	<name>Opentides 3 Notification</name>
+	<name>opentides-notification</name>
 	<packaging>jar</packaging>
 
 	<properties>
 		<org.springframework-version>3.2.8.RELEASE</org.springframework-version>
+		<org.atmosphere-version>2.2.3</org.atmosphere-version>
+		
 	</properties>
 
 	<dependencies>
-		<!-- Atmosphere for NIO notification -->
+		<dependency>
+			<groupId>org.opentides</groupId>
+			<artifactId>core</artifactId>
+			<version>3.1.0</version>
+		</dependency>
+
+		<!-- Atmosphere for NIO notification  -->
 		<dependency>
 			<groupId>org.atmosphere</groupId>
 			<artifactId>atmosphere-runtime</artifactId>
-			<version>2.2.3</version>
+			<version>${org.atmosphere-version}</version>
 		</dependency>
 
 		<dependency>
@@ -24,7 +30,8 @@
 			<artifactId>servlet-api</artifactId>
 			<version>2.5</version>
 			<scope>provided</scope>
-		</dependency>
+		</dependency> 
+
 		<dependency>
 			<groupId>javax.servlet.jsp</groupId>
 			<artifactId>jsp-api</artifactId>
@@ -36,12 +43,14 @@
 			<artifactId>jstl</artifactId>
 			<version>1.2</version>
 		</dependency>
-		
+<!--	
+	
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<scope>test</scope>
 		</dependency>
+		
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
@@ -61,12 +70,6 @@
 			<artifactId>dbunit</artifactId>
 			<version>2.4.3</version>
 			<scope>test</scope>
-			<exclusions>
-				<exclusion>
-					<artifactId>slf4j-api</artifactId>
-					<groupId>org.slf4j</groupId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 
 		<dependency>
@@ -75,9 +78,8 @@
 			<version>2.2.8</version>
 			<scope>test</scope>
 		</dependency>
-		
+ -->		
 	</dependencies>
-	
 	<build>
 		<plugins>
 			<plugin>
@@ -97,5 +99,4 @@
 		<artifactId>opentides3</artifactId>
 		<version>3.1.0</version>
 	</parent>
-	
 </project>

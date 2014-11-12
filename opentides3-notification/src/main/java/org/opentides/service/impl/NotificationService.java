@@ -70,10 +70,24 @@ public interface NotificationService extends BaseCrudService<Notification>{
 	public long countNewPopup(long userId);
 	
 	/**
+	 * Clears all notifications as read.
+	 * @param userId
+	 */
+	public void clearPopup(long userId);
+	
+	/**
+	 * Returns the message for the notification ajax call.
+	 * 
+	 * @param userId
+	 * @return
+	 */
+	public String getPopupNotification(long userId);
+	
+	/**
 	 * Retrieves all the new notification to be displayed.
 	 * 
 	 * @param userId
 	 * @return
 	 */
-	public List<Notification> findNewPopup(long userId);
+	public List<Notification> findMostRecentPopup(long userId);
 }

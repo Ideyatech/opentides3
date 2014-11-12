@@ -16,9 +16,11 @@
 
 package org.opentides.service.impl;
 
-import java.util.ArrayList;
+import java.io.File;
 import java.util.List;
 import java.util.Locale;
+
+import javax.transaction.Transactional;
 
 import org.apache.log4j.Logger;
 import org.apache.velocity.app.VelocityEngine;
@@ -27,11 +29,11 @@ import org.atmosphere.cpr.BroadcasterFactory;
 import org.opentides.bean.BaseEntity;
 import org.opentides.bean.Event;
 import org.opentides.bean.Notification;
-import org.opentides.bean.Notification.Medium;
 import org.opentides.bean.Notification.Status;
 import org.opentides.dao.NotificationDao;
 import org.opentides.eventhandler.EmailHandler;
 import org.opentides.service.MailingService;
+import org.opentides.util.DateUtil;
 import org.opentides.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -78,41 +80,64 @@ implements NotificationService {
 //                velocityEngine, "com/dns/registration-confirmation.vm", "UTF-8", model);
 //	}
 	
-	@Scheduled(fixedDelayString = "${notification.delay}")	
+	@Scheduled(fixedDelayString = "${notification.delay}")
+	@Transactional
 	public void executeNotification() {
-		List<Notification> notifications = notificationDao.findNewNotifications(StringUtil.convertToInt(limit,20));
-		for (Notification n:notifications) {			
+		int max = StringUtil.convertToInt(limit,20);
+		for (int i=0; i<max; i++) {
+			List<Notification> notifications = notificationDao.findNewNotifications(1);
+			if (notifications== null || notifications.isEmpty()) 
+				break;
+			Notification n = notifications.get(0);
 			Status status = null;
 			boolean processed = false;
 			StringBuffer remarks = new StringBuffer();
 			try {
-				if (n.getMedium().equals(Medium.EMAIL)) {
+				if ("EMAIL".equals(n.getMedium())) {
+					n.setStatus(Status.IN_PROCESS.toString());
+					notificationDao.saveEntityModel(n);
 					// send email
 					if (n.getSubject()==null) n.setSubject("");
-					emailHandler.sendEmail(new String [] {n.getRecipientReference()}, new String [] {}, new String [] {}, 
-						n.getSubject(), n.getMessage());
+					if (StringUtil.isEmpty(n.getAttachment())) {
+						emailHandler.sendEmail(n.getRecipientReference().split(","), new String [] {n.getEmailCC()}, 
+								new String [] {}, n.getEmailReplyTo(), n.getSubject(), n.getMessage());						
+					} else {
+						// send with attachment
+						File attachment = new File(n.getAttachment());
+						emailHandler.sendEmail(n.getRecipientReference().split(","), new String [] {n.getEmailCC()}, 
+								new String [] {}, n.getEmailReplyTo(), n.getSubject(), n.getMessage(), new File[] {attachment});						
+					}
+
 					status=Status.PROCESSED;
 					processed = true;
 					remarks.append("Email successfully sent to "+n.getRecipientReference()+".\n");
 				}
-				if (n.getMedium().equals(Medium.SMS)) {
+				if ("SMS".equals(n.getMedium())) {
+					n.setStatus(Status.IN_PROCESS.toString());
+					notificationDao.saveEntityModel(n);
 					// send SMS
-					processed = true;
-					remarks.append("SMS notification not supported.\n");
+//					processed = smsService.send(n.getRecipientReference(), n.getMessage());
+//					if(processed) {
+//						status = Status.PROCESSED;
+//						remarks.append("SMS sent to " + n.getRecipientReference() + "\n");
+//					} else {
+//						status = Status.FAILED;
+//					}
 				}
 				if (processed) {
-					n.setStatus(status);
+					if (status!=null) n.setStatus(status.toString());
 					n.setRemarks(remarks.toString());				
 					notificationDao.saveEntityModel(n);
 				}
 			} catch (Exception e) {
+				_log.error("Error encountered while sending notification", e);
 				remarks.append(e.getMessage());
 				if (remarks.length()>3999)
 					n.setRemarks(remarks.substring(0, 3999));
 				else
 					n.setRemarks(remarks.toString()+"\n");				
-				n.setStatus(Status.FAILED);
-				notificationDao.saveEntityModel(n);	
+				n.setStatus(Status.FAILED.toString());
+				notificationDao.saveEntityModel(n);	 
 			}
 		}
 	}
@@ -121,7 +146,7 @@ implements NotificationService {
 	    Broadcaster b = BroadcasterFactory.getDefault().lookup(userId);
 	    if (b!=null) {
 	        long nCount = notificationDao.countNewPopup(new Long(userId));
-	        List<Notification> notifications = notificationDao.findNewPopup(new Long(userId));
+	        List<Notification> notifications = notificationDao.findMostRecentPopup(new Long(userId));
 	        StringBuffer response = new StringBuffer("[");
 	        response.append(nCount);
 	        for (Notification n:notifications) {
@@ -144,7 +169,6 @@ implements NotificationService {
 	public void triggerEvent(Event event, BaseEntity command) {
 		// build the message
 		
-		
 		// get the recipients
 		
 		// save as new notification
@@ -156,8 +180,39 @@ implements NotificationService {
 	}
 
 	@Override
-	public List<Notification> findNewPopup(long userId) {
-		return notificationDao.findNewPopup(userId);
+	public void clearPopup(long userId) {
+		notificationDao.clearPopup(userId);
 	}
 
+	@Override	
+	public String getPopupNotification(long userId) {
+		// Let's manually build the json
+		StringBuilder jsonBuilder = new StringBuilder();
+		List<Notification> notifs = null;
+		long count = 0;
+		notifs = this.findMostRecentPopup(userId);
+		count = this.countNewPopup(userId);
+		
+		jsonBuilder.append("{\"notifications\":[");
+		if (notifs != null) {
+			int idx = 0;
+			for (Notification n : notifs) {
+				if (idx++ > 0) jsonBuilder.append(",");
+				jsonBuilder.append("{\"createDate\":\"")
+				.append(DateUtil.dateToString(n.getCreateDate(), "MMM dd, yyyy hh:mm a"))
+				.append("\",\"message\":\"").append(n.getMessage()).append("\"}");
+			}
+		}
+		
+		jsonBuilder.append("],\"notifyCount\":\"")
+				   .append(count)
+				   .append("\"}");
+
+		return jsonBuilder.toString(); 
+	}
+	
+	@Override
+	public List<Notification> findMostRecentPopup(long userId) {
+		return notificationDao.findMostRecentPopup(userId);
+	}
 }

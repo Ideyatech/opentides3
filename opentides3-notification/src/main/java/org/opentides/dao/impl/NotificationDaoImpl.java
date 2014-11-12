@@ -57,12 +57,13 @@ implements NotificationDao {
 		if (!StringUtil.isEmpty(append.toString())){
 			append.append(" and ");
 		}
+		
 		if (example.getStartDate() != null){
 			if (!StringUtil.isEmpty(append.toString())){
 				append.append(" and ");
 			}
 			String startDate = DateUtil.dateToString(example.getStartDate(), "yyyy-MM-dd");
-			append.append(" obj.createDate >= '");
+			append.append(" date(obj.createDate) >= '");
 			append.append(startDate + "'");
 		}
 		
@@ -72,9 +73,10 @@ implements NotificationDao {
 			}			
 			String endDate = DateUtil.dateToString(
 								DateUtils.addDays(example.getEndDate(), 1), "yyyy-MM-dd");
-			append.append(" obj.createDate <= '");
+			append.append(" date(obj.createDate) <= '");
 			append.append(endDate + "'");
 		}
+		
 		return append.toString();
 	}
 
@@ -97,11 +99,31 @@ implements NotificationDao {
 
 	@Override
 	@Transactional(readOnly=true)
-	public List<Notification> findNewPopup(long userId) {
+	public List<Notification> findMostRecentPopup(long userId) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("userId", userId);
-        List<Notification> result = findByNamedQuery("jpql.notification.findNewPopup", params);
+        List<Notification> result = findByNamedQuery("jpql.notification.findMostRecentPopup", params, 0, 10);
         return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.gsis.tms.dao.NotificationDao#clearPopup(long)
+	 */
+	@Override
+	@Transactional
+	public void clearPopup(long userId) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("userId", userId);
+		executeByNamedQuery("jpql.notification.clearPopup", params);
+		return;		
+	}
+
+	@Override
+	public void clearNotification(long id) {
+		Map<String, Object> params = new HashMap<String, Object>();
+        params.put("id", id);
+		executeByNamedQuery("jpql.notification.clearNotification", params);
+		return;		
 	}
 	
 }

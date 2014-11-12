@@ -55,7 +55,18 @@ public interface NotificationDao extends BaseEntityDao<Notification, Long> {
 	 * @param userId
 	 * @return
 	 */
-	public List<Notification> findNewPopup(long userId);
+	public List<Notification> findMostRecentPopup(long userId);
 	
-
+	/**
+	 * Clears all popup alerts as read.
+	 * @param userId
+	 */
+	public void clearPopup(long userId);
+	
+	/**
+	 * Clears notification as read/processed.
+	 * @param userId
+	 */
+	public void clearNotification(long id);	
+	
 }

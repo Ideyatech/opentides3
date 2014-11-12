@@ -19,6 +19,7 @@
 package org.opentides.web.controller;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -32,7 +33,9 @@ import org.opentides.bean.user.BaseUser;
 import org.opentides.bean.user.SessionUser;
 import org.opentides.service.UserService;
 import org.opentides.service.impl.NotificationService;
+import org.opentides.util.DateUtil;
 import org.opentides.util.SecurityUtil;
+import org.opentides.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -81,33 +84,23 @@ public class NotificationController extends BaseCrudController<Notification> {
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value="/add-random")
-	public final String addRandom(Model model){
-//		Notification n = new Notification();
-//		n.setMessage("This is a test message");
-//		n.setMedium(Medium.EMAIL);
-//		n.setRecipientReference("allan@ideyatech.com");
-//		n.setEntityClass(this.getClass());
-//		n.setEntityId(1l);
-//		n.setEventGroupId(1l);
-//		n.setStatus(Status.NEW);
-//		notificationService.save(n);
-
-	
+	public final String addRandom(Model model){	
 		BaseUser user = userService.getCurrentUser();
+		String random = DateUtil.dateToString(new Date(), "hh:mm:ss");
 		Notification n1 = new Notification();
-		n1.setMessage("This is a test message");
-		n1.setMedium(Medium.POPUP);
+		n1.setMessage("This is a test message. " + random);
+		n1.setMedium(Medium.POPUP.toString());
 		n1.setRecipientUser(user);
 		n1.setEntityClass(this.getClass());
 		n1.setEntityId(1l);
 		n1.setEventGroupId(1l);
-		n1.setStatus(Status.NEW);
+		n1.setStatus(Status.NEW.toString());
 		notificationService.save(n1);
 				
 		try {
 			SessionUser sessionUser = SecurityUtil.getSessionUser();
-			Event event = new Event();
-			event.setDescription("Hooray!");
+			Event event = new Event();			
+			event.setDescription("Hooray! " + random);
 			notificationService.notify(""+sessionUser.getId(),event);
 		} catch (Exception e) {
 		}		

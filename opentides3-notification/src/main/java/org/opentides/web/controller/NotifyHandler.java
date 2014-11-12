@@ -39,7 +39,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 
 /**
- * A Spring MVC controller that enables the server to push the time to clients.
+ * A Spring MVC controller that enables the server to push notifications to clients
+ * using Atmosphere.
  */
 @Controller
 public class NotifyHandler {
@@ -52,19 +53,6 @@ public class NotifyHandler {
      * Set the meteor's broadcaster to '/notify', suspend, then broadcast to this request only.
      * @param m A meteor that represents the current comet session.
      */
-/*  
-    @RequestMapping("/notify/{userId}")
-    @ResponseBody
-    public void time(final Meteor m) {
-    	if (this.bf==null) 
-    		initialiseBroadcaster();
-        final Broadcaster b = this.bf.lookup("/notify");
-        m.setBroadcaster(b);
-        m.suspend(-1);
-        b.broadcast(DateUtil.dateToString(new Date(), "MM/dd/yyyy mm:hh:ss"), 
-        		m.getAtmosphereResource());
-    }
-*/
     @RequestMapping(value = "/notify/{userId}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -83,7 +71,7 @@ public class NotifyHandler {
         broadcaster.addAtmosphereResource(resource);
         
         long nCount = notificationService.countNewPopup(new Long(userId));
-        List<Notification> notifications = notificationService.findNewPopup(new Long(userId));
+        List<Notification> notifications = notificationService.findMostRecentPopup(new Long(userId));
         List<String> response = new ArrayList<String>();
         response.add(""+nCount);
         for (Notification n:notifications) {
