@@ -37,4 +37,7 @@
 		<property name="startupCommand" ref="startupCommand" />
 	</bean>
 	
+	<!-- Property map injected into entity manager to enable multitenancy -->
+	<util:map id="jpaPropertyMap">
+	</util:map>
 </beans>
