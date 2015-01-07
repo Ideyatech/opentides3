@@ -30,7 +30,6 @@ import org.opentides.bean.user.UserGroup;
 import org.opentides.service.UserGroupService;
 import org.opentides.service.UserService;
 import org.opentides.util.StringUtil;
-import org.opentides.web.validator.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -52,6 +51,16 @@ public class UserCrudController extends BaseCrudController<BaseUser> {
 	private UserGroupService userGroupService;
 	
 	/**
+	 * Override the setter of user service to inject "userService" bean
+	 * instead of "baseUserService" 
+	 * 
+	 * @param userService
+	 */
+	@Autowired
+	public void setUserService(UserService userService) {
+		super.service = userService;
+	}
+	/**
 	 * Post construct that initializes the crud page to {@code /base/user-crud}.
 	 */
 	@PostConstruct
@@ -66,16 +75,6 @@ public class UserCrudController extends BaseCrudController<BaseUser> {
 	@ModelAttribute("userGroupsList")
 	public List<UserGroup> getUserGroupsList() {
 		return userGroupService.findAll();
-	}
-	
-	@Autowired
-	public void setService(UserService userService) {
-		this.service = userService;
-	}
-	
-	@Autowired
-	public void setValidator(UserValidator userValidator) {
-		this.formValidator = userValidator;
 	}
 	
 	/* (non-Javadoc)

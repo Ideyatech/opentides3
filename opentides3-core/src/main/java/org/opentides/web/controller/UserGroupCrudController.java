@@ -56,13 +56,15 @@ public class UserGroupCrudController extends BaseCrudController<UserGroup> {
     }
 
 	/**
-	 * Post construct that initializes the crud page to {@code "/base/system-codes-crud"}.
+	 * Initializes the crud page to {@code "/base/usergroup-crud"}.
+	 * and no paging support.
 	 */
-	@PostConstruct
-	public void init() {
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		super.afterPropertiesSet();
 		singlePage = "/base/usergroup-crud";
-		// no pagination support
-		pageSize = 0;
+		// no support for pagination
+		this.service.setPageSize(0);
 	}
 
 	/* (non-Javadoc)
