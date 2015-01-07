@@ -19,12 +19,15 @@
 
 package org.opentides.util;
 
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -60,6 +63,8 @@ public class CrudUtil {
 	private static final String SQL_PARAM = ":([^\\s]+)"; 
 	private static final Pattern SQL_PARAM_PATTERN = Pattern.compile(
 			SQL_PARAM, Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
+	
+	private static final String URL_ENCODING = "UTF-8";
 	
 	/**
 	 * Hide the constructor.
@@ -275,7 +280,93 @@ public class CrudUtil {
 		}
     	return obj;
     }
-
+    
+    /**
+     * Helper function that converts the given object into a map value.
+     * 
+     * @param object
+     * @return
+     */
+    public static Map<String, Object> buildMapValues(BaseEntity object) {
+    	return buildMapValues(object, CacheUtil.getPersistentFields(object));
+    }
+    
+    /**
+     * Helper function that converts the given object into a map value.
+     * 
+     * @param object
+     * @param fields
+     * @return
+     */
+    @SuppressWarnings("rawtypes")
+	public static Map<String, Object> buildMapValues(BaseEntity object, List<String> fields) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		for (String property:fields) {
+			// get the value
+			Object ret = retrieveObjectValue(object, property);
+			if (ret!=null) {
+				if (SystemCodes.class.isAssignableFrom(ret.getClass())) {
+					SystemCodes sc = (SystemCodes) ret;
+					if (!StringUtil.isEmpty(sc.getKey())) {
+						map.put(property, sc.getKey());
+					}
+				} else if (BaseEntity.class.isAssignableFrom(ret.getClass())) {
+					BaseEntity be = (BaseEntity) ret;
+					if (be.getId() != null) {
+						map.put(property, be.getId());
+					}
+				} else if (Collection.class.isAssignableFrom(ret.getClass())) {
+					Collection c = (Collection) ret;
+					Iterator itr = c.iterator();
+				      while(itr.hasNext()) {
+				         Object value = itr.next();				        	 
+				         if (value!=null) {
+					         if (BaseEntity.class.isAssignableFrom(value.getClass())) {
+									BaseEntity be = (BaseEntity) value;
+									if (be.getId() != null) {
+										map.put(property, be.getId());
+									}					        	 
+					         } else
+					        	 map.put(property, value);
+				         }
+				      }
+				} else if (ret.toString().trim().length()>0){
+					map.put(property, ret.toString());
+				}				
+			}
+		}
+    	return map;
+    }
+    
+    /**
+     * Builds the URL parameter for invoking search services via REST
+     * 
+     * @param example
+     * @return
+     * @throws UnsupportedEncodingException 
+     */
+	public static String buildURLParameters(BaseEntity object) {		
+		Map<String, Object> map = buildMapValues(object);
+		StringBuilder parameter = new StringBuilder("");
+		int count=0;
+		try {
+			for (String key:map.keySet()) {
+				if (count > 0) parameter.append("&");
+				parameter.append(key)
+						 .append("=")
+						 .append(URLEncoder.encode(map.get(key).toString(), URL_ENCODING));
+				count++;
+			}
+		} catch (UnsupportedEncodingException ex) {
+			_log.error(URL_ENCODING + " is not supported", ex);
+		}
+		if (count > 0) 
+	    	return parameter.toString();
+	    else
+	    	return "";
+    }
+			
+			
     /**
      * Builds the query string appended to queryByExample
      * @param example
