@@ -2,7 +2,7 @@
 	- input.tag
 	- Generates form input element
 --%>
-<%@ tag body-content="empty" dynamic-attributes="dAttrs" %>
+<%@ tag body-content="empty" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
@@ -11,16 +11,13 @@
 <%@ attribute name="required" required="false" type="java.lang.Boolean" %>
 <%@ attribute name="textarea" required="false" type="java.lang.Boolean" %>
 <%@ attribute name="type" required="false" type="java.lang.String" %>
-<%@ attribute name="placeholder" required="false" type="java.lang.String" %>
 <%@ attribute name="cssClass" required="false" type="java.lang.String" %>
+<%@ attribute name="placeholder" required="false" type="java.lang.String" %>
+<%@ attribute name="readonly" required="false" type="java.lang.String" %>
 <%@ attribute name="appendText" required="false" type="java.lang.String" %>
 <%@ attribute name="prependText" required="false" type="java.lang.String" %>
 <%@ attribute name="appendIcon" required="false" type="java.lang.String" %>
 <%@ attribute name="prependIcon" required="false" type="java.lang.String" %>
-
-<c:forEach items="${dAttrs}" var="attr">
-	<c:set var="attrs" value='${attrs} ${attr.key}="${attr.value}"'/>
-</c:forEach>
 
 <div class="control-group">
 
@@ -47,19 +44,18 @@
 			<c:choose>
 				<c:when test="${textarea}">
 					<form:textarea path="${path}"
-				
 						type="${empty type ? 'text': type }"
 						placeholder="${placeholder}"
 						cssClass="${cssClass}"
-						
+						readonly="${readonly}"
 						/>
 				</c:when>
 				<c:otherwise>
 					<form:input path="${path}"
-				
 						type="${empty type ? 'text': type }"
 						placeholder="${placeholder}"
 						cssClass="${cssClass}"
+						readonly="${readonly}"
 						/>
 				</c:otherwise>
 			</c:choose>
