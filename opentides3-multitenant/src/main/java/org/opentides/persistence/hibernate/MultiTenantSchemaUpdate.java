@@ -1,0 +1,224 @@
+/*
+   Licensed to the Apache Software Foundation (ASF) under one
+   or more contributor license agreements.  See the NOTICE file
+   distributed with this work for additional information
+   regarding copyright ownership.  The ASF licenses this file
+   to you under the Apache License, Version 2.0 (the
+   "License"); you may not use this file except in compliance
+   with the License.  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing,
+   software distributed under the License is distributed on an
+   "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+   KIND, either express or implied.  See the License for the
+   specific language governing permissions and limitations
+   under the License.    
+ */
+package org.opentides.persistence.hibernate;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
+
+import javax.annotation.PostConstruct;
+import javax.sql.DataSource;
+import javax.transaction.Transactional;
+
+import org.apache.log4j.Logger;
+import org.hibernate.HibernateException;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.engine.jdbc.connections.internal.DatasourceConnectionProviderImpl;
+import org.hibernate.engine.jdbc.connections.spi.ConnectionProvider;
+import org.hibernate.tool.hbm2ddl.SchemaExport;
+import org.opentides.util.DatabaseUtil;
+import org.opentides.util.DateUtil;
+import org.opentides.util.FileUtil;
+import org.opentides.util.StringUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
+
+/**
+ * Utilities for performing multi-tenancy operations.
+ * 
+ * @author allantan
+ *
+ */
+@Service("multiTenantSchemaUpdate")
+public class MultiTenantSchemaUpdate {
+	
+	private static final Logger _log = Logger.getLogger(MultiTenantSchemaUpdate.class);
+
+	private ConnectionProvider connectionProvider = null;
+	
+	@Autowired
+	private PersistenceScanner persistenceScanner;
+	
+	@Autowired
+	private DataSource dataSource;
+			
+	@Value("${database.default_schema}")
+	private String defaultSchema = "master";
+
+	@Value("${jpa.log_ddl.directory}")
+	private String ddlLogs = "/var/log/ss_ddl/";
+	
+	@Value("${jpa.script_ddl.latest}")
+	private Resource ddlScript;
+	
+	@Value("${jpa.log_ddl}")	
+	private Boolean logDdl = false;
+	
+    /**
+     * Persistence name in hibernate.
+     */
+	@Value("${persistence.name}")
+    private String persistenceUnitName = "opentidesPU";
+
+	/**
+	 * Creates or updates the schema for the given tenantId.
+	 * Invoke this method only when a separate schema is needed 
+	 * for the tenant.
+	 * 
+	 * @param tenantId
+	 * @return
+	 * @throws ClassNotFoundException 
+	 * @throws SQLException 
+	 * @throws HibernateException 
+	 */
+	@Transactional
+	public boolean schemaEvolve(String schema) {
+		if (StringUtil.isEmpty(schema)) schema = defaultSchema;
+		_log.info("Performing schema update for schema = "+schema);
+		try {
+			Connection connection = connectionProvider.getConnection();			
+			connection.createStatement().execute(
+					"CREATE SCHEMA IF NOT EXISTS " + schema + ";");
+			connection.createStatement().execute(
+					"USE "+schema+";");
+			
+			// Code below is specific to hibernate
+			Configuration cfg = new Configuration();			
+			for (String clazz:DatabaseUtil.getClasses()) {
+				try {
+					cfg.addAnnotatedClass(Class.forName(clazz));
+				} catch (ClassNotFoundException e) {
+					_log.error("Class not found for schema upate ["+clazz+"]",e);
+				}				
+			}
+			// add classes from packagesToScan
+			for (String clazz:persistenceScanner.scanPackages()) {
+				try {
+					cfg.addAnnotatedClass(Class.forName(clazz));
+				} catch (ClassNotFoundException e) {
+					_log.error("Class not found for schema upate ["+clazz+"]",e);
+				}								
+			}
+			cfg.configure();
+			
+			// is this a new schema?
+			if (connection.createStatement().executeQuery("SHOW TABLES LIKE 'SYSTEM_CODES'").next() == false) {
+				//new schema, let's build it
+				initializeSchema(cfg, connection, schema);
+			}			
+			return true;
+		} catch (HibernateException e) {
+			_log.error("Failed to update schema for ["+schema+"].",e);
+			return false;
+		} catch (SQLException e) {
+			_log.error("Failed to update schema for ["+schema+"].",e);
+			return false;
+		}
+	}
+	
+	/**
+	 * This is the helper function that initializes the schema and tables.
+	 * Initialization is as follows: 
+	 *    (1) Get the latest initialization sql script. Execute the sql script.
+	 *    (2) If there is no initialization script, use the hibernate SchemaExport.
+	 *    
+	 * @param tenantId
+	 */
+	private void initializeSchema(Configuration cfg, Connection connection, String schema) {
+		// check if there SQL file under the sslScript folder
+		boolean initialized = false;
+		
+		if (ddlScript != null && ddlScript.exists()) {
+			_log.info("Initializing schema ["+schema+"] using DDL script ["+ddlScript.getFilename()+"].");
+			InputStream inputStream = null;
+			try {
+				inputStream = ddlScript.getInputStream();				
+				Scanner f = new Scanner(inputStream);
+				StringBuilder stmt = new StringBuilder();
+				while (f.hasNext()) {
+					String line = f.nextLine();
+					// ignore comment
+					if (line.startsWith("--")) continue;
+					stmt.append(" ").append(line);
+					if (line.endsWith(";")) {
+						// end of statement, execute then clear
+						connection.createStatement().execute(stmt.toString());
+						System.out.println(stmt.toString());
+						stmt.setLength(0);
+					}
+				}
+				f.close();
+				initialized=true;
+			} catch (SQLException e) {
+				_log.error("Failed to execute sql script for initialization",e);
+			}catch (IOException e) {
+				_log.error("Failed to read sql script for initialization",e);
+			} finally {
+				if (inputStream != null) {
+					try {
+						inputStream.close();
+					} catch (IOException e) {
+					}
+				}
+			}
+		}
+		
+		if (!initialized) {
+			_log.info("Initializing schema ["+schema+"] using SchemaExport. ");
+			SchemaExport export = new SchemaExport(cfg, connection);
+			if (this.logDdl) {
+				String dir = ddlLogs+"/"+DateUtil.convertShortDate(new Date());
+				_log.info("DDL logs can be found in "+ dir + "/schema-"+schema+".sql");
+				FileUtil.createDirectory(dir);
+				export.setOutputFile(dir + "/schema-"+schema+".sql");
+				export.setDelimiter(";");				
+			}
+			export.execute(this.logDdl, true, false, true);			
+		}
+
+	}
+	
+	/**
+	 * This is a post construct that set ups the connection provider.
+	 * 
+	 * @throws Exception
+	 */
+	@PostConstruct
+	public void afterPropertiesSet() throws Exception {
+		if (dataSource != null) {
+			DatasourceConnectionProviderImpl ds = new DatasourceConnectionProviderImpl();
+			Map<String, String> config = new HashMap<String, String>();
+			ds.setDataSource(dataSource);
+			ds.configure(config);
+			connectionProvider = ds;
+		}
+		
+		Assert.notNull(this.connectionProvider, this.getClass().getSimpleName()
+				+ " does not have a datasource for the database connection."
+				+ " Please check your configuration.");
+	}
+}
