@@ -65,7 +65,12 @@ public class SearchResults<T> {
 	/** Messages to be displayed */
 	@JsonView(Views.SearchView.class)	
 	private List<MessageResponse> messages;
-	
+		
+	public SearchResults() {
+		results = new ArrayList<T>();
+		messages = new ArrayList<MessageResponse>();
+	}
+
 	public SearchResults(int pageSize, int numLinks) {
         this.pageSize = pageSize;
         this.numLinks = numLinks;
