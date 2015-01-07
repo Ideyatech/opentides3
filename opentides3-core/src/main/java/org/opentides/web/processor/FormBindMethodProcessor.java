@@ -83,7 +83,7 @@ public class FormBindMethodProcessor implements HandlerMethodArgumentResolver {
 				 (HttpServletRequest) nativeRequest.getNativeRequest();
 
 		Method addForm = CacheUtil.getNewFormBindMethod(clazz);
-		Object controller = beanFactory.getBean(parameter.getDeclaringClass());		
+		Object controller = beanFactory.getBean(parameter.getContainingClass());		
 		Object target = (addForm!=null) ?
 						addForm.invoke(controller, request) : 
 						BeanUtils.instantiateClass(parameter.getParameterType());
