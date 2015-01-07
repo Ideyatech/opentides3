@@ -23,11 +23,18 @@
 		<context:include-filter expression="org.springframework.stereotype.Controller"
 			type="annotation" />
 	</context:component-scan>
-
-	<bean id="additionalMessages" class="java.util.ArrayList" >
+	
+	<bean id="startupCommand" class="java.util.ArrayList" >
 		<constructor-arg>
 			<list>
+				<bean class="org.opentides.listener.command.DBEvolveCommand" />
 			</list>
 		</constructor-arg>
 	</bean>
+
+	<bean id="startupListener" class="org.opentides.listener.ApplicationStartupListener">
+		<property name="propertyName" value="${property.name}" />
+		<property name="startupCommand" ref="startupCommand" />
+	</bean>
+	
 </beans>
