@@ -21,6 +21,7 @@ package org.opentides.web.validator;
 
 import org.opentides.bean.user.BaseUser;
 import org.opentides.dao.UserDao;
+import org.opentides.service.UserService;
 import org.opentides.util.StringUtil;
 import org.opentides.util.ValidatorUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,11 +30,11 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
-@Component
+@Component("baseUserValidator")
 public class UserValidator implements Validator {
 	
 	@Autowired
-	private UserDao userDao;
+	private UserService userService;
 
 	@SuppressWarnings("rawtypes")
 	public boolean supports(Class clazz) {
@@ -57,7 +58,7 @@ public class UserValidator implements Validator {
 				"error.required.at-least-one", new Object[]{"Groups"},"At least one Usergroup is required.");
 		
 		if (isDuplicateUsername(user)) {
-			e.reject("error.duplicate-field", new Object[]{user.getCredential().getUsername(), "username"}, "User name already exists.");
+			e.rejectValue("username", "error.duplicate-field", new Object[]{user.getCredential().getUsername(), "username"}, "User name already exists.");
 		}
 
 		ValidationUtils.rejectIfEmptyOrWhitespace(e, "emailAddress", 
@@ -94,7 +95,7 @@ public class UserValidator implements Validator {
 	private boolean isDuplicateUsername(BaseUser user) {
 		String userName = user.getCredential().getUsername();
 		if (userName != null && !StringUtil.isEmpty(userName)){
-			BaseUser userCheck = userDao.loadByUsername(userName);
+			BaseUser userCheck = userService.loadByUsername(userName);
 			if (userCheck != null && user.isNew())
 				return true;		
 			if (userCheck != null && !userCheck.getId().equals(user.getId())) 
@@ -111,19 +112,12 @@ public class UserValidator implements Validator {
 	private boolean isDuplicateEmail(BaseUser user) {
 		String email = user.getEmailAddress();
 		if (email != null && !StringUtil.isEmpty(email)){
-			BaseUser userCheck = userDao.loadByEmailAddress(email);
+			BaseUser userCheck = userService.loadByEmailAddress(email);
 			if (userCheck != null && user.isNew())
 				return true;			
 			if (userCheck != null && !userCheck.getId().equals(user.getId())) 
 				return true;
 		}
 		return false;
-	}
-
-	/**
-	 * @param ecmtUserDao the ecmtUserDao to set
-	 */
-	public void setUserDao(UserDao userDao) {
-		this.userDao = userDao;
 	}
 }
