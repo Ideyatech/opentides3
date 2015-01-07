@@ -2,7 +2,7 @@
 	- date_picker.tag
 	- Generates form input element with bootstrap date picker
 --%>
-<%@ tag body-content="empty" dynamic-attributes="dAttrs" %>
+<%@ tag body-content="empty" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
@@ -15,10 +15,6 @@
 <%@ attribute name="cssClass" required="false" type="java.lang.String" %>
 <%@ attribute name="format" required="false"  type="java.lang.String" %>
 <%@ attribute name="autoClose" required="false" type="java.lang.String" %>
-
-<c:forEach items="${dAttrs}" var="attr">
-	<c:set var="attrs" value='${attrs} ${attr.key}="${attr.value}"'/>
-</c:forEach>
 
 <c:if test="${empty format}">
 	<c:set var="format" value="mm/dd/yyyy" />

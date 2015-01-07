@@ -1,4 +1,4 @@
-<%@ tag dynamic-attributes="attributes" isELIgnored="false" body-content="scriptless" %>
+<%@ tag isELIgnored="false" body-content="scriptless" %>
 <%@ attribute name="commentList" required="true" type="java.util.Collection"%>
 <%@ attribute name="action" required="true" type="java.lang.String"%>
 <%@ attribute name="commentableId" required="true" type="java.lang.Long"%>

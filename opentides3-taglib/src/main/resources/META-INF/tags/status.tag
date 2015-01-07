@@ -5,7 +5,7 @@
 	- @param results - the results object, must be of type BaseResults
 	- @param resultLabel - name referring to the results. Used as "Displaying X of Y <recordName>
 	--%>
-<%@ tag dynamic-attributes="attributes" isELIgnored="false" body-content="empty" %>
+<%@ tag isELIgnored="false" body-content="empty" %>
 <%@ attribute name="results" required="true" type="org.opentides.bean.SearchResults" %>
 <%@ attribute name="pageParamName" required="false" %>
 <%@ attribute name="searchFormId" required="false" %>

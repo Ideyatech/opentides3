@@ -1,4 +1,4 @@
-<%@ tag dynamic-attributes="attributes" isELIgnored="false" body-content="scriptless" %>
+<%@ tag isELIgnored="false" body-content="scriptless" %>
 <%@ attribute name="pageType" required="false" type="java.lang.String"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>

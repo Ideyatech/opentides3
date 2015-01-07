@@ -2,7 +2,7 @@
 	- input-file.tag
 	- Generates input with type file element and handles file upload.
 --%>
-<%@ tag body-content="empty" dynamic-attributes="dAttrs" %>
+<%@ tag body-content="empty" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ attribute name="label" required="true" type="java.lang.String" %>
@@ -12,13 +12,6 @@
 <%@ attribute name="dataURL" required="false" type="java.lang.String" %>
 <%@ attribute name="isFile" required="false" type="java.lang.Boolean" %>
 <%@ attribute name="uploadType" required="false" type="java.lang.String" %>
-
-<!-- Get all dynamic attributes of this tag. -->
-<c:forEach items="${dAttrs}" var="attr">
-	<c:set var="attrs" value='${attrs} ${attr.key}="${attr.value}"'/>
-</c:forEach>
-
-
 
 <!-- Initialize Upload URL. -->
 <c:set var="uploadURL" value="${home}/image/upload"/>

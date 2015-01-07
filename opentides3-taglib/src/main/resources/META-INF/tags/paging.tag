@@ -4,7 +4,7 @@
 	-
 	- @param results - the results object, must be of type BaseResults
 	--%>
-<%@ tag dynamic-attributes="attributes" isELIgnored="false" body-content="empty" %>
+<%@ tag isELIgnored="false" body-content="empty" %>
 <%@ attribute name="results" required="true" type="org.opentides.bean.SearchResults" %>
 <%@ attribute name="cssClass" required="false" type="java.lang.String" %>
 
