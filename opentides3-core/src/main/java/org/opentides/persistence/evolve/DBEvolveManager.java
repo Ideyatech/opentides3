@@ -21,7 +21,7 @@ package org.opentides.persistence.evolve;
 import java.util.Collections;
 import java.util.List;
 
-import javax.persistence.NoResultException;
+import javax.annotation.PostConstruct;
 
 import org.apache.log4j.Logger;
 import org.opentides.bean.Sequence;
@@ -53,22 +53,19 @@ public class DBEvolveManager {
 	@Autowired
 	private UserGroupService userGroupService;
 	
+	private Sequence currentVersion;
+	
+	private Long latestVersion;
+	
 	private static final Logger _log = Logger.getLogger(DBEvolveManager.class);
-
+	
 	@Transactional
 	public void evolve() {
-
-		// get current db version
-		Sequence version;
-		try {
-		    version = sequenceDao.loadSequenceByKey("DB_VERSION");
-		} catch (NoResultException nre) {
-		    version = null;
-		}
-		if (version==null) {
+		
+		if (currentVersion==null) {
 			// no version available yet, lets create one
-			version = new Sequence("DB_VERSION", 0l);
-			sequenceDao.saveEntityModel(version);
+			currentVersion = new Sequence("DB_VERSION", 0l);
+			sequenceDao.saveEntityModel(currentVersion);
 			// initialize default admin user
 			userGroupService.setupAdminGroup();
 			userService.setupAdminUser();
@@ -79,24 +76,9 @@ public class DBEvolveManager {
 			_log.info("No evolve scripts found.");
 			return;
 		}
-		
 
-		// sort the evolve list
-		Collections.sort(evolveList, new VersionComparator());
-		// check for duplicate version numbers
-		for (int i=0; i<(evolveList.size()-1); i++) {
-			if (evolveList.get(i).getVersion() == evolveList.get(i+1).getVersion()) {
-				// we have a duplicate version... exit
-				throw new InvalidImplementationException(
-						"Duplicate version number ["+evolveList.get(i).getVersion() +
-						"] detected on evolve script for "+evolveList.get(i).getClass().getName() + 
-						" and " + evolveList.get(i+1).getClass().getName());
-			}
-		}
-		
 		// get number of latest evolve script
-		long currVersion   = version.getValue();
-		long latestVersion = evolveList.get(evolveList.size()-1).getVersion();
+		long currVersion   = currentVersion.getValue();
 		
 		if (currVersion>=latestVersion) {
 			_log.info("Database is already at version " + currVersion);
@@ -112,17 +94,55 @@ public class DBEvolveManager {
 				_log.info("Executing evolve version ["+evolve.getVersion()+"] - "+evolve.getDescription());
 				evolve.execute();
 				// if successful, update current db version
-				version.setValue(Long.valueOf(evolve.getVersion()));
-				sequenceDao.saveEntityModel(version);
+				currentVersion.setValue(Long.valueOf(evolve.getVersion()));
+				sequenceDao.saveEntityModel(currentVersion);
 				_log.info("Evolve version  ["+evolve.getVersion()+"] successful.");
 			}
 		}
 		// as precaution let's update db version again
-		version.setValue(Long.valueOf(latestVersion));
-		sequenceDao.saveEntityModel(version);
-		_log.info("Database is now updated to version "+latestVersion);
+		currentVersion.setValue(Long.valueOf(latestVersion));
+		sequenceDao.saveEntityModel(currentVersion);
+		_log.info("Database is now updated to version "+currentVersion.getValue());
 	}
 
+	/**
+	 * This is a post construct that set ups the version numbers.
+	 * 
+	 * @throws Exception
+	 */
+	@PostConstruct
+	public void afterPropertiesSet() throws Exception {
+		
+		// get current db version
+		try {
+		    currentVersion = sequenceDao.loadSequenceByKey("DB_VERSION");
+		} catch (Exception nre) {
+			currentVersion = null;
+		} 
+		
+		// get the latest db evolve version
+		if (evolveList.size() > 0) {
+			// sort the evolve list
+			Collections.sort(evolveList, new VersionComparator());
+			latestVersion = new Long (evolveList.get(evolveList.size()-1).getVersion());			
+		} else {
+			latestVersion = 0l;
+		}
+		
+		// sort the evolve list
+		Collections.sort(evolveList, new VersionComparator());
+		// check for duplicate version numbers
+		for (int i=0; i<(evolveList.size()-1); i++) {
+			if (evolveList.get(i).getVersion() == evolveList.get(i+1).getVersion()) {
+				// we have a duplicate version... exit
+				throw new InvalidImplementationException(
+						"Duplicate version number ["+evolveList.get(i).getVersion() +
+						"] detected on evolve script for "+evolveList.get(i).getClass().getName() + 
+						" and " + evolveList.get(i+1).getClass().getName());
+			}
+		}
+	}
+	
 	/**
 	 * @param evolveList the evolveList to set
 	 */
@@ -143,6 +163,20 @@ public class DBEvolveManager {
 	 */
 	public void setUserService(UserService userService) {
 		this.userService = userService;
+	}
+
+	/**
+	 * @return the currentVersion
+	 */
+	public final Sequence getCurrentVersion() {
+		return currentVersion;
+	}
+
+	/**
+	 * @return the latestVersion
+	 */
+	public final Long getLatestVersion() {
+		return latestVersion;
 	}
 	
 }
