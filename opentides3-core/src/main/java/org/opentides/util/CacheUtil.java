@@ -37,7 +37,6 @@ import org.opentides.annotation.PrimaryField;
 import org.opentides.annotation.SearchableFields;
 import org.opentides.bean.AuditableField;
 import org.opentides.bean.BaseEntity;
-//import org.opentides.annotation.AuditableFields;
 
 /**
  * Helper class to keep a cache of reusable attributes.
@@ -230,10 +229,12 @@ public class CacheUtil {
 	        		persistents.add(field.getName());
 	            }
 	        }
-	        _log.debug(clazz.getSimpleName()+" contains the following persistent fields");
-	        for (String persistent:persistents) {
-	            _log.debug(persistent);        	
-	        }			
+	        if (_log.isDebugEnabled()) {
+		        _log.debug(clazz.getSimpleName()+" contains the following persistent fields");
+		        for (String persistent:persistents) {
+		            _log.debug(persistent);        	
+		        }			
+	        }
 			persistentFields.put(obj.getClass(), persistents);
 			ret =  persistentFields.get(obj.getClass());
 		}
@@ -268,15 +269,18 @@ public class CacheUtil {
 			if (fields == null) {
 				fields = CacheUtil.getPersistentFields(obj);
 			}
-	        _log.debug(clazz.getSimpleName()+" contains the following searchable fields");
-	        for (String field:fields) {
-	            _log.debug(field);        	
-	        }			
+	        if (_log.isDebugEnabled()) {
+		        _log.debug(clazz.getSimpleName()+" contains the following searchable fields");
+		        for (String field:fields) {
+		            _log.debug(field);        	
+		        }			
+	        }		
 			searchableFields.put(obj.getClass(), fields);
 			ret =  searchableFields.get(obj.getClass());
 		}
 		return ret;				
 	}
+	
 	/**
 	 * Retrieves the method annotated with @FormBind(mode=Load.NEW), if available. 
 	 * Otherwise, null method is returned.
