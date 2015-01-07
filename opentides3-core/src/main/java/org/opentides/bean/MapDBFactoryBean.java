@@ -22,6 +22,7 @@ package org.opentides.bean;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.opentides.dao.SystemCodesDao;
 import org.springframework.beans.factory.config.MapFactoryBean;
 
@@ -33,6 +34,8 @@ import org.springframework.beans.factory.config.MapFactoryBean;
  * @author allanctan
  */
 public class MapDBFactoryBean extends MapFactoryBean {
+	
+	private static final Logger _log = Logger.getLogger(MapDBFactoryBean.class);	
 
 	private SystemCodesDao systemCodesDao;
 	private String systemCodesCategory;
@@ -40,17 +43,20 @@ public class MapDBFactoryBean extends MapFactoryBean {
 	/* (non-Javadoc)
 	 * @see org.springframework.beans.factory.config.MapFactoryBean#createInstance()
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
-	protected Map<String, String> createInstance() {
-		Map<String, String> map = super.createInstance();
+	protected Map<Object, Object> createInstance() {
+		Map<Object, Object> map = super.createInstance();
 		// let's append results from system codes
 		if (systemCodesDao!=null) {
-			List<SystemCodes> scList = systemCodesDao.findSystemCodesByCategory(systemCodesCategory);
-			if (scList!=null) {
-				for (SystemCodes sc:scList) {
-					map.put(sc.getKey(), sc.getValue());
+			try {
+				List<SystemCodes> scList = systemCodesDao.findSystemCodesByCategory(systemCodesCategory);
+				if (scList!=null) {
+					for (SystemCodes sc:scList) {
+						map.put(sc.getKey(), sc.getValue());
+					}
 				}
+			} catch (Exception e) {
+				_log.error("Failed to query from SystemCodes. Table is not yet available.",e);
 			}
 		}
 		return map;
