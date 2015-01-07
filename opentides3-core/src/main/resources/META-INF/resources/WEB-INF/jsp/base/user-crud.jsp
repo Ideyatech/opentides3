@@ -7,7 +7,7 @@
 
 <app:header pageTitle="label.user" active="users" />
 	
-<div id="user-body">
+<div id="user-body" class="container">
 
 
 <ul class="breadcrumb">
@@ -15,7 +15,10 @@
   <li><spring:message code="label.user"/></li>
 </ul>
 
-<div id="search-body" class="${search}">
+<div class="page-wrapper-2 overflow-hidden">
+<div class="page-wrapper">
+
+<div id="search-body" class="page main ${search}">
 
 	<div id="search-panel" class="span3">
 	
@@ -72,7 +75,8 @@
 	           			<script type="text/template" class="template">
 	                		<tr id="user-row-{{id}}" data-id="{{id}}">
 								<td>
-									<a href="${home}/organization/users/view/{{id}}">
+									<a href="${home}/organization/users/view/{{id}}" class="view-action" 
+											data-id="{{id}}" data-form="view-body">
 									  	<img class="img-polaroid" src="${home}/image/{{primaryImage.id}}?c=32"/>
 										{{completeName}}
 									</a>
@@ -89,7 +93,7 @@
 		            	<c:forEach items="${results.results}" var="record" varStatus="status">
 			            	<tr id="user-row-${record.id}" data-id="${record.id}">            
 			                	<td>
-			                		<a href="${home}/organization/users/view/${record.id}">
+			                		<a href="${home}/organization/users/view/${record.id}" class="view-action" data-id="${record.id}">
 									  	<img class="img-polaroid" src="${home}/image/${record.primaryImage.id}?c=32"/>
 										<c:out value="${record.completeName}" />
 									</a>
@@ -118,12 +122,11 @@
 
 </div>
    		
-<div id="form-body" class="modal fade ${form}">
+<div id="form-body" class="page ${form}">
 
 	<div id="form-panel">
 	
 		<div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal">&times;</button>
 			<h4 class="${add}"><spring:message code="label.user.add" /></h4>		    
 			<h4 class="${update}"><spring:message code="label.user.update" /></h4>			    
 		</div>
@@ -135,46 +138,30 @@
 				<tides:input path="firstName" label="label.user.first-name" required="true"/>
 				<tides:input path="lastName" label="label.user.last-name" required="true"/>
 				<tides:input path="emailAddress" label="label.user.email" required="true"/>
+				<c:if test="${formCommand.userClass eq 'MultitenantUser'}">
+				<tides:auto_complete path="tenant" pathValue="tenantSearch" url="${home}/ajax/tenants-list" parameterName="q" label="label.user.tenant" required="true" />
+				</c:if>
 				<tides:input path="credential.newPassword" label="label.user.password" type="password" />
 				<tides:input path="credential.confirmPassword" label="label.user.confirm-password" type="password" />
 				<tides:select label="label.user.groups" path="groups" multiple="true"
 					items="${userGroupsList}" itemLabel="name" itemValue="id" select2="true" required="true"/>
 				<tides:checkbox label="label.user.active" path="credential.enabled"/>
-<!-- Start of Photo Gallery -->				
-    <!-- The fileinput-button span is used to style the file input field as button -->
-    <span class="btn btn-success fileinput-button">
-        <i class="glyphicon glyphicon-plus"></i>
-        <span>Add files...</span>
-        <!-- The file input field used as target for the file upload widget -->
-        <input id="fileupload" type="file" name="files[]" multiple>
-    </span>
-    <br>
-    <br>
-    <!-- The global progress bar -->
-    <div id="progress" class="progress">
-        <div class="progress-bar progress-bar-success"></div>
-    </div>
-    <!-- The container for the uploaded files -->
-    <div id="files" class="files"></div>
-
-<!-- End of Photo Gallery -->						
+					
 				<br/>
 			</div>
 		 	<div class="modal-footer">
-		    	<button type="button" class="btn btn-link" data-dismiss="modal"><spring:message code="label.close" /></button>
+		    	<button type="button" class="btn btn-link" data-dismiss="page"><spring:message code="label.back" /></button>
 				<input type="submit" class="btn btn-info  ${add}" data-form-display="add" data-submit="save-and-new" value="<spring:message code="label.save-and-new" />" />
 				<input type="submit" class="btn btn-success" data-submit="save" value="<spring:message code="label.save" />" />
 		    	<input type="hidden" name="id" />
 		  	</div>
 		</form:form>		  	
-	</div>
-			
+	</div>			
 </div>
 
-<div class="adjust-photo-modal modal hide fade" data-width="760" tabindex="-1"></div>
-<div class="upload-photo-modal modal hide fade" data-width="760" tabindex="-2"></div>
-
 <div id="view-body" class="page ${view}">
+	
+	<button type="button" class="btn btn-link" data-dismiss="page"><spring:message code="label.back" /></button>
 	
 	<div class="row-fluid" style="margin-bottom: 20px;">
 		<div class="span2">
@@ -200,7 +187,7 @@
 		</tr>
 		<tr>
 			<td><spring:message code="label.user.groups"/></td>
-			<td><a href="mailto:#">${formCommand.displayGroups}</a></td>
+			<td>${formCommand.displayGroups}</td>
 		</tr>
 		<tr>
 			<td><spring:message code="label.user.active"/></td>
@@ -209,7 +196,16 @@
 			</td>
 		</tr>
 	</table>
+	
+	<button type="button" class="btn btn-link" data-dismiss="page"><spring:message code="label.back" /></button>
+	
 </div>
+
+</div> <!-- END OF page-wrapper-2 -->
+</div> <!-- END OF page-wrapper -->
+
+<div class="adjust-photo-modal modal hide fade" data-width="760" tabindex="-1"></div>
+<div class="upload-photo-modal modal hide fade" data-width="760" tabindex="-2"></div>
 
 </div>
 
@@ -223,12 +219,4 @@
 	.on("click", '.upload-photo', opentides3.showUploadPhoto);
   </script>
   
-  <!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
-  <script src="js/jquery.iframe-transport.js"></script>
-  <!-- The basic File Upload plugin -->
-  <script src="js/jquery.fileupload.js"></script>
-  <!-- The File Upload processing plugin -->
-  <script src="js/jquery.fileupload-process.js"></script>
-  <!-- The File Upload image preview & resize plugin -->
-  <script src="js/jquery.fileupload-image.js"></script>
 </tides:footer>
