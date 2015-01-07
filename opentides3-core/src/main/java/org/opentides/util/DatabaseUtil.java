@@ -19,6 +19,7 @@
 
 package org.opentides.util;
 
+import java.util.List;
 import java.util.Properties;
 
 import javax.persistence.EntityManager;
@@ -79,7 +80,17 @@ public class DatabaseUtil {
     private static String jndiName;
     
     /**
-     * Entity Manager Fcctory
+     * PropertiesMap used to initialize EntityManagerFactory.
+     */
+    private static Properties propertiesMap;
+    
+    /**
+     * List of classes handled by JPA/Hibernate.
+     */
+    private static List<String> classes;
+    
+    /**
+     * Entity Manager Factory
      */
     private static EntityManagerFactory emf;
 
@@ -95,21 +106,22 @@ public class DatabaseUtil {
     private static void initialize() {
         try { 
         	if (emf == null || !emf.isOpen()) {
-            	Properties propertiesMap = XMLPersistenceUtil.getProperties(persistenceFile, persistenceUnitName);        	
-//            	if (StringUtil.isEmpty(jndiName)) {
+            	propertiesMap = XMLPersistenceUtil.getProperties(persistenceFile, persistenceUnitName);        	
+            	classes = XMLPersistenceUtil.getClasses(persistenceFile, persistenceUnitName);
+            	if (StringUtil.isEmpty(jndiName)) {
     	            propertiesMap.put("javax.persistence.jdbc.driver", driverClassName);
             		propertiesMap.put("javax.persistence.jdbc.url", url);
             		propertiesMap.put("javax.persistence.jdbc.user", username);
             		propertiesMap.put("javax.persistence.jdbc.password", password);
-//            	} else {
-//            		_log.debug("Connecting to JNDI [" + jndiName + "]");
+            	} else {
+            		_log.debug("Connecting to JNDI [" + jndiName + "]");
 //				For Eclipselink only
-//            		propertiesMap.put("eclipselink.session.customizer", 
-//            				"org.opentides.persistence.config.JPAEclipseLinkSessionCustomizer");
-//            		propertiesMap.put("javax.persistence.nonJtaDataSource",jndiName);
-//              }
-//            	Persistence.
+            		propertiesMap.put("eclipselink.session.customizer", 
+            				"org.opentides.persistence.config.JPAEclipseLinkSessionCustomizer");
+            		propertiesMap.put("javax.persistence.nonJtaDataSource",jndiName);
+              }
             	emf = Persistence.createEntityManagerFactory(persistenceUnitName, propertiesMap);
+            	
         	}
         	entityManager = emf.createEntityManager();        	
         } catch (Throwable ex) {
@@ -187,6 +199,31 @@ public class DatabaseUtil {
 	public final void setPersistenceFile(String persistenceFile) {
 		_log.info("Setting Persistence file to " + persistenceFile);
 		DatabaseUtil.persistenceFile = persistenceFile;
+	}
+
+	/**
+	 * @return the persistenceUnitName
+	 */
+	public static final String getPersistenceUnitName() {
+		return persistenceUnitName;
+	}
+
+	/**
+	 * @return the propertiesMap
+	 */
+	public static final Properties getPropertiesMap() {
+    	if (entityManager == null || !entityManager.isOpen())
+    		DatabaseUtil.initialize();		
+		return propertiesMap;
+	}
+	
+	/**
+	 * @return the classes mapped in persistence.xml
+	 */
+	public static final List<String> getClasses() {
+    	if (entityManager == null || !entityManager.isOpen())
+    		DatabaseUtil.initialize();		
+		return classes;
 	}
 	
 }
