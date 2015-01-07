@@ -134,6 +134,7 @@ public class BaseUser extends BaseEntity implements ImageUploadable {
 	)
 	@JsonView(Views.FormView.class)
 	private List<ImageInfo> images;
+
 	
 	@Transient
 	private transient MultipartFile photo;
@@ -142,7 +143,7 @@ public class BaseUser extends BaseEntity implements ImageUploadable {
 		super();
 		this.setCredential(new UserCredential());
 		this.images = new ArrayList<ImageInfo>();
-		groups = new HashSet<UserGroup>();
+		this.groups = new HashSet<UserGroup>();
 	}
 	
 	/**
@@ -603,7 +604,7 @@ public class BaseUser extends BaseEntity implements ImageUploadable {
 	public void setLastFailedLoginMillis(Long lastFailedLoginMillis) {
 		this.lastFailedLoginMillis = lastFailedLoginMillis;
 	}
-
+	
 	@Override
 	public List<ImageInfo> getImages() {
 		return images;
@@ -643,6 +644,9 @@ public class BaseUser extends BaseEntity implements ImageUploadable {
 		}
 	}
 	
+	public String getUserClass() {
+		return this.getClass().getName();
+	}
+
 	// End of ImageUploadable requirements
-	
 }
