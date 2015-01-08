@@ -245,8 +245,10 @@ public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 	public void unlockUser(String username) {
 		UserDao userDao = (UserDao) getDao();
 		BaseUser user = userDao.loadByUsername(username);
-		user.resetFailedLoginCount();
-		userDao.saveEntityModel(user);
+		if (user!=null) {
+			user.resetFailedLoginCount();
+			userDao.saveEntityModel(user);			
+		}
 	}
 	
 	@Override

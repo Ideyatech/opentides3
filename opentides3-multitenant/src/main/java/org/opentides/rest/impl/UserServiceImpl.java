@@ -131,12 +131,6 @@ public class UserServiceImpl extends BaseCrudRestServiceImpl<BaseUser>
 	}
 
 	@Override
-	public UserCredential generateFakeCredentials() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public boolean resetPassword(PasswordReset passwd) {
 		// TODO Auto-generated method stub
 		return false;

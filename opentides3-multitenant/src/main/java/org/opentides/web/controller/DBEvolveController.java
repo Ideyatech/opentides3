@@ -37,6 +37,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
+ * Not yet used for now....
  * @author allantan
  *
  */
@@ -54,7 +55,7 @@ public class DBEvolveController {
 	public String evolve() {
 		return "/base/db-evolve";
 	}
-	
+/*	
 	@ModelAttribute("latestVersion")
 	private Long latestVersion() {
 		return evolveManager.getLatestVersion();
@@ -67,20 +68,20 @@ public class DBEvolveController {
 		else
 			return evolveManager.getCurrentVersion().getValue();
 	}
-	
+*/	
 	@ModelAttribute("evolveList")
 	private List<DBEvolve> evolveList() {
 		List<DBEvolve> evolveList = new ArrayList<DBEvolve>();
 		
 		// get number of latest evolve script
-		long currVersion   = currentVersion();
+//		long currVersion   = currentVersion();
 		
 		// execute new evolve scripts
-		for (DBEvolve evolve:evolveList) {
-			if (evolve.getVersion() > currVersion) {
-				evolveList.add(evolve);				
-			}
-		}
+//		for (DBEvolve evolve:evolveList) {
+//			if (evolve.getVersion() > currVersion) {
+//				evolveList.add(evolve);				
+//			}
+//		}
 		return evolveList;
 	}
 }
