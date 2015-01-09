@@ -124,6 +124,10 @@
 		<property name="resourceLoaderPath" value="/WEB-INF/template/" />
 	</bean>
 	
+	<bean id="baseEntityRegistry" class="org.opentides.bean.factory.support.BaseEntityRegistry">
+		<property name="packagesToScan" ref="packagesToScan" />
+	</bean>
+	
 	<!-- Property map injected into entity manager to enable multitenancy -->
 	<util:map id="jpaPropertyMap">
 	</util:map>

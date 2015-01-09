@@ -28,7 +28,6 @@ import org.springframework.beans.factory.support.SimpleBeanDefinitionRegistry;
 import org.springframework.context.annotation.ClassPathBeanDefinitionScanner;
 import org.springframework.core.type.filter.AssignableTypeFilter;
 import org.springframework.core.type.filter.TypeFilter;
-import org.springframework.stereotype.Component;
 
 /**
  * This class retrieves all classes that extends BaseEntity.
@@ -36,25 +35,24 @@ import org.springframework.stereotype.Component;
  * @author allanctan
  *
  */
-@Component
 public class BaseEntityRegistry implements InitializingBean {
 
-	private List<String> packages;
+	private List<String> packagesToScan;
 	
 	private List<String> baseEntities;
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		if (packages==null)
-			packages = new ArrayList<String>();
-		packages.add("org.opentides.bean");
+		if (packagesToScan==null)
+			packagesToScan = new ArrayList<String>();
+		packagesToScan.add("org.opentides.bean");
 		baseEntities = new ArrayList<String>();
 		BeanDefinitionRegistry registry = new SimpleBeanDefinitionRegistry();
 		ClassPathBeanDefinitionScanner s = new ClassPathBeanDefinitionScanner(registry);
 		TypeFilter tf = new AssignableTypeFilter(BaseEntity.class);
 		s.resetFilters(false);
 		s.addIncludeFilter(tf);		
-		s.scan(packages.toArray(new String[packages.size()]));		
+		s.scan(packagesToScan.toArray(new String[packagesToScan.size()]));
 		for (String name:registry.getBeanDefinitionNames()) {
 			Class<?> clazz = Class.forName(registry.getBeanDefinition(name).getBeanClassName());
 			if (BaseEntity.class.isAssignableFrom(clazz))
@@ -70,10 +68,10 @@ public class BaseEntityRegistry implements InitializingBean {
 	}
 
 	/**
-	 * @param packages the packages to set
+	 * @param packagesToScan the packagesToScan to set
 	 */
-	public final void setPackages(List<String> packages) {
-		this.packages = packages;
+	public final void setPackagesToScan(List<String> packagesToScan) {
+		this.packagesToScan = packagesToScan;
 	}
 
 }
