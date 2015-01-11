@@ -183,32 +183,6 @@ public class BaseEntityDAOJpaImplIntegrationTest extends AbstractJUnit4SpringCon
 	}
 	
 	@Test
-	public void testFindByNamedQueryUsingObject() {
-		final Ninja ninja = new Ninja();
-		ninja.setFirstName("Richard");
-		ninja.setLastName("Buendia");
-		ninja.setGender("Male");
-		ninja.setEmail("richard@buendia.com");
-		
-		transactionTemplate.execute(new TransactionCallbackWithoutResult() {
-			@Override
-			protected void doInTransactionWithoutResult(TransactionStatus status) {
-				//We will use this for searching...
-				ninjaDAO.saveEntityModel(ninja);
-				String jpql = "jpql.ninja.findByNameObj";
-				List<Ninja> ninjas = ninjaDAO.findByNamedQuery(jpql, new Object[]{"Richard"});
-				
-				//I expect only 1 Richard..
-				assertEquals(1, ninjas.size());
-				Ninja result = ninjas.get(0);
-				assertEquals("Richard", result.getFirstName());
-				assertEquals("Buendia", result.getLastName());
-				assertEquals("Male", result.getGender());
-			}
-		});
-	}
-	
-	@Test
 	public void testFindByNamedQueryUsingObjectWithPaging() {
 		final Ninja ninja = new Ninja();
 		ninja.setFirstName("Sensei");

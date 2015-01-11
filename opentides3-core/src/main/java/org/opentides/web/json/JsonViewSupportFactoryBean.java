@@ -7,7 +7,6 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
-import org.springframework.web.method.support.HandlerMethodReturnValueHandlerComposite;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 import org.springframework.web.servlet.mvc.method.annotation.RequestResponseBodyMethodProcessor;
 
@@ -28,25 +27,24 @@ public class JsonViewSupportFactoryBean implements InitializingBean {
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		HandlerMethodReturnValueHandlerComposite returnValueHandlers = adapter
-				.getReturnValueHandlers();
-		List<HandlerMethodReturnValueHandler> handlers = new ArrayList<HandlerMethodReturnValueHandler>(
-				returnValueHandlers.getHandlers());
-		decorateHandlers(handlers);
-		adapter.setReturnValueHandlers(handlers);
+		List<HandlerMethodReturnValueHandler> handlers = adapter.getReturnValueHandlers();
+		adapter.setReturnValueHandlers(decorateHandlers(handlers));
 	}
 
-	private void decorateHandlers(List<HandlerMethodReturnValueHandler> handlers) {
+	private List<HandlerMethodReturnValueHandler> decorateHandlers(List<HandlerMethodReturnValueHandler> handlers) {
+		List<HandlerMethodReturnValueHandler> decorated = new ArrayList<HandlerMethodReturnValueHandler>();
+		
 		for (HandlerMethodReturnValueHandler handler : handlers) {
 			if (handler instanceof RequestResponseBodyMethodProcessor) {
 				ViewInjectingReturnValueHandler decorator = new 
 						ViewInjectingReturnValueHandler(handler);
-				int index = handlers.indexOf(handler);
-				handlers.set(index, decorator);
+				decorated.add(decorator);
                 _log.info("JsonView decorator support wired up for @ResponseBody.");
-				break;
+			} else {
+				decorated.add(handler);				
 			}
 		}
+		return decorated;
 	}
 
 }

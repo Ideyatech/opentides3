@@ -43,6 +43,8 @@ public class SessionUser extends User {
 	private final Map<String, Object> profile = new HashMap<String, Object>();
 
 	private Long id;
+	
+	private String schema;
 
 	public SessionUser(UserDetails user) {
 		super(user.getUsername(), user.getPassword(), user.isEnabled(), user.isAccountNonExpired(), 
@@ -100,6 +102,8 @@ public class SessionUser extends User {
 	public void addProfile(String key, Object value) {
 		if ("ID".equals(key)) {
 			this.id = new Long(""+value);			
+		} else if ("SCHEMA_NAME".equals(key) && value!=null) {
+			this.schema = value.toString();			
 		} else {
 			profile.put(key, value);			
 		}
@@ -110,6 +114,13 @@ public class SessionUser extends User {
 	 */
 	public final Long getId() {
 		return id;
+	}
+
+	/**
+	 * @return the tenantId
+	 */
+	public final String getSchema() {
+		return schema;
 	}
 	
 }

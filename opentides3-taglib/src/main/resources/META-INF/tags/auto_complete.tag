@@ -17,7 +17,7 @@
 
 <div class="control-group">
 
-	<form:label path="${pathValue}" cssClass="control-label" cssErrorClass="highlight-error">
+	<form:label path="${path}" cssClass="control-label" cssErrorClass="highlight-error">
 		<spring:message code="${label}"/>
 		<c:if test="${required}">
 			<span class="required"><spring:message code="label.required-field" /></span>

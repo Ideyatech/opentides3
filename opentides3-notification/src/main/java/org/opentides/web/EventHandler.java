@@ -45,7 +45,7 @@ public class EventHandler {
 	private UserService userService;
 	
 	/**
-	 * 
+	 * TODO: Check this against AjaxRequestController
 	 * @param name
 	 * @return
 	 */

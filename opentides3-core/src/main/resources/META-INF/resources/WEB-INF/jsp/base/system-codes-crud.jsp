@@ -17,7 +17,6 @@
 <div id="search-body" class="${search}">
 
 	<div id="search-panel" class="span3">
-
 		<div id="search-panel-inner" data-spy="affix" data-offset-top="60">
 			<div class="navbar">
 				<div class="navbar-inner">
@@ -74,7 +73,7 @@
 						<script type="text/template" class="template">
 	                		<tr data-id="{{id}}">
 								<td>
-									<a href="${home}/system/system-codes/view/{{id}}">
+									<a href="${home}/system/system-codes/view/{{id}}" class='view-action' data-id='{{id}}' data-target='#view-body'>
 										{{value}}
 									</a>
 								</td>
@@ -90,7 +89,7 @@
 						<c:forEach items="${results.results}" var="record" varStatus="status">
 							<tr id="system-codes-row-${record.id}">
 								<td>
-									<a href="${home}/system/system-codes/view/${record.id}">
+									<a href="${home}/system/system-codes/view/${record.id}" class='view-action' data-id='${record.id}' data-target='#view-body'>
 										<c:out value="${record.value}" />
 									</a>
 								</td>
@@ -143,32 +142,42 @@
 	
 </div>
 
-<div id="view-body" class="page ${view}">
+<div id="view-body" class="modal ${view}">
 	
-	<div class="row-fluid" style="margin-bottom: 20px;">
-		<div class="span10">
-			<h2>${formCommand.category}</h2>	
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal">&times;</button>
+			<h4><spring:message code="label.system-codes.view" /></h4>
 		</div>
-	</div>
-	
-	<table class="table table-striped">
-		<tr>
-			<td><spring:message code="label.system-codes.key"/></td>
-			<td>${formCommand.key}</td>
-		</tr>
-		<tr>
-			<td><spring:message code="label.system-codes.value"/></td>
-			<td>${formCommand.value}</td>
-		</tr>
-		<tr>
-			<td><spring:message code="label.system-codes.parent"/></td>
-			<td>${formCommand.parentKey}</td>
-		</tr>
-		<tr>
-			<td><spring:message code="label.system-codes.number-value"/></td>
-			<td>${formCommand.numberValue}</td>
-		</tr>
-	</table>
+		<div class="modal-body">
+			<div class="row-fluid" style="margin-bottom: 20px;">
+				<div class="span10">
+					<h2><tides:display modelAttribute="formCommand" path="category" /></h2>	
+				</div>
+			</div>
+			
+			<table class="table table-striped">
+				<tr>
+					<td><spring:message code="label.system-codes.key"/></td>
+					<td><tides:display modelAttribute="formCommand" path="key" /></td>
+				</tr>
+				<tr>
+					<td><spring:message code="label.system-codes.value"/></td>
+					<td><tides:display modelAttribute="formCommand" path="value" /></td>
+				</tr>
+				<tr>
+					<td><spring:message code="label.system-codes.parent"/></td>
+					<td><tides:display modelAttribute="formCommand" path="parentKey" /></td>
+				</tr>
+				<tr>
+					<td><spring:message code="label.system-codes.number-value"/></td>
+					<td><tides:display modelAttribute="formCommand" path="numberValue" /></td>
+				</tr>
+			</table>
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="btn btn-link" data-dismiss="modal"><spring:message code="label.close" /></button>
+			<input type="hidden" name="id" />
+		</div>
 </div>
 
 </div>

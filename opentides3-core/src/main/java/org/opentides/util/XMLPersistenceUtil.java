@@ -19,6 +19,7 @@
 package org.opentides.util;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
@@ -40,7 +41,40 @@ public class XMLPersistenceUtil {
 	/**
 	 * Hide the constructor.
 	 */
-	private XMLPersistenceUtil() {		
+	private XMLPersistenceUtil() {	
+	}
+	
+	public static List<String> getClasses(String persistenceFile, String persistenceUnit) {
+		List<String> classes = new ArrayList<String>();
+		SAXReader reader = new SAXReader();
+		InputStream is = null;
+		try {
+	        Document doc;
+			is = XMLPersistenceUtil.class.getClassLoader().getResourceAsStream(persistenceFile);
+			doc = reader.read(is);
+	        Element root = doc.getRootElement();
+	        List<Element> elements = root.elements();
+	        for (Element el:elements) {
+	        	if (persistenceUnit.equals(el.attributeValue("name"))) {
+	        		// this is the persistence unit specified, let's get all properties inside
+	        		List<Element> xmlProps = el.elements("class");
+	        		for (Element prop:xmlProps) {
+	        			classes.add(prop.getText());
+	        		}
+	        	}
+	        }
+		} catch (DocumentException e) {
+			_log.error("Failed to read file contents for "+persistenceFile,e);
+			return null;
+		} finally {
+			if (is!=null)
+				try {
+					is.close();
+				} catch(Exception e) {
+					// do nothing
+				};
+		}
+        return classes;		
 	}
 	
 	@SuppressWarnings("unchecked")

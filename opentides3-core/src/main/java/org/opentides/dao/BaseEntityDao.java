@@ -53,8 +53,7 @@ public interface BaseEntityDao<T extends BaseEntity, ID extends Serializable> {
 	 * @return List of entity
 	 */
 	public List<T> findAll(int start, int total);
-	
-	
+		
 	/**
 	 * Returns all entries found by the named query
 	 * 
@@ -68,13 +67,6 @@ public interface BaseEntityDao<T extends BaseEntity, ID extends Serializable> {
 	 * @return List of entity
 	 */
 	public List<T> findByNamedQuery(String name, Map<String,Object> params, int start, int total);
-	
-	/**
-	 * Returns all entries found by the named query
-	 * 
-	 * @return List of entity
-	 */
-	public List<T> findByNamedQuery(String name, Object... params);
 	
 	/**
 	 * Returns all entries found by the named query with start and limit

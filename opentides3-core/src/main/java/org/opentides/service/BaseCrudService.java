@@ -17,8 +17,10 @@
 package org.opentides.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.opentides.bean.BaseEntity;
+import org.opentides.bean.SearchResults;
 
 
 /**
@@ -30,6 +32,84 @@ import org.opentides.bean.BaseEntity;
  * @param <ID>
  */
 public interface BaseCrudService<T extends BaseEntity> extends BaseService {
+
+	/**
+	 * Returns all entries found by the named query
+	 * 
+	 * @return List of entity
+	 */
+	public List<T> findByNamedQuery(String name, Map<String, Object> params);
+	
+	/**
+	 * Returns all entries found by the named query with start and limit
+	 * 
+	 * @return List of entity
+	 */
+	public List<T> findByNamedQuery(String name, Map<String,Object> params, int start, int total);
+	
+	/**
+	 * Returns all entries found by the named query with start and limit
+	 * 
+	 * @return List of entity
+	 */
+	public List<T> findByNamedQuery(String name, Map<String,Object> params, int start, int total, boolean bypassSecurity);
+	
+	/**
+	 * Returns all entries found by the named query with start and limit
+	 * 
+	 * @return List of entity
+	 */
+	public List<T> findByNamedQuery(final String name, int start, int total, boolean bypassSecurity, Object... params);
+
+	/**
+	 * Returns an entry found by the named query
+	 * 
+	 * @return Single entity
+	 */
+	public T findSingleResultByNamedQuery(String name, Map<String,Object> params);
+	
+	/**
+	 * Returns an entry found by the named query
+	 * 
+	 * @return Single entity
+	 */
+	public T findSingleResultByNamedQuery(String name, Map<String,Object> params, boolean bypassSecurity);
+
+	/**
+	 * Returns an entry found by the named query
+	 * 
+	 * @return Single entity
+	 */
+	public T findSingleResultByNamedQuery(String name, Object... params);
+	
+	/**
+	 * Returns an entry found by the named query
+	 * 
+	 * @return Single entity
+	 */
+	public T findSingleResultByNamedQuery(String name, boolean bypassSecurity, Object... params);
+
+	/**
+	 * Executes SQL operation by named query. 
+	 * 
+	 * Use for DDL operations.
+	 * 
+	 * @param name
+	 * @param params
+	 * @return
+	 */
+	public int executeByNamedQuery(String name, Map<String,Object> params);
+
+	/**
+	 * Executes SQL operation by named query. 
+	 * 
+	 * Use for DDL operations.
+	 * 
+	 * @param name
+	 * @param params
+	 * @return
+	 */
+	public int executeByNamedQuery(String name, Object... params);
 
 	/**
 	 * Finds all the objects in the entity.
@@ -86,7 +166,7 @@ public interface BaseCrudService<T extends BaseEntity> extends BaseService {
 	 * 
 	 * @return List of objects
 	 */
-	public List<T> findByExample(T example);	
+	public List<T> findByExample(T example);
 	
 	/**
 	 * Retrieves matching records based on the object passed.
@@ -171,6 +251,15 @@ public interface BaseCrudService<T extends BaseEntity> extends BaseService {
 	 * @return List of objects
 	 */
 	public List<T> findByExample(T example, boolean exactMatch, int start, int total, boolean bypassSecurity);	
+
+	/**
+	 * This is a helper function for search operations performed by the controller. 
+	 * 
+	 * @param command
+	 * @param page
+	 * @return
+	 */
+	public SearchResults<T> search(T command, int page);
 
 	/**
 	 * Counts all the record of this object.
@@ -327,4 +416,12 @@ public interface BaseCrudService<T extends BaseEntity> extends BaseService {
 	 * @param id - id to delete
 	 */	
 	public void delete(Long id, boolean bypassSecurity);
+	
+	/**
+	 * Sets the total number of search results displayed per page.
+	 * Set to 0 when paging is not supported.
+	 * 
+	 * @param pageSize the pageSize to set
+	 */
+	public void setPageSize(Integer pageSize);
 }

@@ -134,6 +134,10 @@ public class BaseUser extends BaseEntity implements ImageUploadable {
 	)
 	@JsonView(Views.FormView.class)
 	private List<ImageInfo> images;
+
+	@Column(name = "SCHEMA_NAME")
+	@JsonView(Views.SearchView.class)
+	private String schemaName;
 	
 	@Transient
 	private transient MultipartFile photo;
@@ -142,7 +146,7 @@ public class BaseUser extends BaseEntity implements ImageUploadable {
 		super();
 		this.setCredential(new UserCredential());
 		this.images = new ArrayList<ImageInfo>();
-		groups = new HashSet<UserGroup>();
+		this.groups = new HashSet<UserGroup>();
 	}
 	
 	/**
@@ -604,6 +608,22 @@ public class BaseUser extends BaseEntity implements ImageUploadable {
 	public void setLastFailedLoginMillis(Long lastFailedLoginMillis) {
 		this.lastFailedLoginMillis = lastFailedLoginMillis;
 	}
+	
+	
+	
+	/**
+	 * @return the schemaName
+	 */
+	public final String getSchemaName() {
+		return schemaName;
+	}
+
+	/**
+	 * @param schemaName the schemaName to set
+	 */
+	public final void setSchemaName(String schemaName) {
+		this.schemaName = schemaName;
+	}
 
 	@Override
 	public List<ImageInfo> getImages() {
@@ -644,6 +664,9 @@ public class BaseUser extends BaseEntity implements ImageUploadable {
 		}
 	}
 	
+	public String getUserClass() {
+		return this.getClass().getName();
+	}
+
 	// End of ImageUploadable requirements
-	
 }

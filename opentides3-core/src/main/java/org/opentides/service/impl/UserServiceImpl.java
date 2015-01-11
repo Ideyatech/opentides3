@@ -114,7 +114,7 @@ public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 			BaseUser user = new BaseUser();
 			UserCredential cred = new UserCredential();
 			cred.setUsername("admin");
-			cred.setPassword(encryptPassword("ideyatech"));
+			cred.setPassword(encryptPassword("opentides"));
 			cred.setEnabled(true);
 			cred.setUser(user);
 			user.setCredential(cred);
@@ -245,8 +245,10 @@ public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 	public void unlockUser(String username) {
 		UserDao userDao = (UserDao) getDao();
 		BaseUser user = userDao.loadByUsername(username);
-		user.resetFailedLoginCount();
-		userDao.saveEntityModel(user);
+		if (user!=null) {
+			user.resetFailedLoginCount();
+			userDao.saveEntityModel(user);			
+		}
 	}
 	
 	@Override
@@ -263,6 +265,16 @@ public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 	@Override
 	public List<BaseUser> findUsersLikeLastName(String name, int maxResults) {
 		return getUserDao().findUsersLikeLastName(name, -1, maxResults);
+	}
+	
+	@Override
+	public BaseUser loadByUsername(String username) {
+		return getUserDao().loadByUsername(username);
+	}
+
+	@Override
+	public BaseUser loadByEmailAddress(String emailAddress) {
+		return getUserDao().loadByEmailAddress(emailAddress);
 	}
 
 	public BaseUser getCurrentUser() {
@@ -303,27 +315,6 @@ public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 					templateVariables);
 		}
 	}
-
-	@Override
-	public UserCredential generateFakeCredentials(){
-
-		UserDao userDao = (UserDao) getDao();
-		UserCredential credential = new UserCredential();
-		
-		String username;
-		
-		do {
-			username = RandomStringUtils.randomAlphanumeric(10);
-		} while (userDao.loadByUsername(username) != null);
-		
-		credential.setSkipAudit(true);
-		credential.setEnabled(Boolean.TRUE);
-		credential.setUsername(username);
-		credential.setPassword(encryptPassword(RandomStringUtils.randomAlphanumeric(10)));
-		
-		
-		return credential;
-	}
 	
 	@Override
 	public List<BaseUser> findAllUsersWithAuthority(String authority) {
@@ -356,6 +347,8 @@ public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 	}
 
 	/**
+	 * Private helper to send email.
+	 * 
 	 * @param emailAddress
 	 * @param token
 	 * @param cipher
@@ -370,9 +363,7 @@ public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 		mailingService.sendEmail(new String[] {emailAddress}, "Information regarding your password reset", "password_reset.vm", dataMap);
 	}
 
-	/**
-	 * Resets the password by specifying email address and token.
-	 */
+	@Override
 	public boolean confirmPasswordReset(String emailAddress, String token) {
 		// check if email and token matched
 		PasswordReset example = new PasswordReset();
@@ -401,13 +392,6 @@ public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 		return true;
 	}
 
-	/**
-	 * Validates the cipher for password reset and returns the corresponding
-	 * email address and token.
-	 * 
-	 * @param passwd
-	 * @return
-	 */
 	@Override
 	public boolean confirmPasswordResetByCipher(PasswordReset passwd) {
 		String decrypted = "";
@@ -428,12 +412,6 @@ public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 		return confirmPasswordReset(email, token);
 	}
 
-	/**
-	 * Resets the password
-	 * 
-	 * @param passwd
-	 * @return
-	 */
 	@Override
 	public boolean resetPassword(PasswordReset passwd) {
 		// check if password reset is active and not expired

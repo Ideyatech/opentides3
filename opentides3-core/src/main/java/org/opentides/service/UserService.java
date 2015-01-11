@@ -119,20 +119,69 @@ public interface UserService extends BaseCrudService<BaseUser> {
 	 * @return
 	 */
 	public List<BaseUser> findAllUsersWithAuthority(String authority);
+	
+	/**
+	 * Loads user using username
+	 * @param username
+	 * @return
+	 */
+	public BaseUser loadByUsername(String username);
+	
+	/**
+	 * Loads user using email address
+	 * @param emailAddress
+	 * @return
+	 */
+	public BaseUser loadByEmailAddress(String emailAddress);
 
+	/**
+	 * Returns current user from the session.
+	 */
 	public BaseUser getCurrentUser();
 
+	/**
+	 * Register new user with flag to indicate if email will be sent 
+	 * to user.
+	 */
 	public void registerUser(BaseUser baseUser, boolean sendEmail);
-
-	public UserCredential generateFakeCredentials();
-
+	
+	/**
+	 * Resets password of the user.
+	 * @param passwd
+	 * @return
+	 */
 	public boolean resetPassword(PasswordReset passwd);
 
+	/**
+	 * 
+	 * @param passwd
+	 * @return
+	 */
 	public boolean confirmPasswordResetByCipher(PasswordReset passwd);
 
+	/**
+	 * Validates the cipher for password reset and returns the corresponding
+	 * email address and token.
+	 * 
+	 * @param passwd
+	 * @return
+	 */
 	public boolean confirmPasswordReset(String emailAddress, String token);
 
+	/**
+	 * User requested for password reset, but needs some form of authentication.
+	 * This is done by sending a password reset link to the registered email 
+	 * address.
+	 * 
+	 * @param emailAddress
+	 */
 	public void requestPasswordReset(String emailAddress);
 	
+	/**
+	 * Performs pagination on logged-in users from the user session list.
+	 * @param start
+	 * @param total
+	 * @return
+	 */
 	public List<SessionInformation> getAllLoggedUsersPagenation(int start, int total);
 }

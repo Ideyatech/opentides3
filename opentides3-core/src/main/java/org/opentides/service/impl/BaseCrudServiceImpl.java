@@ -20,11 +20,13 @@ package org.opentides.service.impl;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
 import org.opentides.annotation.CrudSecure;
 import org.opentides.bean.BaseEntity;
+import org.opentides.bean.SearchResults;
 import org.opentides.dao.BaseEntityDao;
 import org.opentides.exception.InvalidImplementationException;
 import org.opentides.service.BaseCrudService;
@@ -33,6 +35,7 @@ import org.opentides.util.SecurityUtil;
 import org.opentides.util.StringUtil;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.util.Assert;
 
@@ -44,6 +47,19 @@ import org.springframework.util.Assert;
  */
 public class BaseCrudServiceImpl<T extends BaseEntity> extends
 		BaseServiceDefaultImpl implements BaseCrudService<T> {
+	
+
+	/**
+	 * This is the page size for the search results table. Defaults to 20 results per table.
+	 */
+	@Value("#{applicationSettings.pageSize}")
+	protected Integer pageSize = 20;
+
+	/**
+	 * This is the total number of pages displayed on the pagination links. Defaults to 10 links.
+	 */
+	@Value("#{applicationSettings.linksCount}")
+	protected Integer numLinks = 10;
 
 	// contains the class type of the bean    
     private Class<T> entityBeanType;
@@ -54,6 +70,69 @@ public class BaseCrudServiceImpl<T extends BaseEntity> extends
 	@Autowired
 	private BeanFactory beanFactory;
 
+	@Override
+	public List<T> findByNamedQuery(String name, Map<String, Object> params) {
+		return findByNamedQuery(name, params, -1, -1);
+	}
+
+	@Override
+	public List<T> findByNamedQuery(String name, Map<String, Object> params,
+			int start, int total) {
+		return findByNamedQuery(name, params, start, total, false);
+	}
+	
+	@Override
+	public List<T> findByNamedQuery(String name, Map<String, Object> params, 
+			int start, int total, boolean bypassSecurity) {
+		if (!bypassSecurity) 
+			checkAccess("SEARCH");
+		return dao.findByNamedQuery(name, params, start, total);
+	}
+	
+	@Override
+	public List<T> findByNamedQuery(String name, int start, int total, 
+			boolean bypassSecurity, Object... params) {
+		if (!bypassSecurity) 
+			checkAccess("SEARCH");
+		return dao.findByNamedQuery(name, start, total, params);		
+	}
+
+	@Override
+	public T findSingleResultByNamedQuery(String name,
+			Map<String, Object> params) {
+		return findSingleResultByNamedQuery(name, params, false);
+	}
+	
+	@Override
+	public T findSingleResultByNamedQuery(String name,
+			Map<String, Object> params, boolean bypassSecurity) {
+		if (!bypassSecurity) 
+			checkAccess("SEARCH");
+		return dao.findSingleResultByNamedQuery(name, params);
+	}
+
+	@Override
+	public T findSingleResultByNamedQuery(String name, Object... params) {
+		return findSingleResultByNamedQuery(name, false, params);
+	}
+	
+	@Override
+	public T findSingleResultByNamedQuery(String name, boolean bypassSecurity, Object... params) {
+		if (!bypassSecurity) 
+			checkAccess("SEARCH");
+		return dao.findSingleResultByNamedQuery(name, params);
+	}
+
+	@Override
+	public int executeByNamedQuery(String name, Map<String, Object> params) {
+		return dao.executeByNamedQuery(name, params);
+	}
+
+	@Override
+	public int executeByNamedQuery(String name, Object... params) {
+		return dao.executeByNamedQuery(name, params);
+	}
+	
 	/**
 	 * {@inheritDoc}
 	 */
@@ -95,8 +174,7 @@ public class BaseCrudServiceImpl<T extends BaseEntity> extends
 	 */
 	@Override
 	public final List<T> findByExample(final T example) {
-		checkAccess("SEARCH");
-		return dao.findByExample(example);
+		return dao.findByExample(example, false);
 	}
 
 	/**
@@ -158,6 +236,48 @@ public class BaseCrudServiceImpl<T extends BaseEntity> extends
 		return dao.findByExample(example, exactMatch, start, total);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */	
+	@Override
+	public final SearchResults<T> search(T command, int page) {
+		SearchResults<T> results = new SearchResults<T>(pageSize, numLinks);
+		long startTime = System.currentTimeMillis();
+		results.setCurrPage(page);
+		if (command == null) {
+			results.setTotalResults(this.countAll());
+		} else if (command.getExactMatch() != null && command.getExactMatch()) {
+			results.setTotalResults(this.countByExample(command, true));			
+		} else {
+			results.setTotalResults(this.countByExample(command, false));			
+		}
+		int start = results.getStartIndex();
+		int total = results.getPageSize();
+		if (pageSize > 0) {
+			if (command == null) {
+				// no command, let's search everything
+				results.addResults(this.findAll(start, total));
+			} else if (command.getExactMatch() != null && command.getExactMatch()) {
+				results.addResults(this.findByExample(command, true, start, total));
+			} else {
+				// let's do a query by example
+				results.addResults(this.findByExample(command, start, total));
+			}
+		} else {
+			if (command == null) {
+				// no command, let's search everything
+				results.addResults(this.findAll());
+			} else if (command.getExactMatch() != null && command.getExactMatch()) {
+				results.addResults(this.findByExample(command, true));
+			}  else {
+				// let's do a query by example
+				results.addResults(this.findByExample(command));
+			}
+		}
+		results.setSearchTime(System.currentTimeMillis() - startTime);
+		return results;
+	}
+	
 	/**
 	 * {@inheritDoc}
 	 */	
@@ -368,4 +488,11 @@ public class BaseCrudServiceImpl<T extends BaseEntity> extends
 		return dao;
 	}
 
+	/**
+	 * @param pageSize the pageSize to set
+	 */
+	@Override
+	public final void setPageSize(Integer pageSize) {
+		this.pageSize = pageSize;
+	}
 }

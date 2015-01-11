@@ -19,13 +19,13 @@
 
 package org.opentides.listener;
 
+import java.util.List;
+
 import org.apache.log4j.Logger;
-import org.opentides.persistence.evolve.DBEvolveManager;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.opentides.listener.command.Command;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.stereotype.Component;
 
 /**
  * This class is configured to be executed during application startup. Checks to
@@ -34,7 +34,6 @@ import org.springframework.stereotype.Component;
  * 
  * @author allanctan
  */
-@Component
 public class ApplicationStartupListener implements ApplicationListener<ContextRefreshedEvent> {
 
 	private static final Logger _log = Logger
@@ -44,8 +43,7 @@ public class ApplicationStartupListener implements ApplicationListener<ContextRe
 
 	private String propertyName;
 
-	@Autowired
-	private DBEvolveManager evolveManager;
+	private List<Command> startupCommand;
 
 	/*
 	 * (non-Javadoc)
@@ -56,10 +54,12 @@ public class ApplicationStartupListener implements ApplicationListener<ContextRe
 	 */
 	public void contextInitialized(ApplicationEvent event) {
 		_log.info("Starting up system using " + propertyName + " properties.");
-
-		_log.info("Checking for schema evolve...");
-		evolveManager.evolve();
-
+		
+		if (startupCommand != null) {
+			for (Command command:startupCommand) {
+				command.execute();
+			}
+		}		
 	}
 
 	/**
@@ -75,19 +75,18 @@ public class ApplicationStartupListener implements ApplicationListener<ContextRe
 	}
 
 	/**
-	 * @param evolveManager
-	 *            the evolveManager to set
-	 */
-	public final void setEvolveManager(DBEvolveManager evolveManager) {
-		this.evolveManager = evolveManager;
-	}
-
-	/**
 	 * @param propertyName
 	 *            the propertyName to set
 	 */
 	public final void setPropertyName(String propertyName) {
 		this.propertyName = propertyName;
+	}
+
+	/**
+	 * @param startupCommand the startupCommand to set
+	 */
+	public final void setStartupCommand(List<Command> startupCommand) {
+		this.startupCommand = startupCommand;
 	}
 
 	/**

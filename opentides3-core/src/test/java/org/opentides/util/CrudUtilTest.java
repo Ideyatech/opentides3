@@ -144,6 +144,25 @@ public class CrudUtilTest {
 				CrudUtil.buildDeleteMessage(oldsc));
 		
 	}
+	
+	@Test 
+    public void testBuildURLParameters() {
+		// empty parameter
+    	SystemCodes sc = new SystemCodes();
+    	Assert.assertEquals("", CrudUtil.buildURLParameters(sc));
+    	sc.setValue("");
+    	Assert.assertEquals("", CrudUtil.buildURLParameters(sc));
+
+    	//category=SAMPLE&key=&value=&parent.key=&orderOption=&orderFlow=&p=1
+
+    	sc.setKey("PH");
+		Assert.assertEquals("key=PH", CrudUtil.buildURLParameters(sc));
+
+		sc.setValue("Aloe Vera");
+		Assert.assertEquals(
+				"value=Aloe+Vera&key=PH",
+				CrudUtil.buildURLParameters(sc));
+    }
 
     @Test 
     public void testBuildJpaQueryString() {

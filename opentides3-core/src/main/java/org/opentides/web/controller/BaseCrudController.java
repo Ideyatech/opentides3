@@ -25,7 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -49,8 +49,8 @@ import org.opentides.web.json.ResponseView;
 import org.opentides.web.json.Views;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
@@ -76,21 +76,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * 
  * @author allantan
  */
-public abstract class BaseCrudController<T extends BaseEntity> {
+public abstract class BaseCrudController<T extends BaseEntity> implements InitializingBean {
 
 	private static final Logger _log = Logger.getLogger(BaseCrudController.class);
-
-	/**
-	 * This is the page size for the search results table. This defaults to 20 results per table.
-	 */
-	@Value("#{applicationSettings.pageSize}")
-	protected Integer pageSize = 20;
-
-	/**
-	 * 
-	 */
-	@Value("#{applicationSettings.linksCount}")
-	protected Integer numLinks = 10;
 
 	/**
 	 * 
@@ -138,6 +126,9 @@ public abstract class BaseCrudController<T extends BaseEntity> {
 
 	// single TransactionTemplate shared amongst all methods in this instance
 	private TransactionTemplate transactionTemplate;
+	
+	@Autowired
+	private ServletContext servletContext;
 
 	/**
 	 * Method that attaches the autowired form validator to the binder
@@ -145,7 +136,7 @@ public abstract class BaseCrudController<T extends BaseEntity> {
 	 * @param binder
 	 */
 	@InitBinder
-	protected void initBinder(WebDataBinder binder) throws Exception {
+	protected void attachValidator(WebDataBinder binder) throws Exception {
 		if ((formValidator != null) && (binder.getTarget() != null)
 				&& formValidator.supports(binder.getTarget().getClass()))
 			binder.setValidator(formValidator);
@@ -750,8 +741,8 @@ public abstract class BaseCrudController<T extends BaseEntity> {
 	 * 
 	 * @throws Exception
 	 */
-	@SuppressWarnings("unchecked")
-	@PostConstruct
+	@SuppressWarnings({ "unchecked" })
+	@Override
 	public void afterPropertiesSet() throws Exception {
 		try {
 			this.entityBeanType = (Class<T>) ((ParameterizedType) getClass()
@@ -774,9 +765,11 @@ public abstract class BaseCrudController<T extends BaseEntity> {
 			_log.debug("Retrieving service for " + serviceBean);
 		}
 
-		if (this.service == null && beanFactory.containsBean(serviceBean))
+		if (this.service == null && beanFactory.containsBean(serviceBean)) {
 			this.service = (BaseCrudService<T>) beanFactory
 					.getBean(serviceBean);
+		}
+		
 		if (this.formValidator == null
 				&& beanFactory.containsBean(validatorBean))
 			this.formValidator = (Validator) beanFactory.getBean(validatorBean);
@@ -804,61 +797,9 @@ public abstract class BaseCrudController<T extends BaseEntity> {
 	 * @param request
 	 * @return SSearchResults
 	 */
-	protected final SearchResults<T> search(T command,
-			HttpServletRequest request) {
-		SearchResults<T> results = new SearchResults<T>(pageSize, numLinks);
+	protected final SearchResults<T> search(T command, HttpServletRequest request) {
 		int page = StringUtil.convertToInt(request.getParameter("p"), 1);
-		long startTime = System.currentTimeMillis();
-		results.setCurrPage(page);
-		if(command != null && command.getExactMatch() != null && command.getExactMatch()) {
-			results.setTotalResults(this.countAction(command, command.getExactMatch()));
-		} else {
-			results.setTotalResults(this.countAction(command));
-		}
-		int start = results.getStartIndex();
-		int total = results.getPageSize();
-		if (pageSize > 0) {
-			if (command == null) {
-				// no command, let's search everything
-				results.addResults(service.findAll(start, total));
-			} else if (command.getExactMatch() != null && command.getExactMatch()) {
-				results.addResults(service.findByExample(command, true, start, total));
-			} else {
-				// let's do a query by example
-				results.addResults(service.findByExample(command, start, total));
-			}
-		} else {
-			if (command == null) {
-				// no command, let's search everything
-				results.addResults(service.findAll());
-			} else if (command.getExactMatch() != null && command.getExactMatch()) {
-				results.addResults(service.findByExample(command, true));
-			}  else {
-				// let's do a query by example
-				results.addResults(service.findByExample(command));
-			}
-		}
-		results.setSearchTime(System.currentTimeMillis() - startTime);
-		return results;
-	}
-
-	/**
-	 * Performs record matching count, used for search.
-	 * 
-	 * @param command
-	 * @return the count
-	 */
-	protected long countAction(T command) {
-		return countAction(command, false);
-	}
-	
-	protected long countAction(T command, boolean isExactMatch) {
-		if (command == null) {
-			// no command, let's search everything
-			return service.countAll();
-		} else {
-			return service.countByExample(command, isExactMatch);
-		}
+		return service.search(command, page);
 	}
 
 	/**

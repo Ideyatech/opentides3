@@ -80,4 +80,8 @@
 	    <name>notification</name>
 	    <path>/META-INF/tags/notification.tag</path>
 	 </tag-file>
+	 <tag-file>
+	    <name>display</name>
+	    <path>/META-INF/tags/display.tag</path>
+	 </tag-file>
 </taglib>

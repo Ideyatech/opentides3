@@ -19,26 +19,28 @@
 
 package org.opentides.util;
 
+import java.lang.management.ManagementFactory;
 import java.net.InetAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Map;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
-import javax.servlet.http.Cookie;
+import javax.management.AttributeNotFoundException;
+import javax.management.InstanceNotFoundException;
+import javax.management.MBeanException;
+import javax.management.MBeanServer;
+import javax.management.MalformedObjectNameException;
+import javax.management.ObjectName;
+import javax.management.Query;
+import javax.management.ReflectionException;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
-import org.apache.commons.httpclient.Header;
-import org.apache.commons.httpclient.HostConfiguration;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpMethodBase;
-import org.apache.commons.httpclient.methods.GetMethod;
-import org.apache.commons.httpclient.methods.PostMethod;
-import org.apache.commons.httpclient.params.HttpClientParams;
-import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import org.opentides.bean.UrlResponseObject;
 
 /**
  * Utility class for handling Url strings.
@@ -47,16 +49,16 @@ import org.opentides.bean.UrlResponseObject;
  * 
  */
 public class UrlUtil {
-	
+
 	private static final Logger _log = Logger.getLogger(UrlUtil.class);
 	private static final int CONNECTION_TIMEOUT = 15000;
-	
+
 	/**
 	 * Hide the constructor.
 	 */
-	private UrlUtil() {		
+	private UrlUtil() {
 	}
-	
+
 	/**
 	 * Checks if the given url starts with protocol (e.g.
 	 * "http://www.ideyatech.com")
@@ -110,7 +112,7 @@ public class UrlUtil {
 			endIndex = url.length();
 		return url.substring(startIndex, endIndex);
 	}
-	
+
 	/**
 	 * Returns the hostname of the given url
 	 * 
@@ -204,8 +206,7 @@ public class UrlUtil {
 	}
 
 	/**
-	 * Helper function that converts string of IP Address 
-	 * into an InetAddress
+	 * Helper function that converts string of IP Address into an InetAddress
 	 * 
 	 * @param IPString
 	 * @return InetAddress
@@ -220,118 +221,47 @@ public class UrlUtil {
 					(byte) Integer.parseInt(IPAddress[3]) };
 			return InetAddress.getByAddress(IPBytes);
 		} catch (Exception uhe) {
-			_log.error("FAILED to convert IP address  [" + IPString + "]",
-					uhe);
+			_log.error("FAILED to convert IP address  [" + IPString + "]", uhe);
 			return null;
 		}
 	}
-	
+
 	/**
-	 * Returns the HTML code of the original engine. Takes the URL to connect to
-	 * the engine. Also takes encoding type that overrides default if not null
-	 * "UTF8" is typical encoding type
 	 * 
-	 * @param queryURL
-	 *            - URL of engine to retrieve
-	 * @param request
-	 *            - request object
-	 * @param param
-	 *            - additional parameters
-	 *         	  - Valid parameters are:
-	 *         	  - methodName - Either "POST" or "GET". Default is "POST"   
-	 *            - forwardCookie - if true, will forward cookies found on request object
-	 *            - IPAddress - if specified, this IP will be used for the request
-	 *  
-	 * Note: This method required commons httpclient which is NOT defined in this project's
-	 * POM. Please MANUALLY include httpclient in your application if you need this function.
+	 * Helper function to retrieve the server URL. Returns a list similar to below:
+	 * [http://192.168.1.22:8080]
 	 * 
+	 * @return
+	 * @throws MalformedObjectNameException
+	 * @throws NullPointerException
+	 * @throws UnknownHostException
+	 * @throws AttributeNotFoundException
+	 * @throws InstanceNotFoundException
+	 * @throws MBeanException
+	 * @throws ReflectionException
 	 */
-	public static final UrlResponseObject getPage(final String queryURL,
-								  	   final HttpServletRequest request,
-									   final Map<String, Object> param) {
-		// determine if get or post method
-		HttpMethodBase httpMethodBase;
-		Boolean forwardCookie = false;
-		InetAddress IPAddress = null;
-		
-		if (param!=null) {
-			if (param.get("forwardCookie")!=null)
-				forwardCookie = (Boolean) param.get("forwardCookie");
-			
-			if (param.get("IPAddress")!=null) {
-				String IPString = (String) param.get("IPAddress");
-				if (!StringUtil.isEmpty(IPString)) {
-					IPAddress = convertIPString(IPString);
-				}
+	public static List<String> getEndPoints() throws MalformedObjectNameException,
+			NullPointerException, UnknownHostException,
+			AttributeNotFoundException, InstanceNotFoundException,
+			MBeanException, ReflectionException {
+		MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
+		Set<ObjectName> objs = mbs.queryNames(new ObjectName(
+				"*:type=Connector,*"), Query.match(Query.attr("protocol"),
+				Query.value("HTTP/1.1")));
+		String hostname = InetAddress.getLocalHost().getHostName();
+		InetAddress[] addresses = InetAddress.getAllByName(hostname);
+		ArrayList<String> endPoints = new ArrayList<String>();
+		for (Iterator<ObjectName> i = objs.iterator(); i.hasNext();) {
+			ObjectName obj = i.next();
+			String scheme = mbs.getAttribute(obj, "scheme").toString();
+			String port = obj.getKeyProperty("port");
+			for (InetAddress addr : addresses) {
+				String host = addr.getHostAddress();
+				String ep = scheme + "://" + host + ":" + port;
+				endPoints.add(ep);
 			}
 		}
-		if (param!=null && "GET".equals((String) param.get("methodName"))) {
-			httpMethodBase = new GetMethod(queryURL);
-		} else {
-			httpMethodBase = new PostMethod(queryURL);
-		}
-
-		try {
-			// declare the connection objects
-			HttpClient client = new HttpClient();
-			HostConfiguration hostConfig = new HostConfiguration();
-			String userAgent = request.getHeader("User-Agent");
-				
-			// for debugging
-			if (_log.isDebugEnabled())
-				_log.debug("Retrieving page from " + queryURL);
-
-			// initialize the connection settings
-			client.getHttpConnectionManager().getParams()
-					.setConnectionTimeout(CONNECTION_TIMEOUT);
-			client.getParams().setBooleanParameter(
-					HttpClientParams.ALLOW_CIRCULAR_REDIRECTS, true);
-			httpMethodBase.addRequestHeader("accept", "*/*");
-			httpMethodBase.addRequestHeader("accept-language", "en-us");
-			httpMethodBase.addRequestHeader("user-agent", userAgent);
-
-			if (forwardCookie) {
-				// get cookies from request
-				Cookie[] cookies = request.getCookies();
-				String cookieString = "";
-				for (Cookie c : cookies) {
-					cookieString += c.getName() + "=" + c.getValue() + "; ";
-				}
-				
-				// forward cookies to httpMethod
-				httpMethodBase.setRequestHeader("Cookie", cookieString);
-			}
-			
-			if (IPAddress!=null) {
-				hostConfig.setLocalAddress(IPAddress);
-			}
-
-			// Setup for 3 retry  
-			httpMethodBase.getParams().setParameter(HttpMethodParams.RETRY_HANDLER,
-					new DefaultHttpMethodRetryHandler(3, false));
-
-			// now let's retrieve the data
-			client.executeMethod(hostConfig, httpMethodBase);
-			
-			// Read the response body.
-			UrlResponseObject response = new UrlResponseObject();
-			response.setResponseBody(httpMethodBase.getResponseBody());
-			Header contentType = httpMethodBase.getResponseHeader("Content-Type");
-			if (contentType!=null)
-				response.setResponseType(contentType.getValue());
-			else
-				response.setResponseType("html");
-			return response;
-
-		} catch (Exception ex) {
-			_log.error("Failed to request from URL: ["+queryURL+"]", ex);
-			return null;
-		} finally {
-			try {
-				httpMethodBase.releaseConnection();
-			} catch (Exception ignored) {
-			}
-		}
+		return endPoints;
 	}
-    
+
 }

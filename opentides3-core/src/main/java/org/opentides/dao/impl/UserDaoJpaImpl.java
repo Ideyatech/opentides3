@@ -38,7 +38,7 @@ public class UserDaoJpaImpl extends BaseEntityDaoJpaImpl<BaseUser, Long> impleme
 		UserDao {
 
 	private static final String DEFAULT_TIME_ZONE = "Asia/Manila";
-
+	
 	public final boolean isRegisteredByEmail(String emailAddress) {
 		if (StringUtil.isEmpty(emailAddress))
 			return false;
@@ -108,7 +108,7 @@ public class UserDaoJpaImpl extends BaseEntityDaoJpaImpl<BaseUser, Long> impleme
 			int maxResults) {
 		Map<String, Object> params = new HashMap<>();
 		params.put("name", name + "%");
-		List<BaseUser> usersList = findByNamedQuery("jpql.attacheUser.findUsersLikeLastName", params, firstResult, maxResults);
+		List<BaseUser> usersList = findByNamedQuery("jpql.user.findUsersLikeLastName", params, firstResult, maxResults);
 		return usersList;
 	}
 	
@@ -119,5 +119,5 @@ public class UserDaoJpaImpl extends BaseEntityDaoJpaImpl<BaseUser, Long> impleme
 		List<BaseUser> usersList = findByNamedQuery("jpql.user.findUsersWithAuthority", params);
 		return usersList;
 	}
-
+	
 }

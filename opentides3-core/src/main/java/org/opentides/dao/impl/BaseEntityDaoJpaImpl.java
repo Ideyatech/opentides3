@@ -121,14 +121,6 @@ public class BaseEntityDaoJpaImpl<T extends BaseEntity,ID extends Serializable>
 	 * {@inheritDoc}
 	 */
 	@Override	
-	public final List<T> findByNamedQuery(final String name, final Object... params) {
-		return findByNamedQuery(name, -1, -1, params);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override	
 	@SuppressWarnings("unchecked")
 	public final List<T> findByNamedQuery(final String name, final Map<String,Object> params, int start, int total) {
 		String queryString = getJpqlQuery(name);
