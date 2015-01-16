@@ -31,7 +31,7 @@ import org.springframework.stereotype.Component;
  * @author allanctan
  */
 @Component
-public class MTSchemaUpdateCommand implements Command {
+public class MTSchemaUpdateCommand implements StartupCommand {
 
 	private static final Logger _log = Logger
 			.getLogger(MTSchemaUpdateCommand.class);
