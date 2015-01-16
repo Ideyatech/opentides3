@@ -546,7 +546,7 @@ var opentides3 = (function() {
 					$this.remove();
 				} else if(name){
 					var prime = toPrimitive(opentides3.getValue(json, name));
-					$(this).val(prime);
+					$(this).val(prime).trigger("change");
 				}
 			});
 
