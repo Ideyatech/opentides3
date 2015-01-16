@@ -282,6 +282,7 @@ public class BaseUser extends BaseEntity implements ImageUploadable {
 		props.add("firstName");
 		props.add("lastName");
 		props.add("emailAddress");
+		props.add("credential.username");
 		return props;
 	}
 	
