@@ -57,9 +57,13 @@ public class MailingServiceImpl implements MailingService {
 	@Value("#{applicationSettings['mail.server.port']}")
 	private String port;
 	
+	@Value("#{applicationSettings['mail.from-name']}")
+	private String mailFrom;
+	
 	@Value("#{applicationSettings['application.name']}")
 	private String applicationName;
-	
+
+
 	@Override
 	public void sendEmail(String[] toEmail, String subject, String template,
 			Map<String, Object> templateVariables) {
@@ -81,7 +85,7 @@ public class MailingServiceImpl implements MailingService {
 		MimeBodyPart htmlPart = new MimeBodyPart();
 
 		try {
-			message.setFrom(new InternetAddress(adminEmail, applicationName));
+			message.setFrom(new InternetAddress(adminEmail, mailFrom));
 			for (String addr : toEmail) {
 				message.addRecipient(RecipientType.TO,
 						new InternetAddress(addr));
