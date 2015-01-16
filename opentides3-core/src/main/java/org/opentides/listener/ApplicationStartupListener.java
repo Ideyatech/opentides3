@@ -22,7 +22,7 @@ package org.opentides.listener;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.opentides.listener.command.Command;
+import org.opentides.listener.command.StartupCommand;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -43,7 +43,7 @@ public class ApplicationStartupListener implements ApplicationListener<ContextRe
 
 	private String propertyName;
 
-	private List<Command> startupCommand;
+	private List<StartupCommand> startupCommand;
 
 	/*
 	 * (non-Javadoc)
@@ -56,7 +56,7 @@ public class ApplicationStartupListener implements ApplicationListener<ContextRe
 		_log.info("Starting up system using " + propertyName + " properties.");
 		
 		if (startupCommand != null) {
-			for (Command command:startupCommand) {
+			for (StartupCommand command:startupCommand) {
 				command.execute();
 			}
 		}		
@@ -85,7 +85,7 @@ public class ApplicationStartupListener implements ApplicationListener<ContextRe
 	/**
 	 * @param startupCommand the startupCommand to set
 	 */
-	public final void setStartupCommand(List<Command> startupCommand) {
+	public final void setStartupCommand(List<StartupCommand> startupCommand) {
 		this.startupCommand = startupCommand;
 	}
 

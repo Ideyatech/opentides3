@@ -21,6 +21,8 @@
 		<module>opentides3-core</module>
 		<module>opentides3-taglib</module>
 		<module>opentides3-notification</module>
+		<module>opentides3-multitenant</module>
+		<module>opentides3-mobilesync</module>
 	</modules>
 
 	<dependencyManagement>

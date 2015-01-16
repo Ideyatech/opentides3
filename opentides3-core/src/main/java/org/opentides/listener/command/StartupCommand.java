@@ -26,7 +26,7 @@ package org.opentides.listener.command;
  * @author allantan
  *
  */
-public interface Command {
+public interface StartupCommand {
 	
 	public void execute();
 	

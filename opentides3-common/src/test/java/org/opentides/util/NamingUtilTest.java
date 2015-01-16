@@ -42,6 +42,16 @@ public class NamingUtilTest {
 		Assert.assertEquals("test-codes-form5", NamingUtil.toElementName("TestCodesForm5"));
 		Assert.assertEquals("", NamingUtil.toElementName(""));
 	}
+
+	@Test 
+	public void testToSQLName() {
+		Assert.assertEquals("test", NamingUtil.toSQLName("Test"));
+		Assert.assertEquals("test", NamingUtil.toSQLName("test"));
+		Assert.assertEquals("test_codes", NamingUtil.toSQLName("TestCodes"));
+		Assert.assertEquals("test_codes", NamingUtil.toSQLName("testCodes"));
+		Assert.assertEquals("test_codes_form5", NamingUtil.toSQLName("TestCodesForm5"));
+		Assert.assertEquals("", NamingUtil.toSQLName(""));
+	}
 	
 	@Test
 	public void testToLabel() {

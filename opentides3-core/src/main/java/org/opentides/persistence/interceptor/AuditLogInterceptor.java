@@ -1,8 +1,3 @@
-/**
- * 
- */
-package org.opentides.persistence.interceptor;
-
 /*
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
@@ -21,6 +16,9 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.    
 */
+
+package org.opentides.persistence.interceptor;
+
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashMap;
@@ -35,7 +33,7 @@ import org.apache.log4j.Logger;
 import org.hibernate.CallbackException;
 import org.hibernate.EmptyInterceptor;
 import org.hibernate.type.Type;
-import org.opentides.bean.AuditLog;
+import org.opentides.annotation.Auditable;
 import org.opentides.bean.BaseEntity;
 import org.opentides.dao.impl.AuditLogDaoImpl;
 import org.opentides.util.CrudUtil;
@@ -54,10 +52,10 @@ public class AuditLogInterceptor extends EmptyInterceptor {
 	
 	private static final Logger _log = Logger.getLogger(AuditLogInterceptor.class);
 	
-    private Set<BaseEntity> inserts      = Collections.synchronizedSet(new HashSet<BaseEntity>()); 
-    private Set<BaseEntity> updates      = Collections.synchronizedSet(new HashSet<BaseEntity>()); 
-    private Set<BaseEntity> deletes      = Collections.synchronizedSet(new HashSet<BaseEntity>()); 
-    private Map<Long, BaseEntity> oldies = Collections.synchronizedMap(new HashMap<Long, BaseEntity>()); 
+    protected Set<BaseEntity> inserts      = Collections.synchronizedSet(new HashSet<BaseEntity>()); 
+    protected Set<BaseEntity> updates      = Collections.synchronizedSet(new HashSet<BaseEntity>()); 
+    protected Set<BaseEntity> deletes      = Collections.synchronizedSet(new HashSet<BaseEntity>()); 
+    protected Map<Long, BaseEntity> oldies = Collections.synchronizedMap(new HashMap<Long, BaseEntity>()); 
     
     @Override
     public boolean onSave(Object entity, 
@@ -66,7 +64,7 @@ public class AuditLogInterceptor extends EmptyInterceptor {
                           String[] propertyNames, 
                           Type[] types) 
             throws CallbackException { 
-        if (entity instanceof BaseEntity && !(entity instanceof AuditLog)) {
+        if (entity instanceof BaseEntity) {
         	synchronized(inserts) {
         		inserts.add((BaseEntity)entity);
         	}
@@ -80,7 +78,7 @@ public class AuditLogInterceptor extends EmptyInterceptor {
 	@Override
 	public void onDelete(Object entity, Serializable id, Object[] state,
 			String[] propertyNames, Type[] types) {
-        if (entity instanceof BaseEntity && !(entity instanceof AuditLog)) {
+        if (entity instanceof BaseEntity) {
         	synchronized(deletes) {
         		deletes.add((BaseEntity)entity);
         	}
@@ -95,7 +93,7 @@ public class AuditLogInterceptor extends EmptyInterceptor {
                                 String[] propertyNames, 
                                 Type[] types) 
             throws CallbackException { 
-        if (entity instanceof BaseEntity && !(entity instanceof AuditLog)) {
+        if (entity instanceof BaseEntity) {
         	EntityManager em = null;
         	try {
         		BaseEntity auditable = (BaseEntity) entity;
@@ -127,7 +125,7 @@ public class AuditLogInterceptor extends EmptyInterceptor {
         try { 
         	synchronized(inserts) {
 	        	for (BaseEntity entity:inserts) {
-	        		if (!entity.isSkipAudit()) {
+	        		if (entity.getClass().isAnnotationPresent(Auditable.class) && !entity.isSkipAudit()) {
 	        			String auditMessage = null;
 	        			
 	        			if (StringUtil.isEmpty(entity.getAuditMessage())){
@@ -142,7 +140,7 @@ public class AuditLogInterceptor extends EmptyInterceptor {
         	}
         	synchronized(deletes) {
 	        	for (BaseEntity entity:deletes) {
-	        		if (!entity.isSkipAudit()) {
+	        		if (entity.getClass().isAnnotationPresent(Auditable.class) && !entity.isSkipAudit()) {
 	        			String auditMessage = null;
 	        			
 	        			if (StringUtil.isEmpty(entity.getAuditMessage())){
@@ -156,10 +154,9 @@ public class AuditLogInterceptor extends EmptyInterceptor {
         	}
         	synchronized (updates) {
                	for (BaseEntity entity:updates) {
-	        		if (!entity.isSkipAudit()) {
+	        		if (entity.getClass().isAnnotationPresent(Auditable.class) && !entity.isSkipAudit()) {
 	        			String auditMessage = null;
-	        			
-	        			if (StringUtil.isEmpty(entity.getAuditMessage())){
+	        			if (StringUtil.isEmpty(entity.getAuditMessage())) {
 	        				BaseEntity old = oldies.get(entity.getId());
 			        		auditMessage = CrudUtil.buildUpdateMessage(old, entity);
 	        			}else{
@@ -187,11 +184,4 @@ public class AuditLogInterceptor extends EmptyInterceptor {
     		}
         } 
     }
-	
-	@Override
-	public void onCollectionUpdate(Object collection, Serializable key)
-			throws CallbackException {
-		_log.debug("This is a test to determine if a collection is updated");
-	}
-	
 }

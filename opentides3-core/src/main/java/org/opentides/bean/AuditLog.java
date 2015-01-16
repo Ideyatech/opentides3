@@ -145,7 +145,10 @@ public class AuditLog extends BaseEntity {
             final String reference,
             final Long userId,
             final String userDisplayName) {
-        this.message = message;
+		if (message.length() > 4000)
+			this.message = message.substring(0, 3999);
+		else
+			this.message = message;
         this.entityId = entityId;
         this.entityClass = entityClass;
         this.reference = reference;
@@ -225,7 +228,10 @@ public class AuditLog extends BaseEntity {
 	 * @param message the message to set
 	 */
 	public final void setMessage(String message) {
-		this.message = message;
+		if (message.length() > 4000)
+			this.message = message.substring(0, 3999);
+		else
+			this.message = message;
 	}
 
 	/**

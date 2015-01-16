@@ -124,6 +124,33 @@ public class NamingUtil {
 		return buffer.toString();
 	}
 	
+	
+	/**
+	 * Ensures that name are in html element format (e.g. system-codes)
+	 * @param name
+	 * @return
+	 */
+	public static String toSQLName(String name) {
+		if (StringUtil.isEmpty(name))
+			return "";
+		StringBuilder buffer = new StringBuilder();
+		int startIndex = 0;
+		for (int i=0; i<name.length();i++) {
+			if (name.charAt(i) >= 'A' && name.charAt(i)<= 'Z') {
+				if (startIndex!=0)
+					buffer.append("_");
+				buffer.append(name.substring(startIndex, i).toLowerCase());
+				startIndex = i;				
+			}
+		}
+		if (startIndex<name.length()) {
+			if (startIndex!=0)
+				buffer.append("_");
+			buffer.append(name.substring(startIndex).toLowerCase());
+		}
+		return buffer.toString();
+	}
+	
     /**
      * Retrieves the property name for a method name. 
      * (e.g. getName will return name)

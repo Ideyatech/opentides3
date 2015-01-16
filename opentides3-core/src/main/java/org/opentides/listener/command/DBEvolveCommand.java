@@ -26,7 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @author allantan
  *
  */
-public class DBEvolveCommand implements Command {
+public class DBEvolveCommand implements StartupCommand {
 
 	private static final Logger _log = Logger.getLogger(DBEvolveCommand.class);
 

@@ -27,7 +27,6 @@ import org.opentides.exception.InvalidImplementationException;
 import com.ideyatech.bean.Ninja;
 import com.ideyatech.bean.UserCriteria;
 
-
 /**
  * @author allanctan
  *
@@ -62,6 +61,50 @@ public class CrudUtilTest {
 				CrudUtil.buildCreateMessage(sc3));
 	}
 
+	@Test
+	public void testGetUpdatedFields() {
+		SystemCodes oldsc = new SystemCodes("categoryold","keyold","value");
+		SystemCodes newsc = new SystemCodes("categorynew","keynew","value");
+		SystemCodes samesc = new SystemCodes("categoryold","keyold","value");	
+		SystemCodes emptysc = new SystemCodes("categorynew","keynew","");
+				
+		Assert.assertEquals("key,category",
+				CrudUtil.getUpdatedFields(oldsc, newsc));
+		Assert.assertEquals("value",
+				CrudUtil.getUpdatedFields(newsc, emptysc));
+		Assert.assertEquals("value",
+				CrudUtil.getUpdatedFields(emptysc, newsc));		
+		Assert.assertEquals("",
+				CrudUtil.getUpdatedFields(oldsc, samesc));
+		newsc.setNumberValue(2l);
+		Assert.assertEquals("key,category,numberValue",
+				CrudUtil.getUpdatedFields(oldsc, newsc));
+	}
+	
+	@Test
+	public void testGetUpdatedFieldsArray() {
+		SystemCodes oldsc = new SystemCodes("categoryold","keyold","valueold");
+		SystemCodes newsc = new SystemCodes("categorynew","keynew","valuenew");
+		SystemCodes samesc = new SystemCodes("categoryold","keysame","valuesame");
+		List<SystemCodes> oldFaves = new ArrayList<SystemCodes>();
+		oldFaves.add(samesc);
+		oldFaves.add(oldsc);
+		List<SystemCodes> newFaves = new ArrayList<SystemCodes>();
+		newFaves.add(newsc);
+		newFaves.add(samesc);
+
+		UserCriteria oldUser = new UserCriteria();
+		UserCriteria newUser = new UserCriteria();
+		oldUser.setFavorites(oldFaves);
+		newUser.setFavorites(oldFaves);
+		
+		Assert.assertEquals( "",
+				CrudUtil.getUpdatedFields(oldUser, newUser));
+		
+		newUser.setFavorites(newFaves);
+		Assert.assertEquals( "favorites",
+				CrudUtil.getUpdatedFields(oldUser, newUser));
+	}
 	 
 	@Test
 	public void testBuildUpdateMessage() {
@@ -185,7 +228,6 @@ public class CrudUtilTest {
 						" where obj.key like '%PH%' escape '\\' and obj.value like '%Philippines%' escape '\\'",
        						CrudUtil.buildJpaQueryString(sc, false));
 
-       	
 //       	Category cat = new Category();
 //       	cat.setId(12l);
 //       	sc.setCategory(cat);

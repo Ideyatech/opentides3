@@ -108,6 +108,28 @@ public class CrudUtil {
     }
     
     /**
+     * Returns the list of fields that have difference values or updated.
+     * 
+     * @param oldObject
+     * @param newObject
+     * @return
+     */
+    public static List<String> getUpdatedFields(BaseEntity oldObject, BaseEntity newObject) {
+    	List<String> fields = CacheUtil.getPersistentFields(oldObject);
+    	List<String> updatedFields = new ArrayList<String>();
+    	for (String field:fields) {
+    		Object oldValue = retrieveNullableObjectValue(oldObject, field);
+			Object newValue = retrieveNullableObjectValue(newObject, field);			
+			oldValue = normalizeValue(oldValue);
+			newValue = normalizeValue(newValue);
+			if (!oldValue.equals(newValue)) {
+				updatedFields.add(field);
+			}
+    	}
+    	return updatedFields;
+    }
+    
+    /**
      * Creates the logging message for update audit logs 
      * @param obj
      * @return
