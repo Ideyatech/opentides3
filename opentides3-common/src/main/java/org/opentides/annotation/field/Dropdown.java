@@ -27,13 +27,16 @@ import java.lang.annotation.Target;
 /**
  * Generates a select dropdown field.<p>
  * <b>Sample Usage:</b><br />
- * &emsp;&emsp;&emsp;<code>@DropDown (label = "dropdownFieldLabel", requiredField = "true")</code><br />
+ * &emsp;&emsp;&emsp;<code>@DropDown (label = "dropdownFieldLabel", isRequired = "true")</code><br />
  * @author allanctan
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.SOURCE)
 @Documented
 public @interface Dropdown {
+	
+	String type() default "input";
+	
 	/**
 	 * Refers to the name identifier of the field; default value is <code><b>null</b></code>.
 	 */
@@ -62,16 +65,26 @@ public @interface Dropdown {
 	/**
 	 * Determines if the field is included as a search criteria; default value is <code><b>false</b></code>.
 	 */
-	boolean searchable() default false;
-	
-	/**
-	 * Determines if the field is required and cannot be null; default value is <code><b>false</b></code>. This is used as reference when deleting an entry.
-	 */
-	boolean requiredField() default false;
+	boolean isSearchCriteria() default false;
 	
 	/**
 	 * Determines if the field is included in the table view; default value is <code><b>false</b></code>.
 	 */
-	boolean listed() default false;	
-
+	boolean isSearchResult() default false;	
+	
+	/**
+	 * Determines if the field can have multiple values; default value is <code><b>false</b></code>.
+	 */
+	boolean isMultiple() default false;
+	
+	/**
+	 * Determines if the field is to be included in the entity creation modal; default value is <code><b>false</b></code>. 
+	 */
+	boolean isForCreation() default false;
+	
+	/**
+	 * Determines if the field is a required field for creation form; default value is <code><b>false</b></code>.
+	 * @return
+	 */
+	boolean isRequired() default false;
 }

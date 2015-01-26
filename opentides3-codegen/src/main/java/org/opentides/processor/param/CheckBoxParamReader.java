@@ -29,34 +29,6 @@ import org.opentides.util.AnnotationUtil;
 
 public class CheckBoxParamReader implements	ParamReader {
 
-	/*
-	public Map<String, Object> getParameters(Field field) {
-		Map<String, Object> params = new HashMap<String, Object>();
-		
-		String[] options = field.getAnnotation(CheckBox.class).options();
-		String categoryName = field.getAnnotation(CheckBox.class).category();
-		// put list type params (e.g. category, options or object)
-		params.putAll(populateListTypeParams(field, categoryName, options));
-				
-		if (!BaseParamReader.isValidation()) {
-			BaseParamReader.setValidation(field.getAnnotation(CheckBox.class).requiredField());
-		}
-		
-		if (!StringUtil.isEmpty(field.getAnnotation(CheckBox.class).label())) {
-			params.put("label", field.getAnnotation(CheckBox.class).label());
-		}
-		
-		params.put("isListed", field.getAnnotation(CheckBox.class).listed());
-		params.put("isSearchable", field.getAnnotation(CheckBox.class).searchable());
-		params.put("isRequiredField", field.getAnnotation(CheckBox.class).requiredField());
-		params.put("springParams", field.getAnnotation(CheckBox.class).springParams());
-		params.put("fieldType", "checkBox");
-		params.putAll(super.getStandardParams(field));
-		
-		return params;
-	}
-	*/
-
 	@Override
 	public Definition getDefinition(TypeElement te, Element e) {
 		String fieldName = e.toString();

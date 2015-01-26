@@ -21,12 +21,14 @@ package org.opentides.processor;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -45,11 +47,13 @@ import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 
+import org.opentides.bean.AnnotationDefinition;
 import org.opentides.bean.BeanDefinition;
 import org.opentides.bean.FieldDefinition;
 import org.opentides.processor.param.ParamContext;
 import org.opentides.processor.param.ParamReader;
 import org.opentides.processor.param.ParamReaderFactory;
+import org.opentides.util.AnnotationUtil;
 import org.opentides.util.CloningUtil;
 import org.opentides.util.PackageUtil;
 
@@ -110,6 +114,7 @@ public class ClassProcessor extends AbstractProcessor {
 		} else {
 			// process jars
 			templates = CloningUtil.getJarTemplates();
+			templateFolder = templateFolder.replaceAll(PackageUtil.separator, "/");
 		}
 		
 		for (String templateName : templates) {
@@ -118,10 +123,34 @@ public class ClassProcessor extends AbstractProcessor {
 					templateName.endsWith(".vm") &&
 					!templateName.endsWith("_.vm") ) {				
 				try {
-					String outputFile = PackageUtil.toPackageName(CloningUtil.getOutputName(templateName, params));
-					displayMessage("    Generating " + outputFile + "...");
-					JavaFileObject gen = processingEnv.getFiler().createSourceFile(outputFile);
-					bw = new BufferedWriter(gen.openWriter());			
+					String outputFile;
+					String fileName;
+					//checking for non-java files
+					if(templateName.endsWith(".java.vm")){
+						outputFile = PackageUtil.toPackageName(CloningUtil.getOutputName(templateName, params));
+						fileName = "src"+File.separator+"main"+File.separator+"java"+File.separator+CloningUtil.getOutputName(templateName, params)+".java";
+					} else {
+						outputFile = CloningUtil.getOutputName(templateName, params);
+						fileName = outputFile;
+					}
+					
+					//skipped for testing purposes: somewhat changed
+					if (new File(fileName).exists()) {
+						displayMessage("    Skipping " + fileName + " ... File already exist.");
+						continue;								
+					}
+					
+					File file = new File(outputFile);
+					displayMessage("    Generating " + fileName + " ...");
+					//checking for non-java files
+					if(templateName.endsWith(".java.vm")) {
+						JavaFileObject gen = processingEnv.getFiler().createSourceFile(outputFile);				
+						bw = new BufferedWriter(gen.openWriter());
+					} else {
+						if(!file.getParentFile().exists())file.getParentFile().mkdirs();
+						FileWriter output = new FileWriter(file);
+						bw = new BufferedWriter(output);
+					}
 					CloningUtil.mergeVmTemplate(templateName, params, bw);
 					displayMessage("    Success.");
 				} catch (IOException ex) {
@@ -129,7 +158,7 @@ public class ClassProcessor extends AbstractProcessor {
 				} finally {
 					try {
 						bw.close();
-					} catch (IOException e) {
+					} catch (Exception e) {
 					}
 				}
 			}
@@ -150,7 +179,7 @@ public class ClassProcessor extends AbstractProcessor {
 		
 		for (TypeElement te : annotations) {
 			for (Element e : env.getElementsAnnotatedWith(te)) {
-				if (e.getKind() == ElementKind.CLASS) {
+				if (e.getKind() == ElementKind.CLASS && ParamReaderFactory.getReader(te.getSimpleName().toString())!=null) {
 					String annotation = te.getSimpleName().toString();
 					displayMessage("Processing: "
 							+ e.toString() + " for annotation " + annotation);
@@ -161,6 +190,11 @@ public class ClassProcessor extends AbstractProcessor {
 					ParamReader reader = ParamReaderFactory.getReader(annotation);
 					if (reader!=null) {
 						BeanDefinition beanDefn = (BeanDefinition) reader.getDefinition(te, e);
+						if(beanDefn.getAnnotations()==null) {
+							beanDefn.setAnnotations(new HashSet<AnnotationDefinition>());
+						}
+						AnnotationDefinition annotationDefn = AnnotationUtil.getAnnotationDefinition(te, e);
+						beanDefn.getAnnotations().add(annotationDefn);
 						Set<FieldDefinition> fields = ParamContext.getFieldDefinitions(beanDefn.getQualifiedName());
 						beanDefn.setFields(fields);
 						params.put("bean",beanDefn);

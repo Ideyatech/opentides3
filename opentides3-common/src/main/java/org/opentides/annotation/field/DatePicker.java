@@ -28,20 +28,22 @@ import java.lang.annotation.Target;
 /**
  * Generates an input text area.
  * <b>Sample Usage:</b><br />
- * &emsp;&emsp;&emsp;<code>@TextArea (label = "textAreaLabel", requiredField = "true")</code><br />
+ * &emsp;&emsp;&emsp;<code>@TextArea (label = "textAreaLabel", isRequired = "true")</code><br />
  * @author allanctan
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.SOURCE)
 @Documented
 public @interface DatePicker {
-
+	
+	String type() default "input";
+	
 	/**
 	 * Refers to the name identifier of the field; default value is <code><b>null</b></code>.
 	 * 
 	 */
 	String label() default "";
-
+	
 	/**
 	 * Refers to the parameters to be added; default value is <code><b>null</b></code>.
 	 * 
@@ -52,17 +54,32 @@ public @interface DatePicker {
 	 * Determines if the field is included as a search criteria; default value is <code><b>false</b></code>.
 	 * 
 	 */
-	boolean searchable() default false;
-	
-	/**
-	 * Determines if the field is required and cannot be null; default value is <code><b>false</b></code>. This is used as reference when deleting an entry.
-	 * 
-	 */
-	boolean requiredField() default false;
+	boolean isSearchCriteria() default false;
 	
 	/**
 	 * Determines if the field is included in the table view; default value is <code><b>false</b></code>.
-	 * 
 	 */
-	boolean listed() default false;
+	boolean isSearchResult() default false;
+	
+	/**
+	 * Determines the date format of the field; default value is <code><b>"MM/dd/yyyy"</b></code>.
+	 */
+	String date_format() default "MM/dd/yyyy";
+	
+	/**
+	 * HTML5 placeholder tag
+	 * @return
+	 */
+	String placeholder() default "";
+	
+	/**
+	 * Determines if the field is to be included in the entity creation modal; default value is <code><b>false</b></code>. 
+	 */
+	boolean isForCreation() default false;
+	
+	/**
+	 * Determines if the field is a required field for creation form; default value is <code><b>false</b></code>.
+	 * @return
+	 */
+	boolean isRequired() default false;
 }

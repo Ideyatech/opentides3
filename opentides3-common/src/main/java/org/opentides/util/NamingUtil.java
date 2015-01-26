@@ -124,6 +124,26 @@ public class NamingUtil {
 		return buffer.toString();
 	}
 	
+	public static String toDisplayName(String name) {
+		if (StringUtil.isEmpty(name))
+			return "";
+		StringBuffer buffer = new StringBuffer();
+		int startIndex = 0;
+		for (int i=0; i<name.length();i++) {
+			if (name.charAt(i) >= 'A' && name.charAt(i)<= 'Z') {
+				if (startIndex!=0)
+					buffer.append(" ");
+				buffer.append(name.substring(startIndex, i));
+				startIndex = i;				
+			}
+		}
+		if (startIndex<name.length()) {
+			if (startIndex!=0)
+				buffer.append(" ");
+			buffer.append(name.substring(startIndex));
+		}
+		return buffer.toString();
+	}
 	
 	/**
 	 * Ensures that name are in html element format (e.g. system-codes)

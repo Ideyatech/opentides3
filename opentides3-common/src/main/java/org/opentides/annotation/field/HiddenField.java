@@ -34,7 +34,9 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.SOURCE)
 @Documented
 public @interface HiddenField{
-
+	
+	String type() default "input";
+	
 	/**
 	 * Refers to the parameters to be added; default value is <code><b>null</b></code>. 
 	 */	

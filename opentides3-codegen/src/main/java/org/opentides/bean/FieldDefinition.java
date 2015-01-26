@@ -117,10 +117,41 @@ public class FieldDefinition implements Definition {
 	public final Object getAttribute(String attribute) {
 		for (String key:annotations.keySet()) {
 			AnnotationDefinition defn = annotations.get(key);
-			if (defn.getParams() != null && defn.getParams().containsKey(attribute)) 
+			if (defn.getParams() != null && defn.getParams().containsKey(attribute))
 				return defn.getParams().get(attribute);			
 		}
 		return "";
+	}
+	
+	/**
+	 * Returns the label of the given field converted to its code format
+	 * example. label = "Date Created"; labelCode = "date-created"
+	 * @return labelCode
+	 */
+	public final String getLabelCode() {
+		String label = this.label;
+		if (StringUtil.isEmpty(label))
+			return "";
+		StringBuilder labelCode = new StringBuilder();
+		int startIndex = 0;
+		for (int i=0; i<label.length();i++) {
+			if (label.charAt(i) >= 'A' && label.charAt(i)<= 'Z') {
+				if (startIndex!=0) {
+					labelCode.deleteCharAt(startIndex-1);
+					labelCode.append("-");
+				}
+				labelCode.append(label.substring(startIndex, i).toLowerCase());
+				startIndex = i;				
+			}
+		}
+		if (startIndex<label.length()) {
+			if (startIndex!=0) {
+				labelCode.deleteCharAt(startIndex-1);
+				labelCode.append("-");
+			}
+			labelCode.append(label.substring(startIndex).toLowerCase());
+		}
+		return labelCode.toString();
 	}
 	
 	public final Boolean isByOptions() {

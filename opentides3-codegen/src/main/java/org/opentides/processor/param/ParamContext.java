@@ -25,7 +25,6 @@ import java.util.Set;
 
 import org.opentides.bean.Definition;
 import org.opentides.bean.FieldDefinition;
-import org.opentides.exception.CodeGenerationException;
 
 
 public class ParamContext {

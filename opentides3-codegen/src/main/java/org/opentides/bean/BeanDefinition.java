@@ -18,6 +18,8 @@ public class BeanDefinition implements Definition {
 	
 	private String modelName;
 	
+	private String displayName;
+	
 	private String formName;
 	
 	private String prefix;
@@ -48,6 +50,7 @@ public class BeanDefinition implements Definition {
 	 * Attributes are initialized based on convention below:
 	 * 	 className - SystemCodes
 	 *   modelName - systemCodes
+	 *   displayName - System Codes
 	 *   formName  - system-codes
 	 *   prefix    - system-codes
 	 *   modelPackage - org.opentides.bean
@@ -59,6 +62,7 @@ public class BeanDefinition implements Definition {
 	public BeanDefinition(String package_, String name) {
 		this.className = name;
 		this.modelName = NamingUtil.toAttributeName(name);
+		this.displayName = NamingUtil.toDisplayName(name);
 		this.formName = NamingUtil.toElementName(name);
 		this.prefix = NamingUtil.toElementName(name);
 		this.modelPackage = package_;
@@ -88,8 +92,20 @@ public class BeanDefinition implements Definition {
 		
 	public boolean containsByOptions() {
 		for (FieldDefinition field:fields) {
-			if (field.isByOptions())
+			if (field.isByOptions()) {
 				return true;
+			}
+		}
+		return false;
+	}
+	
+	public boolean containsValidation() {
+		if(fields!=null) {
+			for(FieldDefinition field: fields) {
+				if(field.getAnnotations().containsKey("Validation")) {
+					return true;
+				}
+			}
 		}
 		return false;
 	}
@@ -114,6 +130,13 @@ public class BeanDefinition implements Definition {
 	 */
 	public final String getModelName() {
 		return modelName;
+	}
+	
+	/**
+	 * @return the displayName
+	 */
+	public final String getDisplayName() {
+		return displayName;
 	}
 
 	/**
@@ -151,6 +174,20 @@ public class BeanDefinition implements Definition {
 		return annotations;
 	}
 
+	/**
+	 * Returns the attribute setting for the given annotation.
+	 * @param name
+	 * @return
+	 */
+	public final Object getAttribute(String attribute) {
+		if(annotations!=null){
+			for (AnnotationDefinition defn:annotations) {
+				if (defn.getParams() != null && defn.getParams().containsKey(attribute)) 
+					return defn.getParams().get(attribute);			
+			}
+		}
+		return "";
+	}
 	
 	/**
 	 * @param annotations the annotations to set

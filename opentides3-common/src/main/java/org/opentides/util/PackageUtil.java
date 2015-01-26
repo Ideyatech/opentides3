@@ -38,6 +38,8 @@ public class PackageUtil {
 	
 	private static Set<String> templateFolders = new HashSet<String>();
 	
+	public static final String separator = ("\\".equals(File.separator))? "\\\\":File.separator;
+		
 	/**
 	 * Hide the constructor.
 	 */
@@ -52,9 +54,10 @@ public class PackageUtil {
 	 * @return
 	 */
 	public static String toPackageName(String name) {
-		if (name == null)
+		if (name == null) {
 			return null;
-		return name.replaceAll(File.separator, ".");
+		}
+		return name.replaceAll(separator, ".");
 	}
 	
 	/**
@@ -65,12 +68,13 @@ public class PackageUtil {
 	 * @return
 	 */
 	public static String toFolderName(String name) {
-		if (name == null)
+		if (name == null) {
 			return null;
+		}
 		if (name.endsWith(".java")) {
 			return name.substring(0, name.length()-5).replaceAll("\\.",File.separator) + ".java";
 		} else {
-			return name.replaceAll("\\.",File.separator);
+			return name.replaceAll("\\.", separator);
 		}
 	}
 	

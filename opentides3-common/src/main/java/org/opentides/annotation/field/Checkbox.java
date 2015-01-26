@@ -28,7 +28,7 @@ import java.lang.annotation.Target;
 /**
  * Generates an input checkbox.
  * <b>Sample Usage:</b><br />
- * &emsp;&emsp;&emsp;<code>@Checkbox (label = "checkBoxLabel", requiredField = "true")</code><br />
+ * &emsp;&emsp;&emsp;<code>@Checkbox (label = "checkBoxLabel", isRequired = "true")</code><br />
  * @author allanctan
  */
 @Target(ElementType.FIELD)

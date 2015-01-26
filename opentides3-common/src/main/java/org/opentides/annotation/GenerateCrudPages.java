@@ -39,7 +39,7 @@ import java.lang.annotation.Target;
 public @interface GenerateCrudPages {
 	
 	enum PageType {
-		SINGLE,  // for stand
+		SINGLE,
 		MAIN,
 		CHILD
 	}

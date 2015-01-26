@@ -43,8 +43,24 @@ public class ParamReaderFactory {
 			return new ClassParamReader();
 		} else if("GenerateValidator".equals(annotation)) {
 			return new ClassParamReader();
-		} else {
+		} else if("GenerateMessagesProperties".equals(annotation)) {
+			return new ClassParamReader();
+		} else if("Checkbox".equals(annotation)) {
 			return new FieldParamReader();
-		} 		
+		} else if("Dropdown".equals(annotation)) {
+			return new FieldParamReader();
+		} else if("RadioButton".equals(annotation)) {
+			return new FieldParamReader();
+		} else if("TextArea".equals(annotation)) {
+			return new FieldParamReader();
+		} else if("TextField".equals(annotation)) {
+			return new FieldParamReader();
+		} else if("Validation".equals(annotation)) {
+			return new FieldParamReader();
+		} else if("DatePicker".equals(annotation)) {
+			return new FieldParamReader();
+		} else {
+			return null;
+		}
 	}
 }

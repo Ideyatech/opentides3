@@ -28,14 +28,16 @@ import java.lang.annotation.Target;
 /**
  * Generates an input text field.
  * <b>Sample Usage:</b><br />
- * &emsp;&emsp;&emsp;<code>@TextField (label = "textFieldLabel", requiredField = "true")</code><br />
+ * &emsp;&emsp;&emsp;<code>@TextField (label = "textFieldLabel", isRequired = "true")</code><br />
  * @author allanctan
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.SOURCE)
 @Documented
 public @interface TextField{
-
+	
+	String type() default "input"; 
+	
 	/**
 	 * Refers to the name identifier of the field; default value is <code><b>null</b></code>.
 	 */
@@ -61,5 +63,22 @@ public @interface TextField{
 	 * Determines the defaultValue; default value is <code><b>null</b></code>.
 	 */
 	String defaultValue() default "";
+	
 
+	/**
+	 * Refers to the parameters to be added; default value is <code><b>null</b></code>.
+	 * 
+	 */	
+	String[] springParams() default "";
+	
+	/**
+	 * Determines if the field is to be included in the entity creation modal; default value is <code><b>false</b></code>. 
+	 */
+	boolean isForCreation() default false;
+	
+	/**
+	 * Determines if the field is required and cannot be null; default value is <code><b>false</b></code>. This is used as reference when deleting an entry.
+	 * @return
+	 */
+	boolean isRequired() default false;
 }

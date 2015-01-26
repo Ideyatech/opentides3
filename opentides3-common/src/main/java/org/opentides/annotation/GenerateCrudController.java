@@ -33,4 +33,16 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.SOURCE)
 public @interface GenerateCrudController {
+
+	enum PageType {
+		SINGLE,
+		MAIN,
+		CHILD
+	}
+	
+	/**
+	 * Refers to type of page that will be generated. 
+	 * Can be single, parent or child.
+	 */
+	PageType pageType() default PageType.SINGLE;
 }
