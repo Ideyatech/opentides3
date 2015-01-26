@@ -65,7 +65,7 @@ public class Notification extends BaseEntity {
 	 * Identifier to group multiple recipients in one event.
 	 */
 	@JsonView(Views.SearchView.class)
-	@Column(name = "EVENTGROUP_ID", nullable = false)
+	@Column(name = "EVENTGROUP_ID", nullable = true)
 	private Long eventGroupId;
 
 	/**

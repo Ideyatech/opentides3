@@ -58,9 +58,8 @@ public interface NotificationService extends BaseCrudService<Notification>{
 	 * Invoke this method to notify the client of an event via atmosphere.
 	 * 
 	 * @param userId
-	 * @param event
 	 */
-	public void notify(String userId, Event event);
+	public void notify(String userId);
 	
 	/**
 	 * Returns the total number of popup notification that is new and 

@@ -101,7 +101,7 @@ public class NotificationController extends BaseCrudController<Notification> {
 			SessionUser sessionUser = SecurityUtil.getSessionUser();
 			Event event = new Event();			
 			event.setDescription("Hooray! " + random);
-			notificationService.notify(""+sessionUser.getId(),event);
+			notificationService.notify(""+sessionUser.getId());
 		} catch (Exception e) {
 		}		
 		return "";

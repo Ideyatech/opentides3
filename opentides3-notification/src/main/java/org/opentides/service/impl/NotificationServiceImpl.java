@@ -142,7 +142,7 @@ implements NotificationService {
 		}
 	}
 	
-	public void notify(String userId, Event event) {
+	public void notify(String userId) {
 	    Broadcaster b = BroadcasterFactory.getDefault().lookup(userId);
 	    if (b!=null) {
 	        long nCount = notificationDao.countNewPopup(new Long(userId));
