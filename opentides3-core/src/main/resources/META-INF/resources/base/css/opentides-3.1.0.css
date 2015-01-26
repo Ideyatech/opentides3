@@ -619,3 +619,67 @@ input[type="search"], input[type="tel"], input[type="color"],
 .icon-google-sign:before {
     content: "\f0d4";
 }
+
+/***  NOTIFICATION  **/
+
+.notify-count {
+    margin: 0 1em;
+    padding: 7px 5px;
+    position: relative;
+}
+.notify-count .icon-globe {
+    font-size: 24px;
+    cursor: pointer;
+}
+.notify-count .count {
+    background-color: red;
+    color: #fff;
+    display: inline;
+    cursor: pointer;    
+    font-size: 10px;
+    border-radius: 10px;
+    font-weight: bold;
+    min-width: 10px;
+    padding: 0 5px;
+    position: absolute;
+    right: -7px;
+    text-align: center;
+    top: 18px;
+}
+.notify-wrapper {
+    background-color: #fff;
+    border-radius: 5px;
+    left: -133px;
+    position: absolute;
+    top: 44px;
+    width: 300px;
+    box-shadow: 0 1px 13px #999;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    z-index: 1;
+}
+.notify-wrapper:after {
+    bottom: 100%; 
+    left: 50%; 
+    border: solid transparent; 
+    content: " "; 
+    height: 0; 
+    width: 0; 
+    position: absolute; 
+    pointer-events: none; 
+    border-color: rgba(255, 255, 255, 0); 
+    border-bottom-color: #fff; 
+    border-width: 10px; 
+    margin-left: -10px;
+}
+.notify-wrapper li {
+    list-style:none;
+    padding: 0.7em;
+    font-size: 0.9em;
+    border-bottom: 1px solid #f4f4f4;
+}
+
+.notify-wrapper li h5 {
+    text-align: center;
+    margin: 0;
+}
