@@ -20,16 +20,16 @@
  			<tr>
  				<td>
  					<div class="date input-append">
-					<input name="st" placeHolder="Start Date" id="startDate" value='<fmt:formatDate value="${startDate}" pattern="MM/dd/yyyy"/>' 
-						class="input-small" style="font-size:12px;border:1px solid #ccc;height: 22px;margin-bottom:4px;"/>
+					<input name="st" type=text" placeHolder="Start Date" id="startDate" value='<fmt:formatDate value="${startDate}" pattern="MM/dd/yyyy"/>' 
+						class="input-small"/>
 					<button id="start-button" type="button" class="btn date-button"><i class="icon-calendar"></i></button>
 					</div>
 				</td>
  				<td> &nbsp; to  &nbsp; </td>
  				<td>
 					<div class="date input-append">
-					<input name="st" placeHolder="End Date" id="endDate" value='<fmt:formatDate value="${endDate}" pattern="MM/dd/yyyy"/>' 
-						class="input-small" style="font-size:12px;border:1px solid #ccc;height: 22px;margin-bottom:4px;"/>
+					<input name="st" type=text"  placeHolder="End Date" id="endDate" value='<fmt:formatDate value="${endDate}" pattern="MM/dd/yyyy"/>' 
+						class="input-small" />
 					<button id="end-button" type="button" class="btn date-button"><i class="icon-calendar"></i></button>
 					</div>
  				</td> 
@@ -45,7 +45,7 @@
     <h4><spring:message code="label.notification.your-notifications"/> </h4>
     <div class="notification-all">
     	<c:if test="${empty notifications}">
-    	<div class="notify-wrapper">    	
+    	<div>    	
         	<p class="date"><spring:message code="message.notification.you-have-no-notifications"/></p>
         </div>
     	</c:if>
@@ -55,7 +55,7 @@
     		<fmt:formatDate pattern="MMMM dd, yyyy" value="${now}" var="today" />
     		<c:set var="yest" value="<%=new Date(new Date().getTime() - 60*60*24*1000)%>"/>
     		<fmt:formatDate pattern="MMMM dd, yyyy" value="${yest}" var="yesterday" />
-	    	<div class="notify-wrapper">    	
+	    	<div>    	
 	        	<p class="date">
 	        		<c:choose>
       					<c:when test="${dateLoop eq today}">Today</c:when>

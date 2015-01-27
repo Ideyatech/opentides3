@@ -683,3 +683,19 @@ input[type="search"], input[type="tel"], input[type="color"],
     text-align: center;
     margin: 0;
 }
+
+.notification-all .date {
+   font-weight: bold;
+}
+
+.notification-all .item {
+   border-top: 1px dotted #ccc;
+   padding: 0 0 0 10px;
+}
+
+.notification-all .item .time {
+   color: #999999;
+   font-size: 11px;
+   font-style: italic;
+   padding: 0 10px 0 0;
+}

@@ -175,19 +175,19 @@
 	<table class="table table-striped">
 		<tr>
 			<td><spring:message code="label.user.first-name"/></td>
-			<td>${formCommand.firstName}</td>
+			<td><tides:display modelAttribute="formCommand" path="firstName" /></td>
 		</tr>
 		<tr>
 			<td><spring:message code="label.user.last-name"/></td>
-			<td>${formCommand.lastName}</td>
+			<td><tides:display modelAttribute="formCommand" path="lastName" /</td>
 		</tr>
 		<tr>
 			<td><spring:message code="label.user.email"/></td>
-			<td><a href="mailto:#">${formCommand.emailAddress}</a></td>
+			<td><tides:display modelAttribute="formCommand" path="emailAddress" /></td>
 		</tr>
 		<tr>
 			<td><spring:message code="label.user.groups"/></td>
-			<td>${formCommand.displayGroups}</td>
+			<td><tides:display modelAttribute="formCommand" path="displayGroups" /></td>
 		</tr>
 		<tr>
 			<td><spring:message code="label.user.active"/></td>
