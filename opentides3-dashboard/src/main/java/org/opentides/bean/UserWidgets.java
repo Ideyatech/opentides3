@@ -37,6 +37,9 @@ public class UserWidgets extends BaseEntity {
 	@Column(name="STATUS")
 	private Integer status;
 	
+	@Column(name = "IS_SHOWN")
+	private Boolean isShown;
+	
 	@Transient
 	private transient Boolean checked;
 
@@ -122,6 +125,20 @@ public class UserWidgets extends BaseEntity {
 	 */
 	public void setChecked(Boolean checked) {
 		this.checked = checked;
+	}
+	
+	/**
+	 * @return the isShown
+	 */
+	public Boolean getIsShown() {
+		return isShown;
+	}
+
+	/**
+	 * @param isShown the isShown to set
+	 */
+	public void setIsShown(Boolean isShown) {
+		this.isShown = isShown;
 	}
 
 	/* (non-Javadoc)
