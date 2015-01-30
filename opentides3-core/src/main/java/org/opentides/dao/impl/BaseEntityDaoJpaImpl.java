@@ -532,7 +532,7 @@ public class BaseEntityDaoJpaImpl<T extends BaseEntity,ID extends Serializable>
 	 * Private helper to retrieve applicable security filter
 	 * for the user and entity.
 	 */
-	private String getSecurityFilter() {
+	protected String getSecurityFilter() {
 		// retrieve list of available security filters
 		for (String key:securityFilter.keySet()) {
 			if (SecurityUtil.currentUserHasPermission(key)) {
@@ -552,7 +552,7 @@ public class BaseEntityDaoJpaImpl<T extends BaseEntity,ID extends Serializable>
 	 * @param append
 	 * @return
 	 */
-	private String doSQLAppend(String whereClause, String append) {
+	protected String doSQLAppend(String whereClause, String append) {
 		if (!StringUtil.isEmpty(append)) {
 			if (StringUtil.isEmpty(whereClause))
 				whereClause += " where ";
@@ -567,7 +567,7 @@ public class BaseEntityDaoJpaImpl<T extends BaseEntity,ID extends Serializable>
 	 * Sets the userId within the web session for audit logging.
 	 * @param obj
 	 */
-	private void setAuditUserId(T obj) {
+	protected void setAuditUserId(T obj) {
 		if (obj.getAuditUserId()==null)
 			obj.setUserId();			
 	}
@@ -578,7 +578,7 @@ public class BaseEntityDaoJpaImpl<T extends BaseEntity,ID extends Serializable>
 	 * @param sql
 	 * @param obj
 	 */
-	private void setQueryParameters(Query query, String sql, T obj) {
+	protected void setQueryParameters(Query query, String sql, T obj) {
 		if(_log.isDebugEnabled()) {
 			_log.debug("Processing sql query [" + sql + "]");
 		}
@@ -606,7 +606,7 @@ public class BaseEntityDaoJpaImpl<T extends BaseEntity,ID extends Serializable>
 		}
 	}
 	
-	private void setHints(T obj, Query query) {
+	protected void setHints(T obj, Query query) {
 		if(obj.getHints() != null) {
 			for(String hint : obj.getHints().keySet()) {
 				query.setHint(hint, obj.getHints().get(hint));
