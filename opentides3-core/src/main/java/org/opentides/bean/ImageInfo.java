@@ -5,6 +5,9 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 import org.opentides.annotation.Auditable;
+import org.opentides.web.json.Views;
+
+import com.fasterxml.jackson.annotation.JsonView;
 
 /**
  * Entity for holding uploaded images.
@@ -22,9 +25,11 @@ public class ImageInfo extends BaseEntity {
 	@Column(name = "FULL_PATH", length = 2000)
 	private String fullPath;
 
+    @JsonView(Views.SearchView.class)    
 	@Column(name = "ORIGINAL_FILENAME")
 	private String originalFileName;
 	
+    @JsonView(Views.SearchView.class)    
 	@Column(name = "FILE_SIZE", nullable = false)
 	private Long fileSize;
 

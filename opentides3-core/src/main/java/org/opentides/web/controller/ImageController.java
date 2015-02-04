@@ -240,7 +240,7 @@ public class ImageController {
 			@RequestParam(value="className") String className){
 		modelMap.put("imageId", id);
 		modelMap.put("className", className);
-		modelMap.put("classId", classId);
+		modelMap.put("classId", classId);		
 		return uploadPage;
 	}
 	
@@ -398,6 +398,9 @@ public class ImageController {
 		messages.addAll(CrudUtil.buildSuccessMessage(imageInfo, "upload-photo", request.getLocale(), messageSource));
 		model.put("messages", messages);
 		model.put("attachmentId", imageInfo.getId());
+		model.put("attachmentName", imageInfo.getOriginalFileName());
+		if (entity != null)
+			model.put("uplodable", entity);
 		return model;
 	}
 
