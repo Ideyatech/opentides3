@@ -86,7 +86,7 @@ dropdown of notifications. --%>
 			    });
 			}
 			if (window.Notification && Notification.permission === "granted") {
-			      var n = new Notification(title, { icon: '${home}/base/img/icon_notify.png', body: message });
+			      var n = new Notification(title, { icon: '${home}/img/icon_notify.png', body: message });
 			}; 
 		}
     });
