@@ -20,6 +20,7 @@ import org.opentides.service.WidgetService;
 import org.opentides.util.SecurityUtil;
 import org.opentides.util.StringUtil;
 import org.opentides.util.UrlUtil;
+import org.opentides.util.WidgetUtil;
 import org.springframework.stereotype.Service;
 
 @Service("widgetService")
@@ -115,7 +116,7 @@ public class WidgetServiceImpl extends BaseCrudServiceImpl<Widget> implements
 				if (StringUtil.isEmpty(IPAddress))
 					param.put("IPAddress", IPAddress);
 				
-				UrlResponseObject response = UrlUtil.getPage(url, req, param);
+				UrlResponseObject response = WidgetUtil.getPage(url, req, param);
 				if (response==null)
 					return null;
 				if (response.getResponseType()
@@ -202,7 +203,7 @@ public class WidgetServiceImpl extends BaseCrudServiceImpl<Widget> implements
 		Widget settings = this.findByUrl(url);
 		if (settings == null)
 			settings = new Widget(url, parentSettings);
-		UrlResponseObject response = UrlUtil.getPage(url, req, null);
+		UrlResponseObject response = WidgetUtil.getPage(url, req, null);
 		if (response.getResponseType().startsWith(Widget.TYPE_IMAGE))
 			settings.setCacheType(Widget.TYPE_IMAGE);
 		else

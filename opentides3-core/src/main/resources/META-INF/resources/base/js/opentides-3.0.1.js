@@ -579,7 +579,8 @@ var opentides3 = (function() {
 			'add'        : '.add-action',
 			'edit'       : '.edit-action',
 			'display'    : '.display-action',
-			'remove'     : '.remove-action'
+			'remove'     : '.remove-action',
+			'showFormCallback' : null
 		}, options);
 
 		return this
@@ -820,6 +821,7 @@ var opentides3 = (function() {
 								}
 								form.page();
 							}
+							if (settings['showFormCallback'] != null) settings['showFormCallback'].call(this, json);
 						});
 					});
 
