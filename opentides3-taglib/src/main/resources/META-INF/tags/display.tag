@@ -9,6 +9,14 @@
 <%@ attribute name="modelAttribute" required="false" type="java.lang.String" %>
 <%@ attribute name="cssClass" required="false" type="java.lang.String" %>
 <%@ attribute name="label" required="false" type="java.lang.String" %>
+<%@ attribute name="escapeXml" required="false" type="java.lang.Boolean" %>
+
+<c:if test="${not empty escapeXml}">
+	<c:set var="escape" value="${escapeXml}"/>
+</c:if>
+<c:if test="${empty escapeXml}">
+	<c:set var="escape" value="true"/>
+</c:if>
 
 <c:if test="${not empty label}">
 <div class="control-group">
@@ -28,7 +36,7 @@
 	<spring:bind path="${cpath}">
 	<span name="${status.expression}">
 		<c:if test="${not empty cssClass}"> class="${cssClass}"> </c:if>
-		<c:out value="${status.value} "/>
+		<c:out value="${status.value}" escapeXml="${escape}"/>
 	</span>
 	</spring:bind>
 <c:if test="${not empty label}">

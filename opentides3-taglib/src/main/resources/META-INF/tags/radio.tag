@@ -23,6 +23,21 @@
 	</form:label>
 	
 	<div class="controls">
-		<form:radiobuttons path="${path}" itemLabel="${itemLabel}" itemValue="${itemValue}" items="${items}"/>
+		<c:if test="${not empty items}">
+			<c:choose>
+			<c:when test="${not empty itemLabel and not empty itemValue}">
+			<form:radiobuttons path="${path}" itemLabel="${itemLabel}" itemValue="${itemValue}" items="${items}"/>
+			</c:when>
+			<c:when test="${not empty itemValue}">
+			<form:radiobuttons path="${path}" items="${items}" itemValue="${itemValue}"/>
+			</c:when>
+			<c:when test="${not empty itemLabel}">
+			<form:radiobuttons path="${path}" items="${items}" itemLabel="${itemLabel}"/>
+			</c:when>
+			<c:otherwise>
+			<form:radiobuttons path="${path}" items="${items}"/>
+			</c:otherwise>
+			</c:choose>
+		</c:if>
 	</div>
 </div>
