@@ -22,7 +22,7 @@
 		
 		<div class="span2">
 			<div class="current-image-wrapper">
-				<img class="img-polaroid current-image" src="${home}/image/${imageId}"/>
+				<img class="img-polaroid current-image" src="${home}/image/${imageId}/?${date}"/>
 			</div>
 		</div>
 		<div class="span5">
@@ -64,7 +64,6 @@
 	});
 
 	opentides3.jsonForm($('#upload-photo'), function(data){
-		//$('#upload-photo').find('.switch-modal').click();
 		var newDataUrl = opentides3.template($('script.adjust-data-url').html(), data);
 		$('#switchToAdjust').data('url', newDataUrl);
 		$('#upload-photo').find('.switch-modal').click();

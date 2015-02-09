@@ -35,6 +35,7 @@
 		<input id="adjust-photo-submit" type="submit" value="<spring:message code="photo.save-changes" />" class="btn btn-success" />
 	</div>
 	
+	<script type="text/template" class="load-image-url">${home}/image/{{imageId}}/?</script>
 </form:form>
 
 <script type="text/javascript">
@@ -46,7 +47,9 @@
 	
 	$('.switch-modal').on("click", opentides3.showUploadPhoto);
 	
-	opentides3.jsonForm($('#user-adjust-photo'), function() {
+	opentides3.jsonForm($('#user-adjust-photo'), function(data) {
+		var dataURL = opentides3.template($('.load-image-url').html(), data);
+		$('#profile-picture .img-polaroid').attr('src', dataURL + new Date().getTime());
 		$('#user-adjust-photo').find('.switch-modal').click();
 	});
 </script>

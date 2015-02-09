@@ -90,9 +90,9 @@ public class ImageUtil {
 			String processedPath = processPath(fullPath, command);			
 			File file = new File(processedPath);
 			File oFile = new File(fullPath);
-			if (file.exists())
+			if (file.exists()) {
 				return FileUtil.readFileAsBytes(file);
-			else if (oFile.exists()) {
+			} else if (oFile.exists()) {
 				// file doesn't exist yet, needs pre-processing				
 				Image img = ImageLoader.fromFile(oFile);
 				Image rez = ImageUtil.transformImage(img, command);				
@@ -142,8 +142,9 @@ public class ImageUtil {
 	 * @throws IOException
 	 */
 	public static void cropImage(String fullPath, String command, int resizedWidth, boolean replaceOriginal) throws IOException {
-		if(_log.isDebugEnabled()) 
+		if(_log.isDebugEnabled()) {
 			_log.debug("Crop image using command " + command);
+		}
 		
 		File file = new File(fullPath);
 		Image image = ImageLoader.fromFile(file);
@@ -181,8 +182,9 @@ public class ImageUtil {
 				int underscoreIdx = filePath.lastIndexOf("_");
 				String command = filePath.substring(underscoreIdx + 1, dotIdx);
 				if(isCommandForResizing(command)) {
-					if(_log.isDebugEnabled())
+					if(_log.isDebugEnabled()) {
 						_log.debug("Removing file: " + filePath);
+					}
 					fileEntry.delete();
 				}
 			}
@@ -206,13 +208,28 @@ public class ImageUtil {
 	 * @return
 	 */
 	private static String processPath(String fullPath, String command) {
-		if (StringUtil.isEmpty(command))
+		if (StringUtil.isEmpty(command)) {
 			return fullPath;
-		int idx = fullPath.lastIndexOf(".");
-		if (idx > 0)
-			return fullPath.substring(0, idx) + "_" + command +".png";
-		else 
+		}
+
+		int extensionIdx = fullPath.lastIndexOf(".");
+		if (extensionIdx > 0) {
+			// check the previous command and compare it to the new command
+			int commandIdx = fullPath.lastIndexOf("_");
+			if (commandIdx > 0) {
+				String previousCommand = fullPath.substring(commandIdx + 1,
+						extensionIdx);
+				// if previous command is the same as the new command, no need
+				// to re-process the image
+				if (command.equals(previousCommand)) {
+					return fullPath;
+				}
+			}
+
+			return fullPath.substring(0, extensionIdx) + "_" + command +".png";
+		} else {
 			return fullPath + "_" + command + ".png";
+		}
 	}
 
 	/**
@@ -229,10 +246,11 @@ public class ImageUtil {
 			BufferedImage image = ImageIO.read(inputStream);
 			Integer iWidth = image.getWidth();
 			Integer iHeight = image.getHeight();
-			if(iWidth >= width && iHeight >= height)
+			if(iWidth >= width && iHeight >= height) {
 				return true;
-			else
+			} else {
 				return false;
+			}
 		} catch (IOException e) {
 			return false;
 		}
@@ -254,8 +272,9 @@ public class ImageUtil {
 	 * @param command 
 	 */
 	public static final Image transformImage(Image img, String command) {
-		if (StringUtil.isEmpty(command) || img == null)
+		if (StringUtil.isEmpty(command) || img == null) {
 			return img;
+		}
 		// validate if command is in correct syntax
 		if (!isValidCommand(command)) {
 			_log.error("Cannot recognize transform command ["+command+"]. " +
@@ -264,26 +283,37 @@ public class ImageUtil {
 		}
 		int oWidth = img.getWidth();
 		int oHeight = img.getHeight();
+		if (_log.isDebugEnabled()) {
+			_log.debug("Command is " + command);
+			_log.debug("Image width is " + oWidth);
+			_log.debug("Image height is " + oHeight);
+		}
 		if (command.contains("-c")) {
 			// we are cropping the image
 			String[] c1 = command.split("-c");
 			int t = -1, l = -1, w = 0, h = 0;
 			String[] c2 = c1[0].split("x");
 			w = StringUtil.convertToInt(c2[0], DEFAULT_SIZE);
-			if (c2.length > 1)
+			if (c2.length > 1) {
 				h = StringUtil.convertToInt(c2[1], DEFAULT_SIZE);
-			else
+			} else {
 				h = w;
+			}
 			if ((c1.length > 1) && c1[1].startsWith("@")) {
 				String[] c3 = c1[1].split("x");
 				l = StringUtil.convertToInt(c3[0].substring(1), DEFAULT_SIZE);
 				t = StringUtil.convertToInt(c3[1], DEFAULT_SIZE);
 			}
 			// no location, use center for cropping
-			if (l < 0) l = (oWidth / 2) - (w / 2);
-			if (t < 0) t = (oHeight / 2) - (h / 2);
-			if(_log.isDebugEnabled())
-				_log.debug("Cropping using these parameters, l: " + l + ", t: " + t + "w: " + w + ", h: " + h );
+			if (l < 0) {
+				l = (oWidth / 2) - (w / 2);
+			}
+			if (t < 0) {
+				t = (oHeight / 2) - (h / 2);
+			}
+			if(_log.isDebugEnabled()) {
+				_log.debug("Cropping using these parameters, l: " + l + ", t: " + t + ", w: " + w + ", h: " + h );
+			}
 			return img.crop(l, t, l+w, t+h);
 		} else {
 			// we are resizing the image, format expected is WxH
@@ -324,11 +354,13 @@ public class ImageUtil {
 	 * @return
 	 */
 	public static final boolean isValidCommand(String command) {
-		if (command.matches("(\\d+)|(\\d*x\\d+)") ) // for resizing image
-			return true; 
-		if (command.matches("((\\d+)|(\\d+x\\d+))-c(\\@\\d+x\\d+)?")) // for cropping image
-			return true; 
-		return false;		
+		if (command.matches("(\\d+)|(\\d*x\\d+)") ) {
+			return true;
+		} 
+		if (command.matches("((\\d+)|(\\d+x\\d+))-c(\\@\\d+x\\d+)?")) {
+			return true;
+		} 
+		return false;
 	}
 	
 	/**
@@ -337,8 +369,9 @@ public class ImageUtil {
 	 * @return
 	 */
 	private static final boolean isCommandForResizing(String command) {
-		if (command.matches("(\\d+)|(\\d*x\\d+)") ) // for resizing image
+		if (command.matches("(\\d+)|(\\d*x\\d+)") ) {
 			return true;
+		}
 		return false;
 	}
 	
