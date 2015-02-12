@@ -42,6 +42,7 @@ import org.opentides.bean.ImageInfo;
 import org.opentides.bean.ImageUploadable;
 import org.opentides.bean.MessageResponse;
 import org.opentides.bean.MessageResponse.Type;
+import org.opentides.exception.DataAccessException;
 import org.opentides.service.BaseCrudService;
 import org.opentides.service.FileUploadService;
 import org.opentides.service.ImageInfoService;
@@ -57,11 +58,13 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.Assert;
+import org.springframework.util.MultiValueMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -164,7 +167,7 @@ public class ImageController {
 						&& !StringUtil.isEmpty(info.getCommand())) {
 					c = info.getCommand();
 				}
-				
+
 				boolean replaceCache = replaceOld != null ? replaceOld : false;
 				barray = ImageUtil.loadImage(info.getFullPath(), c,
 						replaceCache);
@@ -229,7 +232,7 @@ public class ImageController {
 			@RequestParam(value = "imageId", required = false) Long id,
 			@RequestParam(value = "classId") Long classId,
 			@RequestParam(value = "className") String className) {
-		modelMap.put("imageId", id);
+		modelMap.put("attachmentId", id);
 		modelMap.put("className", className);
 		modelMap.put("classId", classId);
 		modelMap.put("date", System.currentTimeMillis());
@@ -342,7 +345,7 @@ public class ImageController {
 	 * @param image
 	 * @param className
 	 *            the class name of the ImageUploadable entity.
-	 * @param id
+	 * @param classId
 	 *            the ID of the ImageUploadable entity
 	 * @param isPrimary
 	 *            if the image is the primary photo of the entity
@@ -353,32 +356,14 @@ public class ImageController {
 	 *         objects and the id of the ImageInfo.
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	@RequestMapping(method = RequestMethod.POST, value = "/upload", produces = "application/json")
+	@RequestMapping(method = RequestMethod.POST, value = "/", produces = "application/json")
 	public @ResponseBody Map<String, Object> processUpload(
 			@Valid @ModelAttribute("image") AjaxUpload image,
 			@RequestParam(value = "className", required = false) String className,
-			@RequestParam(value = "classId", required = false) Long id,
+			@RequestParam(value = "classId", required = false) Long classId,
 			@RequestParam(value = "isPrimary", required = false) boolean isPrimary,
 			@RequestParam(value = "folderName", required = false) String folderName,
 			BindingResult result, HttpServletRequest request) {
-
-		BaseEntity entity = null;
-		BaseCrudService service = null;
-		if (!StringUtil.isEmpty(className) && id != null) {
-			String attributeName = NamingUtil.toAttributeName(className);
-			String serviceBean = attributeName + "Service";
-
-			service = (BaseCrudService) beanFactory.getBean(serviceBean);
-			Assert.notNull(service, "Entity " + attributeName
-					+ " is not associated with a service class [" + serviceBean
-					+ "]. Please check your configuration.");
-
-			entity = service.load(id);
-			Assert.notNull(entity, "No " + className
-					+ " object found for the given ID [" + id + "]");
-			Assert.isAssignable(ImageUploadable.class, entity.getClass(),
-					"Object is not ImageUploadable");
-		}
 
 		Map<String, Object> model = new HashMap<String, Object>();
 		List<MessageResponse> messages = new ArrayList<MessageResponse>();
@@ -396,9 +381,25 @@ public class ImageController {
 		imageInfo.setIsPrimary(isPrimary);
 		imageInfoService.save(imageInfo);
 
-		if (entity != null) {
+		if (!StringUtil.isEmpty(className) && classId != null) {
+			String attributeName = NamingUtil.toAttributeName(className);
+			String serviceBean = attributeName + "Service";
+
+			BaseCrudService service = (BaseCrudService) beanFactory
+					.getBean(serviceBean);
+			Assert.notNull(service, "Entity " + attributeName
+					+ " is not associated with a service class [" + serviceBean
+					+ "]. Please check your configuration.");
+
+			BaseEntity entity = service.load(classId);
+			Assert.notNull(entity, "No " + className
+					+ " object found for the given ID [" + classId + "]");
+			Assert.isAssignable(ImageUploadable.class, entity.getClass(),
+					"Object is not ImageUploadable");
+
 			// Attach to entity
 			ImageUploadable imageUploadable = (ImageUploadable) entity;
+
 			if (isPrimary) {
 				if (imageUploadable.getImages() != null) {
 					for (ImageInfo io : imageUploadable.getImages()) {
@@ -407,22 +408,95 @@ public class ImageController {
 					}
 				}
 			}
+
 			imageUploadable.addImage(imageInfo);
 			service.save(entity);
+			model.put("uplodable", entity);
 		}
 
 		messages.addAll(CrudUtil.buildSuccessMessage(imageInfo, "upload-photo",
 				request.getLocale(), messageSource));
 		model.put("messages", messages);
-		model.put("imageId", imageInfo.getId());
+		model.put("attachmentId", imageInfo.getId());
 		model.put("attachmentName", imageInfo.getOriginalFileName());
-		if (entity != null) {
-			model.put("uplodable", entity);
-		}
 		return model;
 	}
 
-	@InitBinder
+	/**
+	 * Deletes the image {@link ImageInfo} and detaches it from the associated
+	 * entity.
+	 * 
+	 * <p>
+	 * It expects that {@code className} and {@code classId} pertaining to the
+	 * owning entity are passed as form arguments.
+	 * </p>
+	 * 
+	 * <p>
+	 * We are using MultiValueMap to get the passed form body since by default
+	 * Tomcat will only parse arguments in the form style when the HTTP method
+	 * is POST. This will ensure compatibility without the need to modify server
+	 * configuration.
+	 * </p>
+	 * 
+	 * @param id
+	 *            - the id of the ImageInfo to be deleted
+	 * @param formData
+	 * @param request
+	 * @return
+	 */
+	@SuppressWarnings({ "rawtypes" })
+	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = "application/json")
+	public @ResponseBody Map<String, Object> deleteImageInfo(
+			@PathVariable("id") Long id,
+			@RequestBody MultiValueMap<String, String> formData,
+			HttpServletRequest request) {
+		Map<String, Object> model = new HashMap<String, Object>();
+		List<MessageResponse> messages = new ArrayList<MessageResponse>();
+		if (id > 0) {
+			String className = formData.getFirst("className");
+			String classId = formData.getFirst("classId");
+			if (!StringUtil.isEmpty(classId) && !StringUtil.isEmpty(className)) {
+				_log.debug("Processing image for entity " + className
+						+ " with id [" + classId + "]");
+				ImageInfo imageInfo = imageInfoService.load(id);
+
+				// load the owning entity using its corresponding service
+				String attributeName = NamingUtil.toAttributeName(className);
+				String serviceBean = attributeName + "Service";
+
+				BaseCrudService service = (BaseCrudService) beanFactory
+						.getBean(serviceBean);
+				Assert.notNull(service, "Entity " + attributeName
+						+ " is not associated with a service class ["
+						+ serviceBean + "]. Please check your configuration.");
+
+				BaseEntity entity = service.load(classId);
+				Assert.notNull(entity, "No " + className
+						+ " object found for the given ID [" + classId + "]");
+				Assert.isAssignable(ImageUploadable.class, entity.getClass(),
+						"Object is not ImageUploadable");
+
+				// remove image for the entity and delete record
+				ImageUploadable imageUploadable = (ImageUploadable) entity;
+				imageUploadable.getImages().remove(imageInfo);
+				imageInfoService.delete(id);
+
+				messages.addAll(CrudUtil.buildSuccessMessage(imageInfo,
+						"delete", request.getLocale(), messageSource));
+				model.put("messages", messages);
+			}
+
+			return model;
+		} else {
+			String message = "Invalid id = [" + id
+					+ "] for delete operation of "
+					+ ImageInfo.class.getSimpleName();
+			_log.error(message);
+			throw new DataAccessException(message);
+		}
+	}
+
+	@InitBinder(value = "formCommand")
 	protected void initBinder(WebDataBinder binder) {
 		binder.setValidator(imageValidator);
 	}

@@ -127,7 +127,7 @@ public class BaseUser extends BaseEntity implements ImageUploadable {
 	private Long lastFailedLoginMillis;
 	
 	// ImageUploadable requirements
-	@OneToMany(cascade=CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
 	@JoinTable(name = "USER_PHOTO", 
 			joinColumns = { @JoinColumn(name = "USER_ID", referencedColumnName = "ID") }, 
 			inverseJoinColumns = @JoinColumn(name = "PHOTO_ID")
@@ -145,8 +145,8 @@ public class BaseUser extends BaseEntity implements ImageUploadable {
 	public BaseUser() {
 		super();
 		this.setCredential(new UserCredential());
-		this.images = new ArrayList<ImageInfo>();
-		this.groups = new HashSet<UserGroup>();
+		images = new ArrayList<ImageInfo>();
+		groups = new HashSet<UserGroup>();
 	}
 	
 	/**
@@ -160,35 +160,39 @@ public class BaseUser extends BaseEntity implements ImageUploadable {
 	 */
 	public BaseUser cloneUserProfile() {
 		BaseUser clone = new BaseUser();
-		clone.firstName    = this.firstName;
-		clone.lastName     = this.lastName;
-		clone.middleName   = this.middleName;
-		clone.emailAddress = this.emailAddress;
-		clone.office	   = this.office;
-		clone.language	   = this.language;
-		clone.lastLogin    = this.lastLogin;
-		clone.credential   = this.credential;
-		clone.lastFailedIP = this.lastFailedIP;
-		clone.lastLoginIP  = this.lastLoginIP;
-		clone.prevLoginIP  = this.prevLoginIP;
-		clone.totalLoginCount  = this.totalLoginCount;
-		clone.failedLoginCount = this.failedLoginCount;
+		clone.firstName    = firstName;
+		clone.lastName     = lastName;
+		clone.middleName   = middleName;
+		clone.emailAddress = emailAddress;
+		clone.office	   = office;
+		clone.language	   = language;
+		clone.lastLogin    = lastLogin;
+		clone.credential   = credential;
+		clone.lastFailedIP = lastFailedIP;
+		clone.lastLoginIP  = lastLoginIP;
+		clone.prevLoginIP  = prevLoginIP;
+		clone.totalLoginCount  = totalLoginCount;
+		clone.failedLoginCount = failedLoginCount;
 		return clone;
 	}
 
 	public void addGroup(UserGroup group) {
-		if (group == null)
+		if (group == null) {
 			throw new IllegalArgumentException("Null group.");
-		if (groups != null)
+		}
+		if (groups != null) {
 			groups.remove(group);
+		}
 		groups.add(group);
 	}
 
 	public void removeGroup(UserGroup group) {
-		if (group == null)
+		if (group == null) {
 			throw new IllegalArgumentException("Null group.");
-		if (groups != null)
+		}
+		if (groups != null) {
 			groups.remove(group);
+		}
 	}
 	
 	/**
@@ -214,10 +218,11 @@ public class BaseUser extends BaseEntity implements ImageUploadable {
 	 */
 	@PrimaryField(label="Username")
 	public String getUsername() {
-		if (credential != null) 
+		if (credential != null) {
 			return credential.getUsername();
-		else
-			return null;		
+		} else {
+			return null;
+		}		
 	}
 	
 	/**
@@ -297,18 +302,23 @@ public class BaseUser extends BaseEntity implements ImageUploadable {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (!super.equals(obj))
+		}
+		if (!super.equals(obj)) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		final BaseUser other = (BaseUser) obj;
 		if (emailAddress == null) {
-			if (other.emailAddress != null)
+			if (other.emailAddress != null) {
 				return false;
-		} else if (!emailAddress.equals(other.emailAddress))
+			}
+		} else if (!emailAddress.equals(other.emailAddress)) {
 			return false;
+		}
 		return true;
 	}
 
@@ -444,8 +454,9 @@ public class BaseUser extends BaseEntity implements ImageUploadable {
 		StringBuilder display = new StringBuilder();
 		int count = 0;
 		for (UserGroup group:groups) {
-			if (count++ > 0)
+			if (count++ > 0) {
 				display.append(", ");
+			}
 			display.append(group.getName());
 		}
 		return display.toString();
@@ -582,17 +593,17 @@ public class BaseUser extends BaseEntity implements ImageUploadable {
 	 * Increment login count by 1
 	 */
 	public void incrementFailedLoginCount() {
-		if(this.failedLoginCount == null) {
-			this.failedLoginCount = 0l;
+		if(failedLoginCount == null) {
+			failedLoginCount = 0l;
 		}
-		this.failedLoginCount ++;
+		failedLoginCount ++;
 	}
 	
 	/**
 	 * Set failedLoginCount to 0
 	 */
 	public void resetFailedLoginCount() {
-		this.failedLoginCount = 0l;
+		failedLoginCount = 0l;
 	}
 	
 	/**
@@ -637,8 +648,8 @@ public class BaseUser extends BaseEntity implements ImageUploadable {
 	
 	@Override
 	public ImageInfo getPrimaryImage() {
-		if(!CollectionUtils.isEmpty(this.images)) {
-			for(ImageInfo imageInfo : this.images) {
+		if(!CollectionUtils.isEmpty(images)) {
+			for(ImageInfo imageInfo : images) {
 				if(imageInfo.getIsPrimary()) {
 					return imageInfo;
 				}
@@ -648,13 +659,14 @@ public class BaseUser extends BaseEntity implements ImageUploadable {
 	}
 	
 	public void setPhotos(List<ImageInfo> photos) {
-		this.images = photos;
+		images = photos;
 	}
 	
 	public void setPhoto(MultipartFile photo) {
 		this.photo = photo;
 	}
 	
+	@Override
 	public void addImage(ImageInfo photoInfo){
 		synchronized (photoInfo) {
 			if (images == null){

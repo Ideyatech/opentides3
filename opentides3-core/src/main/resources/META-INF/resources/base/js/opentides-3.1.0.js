@@ -515,35 +515,27 @@ var opentides3 = (function() {
 					.each(function() {
 				var $this = $(this),
 					name = $this.attr('name');
-				if(name && $this.is(":hidden") && ($this.attr('name') == "photos" || $this.hasClass("ot-images"))){ 
-					var imageIds = opentides3.getValue(json, name);
-					if(imageIds.length > 0) {
-						for(var i = 0; i < imageIds.length; i++) {
-							if(imageIds[i].id !== undefined) {
-								var data = {"imageId" : imageIds[i].id},
-									rowTable = opentides3.template($('script#filesForDownload').html(), data);
-								$this.parent().append($this.clone().val(imageIds[i].id));
-								$("#ot-image-list tbody").append(rowTable);
-							} 
-						}
-					}
-					$this.remove();
-				//for file upload
-				} else if(name && $this.is(":hidden") && ($this.attr('name') == "files" || $this.hasClass("ot-files"))){
+				if(name && $this.is(":hidden") &&  $this.hasClass("ot-files")) {
+					// clean up first - remove the rows as well as the hidden ids
+					$("table.ot-attachment-list tbody").empty();
+					$(".ot-files").filter(function() {
+						return this.id;
+					}).remove();
+					// handler for photo or file upload
 					var fileIds = opentides3.getValue(json, name);
 					if(fileIds.length > 0) {
 						for(var i = 0; i < fileIds.length; i++) {
 							if(fileIds[i].id !== undefined) {
-								var data = {"attachmentId" : fileIds[i].id, "attachmentName" : fileIds[i].filename}, 
-									rowTable = opentides3.template($('script#filesForDownload').html(), data);
+								var filename = fileIds[i].filename != null ? fileIds[i].filename : fileIds[i].originalFileName; 
+								var data = {"attachmentId" : fileIds[i].id, "attachmentName" : filename}, 
+									tableRow = opentides3.template($('script#filesForDownload').html(), data),
+									hiddenRow = opentides3.template($('script#attachmentIdsForUpload').html(), data);
 								
-								newRow = $this.clone().val(fileIds[i].id).attr("id", "hidden-attachment-"+fileIds[i].id);
-								$this.parent().append(newRow);
-								$("#ot-attachment-list tbody").append(rowTable);
+								$this.after(hiddenRow);
+								$("table.ot-attachment-list tbody").append(tableRow);
 							} 
 						}
 					}
-					$this.remove();
 				} else if(name){
 					var prime = toPrimitive(opentides3.getValue(json, name));
 					$(this).val(prime).trigger("change");

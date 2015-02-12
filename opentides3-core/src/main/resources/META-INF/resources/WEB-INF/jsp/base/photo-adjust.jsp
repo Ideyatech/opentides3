@@ -49,7 +49,7 @@
 	
 	opentides3.jsonForm($('#user-adjust-photo'), function(data) {
 		var dataURL = opentides3.template($('.load-image-url').html(), data);
-		$('#profile-picture .img-polaroid').attr('src', dataURL + new Date().getTime());
+		$('.media .img-polaroid').attr('src', dataURL + new Date().getTime());
 		$('#user-adjust-photo').find('.switch-modal').click();
 	});
 </script>
