@@ -67,6 +67,12 @@ public class MailingServiceImpl implements MailingService {
 	@Override
 	public void sendEmail(String[] toEmail, String subject, String template,
 			Map<String, Object> templateVariables) {
+		sendEmail(mailFrom, toEmail, subject, template, templateVariables);
+	}
+
+	@Override
+	public void sendEmail(String fromMail, String[] toEmail, String subject, String template,
+			Map<String, Object> templateVariables) {
 
 		Properties props = new Properties();
 		props.put("mail.smtp.host", host);
@@ -85,7 +91,7 @@ public class MailingServiceImpl implements MailingService {
 		MimeBodyPart htmlPart = new MimeBodyPart();
 
 		try {
-			message.setFrom(new InternetAddress(adminEmail, mailFrom));
+			message.setFrom(new InternetAddress(adminEmail, fromMail));
 			for (String addr : toEmail) {
 				message.addRecipient(RecipientType.TO,
 						new InternetAddress(addr));
