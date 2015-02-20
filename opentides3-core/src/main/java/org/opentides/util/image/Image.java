@@ -32,15 +32,19 @@ import java.util.Arrays;
 
 import javax.imageio.ImageIO;
 
+import org.apache.log4j.Logger;
+
 import com.mortennobel.imagescaling.AdvancedResizeOp;
 import com.mortennobel.imagescaling.MultiStepRescaleOp;
 
 public class Image {
+	private static final Logger _log = Logger.getLogger(Image.class);
+
 	BufferedImage img;
 	ImageType sourceType = ImageType.UNKNOWN;
 
 	Image(InputStream input, ImageType sourceType) throws IOException {
-		this.img = ImageIO.read(input);
+		img = ImageIO.read(input);
 		input.close();
 		this.sourceType = ((sourceType == null) ? ImageType.UNKNOWN
 				: sourceType);
@@ -53,15 +57,15 @@ public class Image {
 	}
 
 	public ImageType getSourceType() {
-		return this.sourceType;
+		return sourceType;
 	}
 
 	public int getWidth() {
-		return this.img.getWidth();
+		return img.getWidth();
 	}
 
 	public int getHeight() {
-		return this.img.getHeight();
+		return img.getHeight();
 	}
 
 	public double getAspectRatio() {
@@ -69,23 +73,27 @@ public class Image {
 	}
 
 	public Image getResizedToWidth(int width) {
-		if (width > getWidth())
+		if (width > getWidth()) {
 			throw new IllegalArgumentException("Width " + width
 					+ " exceeds width of image, which is " + getWidth());
-		int nHeight = width * this.img.getHeight() / this.img.getWidth();
+		}
+		int nHeight = width * img.getHeight() / img.getWidth();
 		MultiStepRescaleOp rescale = new MultiStepRescaleOp(width, nHeight);
 		rescale.setUnsharpenMask(AdvancedResizeOp.UnsharpenMask.Soft);
-		BufferedImage resizedImage = rescale.filter(this.img, null);
+		BufferedImage resizedImage = rescale.filter(img, null);
 
-		return new Image(resizedImage, this.sourceType);
+		return new Image(resizedImage, sourceType);
 	}
 
 	public Image crop(int x1, int y1, int x2, int y2) {
 		if ((x1 < 0) || (x2 <= x1) || (y1 < 0) || (y2 <= y1)
 				|| (x2 > getWidth()) || (y2 > getHeight())) {
+			_log.debug("Coordinates passed [x1, y1, x2, y2]:  " + x1 + ", "
+					+ y1 + ", " + x2 + ", " + y2);
+			_log.debug("Width " + getWidth() + ", height " + getHeight());
 			throw new IllegalArgumentException("invalid crop coordinates");
 		}
-		int type = (this.img.getType() == 0) ? 2 : this.img.getType();
+		int type = (img.getType() == 0) ? 2 : img.getType();
 		int nNewWidth = x2 - x1;
 		int nNewHeight = y2 - y1;
 		BufferedImage cropped = new BufferedImage(nNewWidth, nNewHeight, type);
@@ -95,23 +103,24 @@ public class Image {
 				RenderingHints.VALUE_RENDER_QUALITY);
 		g.setComposite(AlphaComposite.Src);
 
-		g.drawImage(this.img, 0, 0, nNewWidth, nNewHeight, x1, y1, x2, y2, null);
+		g.drawImage(img, 0, 0, nNewWidth, nNewHeight, x1, y1, x2, y2, null);
 		g.dispose();
 
-		return new Image(cropped, this.sourceType);
+		return new Image(cropped, sourceType);
 	}
 
 	public Image getResizedToSquare(int width, double cropEdgesPct) {
-		if ((cropEdgesPct < 0.0D) || (cropEdgesPct > 0.5D))
+		if ((cropEdgesPct < 0.0D) || (cropEdgesPct > 0.5D)) {
 			throw new IllegalArgumentException(
 					"Crop edges pct must be between 0 and 0.5. " + cropEdgesPct
 							+ " was supplied.");
+		}
 		if (width > getWidth()) {
 			throw new IllegalArgumentException("Width " + width
 					+ " exceeds width of image, which is " + getWidth());
 		}
 		int cropMargin = (int) Math
-				.abs(Math.round((this.img.getWidth() - this.img.getHeight()) / 2.0D));
+				.abs(Math.round((img.getWidth() - img.getHeight()) / 2.0D));
 		int x1 = 0;
 		int y1 = 0;
 		int x2 = getWidth();
@@ -149,7 +158,7 @@ public class Image {
 				0.0F };
 		Kernel kernel = new Kernel(3, 3, softenArray);
 		ConvolveOp cOp = new ConvolveOp(kernel, 1, null);
-		return new Image(cOp.filter(this.img, null), this.sourceType);
+		return new Image(cOp.filter(img, null), sourceType);
 	}
 
 	public File writeToFile(File file) throws IOException {
@@ -188,9 +197,10 @@ public class Image {
 	}
 
 	public void writeToFile(File file, String type) throws IOException {
-		if (file == null)
+		if (file == null) {
 			throw new IllegalArgumentException("File argument was null");
-		ImageIO.write(this.img, type, file);
+		}
+		ImageIO.write(img, type, file);
 	}
 
 	public String[] getWriterFormatNames() {
@@ -214,10 +224,10 @@ public class Image {
 	}*/
 
 	public void dispose() {
-		this.img.flush();
+		img.flush();
 	}
 
 	public BufferedImage getBufferedImage() {
-		return this.img;
+		return img;
 	}
 }

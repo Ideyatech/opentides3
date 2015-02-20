@@ -145,6 +145,7 @@
 				<tides:input path="credential.confirmPassword" label="label.user.confirm-password" type="password" />
 				<tides:select label="label.user.groups" path="groups" multiple="true"
 					items="${userGroupsList}" itemLabel="name" itemValue="id" select2="true" required="true"/>
+				<tides:input_file label="label.images" id="imageUpload" imageOnly="true" dropZone="false" className="User" path="images"/>
 				<tides:checkbox label="label.user.active" path="credential.enabled"/>
 					
 				<br/>

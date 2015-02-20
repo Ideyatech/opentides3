@@ -2,20 +2,21 @@
 	- input-file.tag
 	- Generates input with type file element and handles file upload.
 --%>
-<%@ tag body-content="empty" dynamic-attributes="dAttrs" %>
+<%@ tag body-content="empty" dynamic-attributes="dAttrs"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ attribute name="label" required="true" type="java.lang.String" %>
-<%@ attribute name="dropZone" required="false" type="java.lang.Boolean" %>
-<%@ attribute name="dropZoneLabel" required="false" type="java.lang.String" %>
-<%@ attribute name="id" required="true" type="java.lang.String" %>
-<%@ attribute name="dataURL" required="false" type="java.lang.String" %>
-<%@ attribute name="isFile" required="false" type="java.lang.Boolean" %>
-<%@ attribute name="fieldName" required="false" type="java.lang.String" %>
-<%@ attribute name="isMultiple" required="false" type="java.lang.String" %>
-<%@ attribute name="imageOnly" required="false" type="java.lang.String" %>
+<%@ attribute name="id" required="true" type="java.lang.String"%>
+<%@ attribute name="label" required="true" type="java.lang.String"%>
+<%@ attribute name="dropZone" required="false" type="java.lang.Boolean"%>
+<%@ attribute name="dropZoneLabel" required="false" type="java.lang.String"%>
+<%@ attribute name="dataURL" required="false" type="java.lang.String"%>
+<%@ attribute name="path" required="false" type="java.lang.String"%>
+<%@ attribute name="isMultiple" required="false" type="java.lang.String"%>
+<%@ attribute name="imageOnly" required="false" type="java.lang.String"%>
+<%@ attribute name="className" required="false" type="java.lang.String"%>
+<%@ attribute name="files" required="false" type="java.util.Collection"%>
 
-<c:if test="${empty isMultiple}" >
+<c:if test="${empty isMultiple}">
 	<c:set var="isMultiple" value="false" />
 </c:if>
 
@@ -23,76 +24,94 @@
 	<c:set var="imageOnly" value="true" />
 </c:if>
 
+<%-- Initialize field name --%>
 <c:set var="fName" value="files"></c:set>
-<c:if test="${not empty fieldName }">
-	<c:set var="fName" value="${fieldName}"></c:set>
+<c:if test="${not empty path }">
+	<c:set var="fName" value="${path}"></c:set>
 </c:if>
 
-<!-- Get all dynamic attributes of this tag. -->
+<%-- Get all dynamic attributes of this tag. --%>
 <c:forEach items="${dAttrs}" var="attr">
-	<c:set var="attrs" value='${attrs} ${attr.key}="${attr.value}"'/>
+	<c:set var="attrs" value='${attrs} ${attr.key}="${attr.value}"' />
 </c:forEach>
 
-<!-- Initialize Upload URL. -->
-<c:set var="uploadURL" value="${home}/image/upload"/>
-
-<!-- Determine if file upload -->
-<c:if test="${isFile}">
-	<c:set var="uploadURL" value="${home}/file-template/upload" />
+<%-- Initialize upload URL --%>
+<c:if test="${empty dataURL }">
+	<c:choose>
+		<c:when test="${imageOnly }">
+			<%-- if user did not supply data url, use defaults  --%>
+			<c:set var="dataURL" value="${home}/image/"/>
+		</c:when>
+		<c:otherwise>
+			<c:set var="dataURL" value="${home}/files/" />
+		</c:otherwise>
+	</c:choose>
 </c:if>
 
-<c:if test="${not empty dataURL}">
-	<c:set var="uploadURL" value="${dataURL}" />
-</c:if>
-
-<!-- Drop Zone is enabled by default -->
+<%-- Drop Zone is enabled by default --%>
 <c:set var="hasDropZone" value="true" />
 <c:if test="${not empty dropZone}">
 	<c:set var="hasDropZone" value="${dropZone}" />
 </c:if>
-
 <div class="control-group ot-upload-file">
+	<input type="hidden" name="id" value="" id="entity-id"/>
 	
-	<!-- Container of all image ID. -->
+	<%-- Container of all image IDs --%>
 	<div id="${id}-attachmentIds" style="display: none;">
-		
+		<input class="ot-files" type="hidden" name="${fName }"/>
 	</div>
+	
 	<script id="attachmentIdsForUpload" type="text/template">
 		<input id="hidden-attachment-{{attachmentId}}" class="ot-files" type="hidden" name="${fName}" value="{{attachmentId}}"/>
 	</script>
 	
-	<input id="" class="ot-files" type="hidden" name="files" value=""/>
-	
-	<label class="control-label"><spring:message code="${label}" text="Files"/></label>
+	<label class="control-label"> <spring:message code="${label}" text="Files" /></label>
 	<div class="controls">
-		
 		<div class="fileupload-buttonbar">
 			<div class="fileupload-buttons">
-				<span class="fileinput-button">
-					<c:set var="control" value="" />
+				<span class="fileinput-button"> <c:set var="control" value="" />
 					<c:if test="${not empty imageOnly}">
-						<c:set var="control" value="accepts=\"image/*\""/>
+						<c:set var="control" value="accepts=\"image/*\"" />
 					</c:if>
-					<input type="button" value='Browse...' class="browse-button-dummy"/>
-	            	<input id="${id}" ${attrs} type="file" name="attachments" ${control} multiple style="display: none;">
-	            </span>
-	            <span class="fileupload-loading"></span>
-	        </div>
-	        <div class="fileupload-progress fade" style="display:none">
-	            <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
-	            <div class="progress-extended">&nbsp;</div>
-	        </div>
+					<input type="button" value='Browse...' class="browse-button-dummy" />
+					<input id="${id}" ${attrs} type="file" name="attachments"
+					${control} multiple style="display: none;">
+				</span>
+				<span class="fileupload-loading"></span>
+			</div>
+			<div class="fileupload-progress fade" style="display: none">
+				<div class="progress" role="progressbar" aria-valuemin="0"
+					aria-valuemax="100"></div>
+				<div class="progress-extended">&nbsp;</div>
+			</div>
 		</div>
-		
 		<c:if test="${hasDropZone}">
 			<!-- Drop Zone of files to be uploaded -->
-        	<div id="dropzone"><spring:message code="${dropZoneLabel}" text="Drop files here"/></div>
-        </c:if>
-        
+			<div id="dropzone">
+				<spring:message code="${dropZoneLabel}" text="Drop files here" />
+			</div>
+		</c:if>
 		<!-- Display Uploaded Files -->
-        <table id="${id}-ot-attachment-list" class="table ot-attachment-list"><tbody class="files"></tbody></table>
-        
-        <script id="filesForUpload" class="template" type="text/template">
+		<table id="${id}-ot-attachment-list" class="table ot-attachment-list">
+			<tbody class="files">
+				<c:forEach items="${files }" var="file">
+					<tr class="template-download">
+						<td style="width: 80%" colspan="2">
+							<strong>${file.filename }</strong>
+						</td>
+						<td style="width: 20%">
+							<input type="hidden" id="fileUploadId"
+								class="files" value="${file.id }" />
+							<input type="hidden" class="fileList" value="${file.id }" />
+							<a id="remove-file-id-${file.id }" class="btn btn-small btn-danger remove-attachment">
+								<i class="icon-remove"></i>
+							</a>
+						</td>
+					</tr>
+				</c:forEach>
+			</tbody>
+		</table>
+		<script id="filesForUpload" class="template" type="text/template">
 			<tr class="template-upload" >
         		<td style="width: 40%">
             		<strong><p class="name">{{name}} ({{formattedFileSize}})</p></strong>
@@ -119,7 +138,6 @@
 				</td>
     		</tr>
 		</script>
-        
 	</div>
 </div>
 
@@ -141,15 +159,15 @@
 		$('#${id}').fileupload({
 			acceptFileTypes : /(\.|\/)(gif|jpe?g|png)$/i,
 			dataType        : 'json',
-			url             : '${uploadURL}',
+			url             : '${dataURL}',
 			paramName       : 'attachment',
 		    add: function (e, data) {
-		    	var file = null;
 	            $.each(data.files, function() {
 	            	this.formattedFileSize = formatFileSize(this.size);
-	            	file = opentides3.template($('script#filesForUpload').html(), this);
+	            	var file = opentides3.template($('script#filesForUpload').html(), this);
 	            	$('table#${id}-ot-attachment-list tbody.files').append(file);
 	            });
+	            
 	            data.context = $('table#${id}-ot-attachment-list tbody.files tr:last');
 	            data.submit();
 	        },
@@ -162,11 +180,10 @@
 	        done : function(e, data) {
 	        	if(data.result.attachmentId){
 	        		<c:if test="${not isMultiple}">
-				    $('div#${id}-attachmentIds').empty();
+				    	$('div#${id}-attachmentIds').empty();
 		        	</c:if>
 				    
 		        	var attachmentId = $.trim(opentides3.template($('script#attachmentIdsForUpload').html(), data.result));
-
 		        	$('div#${id}-attachmentIds').append(attachmentId);
 		        	
 		        	if (data.context) {
@@ -196,19 +213,39 @@
 		
 		//for removing files that are uploaded
 		$('#${id}-ot-attachment-list').off().on('click', '.remove-attachment', function() {
+			var $this = $(this);
 		    var attachmentId = $(this).attr('id').split('-')[3];
-		    $("#${id}-attachmentIds #hidden-attachment-"+attachmentId).val('');
-		    
-		    $(this).parent().parent().fadeOut(); 
-		    $('.notifications').notify({ message: "Attachment successfully removed", type: 'success'}).show();
-		    $('.browse-button-dummy').prop('disabled', false);
-		   	$('#${id}').prop('disabled', false);
-			$('#${id}').trigger('change');
+		    $.ajax({
+		    	url : '${dataURL}' + attachmentId,
+		    	data : {
+		    		'className' : '${className}',
+		    		'classId' : $('input[type="hidden"]#entity-id').val()
+		    	},
+				type : 'DELETE',
+				dataType : 'json',
+				success : function(json) {
+					opentides3.displayMessage(json);
+					$this.parents('tr').fadeOut(300,
+						function() {
+							$this.parents('tr').remove();
+						});
+					 $("#${id}-attachmentIds #hidden-attachment-" + attachmentId).remove();
+					 $('.browse-button-dummy').prop('disabled', false);
+					 $('#${id}').prop('disabled', false);
+					 $('#${id}').trigger('change');
+				},
+				dataType : 'json'
+			});
 		});
 		
 	}).on('drop dragover', function (e) {
 	    e.preventDefault();
 	}).on('click', '.browse-button-dummy', function() {
 		$(this).next('input[type="file"]').click();
-	});
-</script>	
+	}).on('fileuploadsubmit', function(e, data) {
+		data.formData = {
+			className : '${className}',
+			classId : $('input[type="hidden"]#entity-id').val()
+		}
+	});	
+</script>

@@ -6,7 +6,7 @@
 <%@ taglib prefix="app" tagdir="/WEB-INF/tags"%>
 
 <form:form id="upload-photo" commandName="command" enctype="multipart/form-data"
-		method="POST" action="${home}/image/upload/">
+		method="POST" action="${home}/image/">
 	<input type="hidden" name="className" value="${className}"/>
 	<input type="hidden" name="classId" value="${classId}"/>
 	<div class="modal-header">
@@ -22,7 +22,7 @@
 		
 		<div class="span2">
 			<div class="current-image-wrapper">
-				<img class="img-polaroid current-image" src="${home}/image/${imageId}"/>
+				<img class="img-polaroid current-image" src="${home}/image/${attachmentId}/?${date}"/>
 			</div>
 		</div>
 		<div class="span5">
@@ -41,13 +41,13 @@
 
 	<div class="modal-footer">
 		<input type="button" class="btn btn-link switch-modal" id="switchToAdjust"
-			data-url="${home}/image/adjust?imageId=${imageId}&className=${className}&classId=${classId}"
+			data-url="${home}/image/adjust?imageId=${attachmentId}&className=${className}&classId=${classId}"
 			value="<spring:message code="photo.edit-thumbnail" />" />
 		<input type="button" id="start-upload" value="<spring:message code="photo.change-photo" />" class="btn btn-success" />
 	</div>
 	
 	<script type="text/template" class="adjust-data-url">
-		${home}/image/adjust?imageId={{imageId}}&className=${className}&classId=${classId}
+		${home}/image/adjust?imageId={{attachmentId}}&className=${className}&classId=${classId}
 	</script>
 	
 </form:form>
@@ -64,7 +64,6 @@
 	});
 
 	opentides3.jsonForm($('#upload-photo'), function(data){
-		//$('#upload-photo').find('.switch-modal').click();
 		var newDataUrl = opentides3.template($('script.adjust-data-url').html(), data);
 		$('#switchToAdjust').data('url', newDataUrl);
 		$('#upload-photo').find('.switch-modal').click();
