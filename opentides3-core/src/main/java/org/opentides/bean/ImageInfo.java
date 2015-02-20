@@ -75,6 +75,14 @@ public class ImageInfo extends BaseEntity {
 	public final String getOriginalFileName() {
 		return originalFileName;
 	}
+	
+	/**
+	 * For consistency with FileInfo
+	 * @return
+	 */
+	public final String getFilename() {
+		return originalFileName;		
+	}
 
 	/**
 	 * @param originalFileName the originalFileName to set
