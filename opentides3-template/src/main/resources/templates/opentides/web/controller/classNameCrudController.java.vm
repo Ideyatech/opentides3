@@ -1,26 +1,37 @@
-/**
- * 
+/* 
+ * ${bean.className}CrudController.java
  */
 package ${bean.package_}.web.controller;
 
 import ${bean.modelPackage}.${bean.className};
-import org.opentides.controller.BaseCrudController;
+import org.opentides.web.controller.BaseCrudController;
+import ${bean.package_}.service.${bean.className}Service;
+#if(${bean.containsValidation()})
+import ${bean.package_}.web.validator.${bean.className}Validator;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.WebDataBinder;
 
-#if	( $bean.containsByCategory() )
-import jorg.opentides.bean.SystemCodes;
 #end
-
-#if	( $bean.containsByOptions() )
+#if	( ${bean.containsByCategory()} )
+import org.opentides.bean.SystemCodes;
+import org.opentides.service.SystemCodesService;
+#end
+#if	( ${bean.containsByOptions()} )
 import java.util.Arrays;
 #end
+#if	( ${bean.containsByOptions()} || ${bean.containsByCategory()} )
+import java.util.List;
+import org.springframework.web.bind.annotation.ModelAttribute;
 
+#end
+import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-
+import org.springframework.validation.BindingResult;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.springframework.ui.Model;
 
 /**
  * This is the controller class for ${bean.className}.
@@ -28,14 +39,24 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @author opentides
  */
  
-@RequestMapping("/${bean.formName}")
 @Controller
+@RequestMapping("/${bean.formName}")
 public class ${bean.className}CrudController extends BaseCrudController<${bean.className}> {
-
-	@Autowired
-	${bean.className}Service ${bean.modelName}Service;
 	
-#foreach( $field in ${bean.fields} )
+	@Autowired
+	private ${bean.className}Service ${bean.modelName}Service;
+	
+#if ( ${bean.containsByCategory()} )	
+	@Autowired
+	private SystemCodesService systemCodesService;
+	
+#end
+#if(${bean.containsValidation()})
+	@Autowired
+	private ${bean.className}Validator ${bean.modelName}Validator;
+	
+#end
+#foreach( ${field} in ${bean.fields} )
 #if ( ${field.isByCategory()} == true )
 	/**
 	 * Method to return a list of ${field.fieldName} based on 
@@ -45,18 +66,38 @@ public class ${bean.className}CrudController extends BaseCrudController<${bean.c
 	 */
 	@ModelAttribute("${field.fieldName}List")
 	public List<SystemCodes> ${field.fieldName}List() {
-		return getSystemCodesByCategory(${field.getAttribute("category")});
+		return systemCodesService.findSystemCodesByCategory(${field.getAttribute("category")});
 	}
+	
 #elseif ( ${field.isByOptions()} == true )
 	/**
-	 * Method to return a static list of ${field.fieldName}.
+	 * Method to return a static list map of ${field.fieldName}.
 	 * 
-	 * @return list of SystemCodes
+	 * @return list of Strings
 	 */
 	@ModelAttribute("${field.fieldName}List")
 	public List<String> ${field.fieldName}List() {
 		return Arrays.asList(new String[] ${field.getAttribute("options")});
 	}
+	
 #end
+#end	
+#if(${bean.containsValidation()})	
+	@InitBinder("formCommand")
+	protected void ${bean.modelName}InitBinder(WebDataBinder binder) {
+		binder.setValidator(${bean.modelName}Validator);
+	}
+	
 #end
+	@Override
+	protected void onLoadSearch(${bean.className} command, BindingResult bindingResult, 
+			Model uiModel, HttpServletRequest request,
+			HttpServletResponse response) {
+		uiModel.addAttribute("results", search(command, request));
+	}
+	
+	@PostConstruct
+	public void init() {
+		singlePage = "/app/${bean.formName}-crud";
+	}
 }

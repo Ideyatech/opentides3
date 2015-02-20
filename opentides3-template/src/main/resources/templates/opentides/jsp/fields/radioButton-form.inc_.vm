@@ -6,15 +6,15 @@
 #if ( ${field.isByCategory} )
 	<c:forEach items="${${field.fieldName}List}" var="${field.fieldName}2" varStatus="cnt">
 		<input type="radio" name="${field.fieldName}" value="${ ${field.fieldName}2.id }" <c:if test="${ ${modelName}.${field.fieldName}.id == ${field.fieldName}2.id }">checked="checked"</c:if> /> ${ ${field.fieldName}2.value } 
-	</c:forEach> #if ( $isRequiredField == "true" )<sup class="required">*</sup>#end</p>
+	</c:forEach> #if ( $isRequired == "true" )<sup class="required">*</sup>#end</p>
 ## Option/Array Type of RadioButton 
 #elseif ( ${field.isByObject} )
 	<c:forEach items="${${field.fieldName}List}" var="${field.fieldName}2" varStatus="cnt">
 		<input type="radio" name="${field.fieldName}" value="${ ${field.fieldName}2.id }" <c:if test="${ ${modelName}.${field.fieldName}.id == ${field.fieldName}2.id }">checked="checked"</c:if> /> ${ ${field.fieldName}2.${titleField} } 
-	</c:forEach> #if ( $isRequiredField == "true" )<sup class="required">*</sup>#end</p>
+	</c:forEach> #if ( $isRequired == "true" )<sup class="required">*</sup>#end</p>
 #else
 #foreach( $option in $field.options )
 	<form:radiobutton path="${field.fieldName}" value="${option}" #foreach( $springParam in $field.springParams )${springParam} #end/><label for="${option}"> ${option} </label>
-#end #if ( $isRequiredField == "true" )<sup class="required">*</sup>#end</p>
+#end #if ( $isRequired == "true" )<sup class="required">*</sup>#end</p>
 #end
 

@@ -12,6 +12,6 @@ import org.opentides.service.BaseCrudService;
  * @author opentides
  */
  
-public interface ${bean.className}Service extends BaseCrudService<$bean.className> {
+public interface ${bean.className}Service extends BaseCrudService<${bean.className}> {
 
 }

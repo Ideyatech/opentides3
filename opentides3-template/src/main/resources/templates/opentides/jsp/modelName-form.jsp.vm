@@ -52,11 +52,11 @@ Expected parameters:
 		<div class='fieldsBox'>
 #set( $formClosed = false )
 #foreach( $field in $fields )
-	#if ( $field.isRequiredField == "true" )
-		#set ($isRequiredField = "true")
+	#if ( $field.isRequired == "true" )
+		#set ($isRequired = "true")
 		#set ($containsRequiredField = "true" )
 	#else
-		#set ($isRequiredField = "false")
+		#set ($isRequired = "false")
 	#end
 	#if (${field.fieldType} == "multiRecord" && $formClosed == false)
 		</div>
