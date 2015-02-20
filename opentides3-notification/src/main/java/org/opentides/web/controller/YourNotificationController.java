@@ -119,11 +119,11 @@ public class YourNotificationController {
 	}
 	
 	@RequestMapping(value="/pop-up/{userId}", method = RequestMethod.GET, produces="application/json")
-	public @ResponseBody String getNotifications(@PathVariable("userId")Long userId) {
+	public @ResponseBody Map<String, Object> getNotifications(@PathVariable("userId")Long userId) {
 		if (userId > 0)
 			return notificationService.getPopupNotification(userId);
 		else
-			return "";
+			return new HashMap<String, Object>();
 	}
 	
 	@RequestMapping(value="/count/{userId}", method = RequestMethod.GET, produces="application/json")

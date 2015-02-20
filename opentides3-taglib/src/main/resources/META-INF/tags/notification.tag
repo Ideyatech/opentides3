@@ -23,29 +23,30 @@ dropdown of notifications. --%>
                 if (response.status == 200) {
                     var data = JSON.parse(response.responseBody);
                     if (data) {
-                    	if (data.length > 1 && data[0] != "0") {
-                            $("${notifyEl}").html(data[0]).show();
-                            if (data[0] > 1) {
-                            	desktopNotify('Notification', 'You have '+data[0]+' new notifications.');
-                            } else {
-                                desktopNotify('Notification', data[1]);                            	
+                    	if (data.notifyCount > 0) {
+                            $("${notifyEl}").html(data.notifyCount).show();
+                            if (data.notifyCount > 1) {
+                            	desktopNotify('Notification', 'You have '+data.notifyCount+' new notifications.');
+                            } else if (data.notifications[0].medium == 'POPUP') {
+                                desktopNotify('Notification', data.notifications[0].message);
                             }
                             $("${contentEl}").html("");
-                    	} else {
-                    		// no notifications
-                    		if (data.length<=1)
-     	               			$("${contentEl}").html("No notifications.");
-                    		$("${notifyEl}").html("").hide();
-                    	}
-                    	len = data.length;
-                    	if (len > 10) len = 10;
-                        for (i=1;i<len;i++) {
-                        	$("${contentEl}").append("<li>"+data[i]+"</li>");
-                        }
-                        if (data.length > 10) {
-                            $("${contentEl}").append("<li class='divider'></li>"+
-                            		"<li><a href='${home}/your-notifications/page'>View All</a></li>");                            	
-                        }
+                    	} 
+                    	len = data.notifications.length;
+						if (len==0) {
+	                    	// no notifications
+                   			$("${contentEl}").html("No notifications.");
+                    		$("${notifyEl}").html("").hide();							
+						} else {							
+	                    	if (len > 10) len = 10;
+	                        for (i=0;i<len;i++) {
+	                        	$("${contentEl}").append("<li>"+data.notifications[i].message+"</li>");
+	                        }
+	                        if (data.notifications.length >= 10) {
+	                            $("${contentEl}").append(
+	                            		"<li><a href='${home}/your-notifications/page'>View All</a></li>");                            	
+	                        }
+						}
                     }
                 }
             }

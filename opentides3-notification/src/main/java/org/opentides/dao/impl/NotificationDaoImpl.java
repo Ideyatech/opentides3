@@ -102,7 +102,7 @@ implements NotificationDao {
 	public List<Notification> findMostRecentPopup(long userId) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("userId", userId);
-        List<Notification> result = findByNamedQuery("jpql.notification.findMostRecentPopup", params, 0, 10);
+        List<Notification> result = findByNamedQuery("jpql.notification.findMostRecentPopup", params, 0, 5);
         return result;
 	}
 

@@ -17,8 +17,11 @@
 package org.opentides.service.impl;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.transaction.Transactional;
 
@@ -28,18 +31,21 @@ import org.atmosphere.cpr.Broadcaster;
 import org.atmosphere.cpr.BroadcasterFactory;
 import org.opentides.bean.BaseEntity;
 import org.opentides.bean.Event;
+import org.opentides.bean.JSONNotification;
 import org.opentides.bean.Notification;
 import org.opentides.bean.Notification.Status;
 import org.opentides.dao.NotificationDao;
 import org.opentides.eventhandler.EmailHandler;
 import org.opentides.service.MailingService;
-import org.opentides.util.DateUtil;
 import org.opentides.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * @author allantan
@@ -144,18 +150,17 @@ implements NotificationService {
 	
 	public void notify(String userId) {
 	    Broadcaster b = BroadcasterFactory.getDefault().lookup(userId);
+	    ObjectMapper mapper = new ObjectMapper();
 	    if (b!=null) {
-	        long nCount = notificationDao.countNewPopup(new Long(userId));
-	        List<Notification> notifications = notificationDao.findMostRecentPopup(new Long(userId));
-	        StringBuffer response = new StringBuffer("[");
-	        response.append(nCount);
-	        for (Notification n:notifications) {
-	        	response.append(",\"")
-	        			.append(n.getMessage())
-	        			.append("\"");
-	        }
-	        response.append("]");
-	        b.broadcast(response.toString());
+	    	String jsonString;
+			try {
+				jsonString = mapper.writeValueAsString(buildNotification(new Long(userId)));
+		        b.broadcast(jsonString);
+			} catch (NumberFormatException e) {
+				_log.error("Failed to convert to JSON.", e);
+			} catch (JsonProcessingException e) {
+				_log.error("Failed to convert to JSON.", e);
+			}
 	    }
 	}
 	
@@ -185,30 +190,31 @@ implements NotificationService {
 	}
 
 	@Override	
-	public String getPopupNotification(long userId) {
+	public Map<String, Object> getPopupNotification(long userId) {
+		return buildNotification(userId);
+	}
+	
+	private Map<String, Object> buildNotification(Long userId) {
 		// Let's manually build the json
-		StringBuilder jsonBuilder = new StringBuilder();
 		List<Notification> notifs = null;
 		long count = 0;
 		notifs = this.findMostRecentPopup(userId);
 		count = this.countNewPopup(userId);
+		Map<String, Object> result = new HashMap<String, Object>();
 		
-		jsonBuilder.append("{\"notifications\":[");
-		if (notifs != null) {
-			int idx = 0;
-			for (Notification n : notifs) {
-				if (idx++ > 0) jsonBuilder.append(",");
-				jsonBuilder.append("{\"createDate\":\"")
-				.append(DateUtil.dateToString(n.getCreateDate(), "MMM dd, yyyy hh:mm a"))
-				.append("\",\"message\":\"").append(n.getMessage()).append("\"}");
-			}
-		}
-		
-		jsonBuilder.append("],\"notifyCount\":\"")
-				   .append(count)
-				   .append("\"}");
-
-		return jsonBuilder.toString(); 
+		result.put("notifyCount", count);
+		List<JSONNotification> notifications = new ArrayList<JSONNotification>();		
+		for (Notification n:notifs) {
+			JSONNotification jn = new JSONNotification();
+			jn.setCreateDate(n.getCreateDate());
+			jn.setEntityClass(n.getEntityClass().getSimpleName());
+			jn.setEntityId(n.getEntityId());
+			jn.setMedium(n.getMedium());
+			jn.setMessage(n.getMessage());
+			notifications.add(jn);
+		}		
+		result.put("notifications", notifications);
+		return result; 
 	}
 	
 	@Override

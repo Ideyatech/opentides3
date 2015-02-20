@@ -17,6 +17,7 @@
 package org.opentides.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.opentides.bean.BaseEntity;
 import org.opentides.bean.Event;
@@ -80,7 +81,7 @@ public interface NotificationService extends BaseCrudService<Notification>{
 	 * @param userId
 	 * @return
 	 */
-	public String getPopupNotification(long userId);
+	public Map<String, Object> getPopupNotification(long userId);
 	
 	/**
 	 * Retrieves all the new notification to be displayed.

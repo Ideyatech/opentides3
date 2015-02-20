@@ -54,6 +54,7 @@ public class Notification extends BaseEntity {
 	}
 	
 	public static enum Medium {
+		NONE,
 		POPUP,
 		EMAIL,
 		SMS
@@ -99,6 +100,7 @@ public class Notification extends BaseEntity {
     /**
      * Primary key of object being notified.
      */	
+	@JsonView(Views.SearchView.class)    
     @Column(name = "ENTITY_ID", updatable = false)
     private Long entityId;
     
@@ -106,6 +108,7 @@ public class Notification extends BaseEntity {
      * Class type of object being notified.
      */
     @SuppressWarnings({ "rawtypes" })
+	@JsonView(Views.SearchView.class)    
     @Column(name = "ENTITY_CLASS", updatable = false)
     private Class entityClass;
 
@@ -113,7 +116,7 @@ public class Notification extends BaseEntity {
      * Email address or mobile number to receive the notification.
      */
 	@JsonView(Views.SearchView.class)    
-    @Column(name = "RECEIPIENT_REF") 
+    @Column(name = "RECIPIENT_REF") 
     private String recipientReference;
     
 	@JsonView(Views.SearchView.class)

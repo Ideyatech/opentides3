@@ -18,8 +18,7 @@
  */
 package org.opentides.web.controller;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -27,7 +26,6 @@ import org.atmosphere.cpr.ApplicationConfig;
 import org.atmosphere.cpr.AtmosphereResource;
 import org.atmosphere.cpr.Broadcaster;
 import org.atmosphere.cpr.BroadcasterFactory;
-import org.opentides.bean.Notification;
 import org.opentides.service.impl.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -56,7 +54,7 @@ public class NotifyHandler {
     @RequestMapping(value = "/notify/{userId}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public List<String> watch(@PathVariable("userId") String userId,
+    public Map<String, Object> watch(@PathVariable("userId") String userId,
                       HttpServletRequest request) throws Exception {
         //Atmosphere framework puts filter/servlet that adds ATMOSPHERE_RESOURCE to all requests
         AtmosphereResource resource = (AtmosphereResource) request.getAttribute(ApplicationConfig.ATMOSPHERE_RESOURCE);
@@ -69,15 +67,16 @@ public class NotifyHandler {
 
         //saving resource for notifications
         broadcaster.addAtmosphereResource(resource);
+        return notificationService.getPopupNotification(new Long(userId));
         
-        long nCount = notificationService.countNewPopup(new Long(userId));
-        List<Notification> notifications = notificationService.findMostRecentPopup(new Long(userId));
-        List<String> response = new ArrayList<String>();
-        response.add(""+nCount);
-        for (Notification n:notifications) {
-        	response.add(n.getMessage());
-        }
-        return response;
+//        long nCount = notificationService.countNewPopup(new Long(userId));
+//        List<Notification> notifications = notificationService.findMostRecentPopup(new Long(userId));
+//        List<String> response = new ArrayList<String>();
+//        response.add(""+nCount);
+//        for (Notification n:notifications) {
+//        	response.add(n.getMessage());
+//        }
+//        return response;
     }
    
 }

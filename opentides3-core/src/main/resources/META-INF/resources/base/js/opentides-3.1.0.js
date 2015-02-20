@@ -577,7 +577,7 @@ var opentides3 = (function() {
 				var name = $(this).attr('name');
 				var prime = toPrimitive(opentides3.getValue(json, name));
 				if ($(this).attr('value') == prime)
-					$(this).prop('checked', true);
+					$(this).prop('checked', true).trigger('change');
 				else
 					$(this).prop('checked', false);
 
