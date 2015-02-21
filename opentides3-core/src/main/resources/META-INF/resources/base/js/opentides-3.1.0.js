@@ -909,12 +909,13 @@ var opentides3 = (function() {
 						e.preventDefault();
 						var firstForm = $(this);
 						var button = formSubmitButton;
-						
+						button.prop('disabled', true);
 						$.ajax({type : firstForm.attr('method'), // method
 							url : firstForm.attr('action'), 	 // url
 							data : firstForm.serialize(), 		 // data
 							success : function(json) { 			 // callback
 									opentides3.displayMessage(json, form);
+									button.prop('disabled', false);
 									if (typeof (json.command) === 'object'
 											&& json.command.id > 0) {
 										// successfully saved
