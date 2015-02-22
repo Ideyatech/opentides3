@@ -33,6 +33,16 @@ public class TimeUtil {
 	}
 	
 	/**
+	 * Displays a user friendly time format similar to social network.
+	 * 
+	 * @param d
+	 * @return
+	 */
+	public static String prettyTime(Date d) {
+		return prettyTime(new Date(), d);		
+	}
+	
+	/**
 	 * 
 	 * Displays a user friendly time format similar to social network.
 	 * 
@@ -50,8 +60,8 @@ public class TimeUtil {
 	 * @param d
 	 * @return
 	 */
-	public static String prettyTime(Date d) {
-		long ms = System.currentTimeMillis() - d.getTime();
+	public static String prettyTime(Date referenceDate, Date d) {
+		long ms = referenceDate.getTime() - d.getTime();
 		long secs = ms==0 ? 0 : ms/1000;
 		if (secs < 0) 
 			return "on " + DateUtil.dateToString(d, "MMMM d, yyyy");			
