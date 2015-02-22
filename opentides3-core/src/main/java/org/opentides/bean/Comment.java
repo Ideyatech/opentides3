@@ -14,7 +14,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.opentides.bean.user.BaseUser;
-import org.opentides.util.TimeUtil;
+import org.opentides.util.DateUtil;
 import org.springframework.web.multipart.MultipartFile;
 
 @Entity
@@ -58,7 +58,7 @@ public class Comment extends BaseEntity implements Uploadable {
 	}
 	
 	public String getPrettyCreateDate(){
-		return TimeUtil.prettyTime(getCreateDate());
+		return DateUtil.dateToString(getCreateDate(), "MMM dd,yyyy hh:mm a");
 	}
 	
 	// Uploadable requirements

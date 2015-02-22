@@ -16,6 +16,7 @@ import org.opentides.bean.user.BaseUser;
 import org.opentides.service.UserService;
 import org.opentides.service.impl.NotificationService;
 import org.opentides.util.DateUtil;
+import org.opentides.util.SecurityUtil;
 import org.opentides.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -124,9 +125,7 @@ public class YourNotificationController {
 	public @ResponseBody Map<String, Object> getNotifications(@PathVariable("userId")Long userId, 
 			HttpServletRequest request) {
 		if (userId > 0) {
-	        // parameter for timezone can be passed to compute for time difference.
-	        int	tzDiff = StringUtil.convertToInt(request.getParameter("tz"), 0);
-			return notificationService.getPopupNotification(userId, tzDiff);
+			return notificationService.getPopupNotification(userId, SecurityUtil.userTimeZone());
 		} else
 			return new HashMap<String, Object>();
 	}

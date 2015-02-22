@@ -19,6 +19,9 @@
 
 package org.opentides.util;
 
+import java.util.Date;
+
+import org.apache.commons.lang.time.DateUtils;
 import org.apache.log4j.Logger;
 import org.opentides.bean.user.SessionUser;
 import org.springframework.security.core.GrantedAuthority;
@@ -72,5 +75,35 @@ public class SecurityUtil {
 		}
 		return false;
 	}
+	
+	/**
+	 * Returns adjustment of hours for the user's timezone.
+	 * 
+	 * @return
+	 */
+	public static Integer userTimeZone() {
+		Object timeZone = SecurityUtil.getSessionUser().getProfile().get("TZ_DIFF");
+		if (timeZone == null)
+			return 0;
+		else
+			return new Integer(timeZone.toString());
+	}
+	
+	/**
+	 * Returns Now adjusted based on user's timezone
+	 * 
+	 * @return
+	 */
+	public static Date userNow() {
+		Integer tzDiff = SecurityUtil.userTimeZone();
+		return DateUtils.addHours(new Date(), tzDiff);
+	}
 
+	/**
+	 * Non-static accessor for JSTL
+	 * @return
+	 */
+	public Date getNow() {
+		return SecurityUtil.userNow();
+	}
 }

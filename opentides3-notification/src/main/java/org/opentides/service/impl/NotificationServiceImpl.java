@@ -31,6 +31,7 @@ import org.apache.log4j.Logger;
 import org.apache.velocity.app.VelocityEngine;
 import org.atmosphere.cpr.Broadcaster;
 import org.atmosphere.cpr.BroadcasterFactory;
+import org.ocpsoft.prettytime.PrettyTime;
 import org.opentides.bean.BaseEntity;
 import org.opentides.bean.Event;
 import org.opentides.bean.JSONNotification;
@@ -40,7 +41,6 @@ import org.opentides.dao.NotificationDao;
 import org.opentides.eventhandler.EmailHandler;
 import org.opentides.service.MailingService;
 import org.opentides.util.StringUtil;
-import org.opentides.util.TimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
@@ -196,6 +196,11 @@ implements NotificationService {
 		notificationDao.clearPopup(userId);
 	}
 
+	@Override
+	public Map<String, Object> getPopupNotification(long userId) {
+		return buildNotification(userId, 0);
+	}
+	
 	@Override	
 	public Map<String, Object> getPopupNotification(long userId, int timezoneDiff) {
 		return buildNotification(userId, timezoneDiff);
@@ -212,9 +217,10 @@ implements NotificationService {
 		result.put("notifyCount", count);
 		List<JSONNotification> notifications = new ArrayList<JSONNotification>();
 		Date adjusted = DateUtils.addHours(new Date(), timezoneDiff);	
+		PrettyTime pt = new PrettyTime(adjusted);
 		for (Notification n:notifs) {
 			JSONNotification jn = new JSONNotification();			
-			jn.setTimeWhen(TimeUtil.prettyTime(adjusted, n.getNotifyDate()));
+			jn.setTimeWhen(pt.format(n.getNotifyDate()));
 			jn.setEntityClass(n.getEntityClass().getSimpleName());
 			jn.setEntityId(n.getEntityId());
 			jn.setMedium(n.getMedium());
@@ -229,4 +235,5 @@ implements NotificationService {
 	public List<Notification> findMostRecentPopup(long userId) {
 		return notificationDao.findMostRecentPopup(userId);
 	}
+
 }

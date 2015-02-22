@@ -67,12 +67,10 @@ public class NotifyHandler {
         //find broadcaster, second parameter says to create broadcaster if it doesn't exist
         Broadcaster broadcaster = BroadcasterFactory.getDefault().lookup(userId,true);
 
-        // parameter for timezone can be passed to compute for time difference.
-        int	tzDiff = StringUtil.convertToInt(request.getParameter("tz"), 0);
-
+        int timezoneDiff = StringUtil.convertToInt(request.getParameter("tz"), 0);
         //saving resource for notifications
         broadcaster.addAtmosphereResource(resource);
-        return notificationService.getPopupNotification(new Long(userId), tzDiff);
+        return notificationService.getPopupNotification(new Long(userId), timezoneDiff);
         
     }
    

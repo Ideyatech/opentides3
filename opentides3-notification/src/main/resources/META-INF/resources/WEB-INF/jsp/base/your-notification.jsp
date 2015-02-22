@@ -8,6 +8,7 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ page import="java.util.Date" %>
+<%@ page import="org.opentides.util.SecurityUtil" %>
 
 <app:header pageTitle="label.notification.your-notifications" active="system">
 </app:header>
@@ -50,11 +51,11 @@
         </div>
     	</c:if>
     	<c:if test="${not empty notifications}">
-    		<fmt:formatDate pattern="MMMM dd, yyyy" value="${notifications[0].notifyDate}" var="dateLoop" />
-			<c:set var="now" value="<%=new Date()%>"/>
-    		<fmt:formatDate pattern="MMMM dd, yyyy" value="${now}" var="today" />
-    		<c:set var="yest" value="<%=new Date(new Date().getTime() - 60*60*24*1000)%>"/>
-    		<fmt:formatDate pattern="MMMM dd, yyyy" value="${yest}" var="yesterday" />
+    		<fmt:formatDate pattern="E MMMM dd, yyyy" value="${notifications[0].notifyDate}" var="dateLoop" />
+			<c:set var="now" value="<%=SecurityUtil.userNow()%>"/>
+    		<fmt:formatDate pattern="E MMMM dd, yyyy" value="${now}" var="today" />
+    		<c:set var="yest" value="<%=new Date(SecurityUtil.userNow().getTime() - 60*60*24*1000)%>"/>
+    		<fmt:formatDate pattern="E MMMM dd, yyyy" value="${yest}" var="yesterday" />
 	    	<div>    	
 	        	<p class="date">
 	        		<c:choose>
@@ -64,7 +65,7 @@
 					</c:choose>
 	        	</p>    		
     		<c:forEach items="${notifications}" var="notification">
-    			<fmt:formatDate pattern="MMMM dd, yyyy" value="${notification.notifyDate}" var="dateCurr" />
+    			<fmt:formatDate pattern="E MMMM dd, yyyy" value="${notification.notifyDate}" var="dateCurr" />
     			<c:if test="${dateLoop ne dateCurr}">
     			<c:set var="dateLoop" value="${dateCurr}"/>
     		</div>
