@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.opentides.bean.MessageResponse;
 import org.opentides.bean.Notification;
 import org.opentides.bean.Notification.Medium;
@@ -119,10 +121,13 @@ public class YourNotificationController {
 	}
 	
 	@RequestMapping(value="/pop-up/{userId}", method = RequestMethod.GET, produces="application/json")
-	public @ResponseBody Map<String, Object> getNotifications(@PathVariable("userId")Long userId) {
-		if (userId > 0)
-			return notificationService.getPopupNotification(userId);
-		else
+	public @ResponseBody Map<String, Object> getNotifications(@PathVariable("userId")Long userId, 
+			HttpServletRequest request) {
+		if (userId > 0) {
+	        // parameter for timezone can be passed to compute for time difference.
+	        int	tzDiff = StringUtil.convertToInt(request.getParameter("tz"), 0);
+			return notificationService.getPopupNotification(userId, tzDiff);
+		} else
 			return new HashMap<String, Object>();
 	}
 	

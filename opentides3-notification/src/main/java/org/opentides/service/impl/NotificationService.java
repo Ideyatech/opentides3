@@ -59,9 +59,18 @@ public interface NotificationService extends BaseCrudService<Notification>{
 	 * Invoke this method to notify the client of an event via atmosphere.
 	 * 
 	 * @param userId
+	 * @param timezoneDiff - timezone difference to adjust 
+	 *                       computation of time for pretty time.
+	 */
+	public void notify(String userId, int timezoneDiff);
+	
+	/**
+	 * Invoke this method to notify the client of an event via atmosphere.
+	 * 
+	 * @param userId
 	 */
 	public void notify(String userId);
-	
+
 	/**
 	 * Returns the total number of popup notification that is new and 
 	 * not yet seen by user.
@@ -81,7 +90,7 @@ public interface NotificationService extends BaseCrudService<Notification>{
 	 * @param userId
 	 * @return
 	 */
-	public Map<String, Object> getPopupNotification(long userId);
+	public Map<String, Object> getPopupNotification(long userId, int timeZone);
 	
 	/**
 	 * Retrieves all the new notification to be displayed.

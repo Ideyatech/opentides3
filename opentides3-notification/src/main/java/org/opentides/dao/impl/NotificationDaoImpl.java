@@ -48,7 +48,7 @@ implements NotificationDao {
 	 */
 	@Override
 	protected String appendOrderToExample(Notification example) {
-		return "order by createDate desc";
+		return "order by notifyDate desc";
 	}
 	
 	@Override
@@ -63,7 +63,7 @@ implements NotificationDao {
 				append.append(" and ");
 			}
 			String startDate = DateUtil.dateToString(example.getStartDate(), "yyyy-MM-dd");
-			append.append(" date(obj.createDate) >= '");
+			append.append(" date(obj.notifyDate) >= '");
 			append.append(startDate + "'");
 		}
 		
@@ -73,7 +73,7 @@ implements NotificationDao {
 			}			
 			String endDate = DateUtil.dateToString(
 								DateUtils.addDays(example.getEndDate(), 1), "yyyy-MM-dd");
-			append.append(" date(obj.createDate) <= '");
+			append.append(" date(obj.notifyDate) <= '");
 			append.append(endDate + "'");
 		}
 		

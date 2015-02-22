@@ -27,6 +27,7 @@ import org.atmosphere.cpr.AtmosphereResource;
 import org.atmosphere.cpr.Broadcaster;
 import org.atmosphere.cpr.BroadcasterFactory;
 import org.opentides.service.impl.NotificationService;
+import org.opentides.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -49,6 +50,7 @@ public class NotifyHandler {
     /**
      * When a comet request is received allow Spring to auto-magically resolve the meteor argument then:
      * Set the meteor's broadcaster to '/notify', suspend, then broadcast to this request only.
+     * 
      * @param m A meteor that represents the current comet session.
      */
     @RequestMapping(value = "/notify/{userId}")
@@ -65,18 +67,13 @@ public class NotifyHandler {
         //find broadcaster, second parameter says to create broadcaster if it doesn't exist
         Broadcaster broadcaster = BroadcasterFactory.getDefault().lookup(userId,true);
 
+        // parameter for timezone can be passed to compute for time difference.
+        int	tzDiff = StringUtil.convertToInt(request.getParameter("tz"), 0);
+
         //saving resource for notifications
         broadcaster.addAtmosphereResource(resource);
-        return notificationService.getPopupNotification(new Long(userId));
+        return notificationService.getPopupNotification(new Long(userId), tzDiff);
         
-//        long nCount = notificationService.countNewPopup(new Long(userId));
-//        List<Notification> notifications = notificationService.findMostRecentPopup(new Long(userId));
-//        List<String> response = new ArrayList<String>();
-//        response.add(""+nCount);
-//        for (Notification n:notifications) {
-//        	response.add(n.getMessage());
-//        }
-//        return response;
     }
    
 }

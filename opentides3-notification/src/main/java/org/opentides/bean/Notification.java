@@ -25,6 +25,8 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
 import org.opentides.bean.user.BaseUser;
@@ -62,6 +64,13 @@ public class Notification extends BaseEntity {
 	
 	private static final long serialVersionUID = 4857118082796914475L;
 	
+    /**
+     * Notify date.
+     */
+    @Column(name = "NOTIFY_DATE")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date notifyDate;
+
 	/**
 	 * Identifier to group multiple recipients in one event.
 	 */
@@ -150,6 +159,17 @@ public class Notification extends BaseEntity {
 
     public Notification() {
 		super();
+	}
+
+	public Date getNotifyDate() {
+		if (notifyDate==null)
+			return getCreateDate();
+		else
+			return notifyDate;
+	}
+
+	public void setNotifyDate(Date notifyDate) {
+		this.notifyDate = notifyDate;
 	}
 
 	/**

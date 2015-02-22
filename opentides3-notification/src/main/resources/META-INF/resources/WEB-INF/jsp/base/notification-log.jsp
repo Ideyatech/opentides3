@@ -71,22 +71,21 @@
 					<tbody>
 						<script type="text/template" class="template">
 	                		<tr id="notification-row-{{id}}" data-id="{{id}}">
-								<td>{{createDate}}</td>
+								<td>{{notifyDate}}</td>
 								<td>{{recipientDisplay}}</td>
 								<td>{{&messageDisplay}}</td>
-								<td>{{status}} since {{updateDate}}</td>
+								<td>{{status}} {{remarks}}</td>
 							</tr>
 						</script>
 						<c:forEach items="${results.results}" var="record" varStatus="status">
 							<tr id="notification-${record.id}" data-id="${record.id}">
 								<td>
-								<fmt:formatDate value="${record.createDate}" pattern="MM/dd/yyyy hh:mm" var="createDate"/>
-								<fmt:formatDate value="${record.updateDate}" pattern="MM/dd/yyyy hh:mm" var="updateDate"/>
-								${createDate}
+								<fmt:formatDate value="${record.notifyDate}" pattern="MM/dd/yyyy hh:mm" var="notifyDate"/>
+								${notifyDate}
 								</td>
 								<td>${record.recipientDisplay}</td>
 								<td>${record.messageDisplay}</td>
-								<td>${record.status} since ${updateDate}. ${record.remarks}</td>
+								<td>${record.status}. ${record.remarks}</td>
 							</tr>
 						</c:forEach>
 					</tbody>

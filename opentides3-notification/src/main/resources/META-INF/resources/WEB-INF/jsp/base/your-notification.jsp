@@ -50,7 +50,7 @@
         </div>
     	</c:if>
     	<c:if test="${not empty notifications}">
-    		<fmt:formatDate pattern="MMMM dd, yyyy" value="${notifications[0].createDate}" var="dateLoop" />
+    		<fmt:formatDate pattern="MMMM dd, yyyy" value="${notifications[0].notifyDate}" var="dateLoop" />
 			<c:set var="now" value="<%=new Date()%>"/>
     		<fmt:formatDate pattern="MMMM dd, yyyy" value="${now}" var="today" />
     		<c:set var="yest" value="<%=new Date(new Date().getTime() - 60*60*24*1000)%>"/>
@@ -64,11 +64,11 @@
 					</c:choose>
 	        	</p>    		
     		<c:forEach items="${notifications}" var="notification">
-    			<fmt:formatDate pattern="MMMM dd, yyyy" value="${notification.createDate}" var="dateCurr" />
+    			<fmt:formatDate pattern="MMMM dd, yyyy" value="${notification.notifyDate}" var="dateCurr" />
     			<c:if test="${dateLoop ne dateCurr}">
     			<c:set var="dateLoop" value="${dateCurr}"/>
     		</div>
-	    	<div class="notify-wrapper">    
+	    	<div class="notify-wrapper-2">
 		        	<p class="date">
 	        		<c:choose>
       					<c:when test="${dateLoop eq today}">Today</c:when>
@@ -78,7 +78,7 @@
 					</p>        		
 				</c:if>
 	            <p class="item"><span class="time">
-	            	<fmt:formatDate pattern="hh:mm a" value="${notification.createDate}" var="time" />
+	            	<fmt:formatDate pattern="hh:mm a" value="${notification.notifyDate}" var="time" />
 	            	${time}
 	            	</span> <c:out value="${notification.message}"/>
 	            </p>

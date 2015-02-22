@@ -18,6 +18,7 @@ package org.opentides.service.impl;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -25,6 +26,7 @@ import java.util.Map;
 
 import javax.transaction.Transactional;
 
+import org.apache.commons.lang.time.DateUtils;
 import org.apache.log4j.Logger;
 import org.apache.velocity.app.VelocityEngine;
 import org.atmosphere.cpr.Broadcaster;
@@ -38,6 +40,7 @@ import org.opentides.dao.NotificationDao;
 import org.opentides.eventhandler.EmailHandler;
 import org.opentides.service.MailingService;
 import org.opentides.util.StringUtil;
+import org.opentides.util.TimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
@@ -148,13 +151,13 @@ implements NotificationService {
 		}
 	}
 	
-	public void notify(String userId) {
+	public void notify(String userId, int timezoneDiff) {
 	    Broadcaster b = BroadcasterFactory.getDefault().lookup(userId);
 	    ObjectMapper mapper = new ObjectMapper();
 	    if (b!=null) {
 	    	String jsonString;
 			try {
-				jsonString = mapper.writeValueAsString(buildNotification(new Long(userId)));
+				jsonString = mapper.writeValueAsString(buildNotification(new Long(userId), timezoneDiff));
 		        b.broadcast(jsonString);
 			} catch (NumberFormatException e) {
 				_log.error("Failed to convert to JSON.", e);
@@ -162,6 +165,10 @@ implements NotificationService {
 				_log.error("Failed to convert to JSON.", e);
 			}
 	    }
+	}
+
+	public void notify(String userId) {
+		notify(userId, 0);
 	}
 	
 	@Override
@@ -190,11 +197,11 @@ implements NotificationService {
 	}
 
 	@Override	
-	public Map<String, Object> getPopupNotification(long userId) {
-		return buildNotification(userId);
+	public Map<String, Object> getPopupNotification(long userId, int timezoneDiff) {
+		return buildNotification(userId, timezoneDiff);
 	}
-	
-	private Map<String, Object> buildNotification(Long userId) {
+
+	private Map<String, Object> buildNotification(Long userId, int timezoneDiff) {
 		// Let's manually build the json
 		List<Notification> notifs = null;
 		long count = 0;
@@ -203,10 +210,11 @@ implements NotificationService {
 		Map<String, Object> result = new HashMap<String, Object>();
 		
 		result.put("notifyCount", count);
-		List<JSONNotification> notifications = new ArrayList<JSONNotification>();		
+		List<JSONNotification> notifications = new ArrayList<JSONNotification>();
+		Date adjusted = DateUtils.addHours(new Date(), timezoneDiff);	
 		for (Notification n:notifs) {
-			JSONNotification jn = new JSONNotification();
-			jn.setCreateDate(n.getCreateDate());
+			JSONNotification jn = new JSONNotification();			
+			jn.setTimeWhen(TimeUtil.prettyTime(adjusted, n.getNotifyDate()));
 			jn.setEntityClass(n.getEntityClass().getSimpleName());
 			jn.setEntityId(n.getEntityId());
 			jn.setMedium(n.getMedium());

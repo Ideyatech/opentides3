@@ -3,8 +3,6 @@
  */
 package org.opentides.bean;
 
-import java.util.Date;
-
 import org.opentides.web.json.Views;
 
 import com.fasterxml.jackson.annotation.JsonView;
@@ -16,7 +14,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 public class JSONNotification {
 
 	@JsonView(Views.SearchView.class)    
-	private Date createDate;
+	private String timeWhen;
 	
 	/**
 	 * Message to be displayed for notification
@@ -42,12 +40,12 @@ public class JSONNotification {
 	@JsonView(Views.SearchView.class)    
     private String entityClass;
 
-	public Date getCreateDate() {
-		return createDate;
+	public String getTimeWhen() {
+		return timeWhen;
 	}
 
-	public void setCreateDate(Date createDate) {
-		this.createDate = createDate;
+	public void setTimeWhen(String timeWhen) {
+		this.timeWhen = timeWhen;
 	}
 
 	public String getMessage() {
