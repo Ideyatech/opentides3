@@ -70,12 +70,15 @@
 		<div class="fileupload-buttonbar">
 			<div class="fileupload-buttons">
 				<span class="fileinput-button"> <c:set var="control" value="" />
-					<c:if test="${not empty imageOnly}">
-						<c:set var="control" value="accepts=\"image/*\"" />
+					<c:if test="${imageOnly}">
+						<c:set var="control" value="accept=\"image/*\"" />
+					</c:if>
+					<c:if test="${isMultiple}">
+						<c:set var="multiples" value="multiple=\"multiple\"" />
 					</c:if>
 					<input type="button" value='Browse...' class="browse-button-dummy" />
 					<input id="${id}" ${attrs} type="file" name="attachments"
-					${control} multiple style="display: none;">
+					${control} ${multiples } style="display: none;">
 				</span>
 				<span class="fileupload-loading"></span>
 			</div>
