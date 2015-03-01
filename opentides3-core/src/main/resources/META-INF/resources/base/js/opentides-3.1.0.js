@@ -515,6 +515,7 @@ var opentides3 = (function() {
 					.each(function() {
 				var $this = $(this),
 					name = $this.attr('name');
+				// special handler for file upload
 				if(name && $this.is(":hidden") &&  $this.hasClass("ot-files")) {
 					// clean up first - remove the rows as well as the hidden ids
 					$("table.ot-attachment-list tbody").empty();
@@ -522,18 +523,26 @@ var opentides3 = (function() {
 						return this.id;
 					}).remove();
 					// handler for photo or file upload
-					var fileIds = opentides3.getValue(json, name);
+					var fileIds = opentides3.getValue(json, name.replace("__",""));
 					if(fileIds.length > 0) {
 						for(var i = 0; i < fileIds.length; i++) {
 							if(fileIds[i].id !== undefined) {
 								var filename = fileIds[i].filename != null ? fileIds[i].filename : fileIds[i].originalFileName; 
 								var data = {"attachmentId" : fileIds[i].id, "attachmentName" : filename}, 
-									tableRow = opentides3.template($('script#filesForDownload').html(), data),
-									hiddenRow = opentides3.template($('script#attachmentIdsForUpload').html(), data);
-								
-								$this.after(hiddenRow);
+									tableRow = opentides3.template($('script#filesForDownload').html(), data);								
 								$("table.ot-attachment-list tbody").append(tableRow);
 							} 
+						}						
+					}
+					
+					if ($(".ot-upload-file").data("multiple") == false) {
+						var len = $("#images-ot-attachment-list .files tr").length;
+						if (len > 0) {
+							// there is image, disable the button
+							$('.browse-button-dummy').prop('disabled', true);
+						} else {
+							$('.browse-button-dummy').prop('disabled', false);
+							
 						}
 					}
 				} else if(name){
