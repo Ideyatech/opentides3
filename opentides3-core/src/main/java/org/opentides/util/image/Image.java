@@ -74,8 +74,9 @@ public class Image {
 
 	public Image getResizedToWidth(int width) {
 		if (width > getWidth()) {
-			throw new IllegalArgumentException("Width " + width
+			_log.warn("Width " + width
 					+ " exceeds width of image, which is " + getWidth());
+			width=getWidth();
 		}
 		int nHeight = width * img.getHeight() / img.getWidth();
 		MultiStepRescaleOp rescale = new MultiStepRescaleOp(width, nHeight);

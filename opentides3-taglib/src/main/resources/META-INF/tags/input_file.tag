@@ -53,16 +53,16 @@
 <c:if test="${not empty dropZone}">
 	<c:set var="hasDropZone" value="${dropZone}" />
 </c:if>
-<div class="control-group ot-upload-file">
+<div class="control-group ot-upload-file" data-multiple="${isMultiple}">
 	<input type="hidden" name="id" value="" id="entity-id"/>
 	
 	<%-- Container of all image IDs --%>
 	<div id="${id}-attachmentIds" style="display: none;">
-		<input class="ot-files" type="hidden" name="${fName }"/>
+		<input class="ot-files" type="hidden" name="${fName}__" />
 	</div>
 	
 	<script id="attachmentIdsForUpload" type="text/template">
-		<input id="hidden-attachment-{{attachmentId}}" class="ot-files" type="hidden" name="${fName}" value="{{attachmentId}}"/>
+		<input class="ot-files" type="hidden" name="${fName}__" value="{{attachmentId}}/>
 	</script>
 	
 	<label class="control-label"> <spring:message code="${label}" text="Files" /></label>
@@ -105,7 +105,7 @@
 						<td style="width: 20%">
 							<input type="hidden" id="fileUploadId"
 								class="files" value="${file.id }" />
-							<input type="hidden" class="fileList" value="${file.id }" />
+							<input type="hidden" class="fileList" value="${file.id }"/>
 							<a id="remove-file-id-${file.id }" class="btn btn-small btn-danger remove-attachment">
 								<i class="icon-remove"></i>
 							</a>
@@ -159,6 +159,17 @@
             return (bytes / 1000).toFixed(2) + ' KB';
         }
 		
+		if ($(".ot-upload-file").data("multiple") == false) {
+			var len = $("#images-ot-attachment-list .files tr").length;
+			if (len > 0) {
+				// there is image, disable the button
+				$('.browse-button-dummy').prop('disabled', true);
+			} else {
+				$('.browse-button-dummy').prop('disabled', false);
+				
+			}
+		}
+	
 		$('#${id}').fileupload({
 			acceptFileTypes : /(\.|\/)(gif|jpe?g|png)$/i,
 			dataType        : 'json',
@@ -182,9 +193,6 @@
 	        },
 	        done : function(e, data) {
 	        	if(data.result.attachmentId){
-	        		<c:if test="${not isMultiple}">
-				    	$('div#${id}-attachmentIds').empty();
-		        	</c:if>
 				    
 		        	var attachmentId = $.trim(opentides3.template($('script#attachmentIdsForUpload').html(), data.result));
 		        	$('div#${id}-attachmentIds').append(attachmentId);
