@@ -255,7 +255,7 @@ public abstract class BaseCrudController<T extends BaseEntity> implements Initia
 	 * 			command - the command object<br />
 	 * 			messages - list of MessageResponse
 	 */
-	@RequestMapping(method = RequestMethod.POST, produces = "application/json")
+	@RequestMapping(value = {"", "0"}, method = RequestMethod.POST, produces = "application/json")
 	@ResponseView(Views.FormView.class)
 	public final @ResponseBody
 	Map<String, Object> create(@FormBind(name = "formCommand") T command,
