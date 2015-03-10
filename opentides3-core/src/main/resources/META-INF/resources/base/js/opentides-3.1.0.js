@@ -734,7 +734,7 @@ var opentides3 = (function() {
 								}							
 							} else {
 								// initial page load, just refresh the screen
-								window.location.reload();
+								// window.location.reload();
 							}
 						});
 					}
