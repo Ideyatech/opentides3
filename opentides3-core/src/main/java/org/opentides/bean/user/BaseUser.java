@@ -252,6 +252,7 @@ public class BaseUser extends BaseEntity implements ImageUploadable {
 	 * @return true if user has the given permission, false otherwise
 	 */
 	public boolean hasPermission(String permission) {
+		if (groups==null) return false;
 		for (UserGroup group : groups) {
 			for (UserAuthority userRole : group.getAuthorities()) {
 				if (permission.equals(userRole.getAuthority())) {
