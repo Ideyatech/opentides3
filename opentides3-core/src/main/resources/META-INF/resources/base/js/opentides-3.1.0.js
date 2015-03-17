@@ -562,15 +562,15 @@ var opentides3 = (function() {
 				var value = opentides3.getValue(json, name);
 				if (typeof (value) === 'boolean') {
 					if (value == true)
-						$(this).prop('checked', true);
+						$(this).prop('checked', true).trigger("change");
 					else
-						$(this).prop('checked', false);
+						$(this).prop('checked', false).trigger("change");
 				} else {
 					var normValue = normalizeValue(value, true);
 					if (jQuery.inArray($(this).attr('value'), normValue) >= 0)
-						$(this).prop('checked', true);
+						$(this).prop('checked', true).trigger("change");
 					else
-						$(this).prop('checked', false);
+						$(this).prop('checked', false).trigger("change");
 				}
 			});
 
@@ -580,7 +580,7 @@ var opentides3 = (function() {
 				if ($(this).attr('value') == prime)
 					$(this).prop('checked', true).trigger('change');
 				else
-					$(this).prop('checked', false);
+					$(this).prop('checked', false).trigger("change");
 
 			});
 
