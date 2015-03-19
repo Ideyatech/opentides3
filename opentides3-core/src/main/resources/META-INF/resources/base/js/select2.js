@@ -2889,6 +2889,19 @@ the specific language governing permissions and limitations under the Apache Lic
                 return;
             }
 
+            // fix for combobox, -- remove deselected object from the select2 data
+            var selectedObjects = this.data();
+            for(var i in selectedObjects) {
+              var selectedObj = selectedObjects[i];
+
+              // if unselected is the same with this entry
+              if(data.id === selectedObj.id) {
+                selectedObjects.splice(i, 1);
+                this.data(selectedObjects);
+                break;
+              }
+            }
+            
             this.opts.element.trigger({ type: "select2-removed", val: this.id(data), choice: data });
             this.triggerChange({ removed: data });
         },
