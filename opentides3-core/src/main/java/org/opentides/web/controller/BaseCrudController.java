@@ -255,7 +255,7 @@ public abstract class BaseCrudController<T extends BaseEntity> implements Initia
 	 * 			command - the command object<br />
 	 * 			messages - list of MessageResponse
 	 */
-	@RequestMapping(method = RequestMethod.POST, produces = "application/json")
+	@RequestMapping(value = {"", "0"}, method = RequestMethod.POST, produces = "application/json")
 	@ResponseView(Views.FormView.class)
 	public final @ResponseBody
 	Map<String, Object> create(@FormBind(name = "formCommand") T command,
@@ -296,6 +296,8 @@ public abstract class BaseCrudController<T extends BaseEntity> implements Initia
 			HttpServletResponse response) {
 		Map<String, Object> model = new HashMap<String, Object>();
 		List<MessageResponse> messages = new ArrayList<MessageResponse>();
+		if (command.getId() == null) 
+			command.setId(id);
 		updateTx(command, bindingResult, uiModel, request, response);
 		messages.addAll(CrudUtil.buildSuccessMessage(command, "update",
 				request.getLocale(), messageSource));
@@ -795,7 +797,7 @@ public abstract class BaseCrudController<T extends BaseEntity> implements Initia
 	 * 
 	 * @param command
 	 * @param request
-	 * @return SSearchResults
+	 * @return SearchResults
 	 */
 	protected final SearchResults<T> search(T command, HttpServletRequest request) {
 		int page = StringUtil.convertToInt(request.getParameter("p"), 1);

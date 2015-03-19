@@ -97,15 +97,18 @@ public class FormBindMethodProcessor implements HandlerMethodArgumentResolver {
 				throw new BindException(binder.getBindingResult());
 			}			
 			String method = request.getMethod().toLowerCase();
+			
+			// id should be the last segment of the uri
+			String uri = request.getRequestURI();
+			String sid = uri.substring(uri.lastIndexOf("/")+1);
+			Long id = StringUtil.convertToLong(sid, 0);
 
 			// if target extends BaseEntity and for update, link target to database record
-			if ( "put".equals(method) &&
+			if ( ("put".equals(method) || "post".equals(method)) &&
+					id > 0 &&
 					BaseEntity.class.isAssignableFrom(parameter.getParameterType()) ) {
 				// now retrieve record from database for updating
 				Method updateForm = CacheUtil.getUpdateFormBindMethod(clazz);
-				// id should be the last segment of the uri
-				String uri = request.getRequestURI();
-				String sid = uri.substring(uri.lastIndexOf("/")+1);
 
 				BaseEntity record = null;
 				if (updateForm==null) {
