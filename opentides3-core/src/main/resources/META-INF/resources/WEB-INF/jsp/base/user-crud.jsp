@@ -180,7 +180,7 @@
 		</tr>
 		<tr>
 			<td><spring:message code="label.user.last-name"/></td>
-			<td><tides:display modelAttribute="formCommand" path="lastName" /</td>
+			<td><tides:display modelAttribute="formCommand" path="lastName" /></td>
 		</tr>
 		<tr>
 			<td><spring:message code="label.user.email"/></td>

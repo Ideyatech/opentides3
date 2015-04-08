@@ -24,7 +24,7 @@ import ${package}.bean.Clan;
 import ${package}.bean.Ninja;
 import org.opentides.annotation.Auditable;
 import org.opentides.annotation.PrimaryField;
-import org.opentides.annotation.field.CheckBox;
+import org.opentides.annotation.field.Checkbox;
 import org.opentides.annotation.field.DatePicker;
 import org.opentides.annotation.field.DisplayOnly;
 import org.opentides.annotation.field.TextArea;
@@ -62,7 +62,7 @@ private static final long serialVersionUID = -4142599915292096152L;
 	// Label: specified
 	// Validation: required
 	// Use: crud, search criteria
-	@Validation({"required", "maxLength=128"})
+	@Validation(isRequired = true, maxLength = 128)
 	@Column(name = "FIRST_NAME", nullable=false)
 	@JsonView(Views.FormView.class)
 	@TextField(label="Name", isSearchCriteria=true)
@@ -72,7 +72,7 @@ private static final long serialVersionUID = -4142599915292096152L;
 	// Label: default
 	// Validation: required
 	// Use: crud, search criteria
-	@Validation({"required"})
+	@Validation(isRequired = true)
 	@TextField(isSearchCriteria=true)
 	@Column(name = "LAST_NAME", nullable=false)
 	@JsonView(Views.FormView.class)
@@ -82,7 +82,7 @@ private static final long serialVersionUID = -4142599915292096152L;
 	// Label: specified
 	// Validation: email, required
 	// Use: crud, search criteria, search results
-	@Validation({"required", "email"})
+	@Validation(isRequired = true, isEmailFormat = true)
 	@TextField(label="Email Address", isSearchCriteria=true, isSearchResult=true)
 	@Column(name="EMAIL", nullable=false)	
 	@JsonView(Views.SearchView.class)
@@ -96,7 +96,7 @@ private static final long serialVersionUID = -4142599915292096152L;
 	@TextArea
 	private String description;
 	
-	@Validation({"number","min=17","max=65"})
+	@Validation(isNumberFormat = true, minAllowValue = 17, maxAllowValue = 65)
 	@JsonView(Views.SearchView.class)
 	private Integer age;
 	
@@ -111,7 +111,7 @@ private static final long serialVersionUID = -4142599915292096152L;
 	// Label: specified
 	// Validation: today or past date
 	// Use: crud
-	@Validation({"required","past"})
+	@Validation(isRequired = true)
 	@DatePicker
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonView(Views.SearchView.class)
@@ -121,7 +121,7 @@ private static final long serialVersionUID = -4142599915292096152L;
 	// Validation: none
 	// Use: crud
 	// Secured to authz only
-	@CheckBox
+	@Checkbox
 	//@Secure
 	@JsonView(Views.SearchView.class)
 	private Boolean active;
@@ -167,7 +167,7 @@ private static final long serialVersionUID = -4142599915292096152L;
 	
 	// Radiobutton
 	// Searchable
-	@Validation({"required"})
+	@Validation(isRequired = true)
 	@JsonView(Views.FormView.class)
 	private String gender;
 	
