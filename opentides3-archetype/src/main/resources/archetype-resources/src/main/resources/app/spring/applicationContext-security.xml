@@ -6,7 +6,7 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:sec="http://www.springframework.org/schema/security" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
-                        http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+                        http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd">
 
 	<sec:http pattern="/css/**" security="none"/>
 	<sec:http pattern="/js/**" security="none"/>
@@ -84,8 +84,7 @@
 		class="org.springframework.security.web.access.expression.WebExpressionVoter" />
 
 	<bean id="passwordEncoder"
-		class="org.springframework.security.authentication.encoding.ShaPasswordEncoder">
-		<constructor-arg value="256" />
+		class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder">
 	</bean>
 
 	<bean id="authenticationService"

@@ -139,9 +139,19 @@
 		class="org.springframework.web.multipart.commons.CommonsMultipartResolver" />
 
 	<!-- Register Application Listeners -->
+	
+	<bean id="startupCommand" class="java.util.ArrayList" >
+		<constructor-arg>
+			<list>
+				<bean class="org.opentides.listener.command.DBEvolveCommand" />
+			</list>
+		</constructor-arg>
+	</bean>
+	
 	<!-- Application Startup Listener -->
 	<bean id="startupListener" class="org.opentides.listener.ApplicationStartupListener">
-		<property name="propertyName" value="${symbol_dollar}{property.name}" />
+		<property name="propertyName" value="${property.name}" />
+		<property name="startupCommand" ref="startupCommand" />
 	</bean>
 
 	<!-- Add system properties through spring XML configuration. -->
