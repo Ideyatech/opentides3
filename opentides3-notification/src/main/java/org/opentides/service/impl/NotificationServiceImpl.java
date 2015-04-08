@@ -151,13 +151,17 @@ implements NotificationService {
 		}
 	}
 	
+	public void notify(String userId) {
+		notify(userId, 0);
+	}
+	
 	public void notify(String userId, int timezoneDiff) {
 	    Broadcaster b = BroadcasterFactory.getDefault().lookup(userId);
 	    ObjectMapper mapper = new ObjectMapper();
 	    if (b!=null) {
 	    	String jsonString;
 			try {
-				jsonString = mapper.writeValueAsString(buildNotification(new Long(userId), timezoneDiff));
+				jsonString = mapper.writeValueAsString(buildNotification(new Long(userId), timezoneDiff, "alert"));
 		        b.broadcast(jsonString);
 			} catch (NumberFormatException e) {
 				_log.error("Failed to convert to JSON.", e);
@@ -167,10 +171,6 @@ implements NotificationService {
 	    }
 	}
 
-	public void notify(String userId) {
-		notify(userId, 0);
-	}
-	
 	@Override
 	public String buildMessage(Event event, Object[] params) {				
 		return messageSource.getMessage(event.getMessageCode(), params, 
@@ -198,15 +198,15 @@ implements NotificationService {
 
 	@Override
 	public Map<String, Object> getPopupNotification(long userId) {
-		return buildNotification(userId, 0);
+		return buildNotification(userId, 0, "");
 	}
 	
 	@Override	
 	public Map<String, Object> getPopupNotification(long userId, int timezoneDiff) {
-		return buildNotification(userId, timezoneDiff);
+		return buildNotification(userId, timezoneDiff, "");
 	}
-
-	private Map<String, Object> buildNotification(Long userId, int timezoneDiff) {
+	
+	private Map<String, Object> buildNotification(Long userId, int timezoneDiff, String mode) {
 		// Let's manually build the json
 		List<Notification> notifs = null;
 		long count = 0;
@@ -228,6 +228,7 @@ implements NotificationService {
 			notifications.add(jn);
 		}		
 		result.put("notifications", notifications);
+		result.put("mode", mode);
 		return result; 
 	}
 	
