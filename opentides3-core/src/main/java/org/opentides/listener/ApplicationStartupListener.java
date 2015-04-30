@@ -67,6 +67,7 @@ public class ApplicationStartupListener implements ApplicationListener<ContextRe
 	 * ContextStartedEvent is not triggered properly. So, we are using
 	 * ContextRefreshedEvent with a static indicator.
 	 */
+	@Override
 	public void onApplicationEvent(ContextRefreshedEvent event) {
 		if (!applicationStarted) {
 			contextInitialized(event);

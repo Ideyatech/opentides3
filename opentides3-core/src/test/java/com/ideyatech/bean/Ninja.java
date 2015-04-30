@@ -23,7 +23,6 @@ import org.opentides.annotation.PrimaryField;
 import org.opentides.annotation.field.Checkbox;
 import org.opentides.annotation.field.DatePicker;
 import org.opentides.annotation.field.DisplayOnly;
-import org.opentides.annotation.field.MultiRecord;
 import org.opentides.annotation.field.TextArea;
 import org.opentides.annotation.field.TextField;
 import org.opentides.annotation.field.Validation;
@@ -490,6 +489,7 @@ private static final long serialVersionUID = -4142599915292096152L;
 		this.image = image;
 	}
 	
+	@Override
 	public void addImage(ImageInfo imageInfo){
 		synchronized (imageInfo) {
 			if (images == null){
