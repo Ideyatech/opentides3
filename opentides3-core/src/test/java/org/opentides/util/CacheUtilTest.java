@@ -18,7 +18,8 @@
  */
 package org.opentides.util;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,7 +66,7 @@ public class CacheUtilTest {
 	private List<AuditableField> getNinjaExpectedAuditableFields() {
 		List<AuditableField> auditableFields = new ArrayList<>();
 		auditableFields.add(new AuditableField("id"));
-		auditableFields.add(new AuditableField("tenantId"));		
+		// auditableFields.add(new AuditableField("tenantId"));
 		auditableFields.add(new AuditableField("firstName"));
 		auditableFields.add(new AuditableField("lastName"));
 		auditableFields.add(new AuditableField("email"));
@@ -91,7 +92,7 @@ public class CacheUtilTest {
 	private List<AuditableField> getSystemCodesExpectedAuditableFields() {
 		List<AuditableField> auditableFields = new ArrayList<>();
 		auditableFields.add(new AuditableField("id"));
-		auditableFields.add(new AuditableField("tenantId"));		
+		// auditableFields.add(new AuditableField("tenantId"));
 		auditableFields.add(new AuditableField("key"));
 		auditableFields.add(new AuditableField("value"));
 		auditableFields.add(new AuditableField("category"));
@@ -131,7 +132,7 @@ public class CacheUtilTest {
 		persistentFields.add("createDate");
 		persistentFields.add("updateDate");
 		persistentFields.add("createdBy");
-		persistentFields.add("tenantId");
+		// persistentFields.add("tenantId");
 		persistentFields.add("version");
 		persistentFields.add("firstName");
 		persistentFields.add("lastName");
@@ -168,6 +169,7 @@ public class CacheUtilTest {
 		expected.add("firstName");
 		expected.add("lastName");
 		expected.add("emailAddress");
+		expected.add("credential.username");
 		assertEquals(expected, CacheUtil.getSearchableFields(baseUser));
 	}
 

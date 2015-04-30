@@ -37,7 +37,7 @@ import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
  * @author gino
  *
  */
-@ContextConfiguration(locations = {"classpath:applicationContext-service-test.xml"})
+@ContextConfiguration(locations = { "classpath:applicationContext-service-test.xml" })
 public class BaseCrudServiceImplTest extends AbstractJUnit4SpringContextTests {
 	
 	@Autowired
@@ -103,9 +103,10 @@ public class BaseCrudServiceImplTest extends AbstractJUnit4SpringContextTests {
 		SecurityContextHolder.getContext().setAuthentication(getAuthentication());
 		SystemCodes sample = new SystemCodes();
 		sample.setCategory("CATEGORY_1");
-		when(systemCodesDao.findByExample(sample)).thenReturn(getExpectedListOfSystemCodes());
+		when(systemCodesDao.findByExample(sample, false)).thenReturn(
+				getExpectedListOfSystemCodes());
 		List<SystemCodes> actual = systemCodesService.findByExample(sample);
-		verify(systemCodesDao).findByExample(sample);
+		verify(systemCodesDao).findByExample(sample, false);
 		assertEquals(getExpectedListOfSystemCodes(), actual);
 	}
 	

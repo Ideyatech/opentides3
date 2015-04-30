@@ -21,4 +21,5 @@
 	<!-- Load only the service that will be tested -->
 	<bean id="systemCodesService" class="org.opentides.service.impl.SystemCodesServiceImpl"/>
 	
+	<util:properties id="applicationSettings" location="classpath:application-settings-test.properties" />
 </beans>

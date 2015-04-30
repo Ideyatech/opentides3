@@ -11,6 +11,7 @@ package org.opentides.util;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -68,16 +69,16 @@ public class CrudUtilTest {
 		SystemCodes samesc = new SystemCodes("categoryold","keyold","value");	
 		SystemCodes emptysc = new SystemCodes("categorynew","keynew","");
 				
-		Assert.assertEquals("key,category",
+		Assert.assertEquals(Arrays.asList("key", "category"),
 				CrudUtil.getUpdatedFields(oldsc, newsc));
-		Assert.assertEquals("value",
+		Assert.assertEquals(Arrays.asList("value"),
 				CrudUtil.getUpdatedFields(newsc, emptysc));
-		Assert.assertEquals("value",
+		Assert.assertEquals(Arrays.asList("value"),
 				CrudUtil.getUpdatedFields(emptysc, newsc));		
-		Assert.assertEquals("",
+		Assert.assertEquals(new ArrayList<String>(),
 				CrudUtil.getUpdatedFields(oldsc, samesc));
 		newsc.setNumberValue(2l);
-		Assert.assertEquals("key,category,numberValue",
+		Assert.assertEquals(Arrays.asList("key", "category", "numberValue"),
 				CrudUtil.getUpdatedFields(oldsc, newsc));
 	}
 	
@@ -98,11 +99,11 @@ public class CrudUtilTest {
 		oldUser.setFavorites(oldFaves);
 		newUser.setFavorites(oldFaves);
 		
-		Assert.assertEquals( "",
+		Assert.assertEquals(new ArrayList<String>(),
 				CrudUtil.getUpdatedFields(oldUser, newUser));
 		
 		newUser.setFavorites(newFaves);
-		Assert.assertEquals( "favorites",
+		Assert.assertEquals(Arrays.asList("favorites"),
 				CrudUtil.getUpdatedFields(oldUser, newUser));
 	}
 	 

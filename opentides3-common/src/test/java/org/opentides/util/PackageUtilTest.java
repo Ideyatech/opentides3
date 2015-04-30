@@ -22,6 +22,8 @@
 package org.opentides.util;
 
 
+import java.io.File;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -36,15 +38,24 @@ public class PackageUtilTest {
 	public void testToPackageName() {
 		Assert.assertEquals(null, PackageUtil.toPackageName(null));
 		Assert.assertEquals("", PackageUtil.toPackageName(""));
-		Assert.assertEquals("template.org.ideyatech.model", PackageUtil.toPackageName("template/org/ideyatech/model"));
+		Assert.assertEquals(
+				"template.org.ideyatech.model",
+				PackageUtil.toPackageName("template" + File.separator + "org"
+						+ File.separator + "ideyatech" + File.separator
+						+ "model"));
 	}
 	
 	@Test
 	public void testToFolderName() {
 		Assert.assertEquals(null, PackageUtil.toFolderName(null));
 		Assert.assertEquals("", PackageUtil.toFolderName(""));
-		Assert.assertEquals("org/opentides/bean", PackageUtil.toFolderName("org.opentides.bean"));
-		Assert.assertEquals("org/opentides/bean/SystemCodes.java", PackageUtil.toFolderName("org.opentides.bean.SystemCodes.java"));
+		Assert.assertEquals("org" + File.separator + "opentides"
+				+ File.separator + "bean",
+				PackageUtil.toFolderName("org.opentides.bean"));
+		Assert.assertEquals(
+				"org" + File.separator + "opentides" + File.separator + "bean"
+						+ File.separator + "SystemCodes.java",
+				PackageUtil.toFolderName("org.opentides.bean.SystemCodes.java"));
 	}
 	
 }
