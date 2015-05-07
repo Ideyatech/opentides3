@@ -3,6 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <%@ attribute name="userNamePlaceHolder" required="false" type="java.lang.String" %>
+<%@ attribute name="passwordPlaceHolder" required="false" type="java.lang.String" %>
 <%@ attribute name="loginLabel" required="false" type="java.lang.String" %>
 <%@ attribute name="rememberMeLabel" required="false" type="java.lang.String" %>
 <%@ attribute name="cssClass" required="false" type="java.lang.String" %>
@@ -36,7 +37,7 @@
 		<input class="input-block-level" type="text" name="j_username" placeholder='<spring:message code="${userNamePlaceHolder}" text="${userNamePlaceHolder}"/>' autofocus="autofocus">
 	</div>
 	<div class="control-group">
-		<input class="input-block-level" type="password" name="j_password" placeholder="Password">
+		<input class="input-block-level" type="password" name="j_password" placeholder='<spring:message code="${passwordPlaceHolder}" text="${passwordPlaceHolder}"/>'>
 	</div>
 	
 	<div class="control-group">

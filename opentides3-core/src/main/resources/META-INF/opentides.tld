@@ -40,7 +40,11 @@
 	 		<name>userNamePlaceHolder</name>
 	 		<required>false</required>
 	 	</attribute>
-	 	<attribute>
+		 <attribute>
+			 <name>passwordPlaceHolder</name>
+			 <required>false</required>
+		 </attribute>
+		 <attribute>
 	 		<name>loginLabel</name>
 	 		<required>false</required>
 	 	</attribute>
