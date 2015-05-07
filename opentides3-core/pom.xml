@@ -7,11 +7,9 @@
 	<name>Opentides 3 Core</name>
 
 	<properties>
-		<org.springframework-version>4.1.2.RELEASE</org.springframework-version>
-		<org.springframework.security-version>3.2.5.RELEASE</org.springframework.security-version>
 		<org.aspectj-version>1.6.10</org.aspectj-version>
-		<org.slf4j-version>1.6.6</org.slf4j-version>
-		<log4j-version>1.2.15</log4j-version>
+		<org.slf4j-version>1.7.12</org.slf4j-version>
+		<log4j-version>1.2.17</log4j-version>
 		<dom4j-version>1.6.1</dom4j-version>
 		<mysql-connector-java-version>5.1.21</mysql-connector-java-version>
 		<aspectj-version>1.7.1</aspectj-version>
