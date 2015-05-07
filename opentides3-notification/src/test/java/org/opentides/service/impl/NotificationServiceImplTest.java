@@ -1,20 +1,25 @@
 package org.opentides.service.impl;
 
-import junit.framework.Assert;
+import java.util.Locale;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.opentides.bean.Event;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.context.MessageSource;
 
-@ContextConfiguration(locations = {"classpath:applicationContext-notification-test.xml"})
 public class NotificationServiceImplTest {
 	
 	@InjectMocks
-	private NotificationService notificationService = new NotificationServiceImpl();
-		
+	private final NotificationServiceImpl notificationService = new NotificationServiceImpl();
+
+	@Mock
+	private MessageSource messageSource;
+
 	@Before
 	public void init() {
 		MockitoAnnotations.initMocks(this);
@@ -22,9 +27,21 @@ public class NotificationServiceImplTest {
 
 	@Test
 	public void testBuildMessage() {
+		String messageCode = "messages.test";
+		Object[] params = new Object[] { "one", "two", "three" };
+
+		Mockito.when(
+				messageSource.getMessage(messageCode, params,
+						Locale.getDefault())).thenReturn(
+				"This is one for testing two. three.");
+
 		Event event = new Event();
-		event.setMessageCode("message.test");
-		String msg = notificationService.buildMessage(event, new Object[] {"one","two","three", 4});
-		Assert.assertEquals("Displaying one to two of three 4", msg);
+		event.setMessageCode(messageCode);
+		String msg = notificationService.buildMessage(event, params);
+
+		Assert.assertEquals("This is one for testing two. three.", msg);
+
+		Mockito.verify(messageSource).getMessage(messageCode, params,
+				Locale.getDefault());
 	}
 }
