@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:aop="http://www.springframework.org/schema/aop" 
-	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:p="http://www.springframework.org/schema/p"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
-	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:util="http://www.springframework.org/schema/util" xmlns:tx="http://www.springframework.org/schema/tx"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
 						http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd                 
 						http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd                 
 						http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
 						http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd
 						http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd">
-						
+
 	<bean id="propertyConfigurer"
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<property name="location">
@@ -22,12 +21,11 @@
 	<bean id="entityManagerFactory"
 		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
 		<property name="dataSource" ref="dataSource" />
-		<property name="persistenceXmlLocation" value="classpath:META-INF/persistence-test.xml"/>
+		<property name="persistenceXmlLocation" value="classpath:META-INF/persistence-test.xml" />
 		<property name="persistenceUnitName" value="testPU" />
-		<property name="packagesToScan" value="com.ideyatech.bean,org.opentides.bean"/>
+		<property name="packagesToScan" value="com.ideyatech.bean,org.opentides.bean" />
 		<property name="jpaVendorAdapter">
-			<bean
-				class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
 				<property name="showSql" value="true" />
 				<property name="generateDdl" value="true" />
 			</bean>
@@ -39,15 +37,12 @@
 			</props>
 		</property>
 	</bean>
-	
-	<!-- <bean id="dataSource"
-		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
-		<property name="url" value="jdbc:mysql://localhost/opentidestest" />
-		<property name="username" value="opentides3" />
-		<property name="password" value="password" />
-	</bean> -->
-	
+
+	<!-- <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource"> 
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" /> <property 
+		name="url" value="jdbc:mysql://localhost/opentidestest" /> <property name="username" 
+		value="opentides3" /> <property name="password" value="password" /> </bean> -->
+
 	<bean id="dataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="org.hsqldb.jdbcDriver" />
@@ -55,22 +50,22 @@
 		<property name="username" value="sa" />
 		<property name="password" value="" />
 	</bean>
-	
-	<bean id="databaseUtil"
-		class="org.opentides.util.DatabaseUtil" autowire="byName">
+
+	<bean id="databaseUtil" class="org.opentides.util.DatabaseUtil"
+		autowire="byName">
 		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
 		<property name="url" value="jdbc:mysql://localhost/opentidestest" />
 		<property name="username" value="opentides3" />
 		<property name="password" value="password" />
 		<property name="jndiName" value="opentides3" />
-		<property name="persistenceUnitName" value="testPU"/>
-		<property name="persistenceFile" value="META-INF/persistence-test.xml"/>
+		<property name="persistenceUnitName" value="testPU" />
+		<property name="persistenceFile" value="META-INF/persistence-test.xml" />
 	</bean>
-	
+
 	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
 		<property name="entityManagerFactory" ref="entityManagerFactory" />
 	</bean>
-	
+
 	<bean id="jpqlProperties"
 		class="org.springframework.beans.factory.config.PropertiesFactoryBean">
 		<property name="locations">
@@ -79,47 +74,54 @@
 			</list>
 		</property>
 	</bean>
-	
-	<bean class="org.mockito.Mockito" id="mailingService" name="mailingService" factory-method="mock" >
-		<constructor-arg value="org.opentides.service.MailingService" name="classToMock">
+
+	<bean class="org.mockito.Mockito" id="mailingService" name="mailingService"
+		factory-method="mock">
+		<constructor-arg value="org.opentides.service.MailingService"
+			name="classToMock">
 		</constructor-arg>
 	</bean>
-	
-	<bean class="org.mockito.Mockito" id="userGroupService" name="userGroupService" factory-method="mock" >
-		<constructor-arg value="org.opentides.service.UserGroupService" name="classToMock">
+
+	<bean class="org.mockito.Mockito" id="userGroupService" name="userGroupService"
+		factory-method="mock">
+		<constructor-arg value="org.opentides.service.UserGroupService"
+			name="classToMock">
 		</constructor-arg>
 	</bean>
-	
-	<bean class="org.mockito.Mockito" id="sessionRegistry" name="sessionRegistry" factory-method="mock" >
-		<constructor-arg value="org.springframework.security.core.session.SessionRegistry" name="classToMock">
+
+	<bean class="org.mockito.Mockito" id="sessionRegistry" name="sessionRegistry"
+		factory-method="mock">
+		<constructor-arg
+			value="org.springframework.security.core.session.SessionRegistry"
+			name="classToMock">
 		</constructor-arg>
 	</bean>
-	
+
 	<bean id="passwordEncoder"
-		class="org.springframework.security.authentication.encoding.ShaPasswordEncoder">
-		<constructor-arg value="256" />
+		class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder">
 	</bean>
-	
-	<context:annotation-config /> 
+
+	<context:annotation-config />
 	<context:component-scan base-package="com.ideyatech.dao.impl" />
-	
+
 	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
-		<property name="dataSource" ref="dataSource"/>
+		<property name="dataSource" ref="dataSource" />
 	</bean>
-	
-	<!-- This will load only the DAOs needed for testing  -->
-	<context:component-scan base-package="org.opentides.dao.impl" >
-		<context:include-filter type="regex" expression="org.opentides.dao.impl.UserDaoJpaImpl.*"/>
-		<context:include-filter type="regex" expression="org.opentides.dao.impl.WidgetDaoJpaImpl.*"/>
-		<context:include-filter type="regex" expression="org.opentides.dao.impl.UserWidgetsDaoJpaImpl.*"/>
+
+	<!-- This will load only the DAOs needed for testing -->
+	<context:component-scan base-package="org.opentides.dao.impl">
+		<context:include-filter type="regex"
+			expression="org.opentides.dao.impl.UserDaoJpaImpl.*" />
+		<context:include-filter type="regex"
+			expression="org.opentides.dao.impl.WidgetDaoJpaImpl.*" />
+		<context:include-filter type="regex"
+			expression="org.opentides.dao.impl.UserWidgetsDaoJpaImpl.*" />
 	</context:component-scan>
-	
-	<bean class="org.opentides.service.impl.UserServiceImpl" id="userService"/>
-	
-	<!-- 
-		For testing AuthenticationDaoJdbcImpl using an actual MySQL database.
-		The configuration is the same as the one found in applicationContext-security.xml 
-	-->
+
+	<bean class="org.opentides.service.impl.UserServiceImpl" id="userService" />
+
+	<!-- For testing AuthenticationDaoJdbcImpl using an actual MySQL database. 
+		The configuration is the same as the one found in applicationContext-security.xml -->
 	<bean id="authenticationService"
 		class="org.opentides.persistence.user.AuthenticationDaoJdbcImpl">
 		<property name="dataSource">
@@ -130,19 +132,21 @@
 			</value>
 		</property>
 		<property name="authoritiesByUsernameQuery">
-			<value>SELECT u.username,authority from USERS as u 
-					inner join USER_GROUP g on u.userid=g.user_id 
-					inner join USER_AUTHORITY a on g.group_id = a.usergroup_id
-					where u.username=?</value>
+			<value>SELECT u.username,authority from USERS as u
+				inner join USER_GROUP g on u.userid=g.user_id
+				inner join USER_AUTHORITY a on g.group_id = a.usergroup_id
+				where u.username=?
+			</value>
 		</property>
-		<property name="enableUserLockCheck" value="true"/>
-		<property name="maxAttempts" value="2"/>
-		<property name="lockoutSeconds" value="30"/>
+		<property name="enableUserLockCheck" value="true" />
+		<property name="maxAttempts" value="2" />
+		<property name="lockoutSeconds" value="30" />
 	</bean>
-	
+
 	<!-- Class to test -->
-	<tx:annotation-driven mode="proxy" order="9" proxy-target-class="true"/>
-	
+	<tx:annotation-driven mode="proxy" order="9"
+		proxy-target-class="true" />
+
 	<tx:advice id="txAdvice">
 		<tx:attributes>
 			<tx:method name="get*" read-only="true" />
@@ -152,12 +156,13 @@
 			<tx:method name="*" />
 		</tx:attributes>
 	</tx:advice>
-	
+
 	<aop:config proxy-target-class="true">
 		<aop:pointcut id="unitTestPointCut"
 			expression="execution(* org.opentides.dao.impl.*DAOTest.*(..))" />
-		<aop:advisor pointcut-ref="unitTestPointCut"
-			advice-ref="txAdvice" />
+		<aop:advisor pointcut-ref="unitTestPointCut" advice-ref="txAdvice" />
 	</aop:config>
-	
+
+	<util:properties id="applicationSettings"
+		location="classpath:application-settings-test.properties" />
 </beans>

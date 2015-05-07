@@ -35,8 +35,7 @@ public class SynchronizableInterceptorTest {
 	}
 	
 	@Test
-	public void buildUpdatetatement() {
-		SystemCodes old = new SystemCodes("category1","key1","value1");
+	public void buildUpdateStatement() {
 		SystemCodes _new = new SystemCodes("category2","key1","value2");
 		_new.setId(1l);
 		
