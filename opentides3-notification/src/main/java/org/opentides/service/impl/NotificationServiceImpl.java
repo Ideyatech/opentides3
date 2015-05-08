@@ -57,47 +57,54 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service(value = "notificationService")
 public class NotificationServiceImpl extends BaseCrudServiceImpl<Notification>
-implements NotificationService {
+		implements NotificationService {
 
-	private static Logger _log = Logger.getLogger(NotificationServiceImpl.class);
+	private static Logger _log = Logger
+			.getLogger(NotificationServiceImpl.class);
 
 	@Value("#{notificationSettings['mail.default-template']}")
 	private String mailVmTemplate;
-	
+
 	@Value("#{notificationSettings['notification.execute-limit']}")
 	private String limit;
 
 	@Autowired
 	protected MessageSource messageSource;
-	
+
 	@Autowired
 	private VelocityEngine velocityEngine;
 
 	@Autowired
 	private NotificationDao notificationDao;
-	
+
 	@Autowired
 	private EmailHandler emailHandler;
-	
-	@Autowired 
+
+	@Autowired
 	private MailingService mailingService;
-	
-//	public String buildEmailMessage() {
-//		Map<String, Object> model = new HashMap<String, Object>();
-//		
-//		String text = VelocityEngineUtils.mergeTemplateIntoString(
-//                velocityEngine, "com/dns/registration-confirmation.vm", "UTF-8", model);
-//	}
-	
+
+	// public String buildEmailMessage() {
+	// Map<String, Object> model = new HashMap<String, Object>();
+	//
+	// String text = VelocityEngineUtils.mergeTemplateIntoString(
+	// velocityEngine, "com/dns/registration-confirmation.vm", "UTF-8", model);
+	// }
+
 	@Scheduled(fixedDelayString = "${notification.delay}")
 	@Transactional
 	public void executeNotification() {
-		int max = StringUtil.convertToInt(limit,20);
-		for (int i=0; i<max; i++) {
-			List<Notification> notifications = notificationDao.findNewNotifications(1);
-			if (notifications== null || notifications.isEmpty()) 
+		int max = StringUtil.convertToInt(limit, 20);
+		for (int i = 0; i < max; i++) {
+			List<Notification> notifications = notificationDao
+					.findNewNotifications(1);
+			if (notifications == null || notifications.isEmpty())
 				break;
 			Notification n = notifications.get(0);
+
+			_log.info("Processing notification for user "
+					+ n.getRecipientUser().getId() + " with medium "
+					+ n.getMedium());
+
 			Status status = null;
 			boolean processed = false;
 			StringBuffer remarks = new StringBuffer();
@@ -106,83 +113,115 @@ implements NotificationService {
 					n.setStatus(Status.IN_PROCESS.toString());
 					notificationDao.saveEntityModel(n);
 					// send email
-					if (n.getSubject()==null) n.setSubject("");
+					if (n.getSubject() == null)
+						n.setSubject("");
 					if (StringUtil.isEmpty(n.getAttachment())) {
-						emailHandler.sendEmail(n.getRecipientReference().split(","), new String [] {n.getEmailCC()}, 
-								new String [] {}, n.getEmailReplyTo(), n.getSubject(), n.getMessage());						
+						emailHandler.sendEmail(
+								n.getRecipientReference().split(","),
+								new String[] { n.getEmailCC() },
+								new String[] {}, n.getEmailReplyTo(),
+								n.getSubject(), n.getMessage());
 					} else {
 						// send with attachment
 						File attachment = new File(n.getAttachment());
-						emailHandler.sendEmail(n.getRecipientReference().split(","), new String [] {n.getEmailCC()}, 
-								new String [] {}, n.getEmailReplyTo(), n.getSubject(), n.getMessage(), new File[] {attachment});						
+						emailHandler.sendEmail(
+								n.getRecipientReference().split(","),
+								new String[] { n.getEmailCC() },
+								new String[] {}, n.getEmailReplyTo(),
+								n.getSubject(), n.getMessage(),
+								new File[] { attachment });
 					}
 
-					status=Status.PROCESSED;
+					status = Status.PROCESSED;
 					processed = true;
-					remarks.append("Email successfully sent to "+n.getRecipientReference()+".\n");
+					remarks.append("Email successfully sent to "
+							+ n.getRecipientReference() + ".\n");
 				}
 				if ("SMS".equals(n.getMedium())) {
 					n.setStatus(Status.IN_PROCESS.toString());
 					notificationDao.saveEntityModel(n);
 					// send SMS
-//					processed = smsService.send(n.getRecipientReference(), n.getMessage());
-//					if(processed) {
-//						status = Status.PROCESSED;
-//						remarks.append("SMS sent to " + n.getRecipientReference() + "\n");
-//					} else {
-//						status = Status.FAILED;
-//					}
+					// processed = smsService.send(n.getRecipientReference(),
+					// n.getMessage());
+					// if(processed) {
+					// status = Status.PROCESSED;
+					// remarks.append("SMS sent to " + n.getRecipientReference()
+					// + "\n");
+					// } else {
+					// status = Status.FAILED;
+					// }
 				}
+
+				// Enable realtime notifs for popups
+				if ("POPUP".equals(n.getMedium())) {
+					_log.info("Processing POPUP notification ... Setting STATUS to IN_PROCESS");
+					n.setStatus(Status.IN_PROCESS.toString());
+					notificationDao.saveEntityModel(n);
+
+					long recipientUserId = n.getRecipientUser().getId();
+					notify("" + recipientUserId);
+
+					status = Status.PROCESSED;
+					processed = true;
+				}
+
 				if (processed) {
-					if (status!=null) n.setStatus(status.toString());
-					n.setRemarks(remarks.toString());				
+					_log.info("Processing POPUP notification ... Setting STATUS to PROCESSED");
+					if (status != null)
+						n.setStatus(status.toString());
+					n.setRemarks(remarks.toString());
 					notificationDao.saveEntityModel(n);
 				}
 			} catch (Exception e) {
 				_log.error("Error encountered while sending notification", e);
 				remarks.append(e.getMessage());
-				if (remarks.length()>3999)
+				if (remarks.length() > 3999)
 					n.setRemarks(remarks.substring(0, 3999));
 				else
-					n.setRemarks(remarks.toString()+"\n");				
+					n.setRemarks(remarks.toString() + "\n");
 				n.setStatus(Status.FAILED.toString());
-				notificationDao.saveEntityModel(n);	 
+				notificationDao.saveEntityModel(n);
 			}
 		}
 	}
-	
+
 	public void notify(String userId) {
 		notify(userId, 0);
 	}
-	
+
 	public void notify(String userId, int timezoneDiff) {
-	    Broadcaster b = BroadcasterFactory.getDefault().lookup(userId);
-	    ObjectMapper mapper = new ObjectMapper();
-	    if (b!=null) {
-	    	String jsonString;
+		_log.info("Trying to notify user with userId " + userId
+				+ ". Retrieving Broadcaster...");
+		Broadcaster b = BroadcasterFactory.getDefault().lookup(userId);
+		ObjectMapper mapper = new ObjectMapper();
+		if (b != null) {
+			String jsonString;
 			try {
-				jsonString = mapper.writeValueAsString(buildNotification(new Long(userId), timezoneDiff, "alert"));
-		        b.broadcast(jsonString);
+				jsonString = mapper.writeValueAsString(buildNotification(
+						new Long(userId), timezoneDiff, "alert"));
+				b.broadcast(jsonString);
 			} catch (NumberFormatException e) {
 				_log.error("Failed to convert to JSON.", e);
 			} catch (JsonProcessingException e) {
 				_log.error("Failed to convert to JSON.", e);
 			}
-	    }
+		} else {
+			_log.warn("Broadcaster not found... Exiting...");
+		}
 	}
 
 	@Override
-	public String buildMessage(Event event, Object[] params) {				
-		return messageSource.getMessage(event.getMessageCode(), params, 
+	public String buildMessage(Event event, Object[] params) {
+		return messageSource.getMessage(event.getMessageCode(), params,
 				Locale.getDefault());
 	}
-	
+
 	@Override
 	public void triggerEvent(Event event, BaseEntity command) {
 		// build the message
-		
+
 		// get the recipients
-		
+
 		// save as new notification
 	}
 
@@ -200,38 +239,40 @@ implements NotificationService {
 	public Map<String, Object> getPopupNotification(long userId) {
 		return buildNotification(userId, 0, "");
 	}
-	
-	@Override	
-	public Map<String, Object> getPopupNotification(long userId, int timezoneDiff) {
+
+	@Override
+	public Map<String, Object> getPopupNotification(long userId,
+			int timezoneDiff) {
 		return buildNotification(userId, timezoneDiff, "");
 	}
-	
-	private Map<String, Object> buildNotification(Long userId, int timezoneDiff, String mode) {
+
+	private Map<String, Object> buildNotification(Long userId,
+			int timezoneDiff, String mode) {
 		// Let's manually build the json
 		List<Notification> notifs = null;
 		long count = 0;
 		notifs = this.findMostRecentPopup(userId);
 		count = this.countNewPopup(userId);
 		Map<String, Object> result = new HashMap<String, Object>();
-		
+
 		result.put("notifyCount", count);
 		List<JSONNotification> notifications = new ArrayList<JSONNotification>();
-		Date adjusted = DateUtils.addHours(new Date(), timezoneDiff);	
+		Date adjusted = DateUtils.addHours(new Date(), timezoneDiff);
 		PrettyTime pt = new PrettyTime(adjusted);
-		for (Notification n:notifs) {
-			JSONNotification jn = new JSONNotification();			
+		for (Notification n : notifs) {
+			JSONNotification jn = new JSONNotification();
 			jn.setTimeWhen(pt.format(n.getNotifyDate()));
 			jn.setEntityClass(n.getEntityClass().getSimpleName());
 			jn.setEntityId(n.getEntityId());
 			jn.setMedium(n.getMedium());
 			jn.setMessage(n.getMessage());
 			notifications.add(jn);
-		}		
+		}
 		result.put("notifications", notifications);
 		result.put("mode", mode);
-		return result; 
+		return result;
 	}
-	
+
 	@Override
 	public List<Notification> findMostRecentPopup(long userId) {
 		return notificationDao.findMostRecentPopup(userId);
