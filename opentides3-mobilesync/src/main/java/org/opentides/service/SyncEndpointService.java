@@ -12,5 +12,7 @@ import org.opentides.bean.SyncEndpoint;
  */
  
 public interface SyncEndpointService extends BaseCrudService<SyncEndpoint> {
+	
+	public SyncEndpoint findSyncEndpointByClientCode(String clientcode);
 
 }

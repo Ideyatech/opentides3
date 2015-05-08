@@ -21,7 +21,7 @@ package org.opentides.bean;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-
+import javax.persistence.Lob;
 import org.opentides.exception.InvalidImplementationException;
 import org.opentides.web.json.Views;
 
@@ -71,6 +71,9 @@ public class ChangeLog extends BaseEntity {
     @Column(name = "ACTION")
     private int action;
     
+    @Column(name="PARAMS")
+    private String params;
+    
     /**
      * Contains the list of fields for updating.
      */
@@ -80,7 +83,8 @@ public class ChangeLog extends BaseEntity {
     /**
      * SQL statement to be executed in the device.
      */
-    @Column(name = "SQL_COMMAND")
+    @Column(name = "SQL_COMMAND", length=1024)
+    @Lob
     @JsonView(Views.FormView.class)
     private String sqlCommand;
     
@@ -195,6 +199,20 @@ public class ChangeLog extends BaseEntity {
 		this.sqlCommand = sqlCommand;
 	}
 	
+	
+	/**
+	 * @return the sqlCommand
+	 */
+	public final String getParams() {
+		return params;
+	}
+
+	/**
+	 * @param sqlCommand the sqlCommand to set
+	 */
+	public final void setParams(String params) {
+		this.params = params;
+	}
 	
 	
 }

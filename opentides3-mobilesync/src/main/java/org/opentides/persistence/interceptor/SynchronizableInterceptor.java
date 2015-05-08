@@ -24,7 +24,8 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-
+import java.util.Map;
+import java.util.HashMap;
 import javax.persistence.EntityManager;
 
 import org.apache.commons.lang.StringUtils;
@@ -38,6 +39,9 @@ import org.opentides.util.CrudUtil;
 import org.opentides.util.DatabaseUtil;
 import org.opentides.util.DateUtil;
 import org.opentides.util.NamingUtil;
+import org.opentides.bean.SystemCodes;
+import org.opentides.bean.user.BaseUser;
+import org.opentides.bean.user.UserCredential;
 
 /**
  * @author allantan
@@ -58,7 +62,10 @@ public class SynchronizableInterceptor extends AuditLogInterceptor {
         try { 
         	synchronized(inserts) {
 	        	for (BaseEntity entity:inserts) {
-	        		if (entity.getClass().isAnnotationPresent(Synchronizable.class)) {
+	        		if (entity.getClass().isAnnotationPresent(Synchronizable.class) 
+	        				|| (entity instanceof SystemCodes)
+	        				|| (entity instanceof UserCredential)
+	        				|| (entity instanceof BaseUser)) {
 	        			String insertStmt = buildInsertStatement(entity);
 	        			SynchronizableInterceptor.saveLog(entity, ChangeLog.INSERT, "", insertStmt);
 	        		}
@@ -66,7 +73,10 @@ public class SynchronizableInterceptor extends AuditLogInterceptor {
         	}
         	synchronized(deletes) {
 	        	for (BaseEntity entity:deletes) {
-	        		if (entity.getClass().isAnnotationPresent(Synchronizable.class)) {
+	        		if (entity.getClass().isAnnotationPresent(Synchronizable.class) 
+	        				|| (entity instanceof SystemCodes)
+	        				|| (entity instanceof UserCredential)
+	        				|| (entity instanceof BaseUser)) {
 	        			String deleteStmt = buildDeleteStatement(entity);
 	        			SynchronizableInterceptor.saveLog(entity, ChangeLog.DELETE, "", deleteStmt);
 	        		}
@@ -74,7 +84,10 @@ public class SynchronizableInterceptor extends AuditLogInterceptor {
         	}
         	synchronized (updates) {
                	for (BaseEntity entity:updates) {
-	        		if (entity.getClass().isAnnotationPresent(Synchronizable.class)) {
+               		if (entity.getClass().isAnnotationPresent(Synchronizable.class) 
+	        				|| (entity instanceof SystemCodes)
+	        				|| (entity instanceof UserCredential)
+	        				|| (entity instanceof BaseUser)) {
 	        			BaseEntity old = oldies.get(entity.getId());	        			
        					List<String> fields = CrudUtil.getUpdatedFields(old, entity);
        					String updateStmt = buildUpdateStatement(entity, fields);
@@ -99,16 +112,19 @@ public class SynchronizableInterceptor extends AuditLogInterceptor {
 		StringBuilder values = new StringBuilder("(");
 		
 		List<String> fields = CacheUtil.getPersistentFields(obj);
+		Map<String, String> columnFields = CacheUtil.getColumnNames(obj);
+		
 		int count = 0;
-		for (String field:fields) {
+		for (String field: fields) {
 			Object ret = CrudUtil.retrieveNullableObjectValue(obj, field);
+			String column = columnFields.get(field);
 			String n = normalizeValue(ret);
 			if (n.trim().length() > 0) {
 				if (count++ > 0) {
 					columns.append(",");
 					values.append(",");
 				}
-				columns.append(field);
+				columns.append(column);
 				values.append(n);
 			}
 		}
@@ -127,20 +143,23 @@ public class SynchronizableInterceptor extends AuditLogInterceptor {
 	 */
 	public String buildUpdateStatement(BaseEntity obj, List<String> fields) {
 		String tableName = NamingUtil.toSQLName(obj.getClass().getSimpleName());
-
+		
+		Map<String, String> columns = CacheUtil.getColumnNames(obj);
+		
 		StringBuilder sql = new StringBuilder("update ");
 		sql.append(tableName)
 		   .append(" set ");		
 		
 		int count = 0;
 		for (String field:fields) {
+			String columnName = columns.get(field);
 			Object ret = CrudUtil.retrieveNullableObjectValue(obj, field);
 			String n = normalizeValue(ret);
 			if (n.trim().length() > 0) {
 				if (count++ > 0) {
 					sql.append(",");
 				}
-				sql.append(field)
+				sql.append(columnName)
 				   .append("=")
 				   .append(n);
 			}
@@ -208,7 +227,7 @@ public class SynchronizableInterceptor extends AuditLogInterceptor {
     	// convert date into string
     	if (obj instanceof Date) {
     		if (DateUtil.hasTime((Date) obj)) {
-    			return "'" + DateUtil.dateToString((Date) obj, "MM/dd/yy HH:mm:ss z") + "'";
+    			return "'" + DateUtil.dateToString((Date) obj, "yyyy-MM-dd HH:mm:ss") + "'";
     		} else
     			return "'" + DateUtil.dateToString((Date) obj, "MM/dd/yy") + "'";
 		}

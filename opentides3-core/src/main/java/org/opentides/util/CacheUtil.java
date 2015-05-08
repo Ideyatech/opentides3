@@ -18,18 +18,23 @@
  */
 package org.opentides.util;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import javax.persistence.Column;
+import javax.persistence.JoinColumn;
 import javax.persistence.Transient;
 
 import org.apache.log4j.Logger;
+import org.hibernate.annotations.Columns;
 import org.opentides.annotation.Auditable;
 import org.opentides.annotation.FormBind;
 import org.opentides.annotation.FormBind.Load;
@@ -195,8 +200,9 @@ public class CacheUtil {
             	}
             }
             
-            if (pf == null)
-            	pf = new AuditableField("","");
+            if (pf == null) {
+				pf = new AuditableField("","");
+			}
             primaryField.put(obj.getClass(), pf);
             ret = primaryField.get(obj.getClass());
             if(_log.isDebugEnabled()) {
@@ -242,8 +248,84 @@ public class CacheUtil {
 	}
 	
 	/**
-	 * Retrieves searchable fields using getSearchableFields method, if available.
-	 * Otherwise, returns the list of field names that are persisted in database. 
+	 * Retrieves persistent fields from the cache, if available. Otherwise,
+	 * returns the list of field names that are persisted in database. These
+	 * includes all non-transient fields. This method uses reflection and
+	 * annotation to generate the list of fields.
+	 * 
+	 * @param obj
+	 * @return
+	 */
+	public static Map<String, String> getColumnNames(BaseEntity obj) {
+		Class<?> clazz = obj.getClass();
+		Map<String, String> columns = new HashMap<String, String>();
+		final List<Field> fields = CrudUtil.getAllFields(clazz);
+		for (Field field : fields) {
+			if ((!Modifier.isTransient(field.getModifiers()))
+					&& (!Modifier.isVolatile(field.getModifiers()))
+					&& (!Modifier.isStatic(field.getModifiers()))
+					&& (!field.isAnnotationPresent(Transient.class))) {
+				Annotation annotation = field.getAnnotation(Column.class);
+				if (annotation == null) {
+					annotation = field.getAnnotation(JoinColumn.class);
+				}
+				if (annotation != null) {
+					try {
+						String name = (String) annotation.annotationType()
+								.getMethod("name").invoke(annotation);
+						columns.put(field.getName(), name);
+
+					} catch (Exception e) {
+						_log.warn(
+								"Unable to execute annotated method @Column of "
+										+ obj.getClass().getSimpleName(), e);
+					}
+				} else {
+					annotation = field.getAnnotation(Columns.class);
+					if (annotation != null) {
+						try {
+							Column[] cols = (Column[]) annotation
+									.annotationType().getMethod("columns")
+									.invoke(annotation);
+							if (cols != null && cols.length > 0) {
+								String name = "";
+								for (int i = 0; i < cols.length; i++) {
+									if (i > 0) {
+										name += ",";
+									}
+									name += cols[i].name();
+								}
+								columns.put(field.getName(), name);
+
+							}
+
+						} catch (Exception ex) {
+							_log.warn(
+									"Unable to execute annotated method @Columns of "
+											+ obj.getClass().getSimpleName(),
+									ex);
+						}
+					}
+				}
+
+			}
+		}
+		if (_log.isDebugEnabled()) {
+			_log.debug(clazz.getSimpleName()
+					+ " contains the following persistent fields");
+			for (String fieldName : columns.keySet()) {
+				_log.debug(fieldName);
+			}
+
+		}
+
+		return columns;
+	}
+
+	/**
+	 * Retrieves searchable fields using getSearchableFields method, if
+	 * available. Otherwise, returns the list of field names that are persisted
+	 * in database.
 	 * 
 	 * @param obj
 	 * @return

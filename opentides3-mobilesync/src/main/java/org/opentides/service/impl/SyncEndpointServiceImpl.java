@@ -3,6 +3,10 @@
  */
 package org.opentides.service.impl;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.opentides.bean.SyncEndpoint;
 import org.opentides.service.SyncEndpointService;
 import org.springframework.stereotype.Service;
@@ -17,4 +21,10 @@ import org.springframework.stereotype.Service;
 public class SyncEndpointServiceImpl extends BaseCrudServiceImpl<SyncEndpoint>
 		implements SyncEndpointService {
 
+	 	@Override
+		public SyncEndpoint findSyncEndpointByClientCode(String clientcode){
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("clientcode", clientcode);
+			return getDao().findSingleResultByNamedQuery("jpql.syncendpoint.findEndpointByClientCode", map);
+		}
 }
