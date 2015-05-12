@@ -31,19 +31,20 @@ import org.springframework.stereotype.Service;
  *
  */
 @Service("tenantService")
-public class TenantServiceImpl extends BaseCrudServiceImpl<Tenant> implements TenantService {
+public class TenantServiceImpl extends BaseCrudServiceImpl<Tenant> implements
+		TenantService {
 
 	@Autowired
 	private MultiTenantSchemaUpdate multiTenantSchemaUpdate;
-	
+
 	@Override
 	public String findUniqueSchemaName(String company) {
 		String schema = company.replaceAll("[^a-zA-Z]", "");
 		String uniqueSchema = schema;
-		Tenant t = ((TenantDao)getDao()).loadBySchema(uniqueSchema);
-		while (t!=null) {
+		Tenant t = ((TenantDao) getDao()).loadBySchema(uniqueSchema);
+		while (t != null) {
 			uniqueSchema = schema + StringUtil.generateRandomString(3);
-			t = ((TenantDao)getDao()).loadBySchema(uniqueSchema);
+			t = ((TenantDao) getDao()).loadBySchema(uniqueSchema);
 		}
 		return uniqueSchema;
 	}
@@ -51,7 +52,7 @@ public class TenantServiceImpl extends BaseCrudServiceImpl<Tenant> implements Te
 	@Override
 	public boolean createTenantSchema(Tenant tenant) {
 		// create the schema
-		String schema = (tenant==null)?"":"_"+tenant.getSchema();
+		String schema = (tenant == null) ? "" : tenant.getSchema();
 		multiTenantSchemaUpdate.schemaEvolve(schema);
 		return true;
 	}
