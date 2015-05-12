@@ -27,6 +27,7 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 
+import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.engine.jdbc.connections.internal.DatasourceConnectionProviderImpl;
 import org.hibernate.engine.jdbc.connections.spi.ConnectionProvider;
@@ -39,11 +40,11 @@ import org.springframework.util.Assert;
 /**
  * For supporting multi-tenancy applications.
  * 
- * Simple implementation using a single connection pool used to serve multiple 
- * schemas using "connection altering". This approach assumes one application server
- * connects to only one database server and connection pool is shared across 
- * multiple tenants.
-
+ * Simple implementation using a single connection pool used to serve multiple
+ * schemas using "connection altering". This approach assumes one application
+ * server connects to only one database server and connection pool is shared
+ * across multiple tenants.
+ * 
  * @author allantan
  *
  */
@@ -51,15 +52,18 @@ public class MultiTenantConnectionProviderImpl implements
 		MultiTenantConnectionProvider, InitializingBean {
 
 	private static final long serialVersionUID = 5727736453474895433L;
-	
+
+	private static final Logger _log = Logger
+			.getLogger(MultiTenantConnectionProviderImpl.class);
+
 	private ConnectionProvider connectionProvider = null;
-	
+
 	@Autowired
 	private DataSource dataSource;
-			
+
 	@Value("${database.default_schema}")
 	private String defaultSchema;
-	
+
 	@Override
 	public Connection getAnyConnection() throws SQLException {
 		return connectionProvider.getConnection();
@@ -74,6 +78,7 @@ public class MultiTenantConnectionProviderImpl implements
 	public Connection getConnection(String tenantId) throws SQLException {
 		final Connection connection = getAnyConnection();
 		try {
+			_log.debug("Altering connection to schema [" + tenantId + "]");
 			connection.createStatement().execute("USE " + tenantId);
 		} catch (SQLException e) {
 			throw new HibernateException(
@@ -87,7 +92,7 @@ public class MultiTenantConnectionProviderImpl implements
 	public void releaseConnection(String tenantIdentifier, Connection connection)
 			throws SQLException {
 		try {
-			connection.createStatement().execute("USE "+defaultSchema);
+			connection.createStatement().execute("USE " + defaultSchema);
 		} catch (SQLException e) {
 			// on error, throw an exception to make sure the connection is not
 			// returned to the pool.
@@ -95,11 +100,13 @@ public class MultiTenantConnectionProviderImpl implements
 					"Could not alter JDBC connection to specified schema ["
 							+ tenantIdentifier + "]", e);
 		}
+
 		connectionProvider.closeConnection(connection);
 	}
 
 	/**
-	 * @param dataSource the dataSource to set
+	 * @param dataSource
+	 *            the dataSource to set
 	 */
 	public void setDataSource(DataSource dataSource) {
 		this.dataSource = dataSource;
@@ -120,12 +127,13 @@ public class MultiTenantConnectionProviderImpl implements
 	public boolean supportsAggressiveRelease() {
 		return connectionProvider.supportsAggressiveRelease();
 	}
-	
+
 	/**
 	 * This is a post construct that set ups the connection provider.
 	 * 
 	 * @throws Exception
 	 */
+	@Override
 	@PostConstruct
 	public void afterPropertiesSet() throws Exception {
 		if (dataSource != null) {
@@ -135,9 +143,9 @@ public class MultiTenantConnectionProviderImpl implements
 			ds.configure(config);
 			connectionProvider = ds;
 		}
-		
-		Assert.notNull(this.connectionProvider, this.getClass().getSimpleName()
+
+		Assert.notNull(connectionProvider, this.getClass().getSimpleName()
 				+ " does not have a datasource for the database connection."
 				+ " Please check your configuration.");
-	}	
+	}
 }

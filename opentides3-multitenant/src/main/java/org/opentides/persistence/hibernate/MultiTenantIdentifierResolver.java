@@ -19,6 +19,7 @@
 
 package org.opentides.persistence.hibernate;
 
+import org.apache.log4j.Logger;
 import org.hibernate.context.spi.CurrentTenantIdentifierResolver;
 import org.opentides.util.SecurityUtil;
 import org.opentides.util.StringUtil;
@@ -34,6 +35,9 @@ import org.springframework.beans.factory.annotation.Value;
  */
 public class MultiTenantIdentifierResolver implements CurrentTenantIdentifierResolver {
 
+	private static final Logger _log = Logger
+			.getLogger(MultiTenantIdentifierResolver.class);
+
 	@Value("${database.default_schema}")
 	private String defaultSchema;
 	
@@ -45,9 +49,15 @@ public class MultiTenantIdentifierResolver implements CurrentTenantIdentifierRes
 		if (SecurityUtil.getSessionUser()==null || 
 			StringUtil.isEmpty(SecurityUtil.getSessionUser().getSchema()) ) {
 			// no logged-in user, use default tenant
+			_log.debug("Using [" + defaultSchema + "] for schema.");
 			return defaultSchema;
 		} else {
-			return "_" + SecurityUtil.getSessionUser().getSchema();			
+			_log.debug("Using [" + defaultSchema + "_"
+					+ SecurityUtil.getSessionUser().getSchema()
+					+ "] for schema.");
+
+			return defaultSchema + "_"
+					+ SecurityUtil.getSessionUser().getSchema();
 		}
 	}
 
