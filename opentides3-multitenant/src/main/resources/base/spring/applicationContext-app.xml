@@ -1,21 +1,30 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-	xmlns:util="http://www.springframework.org/schema/util" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
 						http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.0.xsd">
 
-	<bean id="multiTenantConnectionProvider" class="org.opentides.persistence.hibernate.MultiTenantConnectionProviderImpl">
+	<bean id="multiTenantConnectionProvider"
+		class="org.opentides.persistence.hibernate.MultiTenantConnectionProviderImpl">
 		<property name="dataSource" ref="dataSource" />
 	</bean>
 
-	<bean id="multiTenantIdentifierResolver" class="org.opentides.persistence.hibernate.MultiTenantIdentifierResolver"/>
-	
+	<bean id="multiTenantIdentifierResolver"
+		class="org.opentides.persistence.hibernate.MultiTenantIdentifierResolver" />
+
+	<bean id="multiTenantDBEvolveManager"
+		class="org.opentides.persistence.hibernate.MultiTenantDBEvolveManager">
+		<property name="evolveList">
+			<ref bean="evolveList" />
+		</property>
+	</bean>
+
 	<!-- Property map injected into entity manager to enable multitenancy -->
 	<util:map id="jpaPropertyMap">
 		<entry key="hibernate.multiTenancy" value="SCHEMA" />
-	  	<entry key="hibernate.tenant_identifier_resolver" value-ref="multiTenantIdentifierResolver" />
-	  	<entry key="hibernate.multi_tenant_connection_provider" value-ref="multiTenantConnectionProvider" />
+		<entry key="hibernate.tenant_identifier_resolver" value-ref="multiTenantIdentifierResolver" />
+		<entry key="hibernate.multi_tenant_connection_provider"
+			value-ref="multiTenantConnectionProvider" />
 	</util:map>
 
 </beans>

@@ -18,15 +18,24 @@
  */
 package org.opentides.web.controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.opentides.bean.MessageResponse;
+import org.opentides.persistence.hibernate.MultiTenantDBEvolveManager;
 import org.opentides.persistence.hibernate.MultiTenantSchemaUpdate;
+import org.opentides.util.NamingUtil;
 import org.opentides.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -44,16 +53,79 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class SystemUtilController {
 
 	@Autowired
+	protected MessageSource messageSource;
+
+	@Autowired
 	private MultiTenantSchemaUpdate multiTenantSchemaUpdate;
 	
+	@Autowired
+	private MultiTenantDBEvolveManager multiTenantDBEvolveManager;
+
+	/**
+	 * 
+	 * @param schemaName
+	 * @param request
+	 * @return
+	 */
 	@RequestMapping(method = RequestMethod.GET, value="/schema-update/{schemaName}", produces = "application/json")
     @ResponseStatus(HttpStatus.OK)
 	@ResponseBody
 	public Map<String, Object> schemaUpdate(@PathVariable("schemaName") String schemaName, HttpServletRequest request) {
-		if (StringUtil.isEmpty(schemaName)) {
-			multiTenantSchemaUpdate.schemaEvolve(schemaName);
+		final Map<String, Object> response = new HashMap<>();
+		final List<MessageResponse> messages = new ArrayList<MessageResponse>();
+		if (!StringUtil.isEmpty(schemaName)) {
+			if (multiTenantSchemaUpdate.schemaEvolve(schemaName)) {
+				messages.add(buildResponse(MultiTenantSchemaUpdate.class,
+						"evolve", "success", request.getLocale(), messageSource));
+			} else {
+				messages.add(buildResponse(MultiTenantSchemaUpdate.class,
+						"evolve", "error", request.getLocale(), messageSource));
+			}
 		}
-		return null;
+
+		response.put("messages", messages);
+		return response;
 	}
 
+	/**
+	 * 
+	 * @param schemaName
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "/db-evolve/{schemaName}", method = RequestMethod.GET, produces = "application/json")
+	@ResponseStatus(HttpStatus.OK)
+	public @ResponseBody Map<String, Object> evolve(
+			@PathVariable("schemaName") String schemaName,
+			HttpServletRequest request) {
+		final Map<String, Object> response = new HashMap<>();
+		final List<MessageResponse> messages = new ArrayList<MessageResponse>();
+
+		multiTenantDBEvolveManager.evolve(schemaName);
+
+		messages.add(buildResponse(MultiTenantDBEvolveManager.class, "evolve",
+				"success", request.getLocale(), messageSource));
+		response.put("messages", messages);
+		
+		return response;
+	}
+
+	/*
+	 * 
+	 */
+	private static MessageResponse buildResponse(Class<?> clazz, String code,
+			String result, Locale locale, MessageSource messageSource) {
+		Assert.notNull(clazz);
+		String prefix = "message."
+				+ NamingUtil.toElementName(clazz.getSimpleName());
+		System.out.println("Prefix " + prefix);
+		String codes = prefix + "." + code + "-" + result + ",message." + code
+				+ "-"
+				+ result;
+		MessageResponse message = new MessageResponse(
+				MessageResponse.Type.notification, codes.split("\\,"), null);
+		message.setMessage(messageSource.getMessage(message, locale));
+
+		return message;
+	}
 }
