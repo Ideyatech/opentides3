@@ -22,6 +22,7 @@ package org.opentides.listener.command;
 import org.apache.log4j.Logger;
 import org.opentides.persistence.hibernate.MultiTenantSchemaUpdate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
@@ -36,6 +37,9 @@ public class MTSchemaUpdateCommand implements StartupCommand {
 	private static final Logger _log = Logger
 			.getLogger(MTSchemaUpdateCommand.class);
 
+	@Value("${database.default_schema}")
+	private String defaultSchema = "master";
+
 	@Autowired
 	private MultiTenantSchemaUpdate multiTenantSchemaUpdate;
 	
@@ -44,6 +48,6 @@ public class MTSchemaUpdateCommand implements StartupCommand {
 		_log.info("Performance schema update for multitenant.");
 
 		// update the master database
-		multiTenantSchemaUpdate.schemaEvolve(null);
+		multiTenantSchemaUpdate.schemaEvolve(defaultSchema);
 	}
 }

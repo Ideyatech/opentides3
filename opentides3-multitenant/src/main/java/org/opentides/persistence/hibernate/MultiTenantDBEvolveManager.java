@@ -18,9 +18,8 @@ import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.jdbc.Work;
 import org.opentides.persistence.evolve.DBEvolveManager;
-import org.opentides.util.StringUtil;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 /**
  * Utility responsible for managing the database evolves of different schemas
@@ -32,9 +31,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class MultiTenantDBEvolveManager extends DBEvolveManager {
 	private static final Logger _log = Logger.getLogger(DBEvolveManager.class);
 	
-	@Value("${database.default_schema}")
-	private String defaultSchema = "master";
-
 	@PersistenceContext
 	private EntityManager entityManager;
 
@@ -44,14 +40,8 @@ public class MultiTenantDBEvolveManager extends DBEvolveManager {
 	 * @param schema
 	 */
 	@Transactional
-	public void evolve(String schema) {
-		if (StringUtil.isEmpty(schema)) {
-			schema = defaultSchema;
-		} else if (!schema.startsWith(defaultSchema)) {
-			schema = defaultSchema + "_" + schema;
-		}
-
-		final String schemaName = schema;
+	public void evolve(final String schemaName) {
+		Assert.notNull(schemaName);
 		_log.debug("Evolving schema [" + schemaName + "]");
 
 		// Hibernate specific code

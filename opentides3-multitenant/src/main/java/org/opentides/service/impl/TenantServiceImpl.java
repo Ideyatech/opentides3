@@ -24,6 +24,7 @@ import org.opentides.persistence.hibernate.MultiTenantSchemaUpdate;
 import org.opentides.service.TenantService;
 import org.opentides.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 /**
@@ -34,31 +35,37 @@ import org.springframework.stereotype.Service;
 public class TenantServiceImpl extends BaseCrudServiceImpl<Tenant> implements
 		TenantService {
 
+	@Value("${database.default_schema}")
+	private String defaultSchema = "master";
+
 	@Autowired
 	private MultiTenantSchemaUpdate multiTenantSchemaUpdate;
 
 	@Override
-	public String findUniqueSchemaName(String company) {
-		String schema = company.replaceAll("[^a-zA-Z]", "");
-		String uniqueSchema = schema;
-		Tenant t = ((TenantDao) getDao()).loadBySchema(uniqueSchema);
+	public String findUniqueSchemaName(final String company) {
+		final String schema = company.replaceAll("[^a-zA-Z]", "");
+		final StringBuffer uniqueSchema = new StringBuffer(defaultSchema + "_"
+				+ schema);
+		Tenant t = ((TenantDao) getDao()).loadBySchema(uniqueSchema.toString());
+
 		while (t != null) {
-			uniqueSchema = schema + StringUtil.generateRandomString(3);
-			t = ((TenantDao) getDao()).loadBySchema(uniqueSchema);
+			uniqueSchema.append(StringUtil.generateRandomString(3));
+			t = ((TenantDao) getDao()).loadBySchema(uniqueSchema.toString());
 		}
-		return uniqueSchema;
+
+		return uniqueSchema.toString();
 	}
 
 	@Override
-	public boolean createTenantSchema(Tenant tenant) {
+	public boolean createTenantSchema(final Tenant tenant) {
 		// create the schema
-		String schema = (tenant == null) ? "" : tenant.getSchema();
+		final String schema = (tenant == null) ? "" : tenant.getSchema();
 		multiTenantSchemaUpdate.schemaEvolve(schema);
 		return true;
 	}
 
 	@Override
-	public boolean deleteTenantSchema(Tenant tenant, boolean createBackup) {
+	public boolean deleteTenantSchema(final Tenant tenant, final boolean createBackup) {
 		// TODO Auto-generated method stub
 		return false;
 	}

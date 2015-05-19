@@ -40,7 +40,6 @@ import org.hibernate.tool.hbm2ddl.SchemaExport;
 import org.opentides.util.DatabaseUtil;
 import org.opentides.util.DateUtil;
 import org.opentides.util.FileUtil;
-import org.opentides.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -66,9 +65,6 @@ public class MultiTenantSchemaUpdate {
 
 	@Autowired
 	private DataSource dataSource;
-
-	@Value("${database.default_schema}")
-	private String defaultSchema = "master";
 
 	@Value("${jpa.log_ddl.directory}")
 	private String ddlLogs = "/var/log/ss_ddl/";
@@ -96,35 +92,30 @@ public class MultiTenantSchemaUpdate {
 	 * @throws HibernateException
 	 */
 	@Transactional
-	public boolean schemaEvolve(String schema) {
-		if (StringUtil.isEmpty(schema)) {
-			schema = defaultSchema;
-		} else if (!schema.startsWith(defaultSchema)) {
-			schema = defaultSchema + "_" + schema;
-		}
-
+	public boolean schemaEvolve(final String schema) {
+		Assert.notNull(schema);
 		_log.info("Performing schema update for schema = " + schema);
 		try {
-			Connection connection = connectionProvider.getConnection();
+			final Connection connection = connectionProvider.getConnection();
 			connection.createStatement().execute(
 					"CREATE SCHEMA IF NOT EXISTS " + schema + ";");
 			connection.createStatement().execute("USE " + schema + ";");
 
 			// Code below is specific to hibernate
-			Configuration cfg = new Configuration();
-			for (String clazz : DatabaseUtil.getClasses()) {
+			final Configuration cfg = new Configuration();
+			for (final String clazz : DatabaseUtil.getClasses()) {
 				try {
 					cfg.addAnnotatedClass(Class.forName(clazz));
-				} catch (ClassNotFoundException e) {
+				} catch (final ClassNotFoundException e) {
 					_log.error("Class not found for schema upate [" + clazz
 							+ "]", e);
 				}
 			}
 			// add classes from packagesToScan
-			for (String clazz : persistenceScanner.scanPackages()) {
+			for (final String clazz : persistenceScanner.scanPackages()) {
 				try {
 					cfg.addAnnotatedClass(Class.forName(clazz));
-				} catch (ClassNotFoundException e) {
+				} catch (final ClassNotFoundException e) {
 					_log.error("Class not found for schema upate [" + clazz
 							+ "]", e);
 				}
@@ -138,10 +129,10 @@ public class MultiTenantSchemaUpdate {
 				initializeSchema(cfg, connection, schema);
 			}
 			return true;
-		} catch (HibernateException e) {
+		} catch (final HibernateException e) {
 			_log.error("Failed to update schema for [" + schema + "].", e);
 			return false;
-		} catch (SQLException e) {
+		} catch (final SQLException e) {
 			_log.error("Failed to update schema for [" + schema + "].", e);
 			return false;
 		}
@@ -155,8 +146,8 @@ public class MultiTenantSchemaUpdate {
 	 * 
 	 * @param tenantId
 	 */
-	private void initializeSchema(Configuration cfg, Connection connection,
-			String schema) {
+	private void initializeSchema(final Configuration cfg, final Connection connection,
+			final String schema) {
 		// check if there SQL file under the sslScript folder
 		boolean initialized = false;
 
@@ -166,10 +157,10 @@ public class MultiTenantSchemaUpdate {
 			InputStream inputStream = null;
 			try {
 				inputStream = ddlScript.getInputStream();
-				Scanner f = new Scanner(inputStream);
-				StringBuilder stmt = new StringBuilder();
+				final Scanner f = new Scanner(inputStream);
+				final StringBuilder stmt = new StringBuilder();
 				while (f.hasNext()) {
-					String line = f.nextLine();
+					final String line = f.nextLine();
 					// ignore comment
 					if (line.startsWith("--")) {
 						continue;
@@ -184,15 +175,15 @@ public class MultiTenantSchemaUpdate {
 				}
 				f.close();
 				initialized = true;
-			} catch (SQLException e) {
+			} catch (final SQLException e) {
 				_log.error("Failed to execute sql script for initialization", e);
-			} catch (IOException e) {
+			} catch (final IOException e) {
 				_log.error("Failed to read sql script for initialization", e);
 			} finally {
 				if (inputStream != null) {
 					try {
 						inputStream.close();
-					} catch (IOException e) {
+					} catch (final IOException e) {
 					}
 				}
 			}
@@ -201,9 +192,9 @@ public class MultiTenantSchemaUpdate {
 		if (!initialized) {
 			_log.info("Initializing schema [" + schema
 					+ "] using SchemaExport. ");
-			SchemaExport export = new SchemaExport(cfg, connection);
+			final SchemaExport export = new SchemaExport(cfg, connection);
 			if (logDdl) {
-				String dir = ddlLogs + "/"
+				final String dir = ddlLogs + "/"
 						+ DateUtil.convertShortDate(new Date());
 				_log.info("DDL logs can be found in " + dir + "/schema-"
 						+ schema + ".sql");
@@ -224,8 +215,8 @@ public class MultiTenantSchemaUpdate {
 	@PostConstruct
 	public void afterPropertiesSet() throws Exception {
 		if (dataSource != null) {
-			DatasourceConnectionProviderImpl ds = new DatasourceConnectionProviderImpl();
-			Map<String, String> config = new HashMap<String, String>();
+			final DatasourceConnectionProviderImpl ds = new DatasourceConnectionProviderImpl();
+			final Map<String, String> config = new HashMap<String, String>();
 			ds.setDataSource(dataSource);
 			ds.configure(config);
 			connectionProvider = ds;
