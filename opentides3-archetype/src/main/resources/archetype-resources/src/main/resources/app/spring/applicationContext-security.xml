@@ -20,7 +20,7 @@
 	
     <sec:global-method-security secured-annotations="enabled"/>
 
-	<sec:http auto-config='false' use-expressions="true"
+	<sec:http auto-config='false' use-expressions="true" entry-point-ref="loginUrlAuthenticationEntryPoint"
 		access-decision-manager-ref="httpRequestAccessDecisionManager">
 		<sec:intercept-url pattern="/login"  access="permitAll"/>
 
@@ -46,6 +46,10 @@
 			<sec:password-encoder ref="passwordEncoder" />
 		</sec:authentication-provider>
 	</sec:authentication-manager>
+	
+	<bean id="loginUrlAuthenticationEntryPoint" class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
+		<constructor-arg type="java.lang.String" value="/login" />
+	</bean>
 		
 	<bean id="httpRequestAccessDecisionManager"
 		class="org.springframework.security.access.vote.AffirmativeBased">
@@ -68,11 +72,6 @@
 		<property name="defaultTargetUrl" value="/login?login_error=logout" />
 	</bean>
 	
-<!-- 	
-	<bean id="promptChangePasswordHandler" class="com.attache.web.security.PromptChangePasswordHandler">
-		<property name="promptEnabled" value="${symbol_dollar}{change-password-prompt}" />
-	</bean>
--->	
 	<bean id="roleVoter" class="org.springframework.security.access.vote.RoleVoter">
 		<property name="rolePrefix" value="ROLE_" />
 	</bean>
