@@ -57,7 +57,7 @@ public class UserCrudController extends BaseCrudController<BaseUser> {
 	 * @param userService
 	 */
 	@Autowired
-	public void setUserService(UserService userService) {
+	public void setUserService(final UserService userService) {
 		super.service = userService;
 	}
 	/**
@@ -87,10 +87,19 @@ public class UserCrudController extends BaseCrudController<BaseUser> {
 	 * @param command
 	 */
 	@Override
-	protected void preCreate(BaseUser command) {
-		UserCredential credential = command.getCredential();
-		if (!StringUtil.isEmpty(credential.getNewPassword()))
+	protected void preCreate(final BaseUser command) {
+		final UserCredential credential = command.getCredential();
+		if (!StringUtil.isEmpty(credential.getNewPassword())) {
 			credential.setPassword(((UserService)service).encryptPassword(credential.getNewPassword()));
+		}
+
+		// update the schema of the created user to the schema of of the user
+		// that created it
+		final BaseUser baseUser = ((UserService) service).getCurrentUser();
+		final String schemaName = baseUser.getSchemaName();
+		if (!StringUtil.isEmpty(schemaName)) {
+			command.setSchemaName(schemaName);
+		}
 	}
 
 
@@ -104,10 +113,19 @@ public class UserCrudController extends BaseCrudController<BaseUser> {
 	 * @param command
 	 */
 	@Override
-	protected void preUpdate(BaseUser command) {
-		UserCredential credential = command.getCredential();
-        if (!StringUtil.isEmpty(credential.getNewPassword()))
-            credential.setPassword(((UserService)service).encryptPassword(credential.getNewPassword()));
+	protected void preUpdate(final BaseUser command) {
+		final UserCredential credential = command.getCredential();
+        if (!StringUtil.isEmpty(credential.getNewPassword())) {
+			credential.setPassword(((UserService)service).encryptPassword(credential.getNewPassword()));
+		}
+
+		// update the schema of the created user to the schema of of the user
+		// that created it
+		final BaseUser baseUser = ((UserService) service).getCurrentUser();
+		final String schemaName = baseUser.getSchemaName();
+		if (!StringUtil.isEmpty(schemaName)) {
+			command.setSchemaName(schemaName);
+		}
 	}
 	
 	/* (non-Javadoc)
@@ -118,9 +136,9 @@ public class UserCrudController extends BaseCrudController<BaseUser> {
 	 * of {@link BaseCrudController } search method.
 	 */
 	@Override
-	protected void onLoadSearch(BaseUser command, BindingResult bindingResult, 
-			Model uiModel, HttpServletRequest request,
-			HttpServletResponse response) {
+	protected void onLoadSearch(final BaseUser command, final BindingResult bindingResult, 
+			final Model uiModel, final HttpServletRequest request,
+			final HttpServletResponse response) {
 		uiModel.addAttribute("results", search(command, request));
 	}
 
