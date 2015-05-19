@@ -21,6 +21,7 @@ package org.opentides.config;
 
 import javax.servlet.ServletContext;
 
+import org.apache.log4j.Logger;
 import org.opentides.exception.InvalidImplementationException;
 import org.opentides.rest.impl.BaseCrudRestServiceImpl;
 import org.opentides.service.UserService;
@@ -41,6 +42,9 @@ import org.springframework.context.annotation.Primary;
 @Configuration
 public class ApplicationConfig {
 
+	private static final Logger _log = Logger
+			.getLogger(ApplicationConfig.class);
+
 	@Autowired
 	protected BeanFactory beanFactory;
 
@@ -54,29 +58,37 @@ public class ApplicationConfig {
 	private String proxyURL = "http://localhost";
 
 	@SuppressWarnings("rawtypes")
-	@Bean(name = "userService")
+	@Bean
 	@Primary
 	public UserService getUserService() throws Exception {
 		String serviceBean = "userService";
+		_log.debug("Proxy service is set to " + enableProxyService);
 		if (enableProxyService) {
 			boolean found = false;
 			for (String endPoint : UrlUtil.getEndPoints()) {
 				endPoint += servletContext.getContextPath();
-				if (proxyURL.contains("localhost"))
+				_log.debug("Checking endpoint " + endPoint);
+				if (proxyURL.contains("localhost")) {
 					endPoint = endPoint.replaceAll("(\\d+)\\.(\\d+)\\.(\\d+)\\.(\\d+)", "localhost");
-				if (proxyURL.startsWith(endPoint))
+					_log.debug("Endpoint changed to " + endPoint);
+				}
+				if (proxyURL.startsWith(endPoint)) {
 					found = true;
+					_log.debug("Proxy URL found [" + proxyURL + "]");
+				}
 			}
-			if (!found)
+			
+			if (!found) {
 				serviceBean = "restUserService";
+			}
 		}
 		if (beanFactory.containsBean(serviceBean)) {
-			UserService service = (UserService) beanFactory
+			final UserService service = (UserService) beanFactory
 					.getBean(serviceBean);
 			if (service != null
 					&& BaseCrudRestServiceImpl.class.isAssignableFrom(service
 							.getClass())) {
-				((BaseCrudRestServiceImpl) service).setServerURL(this.proxyURL
+				((BaseCrudRestServiceImpl) service).setServerURL(proxyURL
 						+ "/organization/users");
 			}
 			return service;
