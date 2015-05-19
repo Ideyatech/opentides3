@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.opentides.bean.user.AccountType;
+import org.opentides.bean.user.MultitenantUser;
 import org.opentides.bean.user.Tenant;
 import org.opentides.bean.user.UserCredential;
 import org.opentides.service.AccountTypeService;
@@ -68,17 +69,24 @@ public class TenantCrudController extends BaseCrudController<Tenant> {
 	}
 	
 	/**
-	 * Responsible for changing the password of the {@code BaseUser} if a 
+	 * Responsible for changing the password of the {@code BaseUser} if a
 	 * {@code newPassword} is set.
+	 * 
+	 * Also responsible for ensuring that {@code BaseUser} is linked to the
+	 * {@code Tenant}.
 	 * 
 	 * @param command
 	 */
 	@Override
-	protected void preCreate(Tenant command) {
-		if (command.getOwner() != null) {
-			UserCredential credential = command.getOwner().getCredential();
-			if (!StringUtil.isEmpty(credential.getNewPassword()))
-				credential.setPassword(userService.encryptPassword(credential.getNewPassword()));			
+	protected void preCreate(final Tenant command) {
+		final MultitenantUser owner = command.getOwner();
+		if (owner != null) {
+			final UserCredential credential = owner.getCredential();
+			if (!StringUtil.isEmpty(credential.getNewPassword())) {
+				credential.setPassword(userService.encryptPassword(credential.getNewPassword()));
+			}
+
+			owner.setTenant(command);
 		}
 		command.setSchema(((TenantService)service).findUniqueSchemaName(command.getCompany()));
 		command.setDbVersion(1l);
@@ -89,22 +97,29 @@ public class TenantCrudController extends BaseCrudController<Tenant> {
 	 * @see org.opentides.web.controller.BaseCrudController#postCreate(org.opentides.bean.BaseEntity)
 	 */
 	@Override
-	protected void postCreate(Tenant tenant) {
+	protected void postCreate(final Tenant tenant) {
 		((TenantService)getService()).createTenantSchema(tenant);
 	}
 
 	/**
-	 * Responsible for changing the password of the {@code BaseUser} if a 
+	 * Responsible for changing the password of the {@code BaseUser} if a
 	 * {@code newPassword} is set.
+	 * 
+	 * Also responsible for ensuring that {@code BaseUser} is linked to the
+	 * {@code Tenant}.
 	 * 
 	 * @param command
 	 */
 	@Override
-	protected void preUpdate(Tenant command) {
-		if (command.getOwner() != null) {
-			UserCredential credential = command.getOwner().getCredential();
-			if (!StringUtil.isEmpty(credential.getNewPassword()))
-				credential.setPassword(userService.encryptPassword(credential.getNewPassword()));			
+	protected void preUpdate(final Tenant command) {
+		final MultitenantUser owner = command.getOwner();
+		if (owner != null) {
+			final UserCredential credential = owner.getCredential();
+			if (!StringUtil.isEmpty(credential.getNewPassword())) {
+				credential.setPassword(userService.encryptPassword(credential.getNewPassword()));
+			}
+
+			owner.setTenant(command);
 		}
 	}
 	
@@ -113,9 +128,9 @@ public class TenantCrudController extends BaseCrudController<Tenant> {
 	 * of {@link BaseCrudController } search method.
 	 */
 	@Override
-	protected void onLoadSearch(Tenant command, BindingResult bindingResult, 
-			Model uiModel, HttpServletRequest request,
-			HttpServletResponse response) {
+	protected void onLoadSearch(final Tenant command, final BindingResult bindingResult, 
+			final Model uiModel, final HttpServletRequest request,
+			final HttpServletResponse response) {
 		uiModel.addAttribute("results", search(command, request));
 	}
 }
