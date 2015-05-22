@@ -84,7 +84,7 @@ public class AccountType extends BaseEntity {
 	/**
 	 * @param name the name to set
 	 */
-	public final void setName(String name) {
+	public final void setName(final String name) {
 		this.name = name;
 	}
 
@@ -98,7 +98,7 @@ public class AccountType extends BaseEntity {
 	/**
 	 * @param description the description to set
 	 */
-	public final void setDescription(String description) {
+	public final void setDescription(final String description) {
 		this.description = description;
 	}
 
@@ -112,7 +112,7 @@ public class AccountType extends BaseEntity {
 	/**
 	 * @param amount the amount to set
 	 */
-	public final void setAmount(Double amount) {
+	public final void setAmount(final Double amount) {
 		this.amount = amount;
 	}
 
@@ -126,7 +126,7 @@ public class AccountType extends BaseEntity {
 	/**
 	 * @param period the period to set
 	 */
-	public final void setPeriod(Period period) {
+	public final void setPeriod(final Period period) {
 		this.period = period;
 	}
 
@@ -139,15 +139,16 @@ public class AccountType extends BaseEntity {
 
 	@JsonView(Views.SearchView.class)
 	public final String getActiveDisplay() {
-		if (active!=null && active)
+		if (active!=null && active) {
 			return "Active";
-		else
+		} else {
 			return "Not Active";
+		}
 	}
 	/**
 	 * @param active the active to set
 	 */
-	public final void setActive(Boolean active) {
+	public final void setActive(final Boolean active) {
 		this.active = active;
 	}
 	
@@ -156,14 +157,16 @@ public class AccountType extends BaseEntity {
 	 */
 	@JsonView(Views.SearchView.class)
 	public final String getSubscription() {
-		StringBuilder subs = new StringBuilder();
-		if (amount > 0) {
+		final StringBuilder subs = new StringBuilder();
+		if (amount != null && amount > 0) {
 			subs.append(amount);
 		} else {
 			subs.append("Free");
 		}
 		subs.append(" - ");
-		if (period != null) subs.append(period);
+		if (period != null) {
+			subs.append(period);
+		}
 		return subs.toString();
 	}
 }
