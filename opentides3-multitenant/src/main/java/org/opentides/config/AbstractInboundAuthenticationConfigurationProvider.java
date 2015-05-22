@@ -72,6 +72,8 @@ public abstract class AbstractInboundAuthenticationConfigurationProvider extends
 	protected static final Logger _log = Logger
 			.getLogger(AbstractInboundAuthenticationConfigurationProvider.class);
 
+	protected String loginPath = "/login";
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -88,7 +90,7 @@ public abstract class AbstractInboundAuthenticationConfigurationProvider extends
 	 * @author Jeric
 	 *
 	 */
-	protected final class StoreTenantNameOperation implements Operation {
+	protected static final class StoreTenantNameOperation implements Operation {
 		@Override
 		public void perform(final Rewrite event, final EvaluationContext context) {
 			final String account = (String) Evaluation.property("account")
@@ -113,13 +115,12 @@ public abstract class AbstractInboundAuthenticationConfigurationProvider extends
 		final Rule parameterRule = RuleBuilder
 				.define()
 				.when(Direction.isInbound().and(
-						Path.matches("/{path}a={account}"))).perform(op);
+						Path.matches(loginPath + ";{*}a={account}")))
+				.perform(op);
 
 		final Rule subDomainRule = RuleBuilder
 				.define()
-				.when(Direction
-						.isInbound()
-.and(
+				.when(Direction.isInbound().and(
 						Domain.matches("{account}.{*}.{*}").or(
 								Domain.matches("{account}.{*}.{*}.{*}"))))
 				.perform(op);
@@ -130,5 +131,13 @@ public abstract class AbstractInboundAuthenticationConfigurationProvider extends
 				.addRule(parameterRule).addRule(subDomainRule);
 
 		return configuration;
+	}
+
+	/**
+	 * @param loginPath
+	 *            the loginPath to set
+	 */
+	public void setLoginPath(final String loginPath) {
+		this.loginPath = loginPath;
 	}
 }
