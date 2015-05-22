@@ -51,7 +51,7 @@ public class MultitenantAuthenticationDaoJdbcImpl extends
 			if (tenantList.containsKey("SCHEMA")) {
 				final String schema = ((String) tenantList.get("SCHEMA"))
 						.toLowerCase();
-				_log.debug("Altering connection to schema [" + schema + "]");
+				_log.info("Altering connection to schema [" + schema + "]");
 				getJdbcTemplate().execute("USE " + schema);
 			} else {
 				_log.warn("Tenant " + tenant
