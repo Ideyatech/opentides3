@@ -32,6 +32,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.engine.jdbc.connections.internal.DatasourceConnectionProviderImpl;
 import org.hibernate.engine.jdbc.connections.spi.ConnectionProvider;
 import org.hibernate.engine.jdbc.connections.spi.MultiTenantConnectionProvider;
+import org.opentides.util.MultitenancyUtil;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -70,30 +71,23 @@ public class MultiTenantConnectionProviderImpl implements
 	}
 
 	@Override
-	public void releaseAnyConnection(Connection connection) throws SQLException {
+	public void releaseAnyConnection(final Connection connection) throws SQLException {
 		connectionProvider.closeConnection(connection);
 	}
 
 	@Override
-	public Connection getConnection(String tenantId) throws SQLException {
+	public Connection getConnection(final String tenantId) throws SQLException {
 		final Connection connection = getAnyConnection();
-		try {
-			_log.debug("Altering connection to schema [" + tenantId + "]");
-			connection.createStatement().execute("USE " + tenantId);
-		} catch (SQLException e) {
-			throw new HibernateException(
-					"Could not alter JDBC connection to specified schema ["
-							+ tenantId + "]", e);
-		}
+		MultitenancyUtil.switchSchema(tenantId, connection);
 		return connection;
 	}
 
 	@Override
-	public void releaseConnection(String tenantIdentifier, Connection connection)
+	public void releaseConnection(final String tenantIdentifier, final Connection connection)
 			throws SQLException {
 		try {
 			connection.createStatement().execute("USE " + defaultSchema);
-		} catch (SQLException e) {
+		} catch (final SQLException e) {
 			// on error, throw an exception to make sure the connection is not
 			// returned to the pool.
 			throw new HibernateException(
@@ -108,18 +102,18 @@ public class MultiTenantConnectionProviderImpl implements
 	 * @param dataSource
 	 *            the dataSource to set
 	 */
-	public void setDataSource(DataSource dataSource) {
+	public void setDataSource(final DataSource dataSource) {
 		this.dataSource = dataSource;
 	}
 
 	@SuppressWarnings("rawtypes")
 	@Override
-	public boolean isUnwrappableAs(Class unwrapType) {
+	public boolean isUnwrappableAs(final Class unwrapType) {
 		return connectionProvider.isUnwrappableAs(unwrapType);
 	}
 
 	@Override
-	public <T> T unwrap(Class<T> unwrapType) {
+	public <T> T unwrap(final Class<T> unwrapType) {
 		return connectionProvider.unwrap(unwrapType);
 	}
 
@@ -137,8 +131,8 @@ public class MultiTenantConnectionProviderImpl implements
 	@PostConstruct
 	public void afterPropertiesSet() throws Exception {
 		if (dataSource != null) {
-			DatasourceConnectionProviderImpl ds = new DatasourceConnectionProviderImpl();
-			Map<String, String> config = new HashMap<String, String>();
+			final DatasourceConnectionProviderImpl ds = new DatasourceConnectionProviderImpl();
+			final Map<String, String> config = new HashMap<String, String>();
 			ds.setDataSource(dataSource);
 			ds.configure(config);
 			connectionProvider = ds;
