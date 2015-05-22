@@ -8,17 +8,23 @@
  */
 package org.opentides.util;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+
+import org.apache.log4j.Logger;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.jdbc.Work;
+
 /**
  * @author Jeric
  *
  */
 public class MultitenancyUtil {
 
-	private static ThreadLocal<String> tenantName;
+	private static final Logger _log = Logger.getLogger(MultitenancyUtil.class);
 
-	static {
-		tenantName = new ThreadLocal<String>();
-	}
+	private static ThreadLocal<String> tenantName = new ThreadLocal<String>();
 
 	/**
 	 * @return the tenantName
@@ -29,5 +35,58 @@ public class MultitenancyUtil {
 
 	public static void setTenantName(final String tenant) {
 		tenantName.set(tenant);
+	}
+
+	/**
+	 * @param tenantId
+	 * @param connection
+	 */
+	public static void switchSchema(final String tenantId,
+			final Connection connection) {
+		try {
+			_log.debug("Altering connection to schema [" + tenantId + "]");
+			connection.createStatement().execute("USE " + tenantId);
+		} catch (final SQLException e) {
+			throw new HibernateException(
+					"Could not alter JDBC connection to specified schema ["
+							+ tenantId + "]", e);
+		}
+	}
+
+	/**
+	 * 
+	 * @param tenantId
+	 * @param connection
+	 */
+	public static void switchSchema(final String tenantId, final Session session) {
+		session.doWork(new MultitenancyUtil.MultitenancySchemaSwitchWork(
+				tenantId));
+	}
+
+	/**
+	 * 
+	 * @author Jeric
+	 *
+	 */
+	protected static class MultitenancySchemaSwitchWork implements Work {
+		private String schema;
+
+		/**
+		 * 
+		 */
+		public MultitenancySchemaSwitchWork(final String schema) {
+			this.schema = schema;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see org.hibernate.jdbc.Work#execute(java.sql.Connection)
+		 */
+		@Override
+		public void execute(final Connection connection) throws SQLException {
+			switchSchema(schema, connection);
+		}
+
 	}
 }

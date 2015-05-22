@@ -19,6 +19,11 @@
 
 package org.opentides.util;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -861,6 +866,29 @@ public class CrudUtil {
 	 */
 	public static boolean isCollection(final Object ob) {
 		return ob instanceof Collection || ob instanceof Map;
+	}
+
+	/**
+	 * Clones a base entity using serialization. Make sure that all the classes
+	 * in object's graph are serializable.
+	 * 
+	 * @param source
+	 * @return
+	 */
+	public static BaseEntity clone(final BaseEntity source) {
+		try {
+			final ByteArrayOutputStream buf = new ByteArrayOutputStream();
+			final ObjectOutputStream o = new ObjectOutputStream(buf);
+			o.writeObject(source);
+
+			final ObjectInputStream in = new ObjectInputStream(
+					new ByteArrayInputStream(buf.toByteArray()));
+			return (BaseEntity) in.readObject();
+		} catch (ClassNotFoundException | IOException e) {
+			_log.error("Failed to clone source object " + source.getClass(), e);
+		}
+
+		return null;
 	}
 
 }

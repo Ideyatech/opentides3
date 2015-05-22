@@ -29,6 +29,7 @@ import org.opentides.bean.user.MultitenantUser;
 import org.opentides.bean.user.Tenant;
 import org.opentides.bean.user.UserCredential;
 import org.opentides.service.AccountTypeService;
+import org.opentides.service.MultitenantUserService;
 import org.opentides.service.TenantService;
 import org.opentides.service.UserService;
 import org.opentides.util.StringUtil;
@@ -47,16 +48,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/system/tenant")
 @Controller
 public class TenantCrudController extends BaseCrudController<Tenant> {
-	
+
 	@Autowired
 	private AccountTypeService accountTypeService;
-	
+
 	@Autowired
 	@Qualifier("userService")
 	private UserService userService;
-	
+
+	@Autowired
+	private MultitenantUserService multitenantUserService;
+
 	/**
-	 * Post construct that initializes the crud page to {@code "/base/tenant-crud"}.
+	 * Post construct that initializes the crud page to
+	 * {@code "/base/tenant-crud"}.
 	 */
 	@PostConstruct
 	public void init() {
@@ -67,13 +72,12 @@ public class TenantCrudController extends BaseCrudController<Tenant> {
 	public List<AccountType> accountTypeList() {
 		return accountTypeService.findAll();
 	}
-	
+
 	/**
 	 * Responsible for changing the password of the {@code BaseUser} if a
 	 * {@code newPassword} is set.
 	 * 
-	 * Also responsible for ensuring that {@code BaseUser} is linked to the
-	 * {@code Tenant}.
+	 * This will also trigger the creation of the tenant schema.
 	 * 
 	 * @param command
 	 */
@@ -83,22 +87,18 @@ public class TenantCrudController extends BaseCrudController<Tenant> {
 		if (owner != null) {
 			final UserCredential credential = owner.getCredential();
 			if (!StringUtil.isEmpty(credential.getNewPassword())) {
-				credential.setPassword(userService.encryptPassword(credential.getNewPassword()));
+				credential.setPassword(userService.encryptPassword(credential
+						.getNewPassword()));
 			}
 
 			owner.setTenant(command);
 		}
-		command.setSchema(((TenantService)service).findUniqueSchemaName(command.getCompany()));
-		command.setDbVersion(1l);
-	}
-	
 
-	/* (non-Javadoc)
-	 * @see org.opentides.web.controller.BaseCrudController#postCreate(org.opentides.bean.BaseEntity)
-	 */
-	@Override
-	protected void postCreate(final Tenant tenant) {
-		((TenantService)getService()).createTenantSchema(tenant);
+		command.setSchema(((TenantService) service)
+				.findUniqueSchemaName(command.getCompany()));
+		command.setDbVersion(1l);
+
+		((TenantService) getService()).createTenantSchema(command, owner);
 	}
 
 	/**
@@ -116,21 +116,22 @@ public class TenantCrudController extends BaseCrudController<Tenant> {
 		if (owner != null) {
 			final UserCredential credential = owner.getCredential();
 			if (!StringUtil.isEmpty(credential.getNewPassword())) {
-				credential.setPassword(userService.encryptPassword(credential.getNewPassword()));
+				credential.setPassword(userService.encryptPassword(credential
+						.getNewPassword()));
 			}
 
-			owner.setTenant(command);
+			// multitenantUserService.persistUserToTenantDb(command, owner);
 		}
 	}
-	
+
 	/**
-	 * Method that adds to the model parameter {@code uiModel} the results {@code results} 
-	 * of {@link BaseCrudController } search method.
+	 * Method that adds to the model parameter {@code uiModel} the results
+	 * {@code results} of {@link BaseCrudController } search method.
 	 */
 	@Override
-	protected void onLoadSearch(final Tenant command, final BindingResult bindingResult, 
-			final Model uiModel, final HttpServletRequest request,
-			final HttpServletResponse response) {
+	protected void onLoadSearch(final Tenant command,
+			final BindingResult bindingResult, final Model uiModel,
+			final HttpServletRequest request, final HttpServletResponse response) {
 		uiModel.addAttribute("results", search(command, request));
 	}
 }

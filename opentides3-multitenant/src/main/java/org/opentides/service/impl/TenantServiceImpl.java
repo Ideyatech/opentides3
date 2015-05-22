@@ -18,9 +18,11 @@
  */
 package org.opentides.service.impl;
 
+import org.opentides.bean.user.MultitenantUser;
 import org.opentides.bean.user.Tenant;
 import org.opentides.dao.TenantDao;
 import org.opentides.persistence.hibernate.MultiTenantSchemaUpdate;
+import org.opentides.service.MultitenantUserService;
 import org.opentides.service.TenantService;
 import org.opentides.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +43,9 @@ public class TenantServiceImpl extends BaseCrudServiceImpl<Tenant> implements
 	@Autowired
 	private MultiTenantSchemaUpdate multiTenantSchemaUpdate;
 
+	@Autowired
+	private MultitenantUserService multitenantUserService;
+
 	@Override
 	public String findUniqueSchemaName(final String company) {
 		final String schema = company.replaceAll("[^a-zA-Z]", "");
@@ -57,10 +62,14 @@ public class TenantServiceImpl extends BaseCrudServiceImpl<Tenant> implements
 	}
 
 	@Override
-	public boolean createTenantSchema(final Tenant tenant) {
+	public boolean createTenantSchema(final Tenant tenant,
+			final MultitenantUser owner) {
 		// create the schema
-		final String schema = (tenant == null) ? "" : tenant.getSchema();
+		final String schema = (tenant.getSchema() == null) ? "" : tenant
+				.getSchema();
 		multiTenantSchemaUpdate.schemaEvolve(schema);
+		multitenantUserService.persistUserToTenantDb(tenant, owner);
+		
 		return true;
 	}
 

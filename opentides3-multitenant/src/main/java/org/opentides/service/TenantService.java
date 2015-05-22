@@ -19,6 +19,7 @@
 
 package org.opentides.service;
 
+import org.opentides.bean.user.MultitenantUser;
 import org.opentides.bean.user.Tenant;
 
 /**
@@ -37,7 +38,7 @@ public interface TenantService extends BaseCrudService<Tenant> {
 	/**
 	 * Creates the schema of the tenant using JPA database create.
 	 */
-	public boolean createTenantSchema(Tenant tenant);
+	public boolean createTenantSchema(Tenant tenant, MultitenantUser owner);
 	
 	/**
 	 * Backups and drop the schema of the tenant.
