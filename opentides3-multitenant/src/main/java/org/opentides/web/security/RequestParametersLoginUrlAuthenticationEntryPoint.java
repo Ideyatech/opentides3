@@ -8,11 +8,12 @@
  */
 package org.opentides.web.security;
 
+import java.util.Enumeration;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
-import org.opentides.util.StringUtil;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 
@@ -29,7 +30,6 @@ public class RequestParametersLoginUrlAuthenticationEntryPoint extends
 	public RequestParametersLoginUrlAuthenticationEntryPoint(
 			final String loginFormUrl) {
 		super(loginFormUrl);
-		setUseForward(true);
 	}
 
 	private static final Logger _log = Logger
@@ -53,29 +53,36 @@ public class RequestParametersLoginUrlAuthenticationEntryPoint extends
 				response, exception);
 		_log.debug("Login form URL is " + login);
 
-		StringBuffer url = new StringBuffer(request.getRequestURI()
-				.substring(request.getContextPath().length()));
+		StringBuffer url = new StringBuffer(request.getRequestURI().substring(
+				request.getContextPath().length()));
 		_log.debug("Request URI is " + url);
-		
-		if (url.lastIndexOf(login) < 0 ) {
 
-			final int lastIndex = url.lastIndexOf("/");
-			// this is to avoid double slashes when appending the login url
-			// e.g. opentides3//login
-			if ((lastIndex == url.length() - 1)
-					&& (login.startsWith("/"))) {
-				url.deleteCharAt(lastIndex);
-			}
-
+		if (url.lastIndexOf(login) < 0) {
 			url = new StringBuffer(login);
-			if (!StringUtil.isEmpty(request.getQueryString())) {
-				_log.debug("Appending query string "
-						+ request.getQueryString());
-				url.append(";").append(request.getQueryString());
-			}
+
+			final String params = appendRequestParameters(request);
+			_log.debug("Appending query string " + params);
+			url.append(params);
 		}
-		
+
+		_log.debug("Login URL will be " + url.toString());
 		return url.toString();
 	}
 
+	protected String appendRequestParameters(final HttpServletRequest request) {
+		final StringBuilder params = new StringBuilder(";");
+		final Enumeration<String> parameterNames = request.getParameterNames();
+		while (parameterNames.hasMoreElements()) {
+			final String paramName = parameterNames.nextElement();
+			params.append(paramName);
+			params.append("=");
+			final String paramValue = request.getParameter(paramName);
+			params.append(paramValue);
+
+			if (parameterNames.hasMoreElements()) {
+				params.append("&");
+			}
+		}
+		return params.toString();
+	}
 }
