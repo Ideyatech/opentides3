@@ -43,12 +43,13 @@ public class SecurityUtil {
 	 */
 	public static SessionUser getSessionUser() {
 		try {
-			Object userObj = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-			if (userObj instanceof SessionUser)
+			final Object userObj = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			if (userObj instanceof SessionUser) {
 				return ((SessionUser) userObj);
-		} catch (NullPointerException npe) {
+			}
+		} catch (final NullPointerException npe) {
 			_log.warn("No Security Context Found!");
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			_log.error(e.getMessage());
 		}
 		return null;
@@ -67,10 +68,10 @@ public class SecurityUtil {
 	 * @param permission
 	 * @return
 	 */
-	public static boolean currentUserHasPermission(String permission) {
-		SessionUser user = SecurityUtil.getSessionUser();
+	public static boolean currentUserHasPermission(final String permission) {
+		final SessionUser user = SecurityUtil.getSessionUser();
 		if (user!=null && user.getAuthorities()!=null) {
-			GrantedAuthority auth = new SimpleGrantedAuthority(permission);
+			final GrantedAuthority auth = new SimpleGrantedAuthority(permission);
 			return user.getAuthorities().contains(auth);
 		}
 		return false;
@@ -82,11 +83,12 @@ public class SecurityUtil {
 	 * @return
 	 */
 	public static Integer userTimeZone() {
-		Object timeZone = SecurityUtil.getSessionUser().getProfile().get("TZ_DIFF");
-		if (timeZone == null)
+		final Object timeZone = SecurityUtil.getSessionUser().getProfile().get("TZ_DIFF");
+		if (timeZone == null) {
 			return 0;
-		else
+		} else {
 			return new Integer(timeZone.toString());
+		}
 	}
 	
 	/**
@@ -95,7 +97,7 @@ public class SecurityUtil {
 	 * @return
 	 */
 	public static Date userNow() {
-		Integer tzDiff = SecurityUtil.userTimeZone();
+		final Integer tzDiff = SecurityUtil.userTimeZone();
 		return DateUtils.addHours(new Date(), tzDiff);
 	}
 
