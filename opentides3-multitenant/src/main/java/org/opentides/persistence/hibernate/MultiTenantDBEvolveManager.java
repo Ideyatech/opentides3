@@ -43,8 +43,10 @@ public class MultiTenantDBEvolveManager extends DBEvolveManager {
 
 		// Hibernate specific code
 		final Session session = entityManager.unwrap(Session.class);
+		final String originatingSchema = session.getTenantIdentifier();
 		MultitenancyUtil.switchSchema(schemaName, session);
 		super.evolve();
+		MultitenancyUtil.switchSchema(originatingSchema, session);
 	}
 
 }
