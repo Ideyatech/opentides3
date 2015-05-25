@@ -19,7 +19,7 @@
 			default-target-url="/"
 			authentication-failure-url="/?login_error=authentication-failed" login-processing-url="/login"/>
 
-		<sec:logout logout-url="/logout" logout-success-url="/" />
+		<sec:logout logout-url="/logout" delete-cookies="JSESSIONID" success-handler-ref="logoutHandler" />
 		
 		<sec:intercept-url pattern="/"  access="permitAll"/>
 		<sec:intercept-url pattern="/**" access="isAuthenticated()" />
