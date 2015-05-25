@@ -9,7 +9,6 @@
 package org.opentides.dao;
 
 import org.opentides.bean.user.MultitenantUser;
-import org.opentides.bean.user.Tenant;
 
 /**
  * @author Jeric
@@ -20,6 +19,6 @@ public interface MultitenantUserDao extends BaseEntityDao<MultitenantUser, Long>
 	 * 
 	 * @param user
 	 */
-	public void persistUserToTenantDb(final Tenant tenant,
+	public void persistUserToTenantDb(final String schema,
 			final MultitenantUser owner);
 }

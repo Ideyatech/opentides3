@@ -11,14 +11,13 @@ package org.opentides.dao.impl;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.opentides.bean.user.MultitenantUser;
-import org.opentides.bean.user.Tenant;
 import org.opentides.bean.user.UserGroup;
 import org.opentides.dao.MultitenantUserDao;
+import org.opentides.service.TenantService;
 import org.opentides.service.UserGroupService;
 import org.opentides.util.MultitenancyUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.util.Assert;
 
 /**
  * @author Jeric
@@ -35,6 +34,8 @@ public class MultitenantUserDaoJpaImpl extends
 	@Autowired
 	private UserGroupService userGroupService;
 
+	@Autowired
+	private TenantService tenantService;
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -43,32 +44,26 @@ public class MultitenantUserDaoJpaImpl extends
 	 * bean.user.MultitenantUser)
 	 */
 	@Override
-	public void persistUserToTenantDb(final Tenant tenant,
+	public void persistUserToTenantDb(final String schema,
 			final MultitenantUser owner) {
-		Assert.notNull(owner);
-		Assert.notNull(tenant);
 
 		final Session session = getEntityManager().unwrap(Session.class);
 		final String originatingSchema = session.getTenantIdentifier();
-		final String schema = tenant.getSchema();
 
 		_log.debug("Switching to tenant schema " + schema);
 		// switch to the schema of the tenant and save the owner
 		MultitenancyUtil.switchSchema(schema, session);
 
+		_log.info("Creating owner on tenant schema " + schema);
+		saveEntityModel(owner);
+
 		if (owner.getGroups() == null || owner.getGroups().isEmpty()) {
-			// make sure that default admin group exists
-			userGroupService.setupAdminGroup();
 			final UserGroup userGroup = userGroupService
 					.loadUserGroupByName("Administrator");
 			owner.addGroup(userGroup);
+			_log.info("Adding Administrator user group");
+			saveEntityModel(owner);
 		}
-
-		// remove the reference to the tenant since this is stored in the
-		// "master" database
-		owner.setTenant(null);
-		_log.info("Creating owner on tenant schema " + schema);
-		saveEntityModel(owner);
 
 		_log.debug("Switching back to originating schema " + originatingSchema);
 		// switch the connection back to the original schema and continue with

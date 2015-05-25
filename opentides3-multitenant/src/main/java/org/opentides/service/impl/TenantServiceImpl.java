@@ -21,13 +21,19 @@ package org.opentides.service.impl;
 import org.opentides.bean.user.MultitenantUser;
 import org.opentides.bean.user.Tenant;
 import org.opentides.dao.TenantDao;
+import org.opentides.persistence.hibernate.MultiTenantDBEvolveManager;
 import org.opentides.persistence.hibernate.MultiTenantSchemaUpdate;
 import org.opentides.service.MultitenantUserService;
 import org.opentides.service.TenantService;
+import org.opentides.util.CrudUtil;
 import org.opentides.util.StringUtil;
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionTemplate;
 
 /**
  * @author allantan
@@ -44,7 +50,15 @@ public class TenantServiceImpl extends BaseCrudServiceImpl<Tenant> implements
 	private MultiTenantSchemaUpdate multiTenantSchemaUpdate;
 
 	@Autowired
+	private MultiTenantDBEvolveManager multitenantDBEvolveManager;
+
+	@Autowired
 	private MultitenantUserService multitenantUserService;
+
+	@Autowired
+	private BeanFactory beanFactory;
+
+	private TransactionTemplate transactionTemplate;
 
 	@Override
 	public String findUniqueSchemaName(final String company) {
@@ -62,13 +76,22 @@ public class TenantServiceImpl extends BaseCrudServiceImpl<Tenant> implements
 	}
 
 	@Override
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public boolean createTenantSchema(final Tenant tenant,
 			final MultitenantUser owner) {
 		// create the schema
 		final String schema = (tenant.getSchema() == null) ? "" : tenant
 				.getSchema();
+
 		multiTenantSchemaUpdate.schemaEvolve(schema);
-		multitenantUserService.persistUserToTenantDb(tenant, owner);
+		multitenantDBEvolveManager.evolve(schema);
+
+		// create a copy of the user since we are persisting this to the tenant
+		// db
+		final MultitenantUser userCopy = (MultitenantUser) CrudUtil
+				.clone(owner);
+
+		multitenantUserService.persistUserToTenantDb(tenant, userCopy);
 		
 		return true;
 	}

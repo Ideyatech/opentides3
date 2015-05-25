@@ -12,8 +12,8 @@ import org.opentides.bean.user.MultitenantUser;
 import org.opentides.bean.user.Tenant;
 import org.opentides.dao.MultitenantUserDao;
 import org.opentides.service.MultitenantUserService;
-import org.opentides.util.CrudUtil;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 /**
  * @author Jeric
@@ -26,8 +26,16 @@ public class MultitenantUserServiceImpl extends
 	@Override
 	public void persistUserToTenantDb(final Tenant tenant,
 			final MultitenantUser owner) {
-		// create a copy of the user and persist to the tenant db
-		final MultitenantUser copy = (MultitenantUser) CrudUtil.clone(owner);
-		((MultitenantUserDao) getDao()).persistUserToTenantDb(tenant, copy);
+		Assert.notNull(owner);
+		Assert.notNull(tenant);
+
+		final String schema = tenant.getSchema();
+		final String tenantName = tenant.getCompany();
+
+		owner.setTenant(null);
+		owner.setSchemaName(schema);
+		owner.setTenantName(tenantName);
+
+		((MultitenantUserDao) getDao()).persistUserToTenantDb(schema, owner);
 	}
 }
