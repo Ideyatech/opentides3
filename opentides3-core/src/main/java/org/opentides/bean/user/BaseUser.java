@@ -64,7 +64,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 public class BaseUser extends BaseEntity implements ImageUploadable {
 
 	private static final long serialVersionUID = 7634675501487373408L;
-	
+
 	@Column(name = "FIRSTNAME")
 	@JsonView(Views.FormView.class)
 	private String firstName;
@@ -72,16 +72,16 @@ public class BaseUser extends BaseEntity implements ImageUploadable {
 	@Column(name = "LASTNAME")
 	@JsonView(Views.FormView.class)
 	private String lastName;
-	
-	@Column(name = "MIDDLENAME", nullable=true)
+
+	@Column(name = "MIDDLENAME", nullable = true)
 	@JsonView(Views.FormView.class)
 	private String middleName;
 
-	@Column(name = "EMAIL", unique=true)
+	@Column(name = "EMAIL", unique = true)
 	@JsonView(Views.SearchView.class)
 	private String emailAddress;
-	
-	@Column(name = "OFFICE", nullable=true)
+
+	@Column(name = "OFFICE", nullable = true)
 	@JsonView(Views.SearchView.class)
 	private String office;
 
@@ -93,52 +93,53 @@ public class BaseUser extends BaseEntity implements ImageUploadable {
 	@JoinTable(name = "USER_GROUP", joinColumns = { @JoinColumn(name = "USER_ID") }, inverseJoinColumns = { @JoinColumn(name = "GROUP_ID") })
 	@JsonView(Views.SearchView.class)
 	private Set<UserGroup> groups;
-	
+
 	@Column(name = "LASTLOGIN")
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonView(Views.DisplayView.class)
-	private Date lastLogin;	
-	
-	@Column(name="LANGUAGE")
+	private Date lastLogin;
+
+	@Column(name = "LANGUAGE")
 	private String language;
-	
-	@Column(name="LAST_LOGIN_IP")
+
+	@Column(name = "LAST_LOGIN_IP")
 	@JsonView(Views.DisplayView.class)
 	private String lastLoginIP;
-	
-	@Column(name="PREV_LOGIN_IP")
+
+	@Column(name = "PREV_LOGIN_IP")
 	@JsonView(Views.DisplayView.class)
 	private String prevLoginIP;
 
-	@Column(name="LAST_FAILED_IP")
+	@Column(name = "LAST_FAILED_IP")
 	@JsonView(Views.DisplayView.class)
 	private String lastFailedIP;
 
-	@Column(name="TOTAL_LOGIN_COUNT")
+	@Column(name = "TOTAL_LOGIN_COUNT")
 	@JsonView(Views.DisplayView.class)
 	private Long totalLoginCount;
-	
-	@Column(name="FAILED_LOGIN_COUNT")
+
+	@Column(name = "FAILED_LOGIN_COUNT")
 	@JsonView(Views.DisplayView.class)
 	private Long failedLoginCount;
-	
-	@Column(name="LAST_FAILED_LOGIN_MILLIS")
+
+	@Column(name = "LAST_FAILED_LOGIN_MILLIS")
 	@JsonView(Views.DisplayView.class)
 	private Long lastFailedLoginMillis;
-	
+
 	// ImageUploadable requirements
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-	@JoinTable(name = "USER_PHOTO", 
-			joinColumns = { @JoinColumn(name = "USER_ID", referencedColumnName = "ID") }, 
-			inverseJoinColumns = @JoinColumn(name = "PHOTO_ID")
-	)
+	@JoinTable(name = "USER_PHOTO", joinColumns = { @JoinColumn(name = "USER_ID", referencedColumnName = "ID") }, inverseJoinColumns = @JoinColumn(name = "PHOTO_ID"))
 	@JsonView(Views.FormView.class)
 	private List<ImageInfo> images;
 
 	@Column(name = "SCHEMA_NAME")
 	@JsonView(Views.SearchView.class)
 	private String schemaName;
-	
+
+	@Column(name = "TENANT_NAME")
+	@JsonView(Views.SearchView.class)
+	private String tenantName;
+
 	@Transient
 	private transient MultipartFile photo;
 
@@ -148,35 +149,38 @@ public class BaseUser extends BaseEntity implements ImageUploadable {
 		images = new ArrayList<ImageInfo>();
 		groups = new HashSet<UserGroup>();
 	}
-	
+
 	/**
-	 * Creates a clone of this object containing basic information including the following:
-	 * firstName, lastName, middleName, emailAddress and lastLogin.
+	 * Creates a clone of this object containing basic information including the
+	 * following: firstName, lastName, middleName, emailAddress and lastLogin.
 	 * This function is used to populate the user object associated to AuditLog.
 	 * 
 	 * Note: groups and credentials are not cloned.
+	 * 
 	 * @param clone
 	 * @return
 	 */
 	public BaseUser cloneUserProfile() {
-		BaseUser clone = new BaseUser();
-		clone.firstName    = firstName;
-		clone.lastName     = lastName;
-		clone.middleName   = middleName;
+		final BaseUser clone = new BaseUser();
+		clone.firstName = firstName;
+		clone.lastName = lastName;
+		clone.middleName = middleName;
 		clone.emailAddress = emailAddress;
-		clone.office	   = office;
-		clone.language	   = language;
-		clone.lastLogin    = lastLogin;
-		clone.credential   = credential;
+		clone.office = office;
+		clone.language = language;
+		clone.lastLogin = lastLogin;
+		clone.credential = credential;
 		clone.lastFailedIP = lastFailedIP;
-		clone.lastLoginIP  = lastLoginIP;
-		clone.prevLoginIP  = prevLoginIP;
-		clone.totalLoginCount  = totalLoginCount;
+		clone.lastLoginIP = lastLoginIP;
+		clone.prevLoginIP = prevLoginIP;
+		clone.totalLoginCount = totalLoginCount;
 		clone.failedLoginCount = failedLoginCount;
+		clone.schemaName = schemaName;
+		clone.tenantName = tenantName;
 		return clone;
 	}
 
-	public void addGroup(UserGroup group) {
+	public void addGroup(final UserGroup group) {
 		if (group == null) {
 			throw new IllegalArgumentException("Null group.");
 		}
@@ -186,7 +190,7 @@ public class BaseUser extends BaseEntity implements ImageUploadable {
 		groups.add(group);
 	}
 
-	public void removeGroup(UserGroup group) {
+	public void removeGroup(final UserGroup group) {
 		if (group == null) {
 			throw new IllegalArgumentException("Null group.");
 		}
@@ -194,7 +198,7 @@ public class BaseUser extends BaseEntity implements ImageUploadable {
 			groups.remove(group);
 		}
 	}
-	
+
 	/**
 	 * Returns the complete name by concatenating lastName and firstName
 	 * 
@@ -214,17 +218,18 @@ public class BaseUser extends BaseEntity implements ImageUploadable {
 
 	/**
 	 * Returns the username from credential object
+	 * 
 	 * @return
 	 */
-	@PrimaryField(label="Username")
+	@PrimaryField(label = "Username")
 	public String getUsername() {
 		if (credential != null) {
 			return credential.getUsername();
 		} else {
 			return null;
-		}		
+		}
 	}
-	
+
 	/**
 	 * Returns Last Name, First Name Middle Name
 	 * 
@@ -244,17 +249,20 @@ public class BaseUser extends BaseEntity implements ImageUploadable {
 		}
 		return name;
 	}
-	
+
 	/**
 	 * Checks if this user has the given permission.
 	 * 
-	 * @param permission the permission to check
+	 * @param permission
+	 *            the permission to check
 	 * @return true if user has the given permission, false otherwise
 	 */
-	public boolean hasPermission(String permission) {
-		if (groups==null) return false;
-		for (UserGroup group : groups) {
-			for (UserAuthority userRole : group.getAuthorities()) {
+	public boolean hasPermission(final String permission) {
+		if (groups == null) {
+			return false;
+		}
+		for (final UserGroup group : groups) {
+			for (final UserAuthority userRole : group.getAuthorities()) {
 				if (permission.equals(userRole.getAuthority())) {
 					return true;
 				}
@@ -262,15 +270,16 @@ public class BaseUser extends BaseEntity implements ImageUploadable {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Get all authorities of the user
+	 * 
 	 * @return a list of {@link UserAuthority} objects
 	 */
 	public List<UserAuthority> getAuthorities() {
-		List<UserAuthority> permissions = new ArrayList<UserAuthority>();
-		for (UserGroup group : groups) {
-			for (UserAuthority userAuthority : group.getAuthorities()) {
+		final List<UserAuthority> permissions = new ArrayList<UserAuthority>();
+		for (final UserGroup group : groups) {
+			for (final UserAuthority userAuthority : group.getAuthorities()) {
 				permissions.add(userAuthority);
 			}
 		}
@@ -281,17 +290,17 @@ public class BaseUser extends BaseEntity implements ImageUploadable {
 	public String toString() {
 		return getCompleteName();
 	}
-	
+
 	@SearchableFields
 	public List<String> searchableFields() {
-		List<String> props = new ArrayList<String>();
+		final List<String> props = new ArrayList<String>();
 		props.add("firstName");
 		props.add("lastName");
 		props.add("emailAddress");
 		props.add("credential.username");
 		return props;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -302,7 +311,7 @@ public class BaseUser extends BaseEntity implements ImageUploadable {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj) {
 			return true;
 		}
@@ -335,9 +344,10 @@ public class BaseUser extends BaseEntity implements ImageUploadable {
 	/**
 	 * Setter method for firstName.
 	 *
-	 * @param firstName the firstName to set
+	 * @param firstName
+	 *            the firstName to set
 	 */
-	public final void setFirstName(String firstName) {
+	public final void setFirstName(final String firstName) {
 		this.firstName = firstName;
 	}
 
@@ -353,9 +363,10 @@ public class BaseUser extends BaseEntity implements ImageUploadable {
 	/**
 	 * Setter method for lastName.
 	 *
-	 * @param lastName the lastName to set
+	 * @param lastName
+	 *            the lastName to set
 	 */
-	public final void setLastName(String lastName) {
+	public final void setLastName(final String lastName) {
 		this.lastName = lastName;
 	}
 
@@ -371,9 +382,10 @@ public class BaseUser extends BaseEntity implements ImageUploadable {
 	/**
 	 * Setter method for middleName.
 	 *
-	 * @param middleName the middleName to set
+	 * @param middleName
+	 *            the middleName to set
 	 */
-	public final void setMiddleName(String middleName) {
+	public final void setMiddleName(final String middleName) {
 		this.middleName = middleName;
 	}
 
@@ -389,9 +401,10 @@ public class BaseUser extends BaseEntity implements ImageUploadable {
 	/**
 	 * Setter method for emailAddress.
 	 *
-	 * @param emailAddress the emailAddress to set
+	 * @param emailAddress
+	 *            the emailAddress to set
 	 */
-	public final void setEmailAddress(String emailAddress) {
+	public final void setEmailAddress(final String emailAddress) {
 		this.emailAddress = emailAddress;
 	}
 
@@ -403,9 +416,10 @@ public class BaseUser extends BaseEntity implements ImageUploadable {
 	}
 
 	/**
-	 * @param office the office to set
+	 * @param office
+	 *            the office to set
 	 */
-	public final void setOffice(String office) {
+	public final void setOffice(final String office) {
 		this.office = office;
 	}
 
@@ -421,11 +435,12 @@ public class BaseUser extends BaseEntity implements ImageUploadable {
 	/**
 	 * Setter method for credential.
 	 *
-	 * @param credential the credential to set
+	 * @param credential
+	 *            the credential to set
 	 */
-	public final void setCredential(UserCredential credential) {
+	public final void setCredential(final UserCredential credential) {
 		this.credential = credential;
-		credential.setUser(this);		
+		credential.setUser(this);
 	}
 
 	/**
@@ -440,28 +455,30 @@ public class BaseUser extends BaseEntity implements ImageUploadable {
 	/**
 	 * Setter method for groups.
 	 *
-	 * @param groups the groups to set
+	 * @param groups
+	 *            the groups to set
 	 */
-	public final void setGroups(Set<UserGroup> groups) {
+	public final void setGroups(final Set<UserGroup> groups) {
 		this.groups = groups;
 	}
-	
+
 	/**
 	 * Returns the list of groups for display purposes
+	 * 
 	 * @return
 	 */
-	@JsonView(value=Views.SearchView.class) 
+	@JsonView(value = Views.SearchView.class)
 	public final String getDisplayGroups() {
-		StringBuilder display = new StringBuilder();
+		final StringBuilder display = new StringBuilder();
 		int count = 0;
-		for (UserGroup group:groups) {
+		for (final UserGroup group : groups) {
 			if (count++ > 0) {
 				display.append(", ");
 			}
 			display.append(group.getName());
 		}
 		return display.toString();
-		
+
 	}
 
 	/**
@@ -476,9 +493,10 @@ public class BaseUser extends BaseEntity implements ImageUploadable {
 	/**
 	 * Setter method for lastLogin.
 	 *
-	 * @param lastLogin the lastLogin to set
+	 * @param lastLogin
+	 *            the lastLogin to set
 	 */
-	public final void setLastLogin(Date lastLogin) {
+	public final void setLastLogin(final Date lastLogin) {
 		this.lastLogin = lastLogin;
 	}
 
@@ -494,9 +512,10 @@ public class BaseUser extends BaseEntity implements ImageUploadable {
 	/**
 	 * Setter method for language.
 	 *
-	 * @param language the language to set
+	 * @param language
+	 *            the language to set
 	 */
-	public final void setLanguage(String language) {
+	public final void setLanguage(final String language) {
 		this.language = language;
 	}
 
@@ -512,9 +531,10 @@ public class BaseUser extends BaseEntity implements ImageUploadable {
 	/**
 	 * Setter method for lastLoginIP.
 	 *
-	 * @param lastLoginIP the lastLoginIP to set
+	 * @param lastLoginIP
+	 *            the lastLoginIP to set
 	 */
-	public final void setLastLoginIP(String lastLoginIP) {
+	public final void setLastLoginIP(final String lastLoginIP) {
 		this.lastLoginIP = lastLoginIP;
 	}
 
@@ -530,9 +550,10 @@ public class BaseUser extends BaseEntity implements ImageUploadable {
 	/**
 	 * Setter method for prevLoginIP.
 	 *
-	 * @param prevLoginIP the prevLoginIP to set
+	 * @param prevLoginIP
+	 *            the prevLoginIP to set
 	 */
-	public final void setPrevLoginIP(String prevLoginIP) {
+	public final void setPrevLoginIP(final String prevLoginIP) {
 		this.prevLoginIP = prevLoginIP;
 	}
 
@@ -548,9 +569,10 @@ public class BaseUser extends BaseEntity implements ImageUploadable {
 	/**
 	 * Setter method for lastFailedIP.
 	 *
-	 * @param lastFailedIP the lastFailedIP to set
+	 * @param lastFailedIP
+	 *            the lastFailedIP to set
 	 */
-	public final void setLastFailedIP(String lastFailedIP) {
+	public final void setLastFailedIP(final String lastFailedIP) {
 		this.lastFailedIP = lastFailedIP;
 	}
 
@@ -566,9 +588,10 @@ public class BaseUser extends BaseEntity implements ImageUploadable {
 	/**
 	 * Setter method for totalLoginCount.
 	 *
-	 * @param totalLoginCount the totalLoginCount to set
+	 * @param totalLoginCount
+	 *            the totalLoginCount to set
 	 */
-	public final void setTotalLoginCount(Long totalLoginCount) {
+	public final void setTotalLoginCount(final Long totalLoginCount) {
 		this.totalLoginCount = totalLoginCount;
 	}
 
@@ -584,29 +607,30 @@ public class BaseUser extends BaseEntity implements ImageUploadable {
 	/**
 	 * Setter method for failedLoginCount.
 	 *
-	 * @param failedLoginCount the failedLoginCount to set
+	 * @param failedLoginCount
+	 *            the failedLoginCount to set
 	 */
-	public final void setFailedLoginCount(Long failedLoginCount) {
+	public final void setFailedLoginCount(final Long failedLoginCount) {
 		this.failedLoginCount = failedLoginCount;
 	}
-	
+
 	/**
 	 * Increment login count by 1
 	 */
 	public void incrementFailedLoginCount() {
-		if(failedLoginCount == null) {
+		if (failedLoginCount == null) {
 			failedLoginCount = 0l;
 		}
-		failedLoginCount ++;
+		failedLoginCount++;
 	}
-	
+
 	/**
 	 * Set failedLoginCount to 0
 	 */
 	public void resetFailedLoginCount() {
 		failedLoginCount = 0l;
 	}
-	
+
 	/**
 	 * @return the lastFailedLoginMillis
 	 */
@@ -615,71 +639,91 @@ public class BaseUser extends BaseEntity implements ImageUploadable {
 	}
 
 	/**
-	 * @param lastFailedLoginMillis the lastFailedLoginMillis to set
+	 * @param lastFailedLoginMillis
+	 *            the lastFailedLoginMillis to set
 	 */
-	public void setLastFailedLoginMillis(Long lastFailedLoginMillis) {
+	public void setLastFailedLoginMillis(final Long lastFailedLoginMillis) {
 		this.lastFailedLoginMillis = lastFailedLoginMillis;
-	}
-	
-	
-	
-	/**
-	 * @return the schemaName
-	 */
-	public final String getSchemaName() {
-		return schemaName;
-	}
-
-	/**
-	 * @param schemaName the schemaName to set
-	 */
-	public final void setSchemaName(String schemaName) {
-		this.schemaName = schemaName;
 	}
 
 	@Override
 	public List<ImageInfo> getImages() {
 		return images;
 	}
-	
+
 	@Override
 	public MultipartFile getImage() {
 		return photo;
 	}
-	
+
 	@Override
 	public ImageInfo getPrimaryImage() {
-		if(!CollectionUtils.isEmpty(images)) {
-			for(ImageInfo imageInfo : images) {
-				if(imageInfo.getIsPrimary()) {
+		if (!CollectionUtils.isEmpty(images)) {
+			for (final ImageInfo imageInfo : images) {
+				if (imageInfo.getIsPrimary()) {
 					return imageInfo;
 				}
 			}
 		}
 		return new ImageInfo();
 	}
-	
-	public void setPhotos(List<ImageInfo> photos) {
+
+	public void setPhotos(final List<ImageInfo> photos) {
 		images = photos;
 	}
-	
-	public void setPhoto(MultipartFile photo) {
+
+	public void setPhoto(final MultipartFile photo) {
 		this.photo = photo;
 	}
-	
+
 	@Override
-	public void addImage(ImageInfo photoInfo){
+	public void addImage(final ImageInfo photoInfo) {
 		synchronized (photoInfo) {
-			if (images == null){
+			if (images == null) {
 				images = new ArrayList<ImageInfo>();
 			}
 			images.add(photoInfo);
 		}
 	}
-	
+
+	// End of ImageUploadable requirements
+
+	/**
+	 * @param schemaName
+	 *            the schemaName to set
+	 */
+	public void setSchemaName(final String schemaName) {
+		this.schemaName = schemaName;
+	}
+
+	/**
+	 * @return the schemaName
+	 */
+	public String getSchemaName() {
+		return schemaName;
+	}
+
+	/**
+	 * @param tenantName
+	 *            the tenantName to set
+	 */
+	public void setTenantName(final String tenantName) {
+		this.tenantName = tenantName;
+	}
+
+	/**
+	 * @return the tenantName
+	 */
+	public String getTenantName() {
+		return tenantName;
+	}
+
+	/**
+	 * 
+	 * @return class name
+	 */
 	public String getUserClass() {
 		return this.getClass().getName();
 	}
 
-	// End of ImageUploadable requirements
 }
