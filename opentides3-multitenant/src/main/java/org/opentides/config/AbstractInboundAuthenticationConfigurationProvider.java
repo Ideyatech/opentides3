@@ -115,7 +115,7 @@ public abstract class AbstractInboundAuthenticationConfigurationProvider extends
 		final Rule parameterRule = RuleBuilder
 				.define()
 				.when(Direction.isInbound().and(
-						Path.matches(loginPath + ";{*}a={account}")))
+						Path.matches(loginPath + "{*}{*}a={account}")))
 				.perform(op);
 
 		final Rule subDomainRule = RuleBuilder
@@ -126,7 +126,7 @@ public abstract class AbstractInboundAuthenticationConfigurationProvider extends
 				.perform(op);
 
 		// Rules for processing:
-		// (1) Path matches are /path;a=<account> and <account>.domain.com
+		// (1) Path matches are /path...a=<account> and <account>.domain.com
 		final Configuration configuration = ConfigurationBuilder.begin()
 				.addRule(parameterRule).addRule(subDomainRule);
 
