@@ -18,6 +18,9 @@ package org.opentides.persistence.user;
 
 import java.util.Map;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.opentides.bean.user.SessionUser;
@@ -35,6 +38,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -65,41 +69,44 @@ public class AuthenticationDaoJdbcImpl extends JdbcDaoImpl implements
 
 	// TODO: Rewrite this to use JPA EntityManager... if at all, possible.
 
+	@PersistenceContext
+	protected EntityManager entityManager;
+
 	@Autowired
-	private UserService userService;
+	protected UserService userService;
 
 	/**
 	 * Flag to determine if user locking will be enabled. By default set to true
 	 */
 	@Value("${enableUserLockCheck}")
-	private boolean enableUserLockCheck = true;
+	protected boolean enableUserLockCheck = true;
 
 	/**
 	 * The lockout seconds for locked users
 	 */
 	@Value("${lockoutSeconds}")
-	private long lockoutSeconds = 60;
+	protected long lockoutSeconds = 60;
 
 	/**
 	 * The max attempts
 	 */
 	@Value("${maxAttempts}")
-	private long maxAttempts = 5;
+	protected long maxAttempts = 5;
 
 	private static Log _log = LogFactory
 			.getLog(AuthenticationDaoJdbcImpl.class);
 
-	private static String loadUserByUsernameQuery = "select U.USERID ID, FIRSTNAME, LASTNAME, EMAIL, P.LASTLOGIN LASTLOGIN, P.OFFICE OFFICE "
+	protected static String loadUserByUsernameQuery = "select U.USERID ID, FIRSTNAME, LASTNAME, EMAIL, P.LASTLOGIN LASTLOGIN, P.OFFICE OFFICE "
 			+ "from USER_PROFILE P inner join USERS U on P.ID=U.USERID where U.USERNAME=?";
 
 	@Override
 	public UserDetails loadUserByUsername(final String username)
 			throws UsernameNotFoundException, DataAccessException {
 		try {
+			preAuthentication();
+
 			UserDetails user = super.loadUserByUsername(username);
 			final SessionUser sessUser = new SessionUser(user);
-
-			preAuthentication();
 
 			final Map<String, Object> result = getJdbcTemplate().queryForMap(
 					loadUserByUsernameQuery.replace("?", "'" + username + "'"));
@@ -128,17 +135,14 @@ public class AuthenticationDaoJdbcImpl extends JdbcDaoImpl implements
 		}
 	}
 
-	/**
-	 * This method is called before any user authentication is done. Child
-	 * classes can override this to perform their pre-authentication activities.
-	 * 
-	 */
-	protected void preAuthentication() {
-	}
-
 	@Override
+	@Transactional
 	public void onApplicationEvent(final ApplicationEvent event) {
 		if (enableUserLockCheck) {
+			if (event instanceof AbstractAuthenticationEvent) {
+				preAuthenticationEvent();
+			}
+
 			if (event instanceof AuthenticationSuccessEvent) {
 				userService.unlockUser(((AbstractAuthenticationEvent) event)
 						.getAuthentication().getName());
@@ -161,6 +165,22 @@ public class AuthenticationDaoJdbcImpl extends JdbcDaoImpl implements
 				}
 			}
 		}
+	}
+
+	/**
+	 * This method is called before any user authentication is done. Child
+	 * classes can override this to perform their pre-authentication activities.
+	 * 
+	 */
+	protected void preAuthentication() {
+	}
+
+	/**
+	 * This method is called before any application event that is a instance of
+	 * AbstractAuthenticationEvent. Child classes can override this to perform
+	 * their pre-authentication event activities.
+	 */
+	protected void preAuthenticationEvent() {
 	}
 
 	/**

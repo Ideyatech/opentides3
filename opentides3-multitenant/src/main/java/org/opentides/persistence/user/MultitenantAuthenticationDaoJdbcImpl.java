@@ -11,6 +11,7 @@ package org.opentides.persistence.user;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.hibernate.Session;
 import org.opentides.util.MultitenancyUtil;
 import org.opentides.util.StringUtil;
 
@@ -24,7 +25,15 @@ public class MultitenantAuthenticationDaoJdbcImpl extends
 	private static final Logger _log = Logger
 			.getLogger(MultitenantAuthenticationDaoJdbcImpl.class);
 
-	private static String loadSchemaNameByTenantQuery = "select t._SCHEMA AS 'SCHEMA' from TENANT t where t.company = ?";
+	protected static String loadSchemaNameByTenantQuery = "select t._SCHEMA AS 'SCHEMA' from TENANT t where t.company = ?";
+
+	/**
+	 * 
+	 */
+	public MultitenantAuthenticationDaoJdbcImpl() {
+		loadUserByUsernameQuery = "select U.USERID ID, FIRSTNAME, LASTNAME, EMAIL, P.LASTLOGIN LASTLOGIN, P.OFFICE OFFICE, P.SCHEMA_NAME SCHEMA_NAME, P.TENANT_NAME TENANT_NAME "
+				+ "from USER_PROFILE P inner join USERS U on P.ID=U.USERID where U.USERNAME=?";
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -36,7 +45,7 @@ public class MultitenantAuthenticationDaoJdbcImpl extends
 	@Override
 	protected void preAuthentication() {
 		final String tenant = MultitenancyUtil.getTenantName();
-		_log.debug("Tenant set in the URL is [" + tenant + "]");
+		_log.info("Tenant set in the URL is [" + tenant + "]");
 		if (!StringUtil.isEmpty(tenant)) {
 			// The list of tenants is set in the "master" database for
 			// multi-tenant applications and this contains the schema name
@@ -53,10 +62,30 @@ public class MultitenantAuthenticationDaoJdbcImpl extends
 						.toLowerCase();
 				_log.info("Altering connection to schema [" + schema + "]");
 				getJdbcTemplate().execute("USE " + schema);
+				MultitenancyUtil.setSchemaName(schema);
 			} else {
 				_log.warn("Tenant " + tenant
 						+ " not found. Using default master schema.");
 			}
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.opentides.persistence.user.AuthenticationDaoJdbcImpl#preApplicationEvent
+	 * ()
+	 */
+	@Override
+	protected void preAuthenticationEvent() {
+		// We will need to change the schema so that the authentication event
+		// activities will use the tenant schema
+		final String schema = MultitenancyUtil.getSchemaName();
+		_log.debug("Schema taken from thread local is " + schema);
+		if (!StringUtil.isEmpty(schema)) {
+			final Session session = entityManager.unwrap(Session.class);
+			MultitenancyUtil.switchSchema(schema, session);
 		}
 	}
 

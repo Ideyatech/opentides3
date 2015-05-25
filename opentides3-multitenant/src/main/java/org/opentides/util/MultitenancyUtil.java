@@ -24,7 +24,16 @@ public class MultitenancyUtil {
 
 	private static final Logger _log = Logger.getLogger(MultitenancyUtil.class);
 
+	/**
+	 * This is used to store the tenant name of the account during log in
+	 */
 	private static ThreadLocal<String> tenantName = new ThreadLocal<String>();
+
+	/**
+	 * This is used to store the schema name of the tenant. This will be
+	 * populated by the user authentication service
+	 */
+	private static ThreadLocal<String> schemaName = new ThreadLocal<String>();
 
 	/**
 	 * @return the tenantName
@@ -38,18 +47,33 @@ public class MultitenancyUtil {
 	}
 
 	/**
-	 * @param tenantId
+	 * @param schemaName
+	 *            the schemaName to set
+	 */
+	public static void setSchemaName(final String schema) {
+		schemaName.set(schema);
+	}
+
+	/**
+	 * @return the schemaName
+	 */
+	public static String getSchemaName() {
+		return schemaName.get();
+	}
+
+	/**
+	 * @param schema
 	 * @param connection
 	 */
-	public static void switchSchema(final String tenantId,
+	public static void switchSchema(final String schema,
 			final Connection connection) {
 		try {
-			_log.debug("Altering connection to schema [" + tenantId + "]");
-			connection.createStatement().execute("USE " + tenantId);
+			_log.debug("Altering connection to schema [" + schema + "]");
+			connection.createStatement().execute("USE " + schema);
 		} catch (final SQLException e) {
 			throw new HibernateException(
 					"Could not alter JDBC connection to specified schema ["
-							+ tenantId + "]", e);
+							+ schema + "]", e);
 		}
 	}
 

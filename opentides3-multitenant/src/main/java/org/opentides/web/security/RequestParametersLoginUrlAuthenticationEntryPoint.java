@@ -70,8 +70,12 @@ public class RequestParametersLoginUrlAuthenticationEntryPoint extends
 	}
 
 	protected String appendRequestParameters(final HttpServletRequest request) {
-		final StringBuilder params = new StringBuilder(";");
+		final StringBuilder params = new StringBuilder();
 		final Enumeration<String> parameterNames = request.getParameterNames();
+		if(parameterNames.hasMoreElements()) {
+			params.append(";");
+		}
+		
 		while (parameterNames.hasMoreElements()) {
 			final String paramName = parameterNames.nextElement();
 			params.append(paramName);
