@@ -30,6 +30,7 @@ public class RequestParametersLoginUrlAuthenticationEntryPoint extends
 	public RequestParametersLoginUrlAuthenticationEntryPoint(
 			final String loginFormUrl) {
 		super(loginFormUrl);
+		setUseForward(true);
 	}
 
 	private static final Logger _log = Logger

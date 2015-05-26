@@ -27,13 +27,13 @@ public class MultitenancyUtil {
 	/**
 	 * This is used to store the tenant name of the account during log in
 	 */
-	private static ThreadLocal<String> tenantName = new ThreadLocal<String>();
+	private static ThreadLocal<String> tenantName = new InheritableThreadLocal<String>();
 
 	/**
 	 * This is used to store the schema name of the tenant. This will be
 	 * populated by the user authentication service
 	 */
-	private static ThreadLocal<String> schemaName = new ThreadLocal<String>();
+	private static ThreadLocal<String> schemaName = new InheritableThreadLocal<String>();
 
 	/**
 	 * @return the tenantName
