@@ -20,6 +20,7 @@
 package org.opentides.util;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.persistence.EntityManager;
@@ -27,6 +28,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
 import org.apache.log4j.Logger;
+import org.springframework.util.CollectionUtils;
 
 /**
  * This utility allows creation of Hibernate session directly.
@@ -84,6 +86,8 @@ public class DatabaseUtil {
      */
     private static Properties propertiesMap;
     
+	private static Map<String, Object> jpaPropertyMap;
+
     /**
      * List of classes handled by JPA/Hibernate.
      */
@@ -120,7 +124,13 @@ public class DatabaseUtil {
             				"org.opentides.persistence.config.JPAEclipseLinkSessionCustomizer");
             		propertiesMap.put("javax.persistence.nonJtaDataSource",jndiName);
               }
-            	emf = Persistence.createEntityManagerFactory(persistenceUnitName, propertiesMap);
+
+				// merge jpa properties configured in XML, if any
+				CollectionUtils.mergePropertiesIntoMap(propertiesMap,
+						jpaPropertyMap);
+
+				emf = Persistence.createEntityManagerFactory(
+						persistenceUnitName, jpaPropertyMap);
         	}
 			entityManager = emf.createEntityManager();
         } catch (final Throwable ex) {
@@ -199,6 +209,15 @@ public class DatabaseUtil {
 	public final void setPersistenceFile(final String persistenceFile) {
 		_log.info("Setting Persistence file to " + persistenceFile);
 		DatabaseUtil.persistenceFile = persistenceFile;
+	}
+
+	/**
+	 * @param jpaPropertyMap
+	 *            the jpaPropertyMap to set
+	 */
+	public static void setJpaPropertyMap(
+			final Map<String, Object> jpaPropertyMap) {
+		DatabaseUtil.jpaPropertyMap = jpaPropertyMap;
 	}
 
 	/**
