@@ -18,11 +18,6 @@ package org.opentides.persistence.user;
 
 import java.util.Map;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.opentides.bean.user.SessionUser;
 import org.opentides.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,9 +64,6 @@ public class AuthenticationDaoJdbcImpl extends JdbcDaoImpl implements
 
 	// TODO: Rewrite this to use JPA EntityManager... if at all, possible.
 
-	@PersistenceContext
-	protected EntityManager entityManager;
-
 	@Autowired
 	protected UserService userService;
 
@@ -92,9 +84,6 @@ public class AuthenticationDaoJdbcImpl extends JdbcDaoImpl implements
 	 */
 	@Value("${maxAttempts}")
 	protected long maxAttempts = 5;
-
-	private static Log _log = LogFactory
-			.getLog(AuthenticationDaoJdbcImpl.class);
 
 	protected static String loadUserByUsernameQuery = "select U.USERID ID, FIRSTNAME, LASTNAME, EMAIL, P.LASTLOGIN LASTLOGIN, P.OFFICE OFFICE "
 			+ "from USER_PROFILE P inner join USERS U on P.ID=U.USERID where U.USERNAME=?";
@@ -126,12 +115,9 @@ public class AuthenticationDaoJdbcImpl extends JdbcDaoImpl implements
 				}
 			}
 			return sessUser;
-		} catch (final UsernameNotFoundException ex1) {
-			_log.error(ex1);
-			throw ex1;
-		} catch (final DataAccessException ex2) {
-			_log.error(ex2);
-			throw ex2;
+		} catch (final UsernameNotFoundException | DataAccessException e) {
+			logger.error(e);
+			throw e;
 		}
 	}
 
@@ -144,8 +130,10 @@ public class AuthenticationDaoJdbcImpl extends JdbcDaoImpl implements
 			}
 
 			if (event instanceof AuthenticationSuccessEvent) {
-				userService.unlockUser(((AbstractAuthenticationEvent) event)
+				final AuthenticationSuccessEvent authenticationSuccessEvent = (AuthenticationSuccessEvent) event;
+				userService.unlockUser(authenticationSuccessEvent
 						.getAuthentication().getName());
+				userService.updateLogin(authenticationSuccessEvent);
 			} else if (event instanceof AbstractAuthenticationFailureEvent) {
 				final String username = ((AbstractAuthenticationEvent) event)
 						.getAuthentication().getName();

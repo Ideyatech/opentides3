@@ -10,6 +10,9 @@ package org.opentides.persistence.user;
 
 import java.util.Map;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.opentides.util.MultitenancyUtil;
@@ -26,6 +29,9 @@ public class MultitenantAuthenticationDaoJdbcImpl extends
 			.getLogger(MultitenantAuthenticationDaoJdbcImpl.class);
 
 	protected static String loadSchemaNameByTenantQuery = "select t._SCHEMA AS 'SCHEMA' from TENANT t where t.company = ?";
+
+	@PersistenceContext
+	protected EntityManager entityManager;
 
 	/**
 	 * 
