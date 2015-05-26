@@ -64,16 +64,16 @@ public class MultiTenantIdentifierResolver implements
 			// Check if the schema name was saved by the user authentication
 			// service after authenticating the login or by the logout listener
 			// after logging out
-			final String schemaNameFromUrl = MultitenancyUtil.getSchemaName();
-			if (!StringUtil.isEmpty(schemaNameFromUrl)) {
-				_log.debug("Using URL schema [" + schemaNameFromUrl
+			final String schemaName = MultitenancyUtil.getSchemaName();
+			if (!StringUtil.isEmpty(schemaName)) {
+				_log.debug("Using thread local schema [" + schemaName
 						+ "] for schema.");
-				return schemaNameFromUrl;
+				return schemaName;
 			}
 		}
 
 		// no logged-in user, use default tenant
-		_log.debug("Using [" + defaultSchema + "] for schema.");
+		_log.debug("Using default schema [" + defaultSchema + "] for schema.");
 		return defaultSchema;
 	}
 
