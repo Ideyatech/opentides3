@@ -29,4 +29,6 @@
 	<bean id="logoutHandler" class="org.opentides.web.security.MultitenantLogoutListener" autowire="byName">
 		<property name="defaultTargetUrl" value="/login?login_error=logout" />
 	</bean>
+	
+	<bean id="preFormLoginFilter" class="org.opentides.web.security.MultitenantSessionFilter" />
 </beans>

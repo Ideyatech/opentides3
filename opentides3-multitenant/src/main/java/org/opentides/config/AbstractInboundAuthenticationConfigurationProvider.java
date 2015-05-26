@@ -20,6 +20,7 @@ import org.opentides.persistence.hibernate.MultiTenantConnectionProviderImpl;
 import org.opentides.persistence.hibernate.MultiTenantIdentifierResolver;
 import org.opentides.persistence.user.AuthenticationDaoJdbcImpl;
 import org.opentides.util.MultitenancyUtil;
+import org.opentides.web.security.MultitenantSessionFilter;
 
 /*
  * This source code is property of Ideyatech,Inc.
@@ -64,8 +65,15 @@ import org.opentides.util.MultitenancyUtil;
  * 
  * @author Jeric
  *
+ * @deprecated This URL filter is now replaced by the more robust
+ *             {@link MultitenantSessionFilter}. This new Spring Security filter
+ *             also looks for the account name in the URL similar to this
+ *             filter. However, it stores the account not only in the thread
+ *             local but in the session as well. This ensures that the
+ *             parameters survive the URL redirects/forwards.
  */
 
+@Deprecated
 public abstract class AbstractInboundAuthenticationConfigurationProvider extends
 		HttpConfigurationProvider {
 

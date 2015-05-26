@@ -17,12 +17,14 @@
 		access-decision-manager-ref="httpRequestAccessDecisionManager">
 		<sec:form-login login-page="/"
 			default-target-url="/"
-			authentication-failure-url="/?login_error=authentication-failed" login-processing-url="/login"/>
+			authentication-failure-handler-ref="authenticationFailureHandler"/>
 
 		<sec:logout logout-url="/logout" delete-cookies="JSESSIONID" success-handler-ref="logoutHandler" />
 		
 		<sec:intercept-url pattern="/"  access="permitAll"/>
 		<sec:intercept-url pattern="/**" access="isAuthenticated()" />
+		
+		<sec:custom-filter ref="preFormLoginFilter" before="FORM_LOGIN_FILTER" />
 
 		<sec:anonymous />
 		<sec:http-basic />
@@ -54,6 +56,8 @@
 		</sec:authentication-provider>
 	</sec:authentication-manager>
 	
+	<bean id="preFormLoginFilter" class="org.opentides.web.security.PreFormLoginFilter" />
+	
 	<bean id="loginUrlAuthenticationEntryPoint" class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
 		<constructor-arg type="java.lang.String" value="/login" />
 	</bean>
@@ -72,17 +76,18 @@
 		</property>
 	</bean>
 	
-	<!-- to keep track of last login and last login error -->
-	<bean id="loginListener" class="org.opentides.listener.LoginListener" autowire="byName" />
-	
 	<bean id="logoutHandler" class="org.opentides.listener.LogoutListener" autowire="byName">
 		<property name="defaultTargetUrl" value="/login?login_error=logout" />
+	</bean>
+	
+	<bean id="authenticationFailureHandler" class="org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler">
+		<property name="defaultFailureUrl" value="/login?login_error=authentication-failed" />
 	</bean>
 	
 	<bean id="roleVoter" class="org.springframework.security.access.vote.RoleVoter">
 		<property name="rolePrefix" value="ROLE_" />
 	</bean>
-
+	
 	<bean id="authenticatedVoter"
 		class="org.springframework.security.access.vote.AuthenticatedVoter" />
 
