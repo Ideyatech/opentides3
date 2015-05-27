@@ -200,6 +200,7 @@ public class SynchronizableController {
 			
 		} catch (IOException e) {
 			_log.error(EXCEPTION + e.getMessage(), e);
+			result = FAIL;
 			errorMsg = "Client parameters parsing error.";
 			
 			e.printStackTrace();
