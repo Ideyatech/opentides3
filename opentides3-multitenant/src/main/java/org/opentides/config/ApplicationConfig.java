@@ -30,7 +30,6 @@ import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 
 /**
@@ -38,8 +37,11 @@ import org.springframework.context.annotation.Primary;
  * service.
  * 
  * @author allantan
+ * 
+ * @deprecated No longer used since the lists of users will be stored in each
+ *             tenant's database.
  */
-@Configuration
+@Deprecated
 public class ApplicationConfig {
 
 	private static final Logger _log = Logger
