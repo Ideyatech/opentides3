@@ -23,7 +23,7 @@ public class ChangeLogServiceImpl extends BaseCrudServiceImpl<ChangeLog> impleme
 	public List<ChangeLog> findAfterVersion(Long version) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("version", version);
-		return getDao().findByNamedQuery("jpql.mobilesync.findChangesAfterVersion", map, 0, 100);
+		return getDao().findByNamedQuery("jpql.mobilesync.findChangesAfterVersion", map, 0, 250);
 	}
 	
 	@Override
