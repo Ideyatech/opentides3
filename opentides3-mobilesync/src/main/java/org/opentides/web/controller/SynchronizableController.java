@@ -266,6 +266,9 @@ public class SynchronizableController {
 			}
 
 			response.setLatestVersion(latestVersion);
+		}else{
+			result = FAIL;
+			errorMsg = "End point is null";
 		}
 
 		Gson gSon = new Gson();
