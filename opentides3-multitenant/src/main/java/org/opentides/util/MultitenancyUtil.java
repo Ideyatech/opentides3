@@ -13,8 +13,6 @@ import java.sql.SQLException;
 
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
-import org.hibernate.Session;
-import org.hibernate.jdbc.Work;
 
 /**
  * @author Jeric
@@ -75,42 +73,5 @@ public class MultitenancyUtil {
 					"Could not alter JDBC connection to specified schema ["
 							+ schema + "]", e);
 		}
-	}
-
-	/**
-	 * 
-	 * @param tenantId
-	 * @param connection
-	 */
-	public static void switchSchema(final String tenantId, final Session session) {
-		session.doWork(new MultitenancyUtil.MultitenancySchemaSwitchWork(
-				tenantId));
-	}
-
-	/**
-	 * 
-	 * @author Jeric
-	 *
-	 */
-	protected static class MultitenancySchemaSwitchWork implements Work {
-		private String schema;
-
-		/**
-		 * 
-		 */
-		public MultitenancySchemaSwitchWork(final String schema) {
-			this.schema = schema;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.hibernate.jdbc.Work#execute(java.sql.Connection)
-		 */
-		@Override
-		public void execute(final Connection connection) throws SQLException {
-			switchSchema(schema, connection);
-		}
-
 	}
 }

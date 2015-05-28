@@ -33,7 +33,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.TransactionTemplate;
 
 /**
  * @author allantan
@@ -57,8 +56,6 @@ public class TenantServiceImpl extends BaseCrudServiceImpl<Tenant> implements
 
 	@Autowired
 	private BeanFactory beanFactory;
-
-	private TransactionTemplate transactionTemplate;
 
 	@Override
 	public String findUniqueSchemaName(final String company) {

@@ -9,13 +9,12 @@
 package org.opentides.dao.impl;
 
 import org.apache.log4j.Logger;
-import org.hibernate.Session;
 import org.opentides.bean.user.MultitenantUser;
 import org.opentides.bean.user.UserGroup;
 import org.opentides.dao.MultitenantUserDao;
+import org.opentides.persistence.jdbc.MultitenantJdbcTemplate;
 import org.opentides.service.TenantService;
 import org.opentides.service.UserGroupService;
-import org.opentides.util.MultitenancyUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -32,10 +31,14 @@ public class MultitenantUserDaoJpaImpl extends
 			.getLogger(MultitenantUserDaoJpaImpl.class);
 
 	@Autowired
-	private UserGroupService userGroupService;
+	protected UserGroupService userGroupService;
 
 	@Autowired
-	private TenantService tenantService;
+	protected TenantService tenantService;
+
+	@Autowired
+	protected MultitenantJdbcTemplate jdbcTemplate;
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -47,12 +50,11 @@ public class MultitenantUserDaoJpaImpl extends
 	public void persistUserToTenantDb(final String schema,
 			final MultitenantUser owner) {
 
-		final Session session = getEntityManager().unwrap(Session.class);
-		final String originatingSchema = session.getTenantIdentifier();
+		final String originatingSchema = jdbcTemplate.getCurrentSchemaName();
 
 		_log.debug("Switching to tenant schema " + schema);
 		// switch to the schema of the tenant and save the owner
-		MultitenancyUtil.switchSchema(schema, session);
+		jdbcTemplate.switchSchema(schema);
 
 		_log.info("Creating owner on tenant schema " + schema);
 		saveEntityModel(owner);
@@ -66,9 +68,9 @@ public class MultitenantUserDaoJpaImpl extends
 		}
 
 		_log.debug("Switching back to originating schema " + originatingSchema);
-		// switch the connection back to the original schema and continue with
-		// the operation
-		MultitenancyUtil.switchSchema(originatingSchema, session);
+		// switch the connection back to the original schema and continue
+		// with the operation
+		jdbcTemplate.switchSchema(originatingSchema);
 	}
 
 }

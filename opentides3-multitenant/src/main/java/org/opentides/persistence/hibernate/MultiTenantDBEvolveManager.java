@@ -8,13 +8,10 @@
  */
 package org.opentides.persistence.hibernate;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 import org.apache.log4j.Logger;
-import org.hibernate.Session;
 import org.opentides.persistence.evolve.DBEvolveManager;
-import org.opentides.util.MultitenancyUtil;
+import org.opentides.persistence.jdbc.MultitenantJdbcTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
@@ -28,8 +25,8 @@ import org.springframework.util.Assert;
 public class MultiTenantDBEvolveManager extends DBEvolveManager {
 	private static final Logger _log = Logger.getLogger(DBEvolveManager.class);
 	
-	@PersistenceContext
-	private EntityManager entityManager;
+	@Autowired
+	protected MultitenantJdbcTemplate jdbcTemplate;
 
 	/**
 	 * Evolves the given schema using the same evolve list of the master schema.
@@ -39,14 +36,13 @@ public class MultiTenantDBEvolveManager extends DBEvolveManager {
 	@Transactional
 	public void evolve(final String schemaName) {
 		Assert.notNull(schemaName);
-		_log.debug("Evolving schema [" + schemaName + "]");
 
-		// Hibernate specific code
-		final Session session = entityManager.unwrap(Session.class);
-		final String originatingSchema = session.getTenantIdentifier();
-		MultitenancyUtil.switchSchema(schemaName, session);
+		final String originatingSchema = jdbcTemplate.getCurrentSchemaName();
+
+		_log.debug("Evolving schema [" + schemaName + "]");
+		jdbcTemplate.switchSchema(schemaName);
 		super.evolve();
-		MultitenancyUtil.switchSchema(originatingSchema, session);
+		jdbcTemplate.switchSchema(originatingSchema);
 	}
 
 }

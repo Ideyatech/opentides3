@@ -10,13 +10,11 @@ package org.opentides.persistence.user;
 
 import java.util.Map;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 import org.apache.log4j.Logger;
-import org.hibernate.Session;
+import org.opentides.persistence.jdbc.MultitenantJdbcTemplate;
 import org.opentides.util.MultitenancyUtil;
 import org.opentides.util.StringUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @author Jeric
@@ -30,8 +28,8 @@ public class MultitenantAuthenticationDaoJdbcImpl extends
 
 	protected static String loadSchemaNameByTenantQuery = "select t._SCHEMA AS 'SCHEMA' from TENANT t where t.company = ?";
 
-	@PersistenceContext
-	protected EntityManager entityManager;
+	@Autowired
+	protected MultitenantJdbcTemplate jdbcTemplate;
 
 	/**
 	 * 
@@ -90,8 +88,7 @@ public class MultitenantAuthenticationDaoJdbcImpl extends
 		final String schema = MultitenancyUtil.getSchemaName();
 		_log.debug("Schema taken from thread local is " + schema);
 		if (!StringUtil.isEmpty(schema)) {
-			final Session session = entityManager.unwrap(Session.class);
-			MultitenancyUtil.switchSchema(schema, session);
+			jdbcTemplate.switchSchema(schema);
 		}
 	}
 
