@@ -18,15 +18,15 @@ import javax.servlet.ServletResponse;
 import org.springframework.web.filter.GenericFilterBean;
 
 /**
- * This filter is inserted before the {@literal FORM_LOGIN_FILTER} in the filter
- * chain. By default, it does nothing and just passes through the next filter in
- * the chain. However, this can be subclassed so that any pre authentication
- * activities can be made by the application.
+ * This filter is inserted after the {@literal SESSION_MANAGEMENT_FILTER} in the
+ * filter chain. By default, it does nothing and just passes through the next
+ * filter in the chain. However, this can be subclassed so that any post-session
+ * creation activities can be made by the application.
  * 
  * @author Jeric
  *
  */
-public class PreFormLoginFilter extends GenericFilterBean {
+public class SessionFilter extends GenericFilterBean {
 
 	/* (non-Javadoc)
 	 * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest, javax.servlet.ServletResponse, javax.servlet.FilterChain)

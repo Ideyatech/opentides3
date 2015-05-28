@@ -13,18 +13,18 @@
 	
     <sec:global-method-security secured-annotations="enabled"/>
 
-	<sec:http auto-config='false' use-expressions="true" entry-point-ref="loginUrlAuthenticationEntryPoint"
+	<sec:http auto-config='false' use-expressions="true"
 		access-decision-manager-ref="httpRequestAccessDecisionManager">
 		<sec:form-login login-page="/"
 			default-target-url="/"
-			authentication-failure-handler-ref="authenticationFailureHandler"/>
+			authentication-failure-handler-ref="authenticationFailureHandler" login-processing-url="/login"/>
 
-		<sec:logout logout-url="/logout" delete-cookies="JSESSIONID" success-handler-ref="logoutHandler" />
+		<sec:logout logout-url="/logout"  success-handler-ref="logoutHandler" />
 		
 		<sec:intercept-url pattern="/"  access="permitAll"/>
 		<sec:intercept-url pattern="/**" access="isAuthenticated()" />
 		
-		<sec:custom-filter ref="preFormLoginFilter" before="FORM_LOGIN_FILTER" />
+		<sec:custom-filter ref="sessionFilter" after="SESSION_MANAGEMENT_FILTER" />
 
 		<sec:anonymous />
 		<sec:http-basic />
@@ -56,12 +56,8 @@
 		</sec:authentication-provider>
 	</sec:authentication-manager>
 	
-	<bean id="preFormLoginFilter" class="org.opentides.web.security.PreFormLoginFilter" />
+	<bean id="sessionFilter" class="org.opentides.web.security.SessionFilter" />
 	
-	<bean id="loginUrlAuthenticationEntryPoint" class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
-		<constructor-arg type="java.lang.String" value="/login" />
-	</bean>
-
 	<bean id="httpRequestAccessDecisionManager"
 		class="org.springframework.security.access.vote.AffirmativeBased">
 		<property name="allowIfAllAbstainDecisions">
@@ -77,11 +73,15 @@
 	</bean>
 	
 	<bean id="logoutHandler" class="org.opentides.listener.LogoutListener" autowire="byName">
-		<property name="defaultTargetUrl" value="/login?login_error=logout" />
+		<property name="defaultTargetUrl" value="/?login_error=logout" />
+	</bean>
+	
+	<bean id="loginEntryPoint" class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
+		<constructor-arg type="java.lang.String" value="/login" />
 	</bean>
 	
 	<bean id="authenticationFailureHandler" class="org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler">
-		<property name="defaultFailureUrl" value="/login?login_error=authentication-failed" />
+		<property name="defaultFailureUrl" value="/?login_error=authentication-failed" />
 	</bean>
 	
 	<bean id="roleVoter" class="org.springframework.security.access.vote.RoleVoter">

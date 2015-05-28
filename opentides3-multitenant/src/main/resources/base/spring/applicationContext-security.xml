@@ -22,13 +22,13 @@
 		</property>
 	</bean>
 	
-	<bean id="loginUrlAuthenticationEntryPoint" class="org.opentides.web.security.RequestParametersLoginUrlAuthenticationEntryPoint">
-		<constructor-arg type="java.lang.String" value="/login" />
-	</bean>
-	
 	<bean id="logoutHandler" class="org.opentides.web.security.MultitenantLogoutListener" autowire="byName">
 		<property name="defaultTargetUrl" value="/login?login_error=logout" />
 	</bean>
 	
-	<bean id="preFormLoginFilter" class="org.opentides.web.security.MultitenantSessionFilter" />
+	<bean id="loginEntryPoint" class="org.opentides.web.security.TenantParameterLoginUrlAuthenticationEntryPoint">
+		<constructor-arg type="java.lang.String" value="/login" />
+	</bean>
+	
+	<bean id="sessionFilter" class="org.opentides.web.security.MultitenantSessionFilter" />
 </beans>

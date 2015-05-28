@@ -2,18 +2,18 @@
  * This source code is property of Ideyatech,Inc.
  * All rights reserved. 
  * 
- * RequestParametersLoginUrlAuthenticationEntryPoint.java
+ * TenantParameterLoginUrlAuthenticationEntryPoint.java
  * May 19, 2015
  *
  */
 package org.opentides.web.security;
 
-import java.util.Enumeration;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
+import org.opentides.util.MultitenancyUtil;
+import org.opentides.util.StringUtil;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 
@@ -24,17 +24,17 @@ import org.springframework.security.web.authentication.LoginUrlAuthenticationEnt
  * @author Jeric
  *
  */
-public class RequestParametersLoginUrlAuthenticationEntryPoint extends
+public class TenantParameterLoginUrlAuthenticationEntryPoint extends
 		LoginUrlAuthenticationEntryPoint {
 
-	public RequestParametersLoginUrlAuthenticationEntryPoint(
+	public TenantParameterLoginUrlAuthenticationEntryPoint(
 			final String loginFormUrl) {
 		super(loginFormUrl);
 		setUseForward(true);
 	}
 
 	private static final Logger _log = Logger
-			.getLogger(RequestParametersLoginUrlAuthenticationEntryPoint.class);
+			.getLogger(TenantParameterLoginUrlAuthenticationEntryPoint.class);
 
 	/*
 	 * (non-Javadoc)
@@ -61,7 +61,7 @@ public class RequestParametersLoginUrlAuthenticationEntryPoint extends
 		if (url.lastIndexOf(login) < 0) {
 			url = new StringBuffer(login);
 
-			final String params = appendRequestParameters(request);
+			final String params = appendTenantName(login);
 			_log.debug("Appending query string " + params);
 			url.append(params);
 		}
@@ -70,24 +70,15 @@ public class RequestParametersLoginUrlAuthenticationEntryPoint extends
 		return url.toString();
 	}
 
-	protected String appendRequestParameters(final HttpServletRequest request) {
+	protected String appendTenantName(final String login) {
 		final StringBuilder params = new StringBuilder();
-		final Enumeration<String> parameterNames = request.getParameterNames();
-		if(parameterNames.hasMoreElements()) {
-			params.append(";");
+		if (!StringUtil.isEmpty(MultitenancyUtil.getTenantName())) {
+			final char separator = login.lastIndexOf("?") < 1 ? '?' : '&';
+			params.append(separator);
+			params.append("a=");
+			params.append(MultitenancyUtil.getTenantName());
 		}
 		
-		while (parameterNames.hasMoreElements()) {
-			final String paramName = parameterNames.nextElement();
-			params.append(paramName);
-			params.append("=");
-			final String paramValue = request.getParameter(paramName);
-			params.append(paramValue);
-
-			if (parameterNames.hasMoreElements()) {
-				params.append("&");
-			}
-		}
 		return params.toString();
 	}
 }
