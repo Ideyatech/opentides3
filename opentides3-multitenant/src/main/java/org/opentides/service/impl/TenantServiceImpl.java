@@ -21,13 +21,10 @@ package org.opentides.service.impl;
 import org.opentides.bean.user.MultitenantUser;
 import org.opentides.bean.user.Tenant;
 import org.opentides.dao.TenantDao;
-import org.opentides.persistence.hibernate.MultiTenantDBEvolveManager;
 import org.opentides.persistence.hibernate.MultiTenantSchemaUpdate;
 import org.opentides.service.MultitenantUserService;
 import org.opentides.service.TenantService;
-import org.opentides.util.CrudUtil;
 import org.opentides.util.StringUtil;
-import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -49,13 +46,7 @@ public class TenantServiceImpl extends BaseCrudServiceImpl<Tenant> implements
 	private MultiTenantSchemaUpdate multiTenantSchemaUpdate;
 
 	@Autowired
-	private MultiTenantDBEvolveManager multitenantDBEvolveManager;
-
-	@Autowired
 	private MultitenantUserService multitenantUserService;
-
-	@Autowired
-	private BeanFactory beanFactory;
 
 	@Override
 	public String findUniqueSchemaName(final String company) {
@@ -72,6 +63,11 @@ public class TenantServiceImpl extends BaseCrudServiceImpl<Tenant> implements
 		return uniqueSchema.toString();
 	}
 
+	/**
+	 * This should be done in a new transaction since the older transaction is
+	 * not aware yet of the new schema that will be created, and thus may cause
+	 * errors because of older fast index
+	 */
 	@Override
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public boolean createTenantSchema(final Tenant tenant,
@@ -79,23 +75,15 @@ public class TenantServiceImpl extends BaseCrudServiceImpl<Tenant> implements
 		// create the schema
 		final String schema = (tenant.getSchema() == null) ? "" : tenant
 				.getSchema();
-
 		multiTenantSchemaUpdate.schemaEvolve(schema);
-		multitenantDBEvolveManager.evolve(schema);
-
-		// create a copy of the user since we are persisting this to the tenant
-		// db
-		final MultitenantUser userCopy = (MultitenantUser) CrudUtil
-				.clone(owner);
-
-		multitenantUserService.persistUserToTenantDb(tenant, userCopy);
+		multitenantUserService.persistUserToTenantDb(tenant, owner);
 		
 		return true;
 	}
 
 	@Override
 	public boolean deleteTenantSchema(final Tenant tenant, final boolean createBackup) {
-		// TODO Auto-generated method stub
-		return false;
+		throw new UnsupportedOperationException(
+				"Deleting of tenant schema is not yet supported.");
 	}
 }

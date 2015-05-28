@@ -32,7 +32,7 @@ import org.opentides.util.StringUtil;
  * @author Jeric
  *
  */
-public class MultitenantSessionFilter extends PreFormLoginFilter {
+public class MultitenantSessionFilter extends SessionFilter {
 
 	/*
 	 * This tries to extract the account/tenant name in the URL either from the
@@ -60,9 +60,7 @@ public class MultitenantSessionFilter extends PreFormLoginFilter {
 				request.getSession().setAttribute("account", tenant);
 				logger.debug("Tenant name [" + tenant
 						+ "] added to session.");
-			}
 
-			if (StringUtil.isEmpty(MultitenancyUtil.getTenantName())) {
 				final String fromSession = (String) request.getSession()
 						.getAttribute("account");
 				MultitenancyUtil.setTenantName(fromSession);

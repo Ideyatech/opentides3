@@ -10,10 +10,8 @@ package org.opentides.dao.impl;
 
 import org.apache.log4j.Logger;
 import org.opentides.bean.user.MultitenantUser;
-import org.opentides.bean.user.UserGroup;
 import org.opentides.dao.MultitenantUserDao;
 import org.opentides.persistence.jdbc.MultitenantJdbcTemplate;
-import org.opentides.service.TenantService;
 import org.opentides.service.UserGroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -32,9 +30,6 @@ public class MultitenantUserDaoJpaImpl extends
 
 	@Autowired
 	protected UserGroupService userGroupService;
-
-	@Autowired
-	protected TenantService tenantService;
 
 	@Autowired
 	protected MultitenantJdbcTemplate jdbcTemplate;
@@ -56,20 +51,12 @@ public class MultitenantUserDaoJpaImpl extends
 		// switch to the schema of the tenant and save the owner
 		jdbcTemplate.switchSchema(schema);
 
-		_log.info("Creating owner on tenant schema " + schema);
+		_log.info("Saving owner on tenant schema " + schema);
 		saveEntityModel(owner);
-
-		if (owner.getGroups() == null || owner.getGroups().isEmpty()) {
-			final UserGroup userGroup = userGroupService
-					.loadUserGroupByName("Administrator");
-			owner.addGroup(userGroup);
-			_log.info("Adding Administrator user group");
-			saveEntityModel(owner);
-		}
 
 		_log.debug("Switching back to originating schema " + originatingSchema);
 		// switch the connection back to the original schema and continue
-		// with the operation
+		// with the operations
 		jdbcTemplate.switchSchema(originatingSchema);
 	}
 

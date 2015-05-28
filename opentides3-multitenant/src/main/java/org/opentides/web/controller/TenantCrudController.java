@@ -29,7 +29,6 @@ import org.opentides.bean.user.MultitenantUser;
 import org.opentides.bean.user.Tenant;
 import org.opentides.bean.user.UserCredential;
 import org.opentides.service.AccountTypeService;
-import org.opentides.service.MultitenantUserService;
 import org.opentides.service.TenantService;
 import org.opentides.service.UserService;
 import org.opentides.util.StringUtil;
@@ -50,14 +49,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class TenantCrudController extends BaseCrudController<Tenant> {
 
 	@Autowired
-	private AccountTypeService accountTypeService;
+	protected AccountTypeService accountTypeService;
 
 	@Autowired
 	@Qualifier("userService")
-	private UserService userService;
-
-	@Autowired
-	private MultitenantUserService multitenantUserService;
+	protected UserService userService;
 
 	/**
 	 * Post construct that initializes the crud page to
@@ -119,8 +115,6 @@ public class TenantCrudController extends BaseCrudController<Tenant> {
 				credential.setPassword(userService.encryptPassword(credential
 						.getNewPassword()));
 			}
-
-			// multitenantUserService.persistUserToTenantDb(command, owner);
 		}
 	}
 

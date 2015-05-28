@@ -58,13 +58,16 @@ public class MultiTenantSchemaUpdate {
 	private static final Logger _log = Logger
 			.getLogger(MultiTenantSchemaUpdate.class);
 
-	private ConnectionProvider connectionProvider = null;
+	private ConnectionProvider connectionProvider;
 
 	@Autowired
 	private PersistenceScanner persistenceScanner;
 
 	@Autowired
 	private DataSource dataSource;
+
+	@Autowired
+	private MultiTenantDBEvolveManager multiTenantDBEvolveManager;
 
 	@Value("${jpa.log_ddl.directory}")
 	private String ddlLogs = "/var/log/ss_ddl/";
@@ -146,8 +149,8 @@ public class MultiTenantSchemaUpdate {
 	 * 
 	 * @param tenantId
 	 */
-	private void initializeSchema(final Configuration cfg, final Connection connection,
-			final String schema) {
+	private void initializeSchema(final Configuration cfg,
+			final Connection connection, final String schema) {
 		// check if there SQL file under the sslScript folder
 		boolean initialized = false;
 
@@ -202,7 +205,10 @@ public class MultiTenantSchemaUpdate {
 				export.setOutputFile(dir + "/schema-" + schema + ".sql");
 				export.setDelimiter(";");
 			}
+
 			export.execute(logDdl, true, false, true);
+
+			multiTenantDBEvolveManager.evolve(schema);
 		}
 
 	}
