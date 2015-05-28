@@ -15,6 +15,8 @@
  */
 package org.opentides.bean.user;
 
+import java.text.NumberFormat;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -159,7 +161,8 @@ public class AccountType extends BaseEntity {
 	public final String getSubscription() {
 		final StringBuilder subs = new StringBuilder();
 		if (amount != null && amount > 0) {
-			subs.append(amount);
+			final NumberFormat format = NumberFormat.getCurrencyInstance();
+			subs.append(format.format(amount));
 		} else {
 			subs.append("Free");
 		}

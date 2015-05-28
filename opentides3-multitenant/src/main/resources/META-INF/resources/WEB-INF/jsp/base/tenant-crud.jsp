@@ -8,6 +8,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="tides" uri="http://www.ideyatech.com/tides"%>
 <%@ taglib prefix="app" tagdir="/WEB-INF/tags"%>
 
@@ -98,7 +99,7 @@
 								<td>${record.company}</td>
 								<td>${record.owner.fullName}</td>
 								<td>${record.accountType.name}</td>
-								<td>${record.expirationDate}</td>
+								<td><fmt:formatDate value="${record.expirationDate}" pattern="MM/dd/yyyy"/></td>
 				                <td>
 									<i class='icon-pencil edit-action' data-id='${record.id}' data-title="<spring:message code="label.edit" />"></i>
 									<i class='icon-trash remove-action' data-id='${record.id}' data-title="<spring:message code="label.delete" />"></i>
