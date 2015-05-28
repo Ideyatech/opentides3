@@ -36,26 +36,26 @@ public class CrudUtilTest {
 	
 	@Test
 	public void testBuildCreateMessage() throws ParseException {
-		SystemCodes sc = new SystemCodes("category","key","value");
-		String expected = "<p class='add-message'>Added new System Codes with Value:<span class='primary-field'>value</span> " +
+		final SystemCodes sc = new SystemCodes("category","key","value");
+		final String expected = "<p class='add-message'>Added new System Codes with Value:<span class='primary-field'>value</span> " +
 				"with the following: Key=<span class='field-value'>KEY</span> and Category=<span class='field-value'>CATEGORY</span> </p>";
 		Assert.assertEquals(expected,
 				CrudUtil.buildCreateMessage(sc));
 		
 		// added date formatting
 		sc.setCreateDate(new Date());		
-		String cDate = DateUtil.dateToString(sc.getCreateDate(), "EEE, dd MMM yyyy HH:mm:ss z");
-		String expected2 = "<p class='add-message'>Added new System Codes with Value:<span class='primary-field'>value</span> " +
+		final String cDate = DateUtil.dateToString(sc.getCreateDate(), "EEE, dd MMM yyyy HH:mm:ss z");
+		final String expected2 = "<p class='add-message'>Added new System Codes with Value:<span class='primary-field'>value</span> " +
 				"with the following: " +
 				"Key=<span class='field-value'>KEY</span> and Category=<span class='field-value'>CATEGORY</span> </p>";
 		Assert.assertEquals(expected2,
 				CrudUtil.buildCreateMessage(sc));
 		
 		// date with no time
-		Date date = DateUtil.stringToDate("03/12/2013", "MM/dd/yyyy");
-		SystemCodes sc3 = new SystemCodes("category","key","value");
+		final Date date = DateUtil.stringToDate("03/12/2013", "MM/dd/yyyy");
+		final SystemCodes sc3 = new SystemCodes("category","key","value");
 		sc3.setCreateDate(date);		
-		String expected3 = "<p class='add-message'>Added new System Codes with Value:<span class='primary-field'>value</span> " +
+		final String expected3 = "<p class='add-message'>Added new System Codes with Value:<span class='primary-field'>value</span> " +
 				"with the following: " +
 				"Key=<span class='field-value'>KEY</span> and Category=<span class='field-value'>CATEGORY</span> </p>";
 		Assert.assertEquals(expected3,
@@ -64,10 +64,10 @@ public class CrudUtilTest {
 
 	@Test
 	public void testGetUpdatedFields() {
-		SystemCodes oldsc = new SystemCodes("categoryold","keyold","value");
-		SystemCodes newsc = new SystemCodes("categorynew","keynew","value");
-		SystemCodes samesc = new SystemCodes("categoryold","keyold","value");	
-		SystemCodes emptysc = new SystemCodes("categorynew","keynew","");
+		final SystemCodes oldsc = new SystemCodes("categoryold","keyold","value");
+		final SystemCodes newsc = new SystemCodes("categorynew","keynew","value");
+		final SystemCodes samesc = new SystemCodes("categoryold","keyold","value");	
+		final SystemCodes emptysc = new SystemCodes("categorynew","keynew","");
 				
 		Assert.assertEquals(Arrays.asList("key", "category"),
 				CrudUtil.getUpdatedFields(oldsc, newsc));
@@ -84,18 +84,18 @@ public class CrudUtilTest {
 	
 	@Test
 	public void testGetUpdatedFieldsArray() {
-		SystemCodes oldsc = new SystemCodes("categoryold","keyold","valueold");
-		SystemCodes newsc = new SystemCodes("categorynew","keynew","valuenew");
-		SystemCodes samesc = new SystemCodes("categoryold","keysame","valuesame");
-		List<SystemCodes> oldFaves = new ArrayList<SystemCodes>();
+		final SystemCodes oldsc = new SystemCodes("categoryold","keyold","valueold");
+		final SystemCodes newsc = new SystemCodes("categorynew","keynew","valuenew");
+		final SystemCodes samesc = new SystemCodes("categoryold","keysame","valuesame");
+		final List<SystemCodes> oldFaves = new ArrayList<SystemCodes>();
 		oldFaves.add(samesc);
 		oldFaves.add(oldsc);
-		List<SystemCodes> newFaves = new ArrayList<SystemCodes>();
+		final List<SystemCodes> newFaves = new ArrayList<SystemCodes>();
 		newFaves.add(newsc);
 		newFaves.add(samesc);
 
-		UserCriteria oldUser = new UserCriteria();
-		UserCriteria newUser = new UserCriteria();
+		final UserCriteria oldUser = new UserCriteria();
+		final UserCriteria newUser = new UserCriteria();
 		oldUser.setFavorites(oldFaves);
 		newUser.setFavorites(oldFaves);
 		
@@ -109,21 +109,21 @@ public class CrudUtilTest {
 	 
 	@Test
 	public void testBuildUpdateMessage() {
-		SystemCodes oldsc = new SystemCodes("categoryold","keyold","value");
-		SystemCodes newsc = new SystemCodes("categorynew","keynew","value");
-		SystemCodes samesc = new SystemCodes("categoryold","keyold","value");	
-		SystemCodes emptysc = new SystemCodes("categorynew","keynew","");
-		String expected = "<p class='change-message'>Changed System Codes with Value:<span class='primary-field'>value</span> " +
+		final SystemCodes oldsc = new SystemCodes("categoryold","keyold","value");
+		final SystemCodes newsc = new SystemCodes("categorynew","keynew","value");
+		final SystemCodes samesc = new SystemCodes("categoryold","keyold","value");	
+		final SystemCodes emptysc = new SystemCodes("categorynew","keynew","");
+		final String expected = "<p class='change-message'>Changed System Codes with Value:<span class='primary-field'>value</span> " +
 				"with the following: Key from <span class='field-value-from'>KEYOLD</span> to <span class='field-value-to'>KEYNEW</span> " +
 				"and Category from <span class='field-value-from'>CATEGORYOLD</span> " +
 				"to <span class='field-value-to'>CATEGORYNEW</span> </p>";
 		Assert.assertEquals(expected,
 				CrudUtil.buildUpdateMessage(oldsc, newsc));
-		String expected2 = "<p class='change-message'>Changed System Codes with Value:<span class='primary-field'>value</span> " +
+		final String expected2 = "<p class='change-message'>Changed System Codes with Value:<span class='primary-field'>value</span> " +
 				"with the following: Value <span class='field-value-removed'>value</span> is removed </p>";		
 		Assert.assertEquals(expected2,
 				CrudUtil.buildUpdateMessage(newsc, emptysc));
-		String expected3 = "<p class='change-message'>Changed System Codes " +
+		final String expected3 = "<p class='change-message'>Changed System Codes " +
 				"with the following: Value is set to <span class='field-value-to'>value</span> </p>";		
 		Assert.assertEquals(expected3,
 				CrudUtil.buildUpdateMessage(emptysc, newsc));
@@ -134,22 +134,22 @@ public class CrudUtilTest {
 
 	@Test
 	public void testBuildUpdateArrayMessage() {
-		SystemCodes oldsc = new SystemCodes("categoryold","keyold","valueold");
-		SystemCodes newsc = new SystemCodes("categorynew","keynew","valuenew");
-		SystemCodes samesc = new SystemCodes("categoryold","keysame","valuesame");
-		List<SystemCodes> oldFaves = new ArrayList<SystemCodes>();
+		final SystemCodes oldsc = new SystemCodes("categoryold","keyold","valueold");
+		final SystemCodes newsc = new SystemCodes("categorynew","keynew","valuenew");
+		final SystemCodes samesc = new SystemCodes("categoryold","keysame","valuesame");
+		final List<SystemCodes> oldFaves = new ArrayList<SystemCodes>();
 		oldFaves.add(samesc);
 		oldFaves.add(oldsc);
-		List<SystemCodes> newFaves = new ArrayList<SystemCodes>();
+		final List<SystemCodes> newFaves = new ArrayList<SystemCodes>();
 		newFaves.add(newsc);
 		newFaves.add(samesc);
 
-		UserCriteria oldUser = new UserCriteria();
-		UserCriteria newUser = new UserCriteria();
+		final UserCriteria oldUser = new UserCriteria();
+		final UserCriteria newUser = new UserCriteria();
 		oldUser.setFavorites(oldFaves);
 		newUser.setFavorites(newFaves);
 		
-		String expected = "<p class='change-message'>Changed User Criteria with the following: added Favorites <span class='field-values-added'>[KEYNEW:valuenew]</span> " +
+		final String expected = "<p class='change-message'>Changed User Criteria with the following: added Favorites <span class='field-values-added'>[KEYNEW:valuenew]</span> " +
 				"and removed Favorites <span class='field-values-removed'>[KEYOLD:valueold]</span> </p>";
 		Assert.assertEquals(expected,
 				CrudUtil.buildUpdateMessage(oldUser, newUser));
@@ -157,22 +157,22 @@ public class CrudUtilTest {
 
 	@Test
 	public void testBuildUpdateSystemCodesMessage() {
-		SystemCodes oldsc = new SystemCodes("categoryold","keyold","old");
-		SystemCodes newsc = new SystemCodes("categorynew","keynew","new");
-		Ninja oldtc = new Ninja();
+		final SystemCodes oldsc = new SystemCodes("categoryold","keyold","old");
+		final SystemCodes newsc = new SystemCodes("categorynew","keynew","new");
+		final Ninja oldtc = new Ninja();
 		oldtc.setFirstName("Samurai");
 		oldtc.setLastName("Ken");
 		oldtc.setStatus(oldsc);
-		Ninja newtc = new Ninja();
+		final Ninja newtc = new Ninja();
 		newtc.setStatus(newsc);
 		newtc.setFirstName("Samurai");
 		newtc.setLastName("Ken");
-		Ninja sametc = new Ninja();
+		final Ninja sametc = new Ninja();
 		sametc.setStatus(oldsc);
 		sametc.setFirstName("Samurai");
 		sametc.setLastName("Ken");
 		
-		String expected = "<p class='change-message'>Changed Ninja with Name:<span class='primary-field'>Samurai Ken</span> with the following: " +
+		final String expected = "<p class='change-message'>Changed Ninja with Name:<span class='primary-field'>Samurai Ken</span> with the following: " +
 				"Status from <span class='field-value-from'>KEYOLD:old</span> to <span class='field-value-to'>KEYNEW:new</span> </p>";
 		Assert.assertEquals(expected,
 				CrudUtil.buildUpdateMessage(oldtc, newtc));
@@ -182,8 +182,8 @@ public class CrudUtilTest {
     
 	@Test
 	public void testBuildDeleteMessage() {
-		SystemCodes oldsc = new SystemCodes("categoryold","keyold","old");
-		String expected = "<p class='delete-message'>Deleted System Codes with Value:<span class='primary-field'>old</span></p>";
+		final SystemCodes oldsc = new SystemCodes("categoryold","keyold","old");
+		final String expected = "<p class='delete-message'>Deleted System Codes with Value:<span class='primary-field'>old</span></p>";
 		Assert.assertEquals(expected,
 				CrudUtil.buildDeleteMessage(oldsc));
 		
@@ -192,7 +192,7 @@ public class CrudUtilTest {
 	@Test 
     public void testBuildURLParameters() {
 		// empty parameter
-    	SystemCodes sc = new SystemCodes();
+    	final SystemCodes sc = new SystemCodes();
     	Assert.assertEquals("", CrudUtil.buildURLParameters(sc));
     	sc.setValue("");
     	Assert.assertEquals("", CrudUtil.buildURLParameters(sc));
@@ -210,7 +210,7 @@ public class CrudUtilTest {
 
     @Test 
     public void testBuildJpaQueryString() {
-    	SystemCodes sc = new SystemCodes();
+    	final SystemCodes sc = new SystemCodes();
     	Assert.assertEquals("", CrudUtil.buildJpaQueryString(sc, true));
     	sc.setValue("");
     	Assert.assertEquals("", CrudUtil.buildJpaQueryString(sc, true));
@@ -218,7 +218,8 @@ public class CrudUtilTest {
     	sc.setKey("PH");
 		Assert.assertEquals(" where obj.key = 'PH'", CrudUtil
 				.buildJpaQueryString(sc, true));
-		Assert.assertEquals(" where obj.key like '%PH%' escape '\\'", CrudUtil
+		Assert.assertEquals(" where obj.key like '%PH%' escape '\\\\'",
+				CrudUtil
 				.buildJpaQueryString(sc, false));
  
     	sc.setValue("Philippines");
@@ -226,7 +227,7 @@ public class CrudUtilTest {
 				" where obj.key = 'PH' and obj.value = 'Philippines'",
        						CrudUtil.buildJpaQueryString(sc, true));
 		Assert.assertEquals(
-						" where obj.key like '%PH%' escape '\\' and obj.value like '%Philippines%' escape '\\'",
+				" where obj.key like '%PH%' escape '\\\\' and obj.value like '%Philippines%' escape '\\\\'",
        						CrudUtil.buildJpaQueryString(sc, false));
 
 //       	Category cat = new Category();
@@ -240,7 +241,7 @@ public class CrudUtilTest {
     
     @Test 
     public void testBuildJpqQueryStringSpecialChars() {
-    	SystemCodes sc = new SystemCodes();
+    	final SystemCodes sc = new SystemCodes();
 		// handle (%)
     	sc.setValue("Phil%");
     	sc.setKey("");
@@ -248,7 +249,7 @@ public class CrudUtilTest {
 				" where obj.value = 'Phil%'",
        						CrudUtil.buildJpaQueryString(sc, true));
 		Assert.assertEquals(
-				" where obj.value like '%Phil\\%%' escape '\\'",
+" where obj.value like '%Phil\\%%' escape '\\\\'",
        						CrudUtil.buildJpaQueryString(sc, false));
 
 		// handle '
@@ -258,7 +259,7 @@ public class CrudUtilTest {
 				" where obj.value = 'Phil''s'",
        						CrudUtil.buildJpaQueryString(sc, true));
 		Assert.assertEquals(
-				" where obj.value like '%Phil''s%' escape '\\'",
+" where obj.value like '%Phil''s%' escape '\\\\'",
        						CrudUtil.buildJpaQueryString(sc, false));
 
 		// handle (\)
@@ -268,7 +269,7 @@ public class CrudUtilTest {
 				" where obj.value = 'Phil''s\\\\Jay'",
        						CrudUtil.buildJpaQueryString(sc, true));
 		Assert.assertEquals(
-				" where obj.value like '%Phil''s\\\\\\\\Jay%' escape '\\'",
+				" where obj.value like '%Phil''s\\\\\\\\Jay%' escape '\\\\'",
        						CrudUtil.buildJpaQueryString(sc, false));
 		
 		// handle (_)
@@ -278,7 +279,7 @@ public class CrudUtilTest {
 				" where obj.value = 'Phil_Jay'",
        						CrudUtil.buildJpaQueryString(sc, true));
 		Assert.assertEquals(
-				" where obj.value like '%Phil\\_Jay%' escape '\\'",
+				" where obj.value like '%Phil\\_Jay%' escape '\\\\'",
        						CrudUtil.buildJpaQueryString(sc, false));
     }
     
@@ -287,8 +288,8 @@ public class CrudUtilTest {
      */
     @Test 
     public void testBuildJpaQueryString2() {
-    	UserCriteria user = new UserCriteria();
-    	UserCredential cred = new UserCredential();
+    	final UserCriteria user = new UserCriteria();
+    	final UserCredential cred = new UserCredential();
     	user.setFirstName("Test");
       	cred.setUsername("testname");
     	cred.setEnabled(true);
@@ -296,7 +297,7 @@ public class CrudUtilTest {
 
 		Assert
 				.assertEquals(
-						" where obj.firstName like '%Test%' escape '\\' and obj.credential.username like '%testname%' escape '\\' and obj.credential.enabled = true",
+				" where obj.firstName like '%Test%' escape '\\\\' and obj.credential.username like '%testname%' escape '\\\\' and obj.credential.enabled = true",
 					CrudUtil.buildJpaQueryString(user, false));
 
 		Assert
@@ -311,8 +312,8 @@ public class CrudUtilTest {
      */
     @Test 
     public void testBuildJpaQueryString3() {
-    	UserCriteria user = new UserCriteria();
-    	UserCredential cred = new UserCredential();
+    	final UserCriteria user = new UserCriteria();
+    	final UserCredential cred = new UserCredential();
     	user.setFirstName("Test");
     	cred.setId(123l);
     	cred.setEnabled(null);
@@ -320,7 +321,7 @@ public class CrudUtilTest {
 
 		Assert
 				.assertEquals(
-						" where obj.firstName like '%Test%' escape '\\' and obj.credential.id = 123",
+				" where obj.firstName like '%Test%' escape '\\\\' and obj.credential.id = 123",
 					CrudUtil.buildJpaQueryString(user, false));
 
 		Assert.assertEquals(
@@ -334,8 +335,8 @@ public class CrudUtilTest {
      */
     @Test 
     public void testBuildJpaQueryString4() {
-    	UserCriteria user = new UserCriteria();
-    	SystemCodes sc = new SystemCodes("STATUS","ACTIVE","Active");
+    	final UserCriteria user = new UserCriteria();
+    	final SystemCodes sc = new SystemCodes("STATUS","ACTIVE","Active");
     	user.setStatus(sc);
 		Assert.assertEquals(
 						" where obj.status.key = 'ACTIVE' and obj.credential.enabled = true",
@@ -347,8 +348,8 @@ public class CrudUtilTest {
      */
     @Test 
     public void testBuildJpaQueryString5() {
-    	UserCriteria user = new UserCriteria();
-    	BaseUser supervisor = new BaseUser();
+    	final UserCriteria user = new UserCriteria();
+    	final BaseUser supervisor = new BaseUser();
     	supervisor.setId(125l);
     	user.setSupervisor(supervisor);
 		Assert.assertEquals(
@@ -357,8 +358,8 @@ public class CrudUtilTest {
     }    
     @Test 
     public void testRetrieveObjectValue() {
-    	UserCriteria user = new UserCriteria();
-    	UserCredential cred = new UserCredential();
+    	final UserCriteria user = new UserCriteria();
+    	final UserCredential cred = new UserCredential();
     	user.setFirstName("Test");
        	user.setEmailAddress("admin@ideyatech.com");
       	cred.setUsername("testname");
@@ -374,13 +375,13 @@ public class CrudUtilTest {
     	try {
     		Assert.assertEquals(null,CrudUtil.retrieveObjectValue(user, "garbage"));
     		Assert.fail("No exception thrown on invalid property [garbage]");
-    	} catch (InvalidImplementationException iie) {
+    	} catch (final InvalidImplementationException iie) {
     		
     	}
     	try {
     		Assert.assertEquals(null,CrudUtil.retrieveObjectValue(user, "credential.garbage"));
     		Assert.fail("No exception thrown on invalid property [credential.garbage]");
-    	} catch (InvalidImplementationException iie) {
+    	} catch (final InvalidImplementationException iie) {
     		
     	}
     }
@@ -388,22 +389,22 @@ public class CrudUtilTest {
     @SuppressWarnings("rawtypes")
 	@Test 
     public void testRetrieveObjectValueArray1() {
-    	UserCriteria user = new UserCriteria();
+    	final UserCriteria user = new UserCriteria();
     	user.setFirstName("Test");
        	user.setEmailAddress("admin@ideyatech.com");
-       	List<SystemCodes> codes = new ArrayList<SystemCodes>();
+       	final List<SystemCodes> codes = new ArrayList<SystemCodes>();
        	codes.add(new SystemCodes("CATEGORY", "STRING_1", "VALUE_1"));
        	codes.add(new SystemCodes("CATEGORY", "STRING_2", "VALUE_2"));
        	codes.add(new SystemCodes("CATEGORY", "STRING_3", "VALUE_3"));
        	user.setFavorites(codes);
 
-       	List keysResult = (List) CrudUtil.retrieveObjectValue(user, "favorites.key");
+       	final List keysResult = (List) CrudUtil.retrieveObjectValue(user, "favorites.key");
        	Assert.assertEquals(3, keysResult.size());
        	Assert.assertEquals("STRING_1", keysResult.get(0));
        	Assert.assertEquals("STRING_2", keysResult.get(1));
        	Assert.assertEquals("STRING_3", keysResult.get(2));
        	
-       	List valuesResult = (List) CrudUtil.retrieveObjectValue(user, "favorites.value");
+       	final List valuesResult = (List) CrudUtil.retrieveObjectValue(user, "favorites.value");
        	Assert.assertEquals(3, keysResult.size());
        	Assert.assertEquals("VALUE_1", valuesResult.get(0));
        	Assert.assertEquals("VALUE_2", valuesResult.get(1));
@@ -412,8 +413,8 @@ public class CrudUtilTest {
 
     @Test 
     public void testRetrieveObjectMap() {
-    	UserCriteria user = new UserCriteria();
-    	UserCredential cred = new UserCredential();
+    	final UserCriteria user = new UserCriteria();
+    	final UserCredential cred = new UserCredential();
     	user.setFirstName("Test");
        	user.setEmailAddress("admin@ideyatech.com");
       	cred.setUsername("testname");
@@ -421,7 +422,7 @@ public class CrudUtilTest {
     	cred.setId(123l);
     	cred.setEnabled(true);
     	user.setCredential(cred);
-    	Map<String, Object> map = new HashMap<String, Object>();
+    	final Map<String, Object> map = new HashMap<String, Object>();
     	map.put("user", user);
     	map.put("cred", cred);
     	Assert.assertEquals("Test", CrudUtil.retrieveObjectValue(map, "user.firstName"));
@@ -434,8 +435,8 @@ public class CrudUtilTest {
     
     @Test 
     public void testRetrieveObjectType() {
-    	UserCriteria user = new UserCriteria();
-    	UserCredential cred = new UserCredential();
+    	final UserCriteria user = new UserCriteria();
+    	final UserCredential cred = new UserCredential();
     	user.setFirstName("Test");
        	user.setEmailAddress("admin@ideyatech.com");
       	cred.setUsername("testname");
@@ -449,21 +450,21 @@ public class CrudUtilTest {
     	try {
     		Assert.assertEquals(null,CrudUtil.retrieveObjectType(user, "garbage"));
     		Assert.fail("No exception thrown on invalid property [garbage]");
-    	} catch (InvalidImplementationException iie) {
+    	} catch (final InvalidImplementationException iie) {
     		
     	}
     	try {
     		Assert.assertEquals(null,CrudUtil.retrieveObjectType(user, "credential.garbage"));
     		Assert.fail("No exception thrown on invalid property [credential.garbage]");
-    	} catch (InvalidImplementationException iie) {
+    	} catch (final InvalidImplementationException iie) {
     		
     	}   	
     }
 
     @Test 
     public void testReplaceSQLParameters() {
-    	UserCriteria user = new UserCriteria();
-    	UserCredential cred = new UserCredential();
+    	final UserCriteria user = new UserCriteria();
+    	final UserCredential cred = new UserCredential();
     	user.setFirstName("Test");
        	user.setEmailAddress("admin@ideyatech.com");
       	cred.setUsername("testname");
@@ -477,10 +478,10 @@ public class CrudUtilTest {
     
     @Test 
     public void testReplaceSQLParametersList() {
-    	UserCriteria user = new UserCriteria();
-    	UserCredential cred = new UserCredential();
-       	List<SystemCodes> favorites = new ArrayList<SystemCodes>();
-       	List<String> alias = new ArrayList<String>();
+    	final UserCriteria user = new UserCriteria();
+    	final UserCredential cred = new UserCredential();
+       	final List<SystemCodes> favorites = new ArrayList<SystemCodes>();
+       	final List<String> alias = new ArrayList<String>();
        	favorites.add(new SystemCodes("FAVORITES","BANANA","Banana"));
        	favorites.add(new SystemCodes("FAVORITES","MANGO","Mango"));
        	alias.add("name1");
