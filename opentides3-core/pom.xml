@@ -11,7 +11,7 @@
 		<org.slf4j-version>1.7.12</org.slf4j-version>
 		<log4j-version>1.2.17</log4j-version>
 		<dom4j-version>1.6.1</dom4j-version>
-		<mysql-connector-java-version>5.1.21</mysql-connector-java-version>
+		<mysql-connector-java-version>5.1.34</mysql-connector-java-version>
 		<aspectj-version>1.7.1</aspectj-version>
 		<cglib-version>2.2.2</cglib-version>
 		<jackson-version>2.3.2</jackson-version>
