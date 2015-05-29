@@ -44,6 +44,9 @@ public class AccountType extends BaseEntity {
 
 	private static final long serialVersionUID = 8389290044783947156L;
 
+	private static final NumberFormat format = NumberFormat
+			.getCurrencyInstance();
+
 	// duration of subscription, in days.
 	public enum Period {
 		MONTHLY,
@@ -161,7 +164,6 @@ public class AccountType extends BaseEntity {
 	public final String getSubscription() {
 		final StringBuilder subs = new StringBuilder();
 		if (amount != null && amount > 0) {
-			final NumberFormat format = NumberFormat.getCurrencyInstance();
 			subs.append(format.format(amount));
 		} else {
 			subs.append("Free");
