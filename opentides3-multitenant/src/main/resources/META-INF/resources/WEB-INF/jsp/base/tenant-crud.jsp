@@ -173,6 +173,13 @@
 		$(document).ready(function() {
 			$('body').tooltip({selector: '.edit-action, .remove-action'});
 			$("#tenant-body").RESTful();
+		}).on('change', 'input[name="owner.id"]', function() {
+			// disable the owner input since this will be managed in the tenant database upon creation
+			if($('input[name="owner.id"]').val() != "") {
+				$("input[name^='owner\\.']").prop("readonly", true);
+			} else {
+				$("input[name^='owner\\.']").prop("readonly", false);
+			}
 		});
 	</script>
 </tides:footer>
