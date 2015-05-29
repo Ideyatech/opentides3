@@ -75,6 +75,9 @@ public class MultiTenantSchemaUpdate {
 	@Value("${jpa.script_ddl.latest}")
 	private Resource ddlScript;
 
+	@Value("${jpa.script_evolve.latest}")
+	private Resource evolveScript;
+
 	@Value("${jpa.log_ddl}")
 	private Boolean logDdl = false;
 
@@ -130,6 +133,8 @@ public class MultiTenantSchemaUpdate {
 					.executeQuery("SHOW TABLES LIKE 'SYSTEM_CODES'").next() == false) {
 				// new schema, let's build it
 				initializeSchema(cfg, connection, schema);
+				// evolve it
+				evolveSchema(connection, schema);
 			}
 			return true;
 		} catch (final HibernateException e) {
@@ -157,39 +162,7 @@ public class MultiTenantSchemaUpdate {
 		if (ddlScript != null && ddlScript.exists()) {
 			_log.info("Initializing schema [" + schema + "] using DDL script ["
 					+ ddlScript.getFilename() + "].");
-			InputStream inputStream = null;
-			try {
-				inputStream = ddlScript.getInputStream();
-				final Scanner f = new Scanner(inputStream);
-				final StringBuilder stmt = new StringBuilder();
-				while (f.hasNext()) {
-					final String line = f.nextLine();
-					// ignore comment
-					if (line.startsWith("--")) {
-						continue;
-					}
-					stmt.append(" ").append(line);
-					if (line.endsWith(";")) {
-						// end of statement, execute then clear
-						connection.createStatement().execute(stmt.toString());
-						System.out.println(stmt.toString());
-						stmt.setLength(0);
-					}
-				}
-				f.close();
-				initialized = true;
-			} catch (final SQLException e) {
-				_log.error("Failed to execute sql script for initialization", e);
-			} catch (final IOException e) {
-				_log.error("Failed to read sql script for initialization", e);
-			} finally {
-				if (inputStream != null) {
-					try {
-						inputStream.close();
-					} catch (final IOException e) {
-					}
-				}
-			}
+			initialized = executeResource(connection, ddlScript);
 		}
 
 		if (!initialized) {
@@ -207,10 +180,71 @@ public class MultiTenantSchemaUpdate {
 			}
 
 			export.execute(logDdl, true, false, true);
+		}
+	}
 
-			multiTenantDBEvolveManager.evolve(schema);
+	/**
+	 * 
+	 * @param connection
+	 * @param schema
+	 */
+	private void evolveSchema(final Connection connection, final String schema) {
+		boolean evolved = false;
+		if (evolveScript != null && evolveScript.exists()) {
+			_log.info("Evolving schema [" + schema + "] using evolve script ["
+					+ evolveScript.getFilename() + "].");
+			evolved = executeResource(connection, evolveScript);
 		}
 
+		if (!evolved) {
+			_log.info("Evolving schema [" + schema + "] using DB evolve. ");
+			multiTenantDBEvolveManager.evolve(schema);
+		}
+	}
+
+	/**
+	 * 
+	 * @param connection
+	 * @param resource
+	 * @return
+	 */
+	private boolean executeResource(final Connection connection,
+			final Resource resource) {
+		InputStream inputStream = null;
+		try {
+			inputStream = resource.getInputStream();
+			final Scanner f = new Scanner(inputStream);
+			final StringBuilder stmt = new StringBuilder();
+			while (f.hasNext()) {
+				final String line = f.nextLine();
+				// ignore comment
+				if (line.startsWith("--")) {
+					continue;
+				}
+				stmt.append(" ").append(line);
+				if (line.endsWith(";")) {
+					// end of statement, execute then clear
+					connection.createStatement().execute(stmt.toString());
+					_log.info(stmt.toString());
+					stmt.setLength(0);
+				}
+			}
+			f.close();
+			return true;
+		} catch (final SQLException e) {
+			_log.error("Failed to execute sql script for initialization", e);
+		} catch (final IOException e) {
+			_log.error("Failed to read sql script for initialization", e);
+		} finally {
+			if (inputStream != null) {
+				try {
+					inputStream.close();
+				} catch (final IOException e) {
+				}
+			}
+		}
+
+		return false;
 	}
 
 	/**
