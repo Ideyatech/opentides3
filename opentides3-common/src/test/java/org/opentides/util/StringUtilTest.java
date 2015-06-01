@@ -1,11 +1,21 @@
-/**
- * 
- * This source code is property of Ideyatech, Inc.
- * All rights reserved. 
- * 
- * StringUtilTest.java
- * Created on Feb 10, 2008, 1:27:19 PM
- */
+/*******************************************************************************
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ *  with the License.  You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.    
+ *******************************************************************************/
 package org.opentides.util;
 
 
@@ -73,8 +83,8 @@ public class StringUtilTest {
     
     @Test
     public final void testRemoveHTMLTags() {
-        String expected = " This is non html . ";
-        String html = "<html> This is <b>non html</b>.</html>";
+        final String expected = " This is non html . ";
+        final String html = "<html> This is <b>non html</b>.</html>";
         Assert.assertEquals(expected, StringUtil.removeHTMLTags(html));
     }
     
@@ -130,12 +140,12 @@ public class StringUtilTest {
 
     @Test
     public final void testParseCsvLine() {
-    	String line1 = "1,\"Lion's Lair\",September,";
-    	String line2 = "2,Test Word,\"September 15, 1990\",End";
-    	String line3 = "";
-    	List<String> str1 = StringUtil.parseCsvLine(line1);
-    	List<String> str2 = StringUtil.parseCsvLine(line2);
-    	List<String> str3 = StringUtil.parseCsvLine(line3);
+    	final String line1 = "1,\"Lion's Lair\",September,";
+    	final String line2 = "2,Test Word,\"September 15, 1990\",End";
+    	final String line3 = "";
+    	final List<String> str1 = StringUtil.parseCsvLine(line1);
+    	final List<String> str2 = StringUtil.parseCsvLine(line2);
+    	final List<String> str3 = StringUtil.parseCsvLine(line3);
     	Assert.assertEquals("1", str1.get(0));
     	Assert.assertEquals("Lion's Lair", str1.get(1));
     	Assert.assertEquals("September", str1.get(2));
