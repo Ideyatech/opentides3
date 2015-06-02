@@ -360,6 +360,7 @@ public class SynchronizableController {
 
 		FileAppender appender = (FileAppender) _log.getAppender("file");
 		appender.setFile(logFilePath);
+		appender.setAppend(true);
 		appender.activateOptions();
 
 	}
