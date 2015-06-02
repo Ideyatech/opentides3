@@ -154,6 +154,7 @@ public class MultiTenantSchemaUpdate {
 	 * 
 	 * @param tenantId
 	 */
+	@Transactional
 	private void initializeSchema(final Configuration cfg,
 			final Connection connection, final String schema) {
 		// check if there SQL file under the sslScript folder

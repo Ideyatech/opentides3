@@ -141,6 +141,29 @@ body.anonymous-page #hd .brand {
 	}
 }
 
+/* REGISTER PAGE */
+.panel {
+	padding: 15px;
+	width: 100%;
+	position: relative;
+}
+
+.overflow-top {
+	top: 500px; 
+	display: none;
+}
+
+.subdomain {
+	width: 115px;
+}
+
+.none {
+	display: none;
+}
+
+.overflow-hidden.row-fluid {
+	height: 275px;
+}
 
 /* HEADER */
 
@@ -589,6 +612,7 @@ input[type="search"], input[type="tel"], input[type="color"],
 .ot-upload-file table.ot-image-list p.name {
 	word-break: break-all;
 }
+
 /**************************/
 /* SOCIAL INTEGRATION CSS */
 /**************************/

@@ -29,6 +29,8 @@ import org.opentides.service.UserGroupService;
 import org.opentides.util.CrudUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 /**
@@ -48,7 +50,14 @@ public class MultitenantUserServiceImpl extends
 	@Autowired
 	protected MultitenantJdbcTemplate jdbcTemplate;
 
+	/**
+	 * This should be done in a new transaction since the older transaction is
+	 * not aware yet of the new schema that will be created, and thus may cause
+	 * errors because of older fast index
+	 * 
+	 */
 	@Override
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public void persistUserToTenantDb(final Tenant tenant,
 			final MultitenantUser owner) {
 		Assert.notNull(owner);
@@ -76,9 +85,5 @@ public class MultitenantUserServiceImpl extends
 		}
 
 		((MultitenantUserDao) getDao()).persistUserToTenantDb(schema, userCopy);
-
-		// disable the copy in the master db so the owner won't be able to log
-		// in there
-		owner.getCredential().setEnabled(Boolean.FALSE);
 	}
 }

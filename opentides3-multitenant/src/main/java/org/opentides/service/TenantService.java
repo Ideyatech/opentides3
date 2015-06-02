@@ -38,7 +38,7 @@ public interface TenantService extends BaseCrudService<Tenant> {
 	/**
 	 * Creates the schema of the tenant using JPA database create.
 	 */
-	public boolean createTenantSchema(Tenant tenant, MultitenantUser owner);
+	public void createTenantSchema(Tenant tenant, MultitenantUser owner);
 	
 	/**
 	 * Backups and drop the schema of the tenant.

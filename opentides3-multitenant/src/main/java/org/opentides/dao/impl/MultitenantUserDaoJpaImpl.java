@@ -54,20 +54,12 @@ public class MultitenantUserDaoJpaImpl extends
 	@Override
 	public void persistUserToTenantDb(final String schema,
 			final MultitenantUser owner) {
-
-		final String originatingSchema = jdbcTemplate.getCurrentSchemaName();
-
 		_log.debug("Switching to tenant schema " + schema);
 		// switch to the schema of the tenant and save the owner
 		jdbcTemplate.switchSchema(schema);
 
 		_log.info("Saving owner on tenant schema " + schema);
 		saveEntityModel(owner);
-
-		_log.debug("Switching back to originating schema " + originatingSchema);
-		// switch the connection back to the original schema and continue
-		// with the operations
-		jdbcTemplate.switchSchema(originatingSchema);
 	}
 
 }

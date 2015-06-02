@@ -90,10 +90,6 @@ public class TenantCrudController extends BaseCrudController<Tenant> {
 			owner.setTenant(command);
 		}
 
-		command.setSchema(((TenantService) service)
-				.findUniqueSchemaName(command.getCompany()));
-		command.setDbVersion(1l);
-
 		((TenantService) getService()).createTenantSchema(command, owner);
 	}
 

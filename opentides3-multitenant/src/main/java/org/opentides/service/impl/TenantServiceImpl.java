@@ -28,8 +28,6 @@ import org.opentides.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author allantan
@@ -63,22 +61,22 @@ public class TenantServiceImpl extends BaseCrudServiceImpl<Tenant> implements
 		return uniqueSchema.toString();
 	}
 
-	/**
-	 * This should be done in a new transaction since the older transaction is
-	 * not aware yet of the new schema that will be created, and thus may cause
-	 * errors because of older fast index
-	 */
 	@Override
-	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public boolean createTenantSchema(final Tenant tenant,
+	public void createTenantSchema(final Tenant tenant,
 			final MultitenantUser owner) {
-		// create the schema
-		final String schema = (tenant.getSchema() == null) ? "" : tenant
-				.getSchema();
+
+		final String company = tenant.getCompany();
+		final String schema = findUniqueSchemaName(company);
+
+		tenant.setSchema(schema);
+		tenant.setDbVersion(1l);
+
 		multiTenantSchemaUpdate.schemaEvolve(schema);
 		multitenantUserService.persistUserToTenantDb(tenant, owner);
 		
-		return true;
+		// disable the copy in the master db so the owner won't be able to log
+		// in there
+		owner.getCredential().setEnabled(Boolean.FALSE);
 	}
 
 	@Override

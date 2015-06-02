@@ -49,7 +49,7 @@ public class AuditLogDaoImpl extends BaseEntityDaoJpaImpl<AuditLog, Long> implem
 	private static final Logger _log = Logger.getLogger(AuditLogDaoImpl.class);
 	
 	@Override
-	public void logEvent(String message, BaseEntity entity, boolean separateEm) {
+	public void logEvent(final String message, final BaseEntity entity, final boolean separateEm) {
 		if(separateEm) {
 			logEvent(message, entity);
 		} else {
@@ -60,7 +60,7 @@ public class AuditLogDaoImpl extends BaseEntityDaoJpaImpl<AuditLog, Long> implem
 				if (userId==null) {
 					_log.error("No userId specified for audit logging on object ["+entity.getClass().getName()
 							+ "] for message ["+message+"]. Retrieving user from interceptor.");
-					SessionUser user = SecurityUtil.getSessionUser();
+					final SessionUser user = SecurityUtil.getSessionUser();
 					userId = user.getId();
 					username = user.getUsername();
 				} 
@@ -69,7 +69,7 @@ public class AuditLogDaoImpl extends BaseEntityDaoJpaImpl<AuditLog, Long> implem
 				username = "System Evolve";
 			}
 			
-			AuditLog record = 
+			final AuditLog record = 
 		            new AuditLog(
 		            			message, 
 		            			entity.getId(), 
@@ -87,15 +87,15 @@ public class AuditLogDaoImpl extends BaseEntityDaoJpaImpl<AuditLog, Long> implem
 	 * @param message
 	 * @param entity
 	 */
-	public static void logEvent(String message, BaseEntity entity) { 		
+	public static void logEvent(final String message, final BaseEntity entity) { 		
 		Long userId = entity.getAuditUserId();
 		String username = entity.getAuditUsername();
 		
-		if (ApplicationStartupListener.isApplicationStarted()) {
+		final SessionUser user = SecurityUtil.getSessionUser();
+		if (ApplicationStartupListener.isApplicationStarted() && user != null) {
 			if (userId==null) {
 				_log.error("No userId specified for audit logging on object ["+entity.getClass().getName()
 						+ "] for message ["+message+"]. Retrieving user from interceptor.");
-				SessionUser user = SecurityUtil.getSessionUser();
 				userId = user.getId();
 				username = user.getUsername();
 			} 
@@ -104,10 +104,10 @@ public class AuditLogDaoImpl extends BaseEntityDaoJpaImpl<AuditLog, Long> implem
 			username = "System Evolve";
 		}
 		
-    	EntityManager em = DatabaseUtil.getEntityManager();
+    	final EntityManager em = DatabaseUtil.getEntityManager();
 		try {
 			em.getTransaction().begin();
-		     AuditLog record = 
+		     final AuditLog record = 
 	            new AuditLog(
 	            			message, 
 	            			entity.getId(), 
@@ -129,13 +129,14 @@ public class AuditLogDaoImpl extends BaseEntityDaoJpaImpl<AuditLog, Long> implem
     /* (non-Javadoc)
 	 * @see com.ideyatech.core.persistence.impl.BaseEntityDAOJpaImpl#appendClauseToExample(com.ideyatech.core.bean.BaseEntity, boolean)
 	 */
-	protected String appendOrderToExample(AuditLog example) {
+	@Override
+	protected String appendOrderToExample(final AuditLog example) {
 		return "order by createDate desc";
 	}
 	
 	@Override
-	protected String appendClauseToExample(AuditLog example, boolean exactMatch) {
-		StringBuilder append = new StringBuilder("");
+	protected String appendClauseToExample(final AuditLog example, final boolean exactMatch) {
+		final StringBuilder append = new StringBuilder("");
 		if (!StringUtil.isEmpty(append.toString())){
 			append.append(" and ");
 		}
@@ -146,7 +147,7 @@ public class AuditLogDaoImpl extends BaseEntityDaoJpaImpl<AuditLog, Long> implem
 			if (!StringUtil.isEmpty(append.toString())){
 				append.append(" and ");
 			}
-			Date startDateNoTime = DateUtil.removeTime(example.getStartDate());
+			final Date startDateNoTime = DateUtil.removeTime(example.getStartDate());
 			example.setStartDateForSearch(startDateNoTime);
 			append.append(" obj.createDate >= :startDateForSearch ");
 		}
@@ -155,7 +156,7 @@ public class AuditLogDaoImpl extends BaseEntityDaoJpaImpl<AuditLog, Long> implem
 			if (!StringUtil.isEmpty(append.toString())){
 				append.append(" and ");
 			}
-			Date endDateNoTime = DateUtil.removeTime(DateUtils.addDays(example.getEndDate(), 1));
+			final Date endDateNoTime = DateUtil.removeTime(DateUtils.addDays(example.getEndDate(), 1));
 			example.setEndDateForSearch(endDateNoTime);
 			append.append(" obj.createDate <= :endDateForSearch ");
 		}
