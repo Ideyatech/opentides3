@@ -25,6 +25,7 @@ import org.opentides.persistence.jdbc.MultitenantJdbcTemplate;
 import org.opentides.util.MultitenancyUtil;
 import org.opentides.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 
 /**
  * @author Jeric
@@ -61,23 +62,24 @@ public class MultitenantAuthenticationDaoJdbcImpl extends
 		final String tenant = MultitenancyUtil.getTenantName();
 		_log.info("Tenant set in the URL is [" + tenant + "]");
 		if (!StringUtil.isEmpty(tenant)) {
-			// The list of tenants is set in the "master" database for
-			// multi-tenant applications and this contains the schema name
-			// linked to each tenant.
-			// From the tenant passed in the URL, this list will be used to
-			// retrieve the schema name that we should authenticate against.
-			final Map<String, Object> tenantList = getJdbcTemplate()
-					.queryForMap(
-							loadSchemaNameByTenantQuery.replace("?", "'"
-									+ tenant + "'"));
+			try {
+				// The list of tenants is set in the "master" database for
+				// multi-tenant applications and this contains the schema name
+				// linked to each tenant.
+				// From the tenant passed in the URL, this list will be used to
+				// retrieve the schema name that we should authenticate against.
+				final Map<String, Object> tenantList = getJdbcTemplate()
+						.queryForMap(
+								loadSchemaNameByTenantQuery.replace("?", "'"
+										+ tenant + "'"));
 
-			if (tenantList.containsKey("SCHEMA")) {
 				final String schema = ((String) tenantList.get("SCHEMA"))
 						.toLowerCase();
 				_log.info("Altering connection to schema [" + schema + "]");
 				getJdbcTemplate().execute("USE " + schema);
 				MultitenancyUtil.setSchemaName(schema);
-			} else {
+
+			} catch (final EmptyResultDataAccessException e) {
 				_log.warn("Tenant " + tenant
 						+ " not found. Using default master schema.");
 			}
