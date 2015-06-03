@@ -19,6 +19,7 @@
 package org.opentides.web.security;
 
 import java.io.IOException;
+import java.util.regex.Pattern;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -98,7 +99,7 @@ public class MultitenantSessionFilter extends SessionFilter {
 	protected String extractTenantName(final ServletRequest req) {
 		// check first for the domain
 		final String hostname = req.getServerName();
-		final String urlParts[] = hostname.split(".");
+		final String urlParts[] = hostname.split(Pattern.quote("."));
 		if (urlParts.length == 3 || urlParts.length == 4) {
 			final String subdomain = urlParts[0]; //
 			if (!subdomain.equalsIgnoreCase("www")) {
