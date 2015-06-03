@@ -51,9 +51,9 @@ public class MultitenantUserServiceImpl extends
 	protected MultitenantJdbcTemplate jdbcTemplate;
 
 	/**
-	 * This should be done in a new transaction since the older transaction is
-	 * not aware yet of the new schema that will be created, and thus may cause
-	 * errors because of older fast index
+	 * This should be done in a new transaction since the older transaction may
+	 * not be aware yet of the new schema that will be created, and thus may
+	 * cause errors because of older fast index
 	 * 
 	 */
 	@Override

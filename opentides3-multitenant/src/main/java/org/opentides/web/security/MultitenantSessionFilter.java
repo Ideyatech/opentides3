@@ -71,11 +71,8 @@ public class MultitenantSessionFilter extends SessionFilter {
 				logger.debug("Tenant name [" + tenant
 						+ "] added to session.");
 
-				final String fromSession = (String) request.getSession()
-						.getAttribute("account");
-				MultitenancyUtil.setTenantName(fromSession);
-
-				logger.debug("Tenant name [" + fromSession
+				MultitenancyUtil.setTenantName(tenant);
+				logger.debug("Tenant name [" + tenant
 						+ "] set in thread local.");
 			}
 		}
