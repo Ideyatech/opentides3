@@ -25,7 +25,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
-import org.opentides.util.MultitenancyUtil;
 import org.opentides.util.StringUtil;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
@@ -50,7 +49,8 @@ public class MultitenantURLAuthenticationFailureHandler extends
 			final HttpServletResponse response, final AuthenticationException exception)
 			throws IOException, ServletException {
 		final StringBuffer url = new StringBuffer(defaultFailureUrl);
-		final String tenant = MultitenancyUtil.getTenantName();
+		final String tenant = (String) request.getSession().getAttribute(
+				"account");
 		_log.info("Tenant parameter is " + tenant);
 		if(!StringUtil.isEmpty(tenant)) {
 			final char seperator = url.lastIndexOf("?") == 0 ? '?' : '&';
