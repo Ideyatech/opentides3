@@ -52,24 +52,24 @@ public class MultiTenantIdentifierResolver implements
 	 */
 	@Override
 	public String resolveCurrentTenantIdentifier() {
-		// Check if the schema name was saved by the user authentication
-		// service after authenticating the login or by the logout listener
-		// after logging out
-		String schemaName = MultitenancyUtil.getSchemaName();
-		if (!StringUtil.isEmpty(schemaName)) {
-			_log.debug("Using thread local schema [" + schemaName
-					+ "] for schema.");
-			return schemaName;
-		}
-
 		final SessionUser sessionUser = SecurityUtil.getSessionUser();
 		if (sessionUser != null) {
-			schemaName = sessionUser.getSchemaName();
+			final String schemaName = sessionUser.getSchemaName();
 			if (!StringUtil.isEmpty(schemaName)) {
 				_log.debug("Using session user schema [" + schemaName
 					+ "] for schema.");
 				return schemaName;
 			}
+		}
+
+		// Check if the schema name was saved by the user authentication
+		// service after authenticating the login or by the logout listener
+		// after logging out
+		final String schemaName = MultitenancyUtil.getSchemaName();
+		if (!StringUtil.isEmpty(schemaName)) {
+			_log.debug("Using thread local schema [" + schemaName
+					+ "] for schema.");
+			return schemaName;
 		}
 
 		// no logged-in user, use default tenant

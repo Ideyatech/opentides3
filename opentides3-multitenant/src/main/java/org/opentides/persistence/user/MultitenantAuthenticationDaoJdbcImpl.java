@@ -78,7 +78,6 @@ public class MultitenantAuthenticationDaoJdbcImpl extends
 				_log.info("Altering connection to schema [" + schema + "]");
 				getJdbcTemplate().execute("USE " + schema);
 				MultitenancyUtil.setSchemaName(schema);
-
 			} catch (final EmptyResultDataAccessException e) {
 				_log.warn("Tenant " + tenant
 						+ " not found. Using default master schema.");

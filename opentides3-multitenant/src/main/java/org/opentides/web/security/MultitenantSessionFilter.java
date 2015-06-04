@@ -61,22 +61,24 @@ public class MultitenantSessionFilter extends SessionFilter {
 	public void doFilter(final ServletRequest req, final ServletResponse res,
 			final FilterChain chain) throws IOException, ServletException {
 		logger.debug("Passing through session filter.");
+
+		String tenant = extractTenantName(req);
+		logger.debug("Tenant name extracted is [" + tenant + "]");
 		if (req instanceof HttpServletRequest) {
 			logger.debug("Request is of type HttpServletRequest.");
 			final HttpServletRequest request = (HttpServletRequest) req;
-			final String tenant = extractTenantName(request);
-			if (!StringUtil.isEmpty(tenant)) {
-				logger.info("Tenant name extracted is [" + tenant + "]");
-
-				request.getSession().setAttribute("account", tenant);
-				logger.debug("Tenant name [" + tenant
-						+ "] added to session.");
-
-				MultitenancyUtil.setTenantName(tenant);
-				logger.debug("Tenant name [" + tenant
-						+ "] set in thread local.");
+			if (StringUtil.isEmpty(tenant)
+					&& request.getSession().getAttribute("account") != null) {
+				tenant = request.getSession().getAttribute("account")
+						.toString();
 			}
+
+			request.getSession().setAttribute("account", tenant);
+			logger.debug("Tenant name [" + tenant + "] added to session.");
 		}
+
+		MultitenancyUtil.setTenantName(tenant);
+		logger.debug("Tenant name [" + tenant + "] set in thread local.");
 
 		chain.doFilter(req, res);
 	}
