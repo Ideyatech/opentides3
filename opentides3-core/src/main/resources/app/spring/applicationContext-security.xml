@@ -24,7 +24,7 @@
 		<sec:intercept-url pattern="/"  access="permitAll"/>
 		<sec:intercept-url pattern="/**" access="isAuthenticated()" />
 		
-		<sec:custom-filter ref="sessionFilter" after="SESSION_MANAGEMENT_FILTER" />
+		<sec:custom-filter ref="tenantContextFilter" after="SECURITY_CONTEXT_FILTER" />
 
 		<sec:anonymous />
 		<sec:http-basic />
@@ -56,7 +56,7 @@
 		</sec:authentication-provider>
 	</sec:authentication-manager>
 	
-	<bean id="sessionFilter" class="org.opentides.web.security.SessionFilter" />
+	<bean id="tenantContextFilter" class="org.opentides.web.security.TenantContextFilter" />
 	
 	<bean id="httpRequestAccessDecisionManager"
 		class="org.springframework.security.access.vote.AffirmativeBased">

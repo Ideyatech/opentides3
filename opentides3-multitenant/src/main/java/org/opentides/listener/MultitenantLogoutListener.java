@@ -25,9 +25,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
-import org.opentides.bean.user.SessionUser;
-import org.opentides.util.MultitenancyUtil;
+import org.opentides.persistence.jdbc.MultitenantJdbcTemplate;
 import org.opentides.util.StringUtil;
+import org.opentides.util.TenantContextHolder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 
 /**
@@ -39,7 +40,8 @@ public class MultitenantLogoutListener extends LogoutListener {
 	private static final Logger _log = Logger
 			.getLogger(MultitenantLogoutListener.class);
 
-	private SessionUser sessionUser;
+	@Autowired
+	private MultitenantJdbcTemplate jdbcTemplate;
 
 	/*
 	 * (non-Javadoc)
@@ -53,19 +55,11 @@ public class MultitenantLogoutListener extends LogoutListener {
 	public void onLogoutSuccess(final HttpServletRequest req,
 			final HttpServletResponse res, final Authentication auth)
 			throws IOException, ServletException {
-		final Object principal = auth.getPrincipal();
-		_log.debug("Getting authentication principal object.");
-		if (principal instanceof SessionUser) {
-			_log.debug("Authentication principal object is of type session user.");
-			sessionUser = (SessionUser) principal;
-			// We set the schema name to the thread local object so it can be
-			// used by the IdentifierResolver for the schema switching in the
-			// LogoutSuccess activities
-			_log.debug("Setting schema name to thread local.");
-			MultitenancyUtil.setSchemaName(sessionUser.getSchemaName());
-		}
-
 		super.onLogoutSuccess(req, res, auth);
+
+		// make sure that the tenant context is cleared
+		_log.debug("Clearing tenant context.");
+		TenantContextHolder.clearContext();
 	}
 
 	/*
@@ -80,10 +74,8 @@ public class MultitenantLogoutListener extends LogoutListener {
 	protected String determineTargetUrl(final HttpServletRequest request,
 			final HttpServletResponse response) {
 		String url = super.determineTargetUrl(request, response);
-		_log.debug("Checking session user.");
-		if (sessionUser != null
-				&& !StringUtil.isEmpty(sessionUser.getTenantName())) {
-			url += "&a=" + sessionUser.getTenantName();
+		if (!StringUtil.isEmpty(TenantContextHolder.getTenantName())) {
+			url += "&a=" + TenantContextHolder.getTenantName();
 			_log.debug("Appended tenant name to logout URL " + url);
 		}
 

@@ -22,8 +22,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
-import org.opentides.util.MultitenancyUtil;
 import org.opentides.util.StringUtil;
+import org.opentides.util.TenantContextHolder;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 
@@ -82,11 +82,11 @@ public class TenantParameterLoginUrlAuthenticationEntryPoint extends
 
 	protected String appendTenantName(final String login) {
 		final StringBuilder params = new StringBuilder();
-		if (!StringUtil.isEmpty(MultitenancyUtil.getTenantName())) {
+		if (!StringUtil.isEmpty(TenantContextHolder.getTenantName())) {
 			final char separator = login.lastIndexOf("?") < 1 ? '?' : '&';
 			params.append(separator);
 			params.append("a=");
-			params.append(MultitenancyUtil.getTenantName());
+			params.append(TenantContextHolder.getTenantName());
 		}
 		
 		return params.toString();
