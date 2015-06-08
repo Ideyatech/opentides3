@@ -57,9 +57,6 @@ public class MultitenantJdbcTemplate extends JdbcTemplate {
 			final DatabaseMetaData metaData = getDataSource().getConnection()
 					.getMetaData();
 
-			// TODO make this db agnostic; see
-			// http://alvinalexander.com/java/jdbc-connection-string-mysql-postgresql-sqlserver
-			// for possible URLs
 			final String url = metaData.getURL();
 			final String schema = extractSchema(url);
 

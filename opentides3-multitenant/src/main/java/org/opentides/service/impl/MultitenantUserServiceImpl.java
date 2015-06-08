@@ -75,7 +75,9 @@ public class MultitenantUserServiceImpl extends
 		userCopy.setTenantName(tenantName);
 
 		if (userCopy.getGroups() == null || userCopy.getGroups().isEmpty()) {
+			_log.debug("Switching to tenant schema " + schema);
 			jdbcTemplate.switchSchema(schema);
+
 			final UserGroup userGroup = userGroupService
 					.loadUserGroupByName("Administrator");
 			if (userGroup != null) {

@@ -30,5 +30,5 @@
 		<constructor-arg type="java.lang.String" value="/login" />
 	</bean>
 	
-	<bean id="sessionFilter" class="org.opentides.web.security.MultitenantSessionFilter" />
+	<bean id="tenantContextFilter" class="org.opentides.web.security.MultitenantContextFilter" />
 </beans>

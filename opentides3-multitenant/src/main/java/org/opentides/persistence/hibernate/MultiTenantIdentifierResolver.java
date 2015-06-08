@@ -21,10 +21,8 @@ package org.opentides.persistence.hibernate;
 
 import org.apache.log4j.Logger;
 import org.hibernate.context.spi.CurrentTenantIdentifierResolver;
-import org.opentides.bean.user.SessionUser;
-import org.opentides.util.MultitenancyUtil;
-import org.opentides.util.SecurityUtil;
 import org.opentides.util.StringUtil;
+import org.opentides.util.TenantContextHolder;
 import org.springframework.beans.factory.annotation.Value;
 
 /**
@@ -52,27 +50,15 @@ public class MultiTenantIdentifierResolver implements
 	 */
 	@Override
 	public String resolveCurrentTenantIdentifier() {
-		final SessionUser sessionUser = SecurityUtil.getSessionUser();
-		if (sessionUser != null) {
-			final String schemaName = sessionUser.getSchemaName();
-			if (!StringUtil.isEmpty(schemaName)) {
-				_log.debug("Using session user schema [" + schemaName
-					+ "] for schema.");
-				return schemaName;
-			}
-		}
-
-		// Check if the schema name was saved by the user authentication
-		// service after authenticating the login or by the logout listener
-		// after logging out
-		final String schemaName = MultitenancyUtil.getSchemaName();
+		// Check if the schema name was saved by the session filter
+		final String schemaName = TenantContextHolder.getSchemaName();
 		if (!StringUtil.isEmpty(schemaName)) {
 			_log.debug("Using thread local schema [" + schemaName
 					+ "] for schema.");
 			return schemaName;
 		}
 
-		// no logged-in user, use default tenant
+		// use default tenant
 		_log.debug("Using default schema [" + defaultSchema + "] for schema.");
 		return defaultSchema;
 	}
