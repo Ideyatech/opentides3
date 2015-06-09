@@ -36,15 +36,17 @@ public class TenantValidator implements Validator {
 	@Autowired
 	private UserDao userDao;
 	
+	@Override
 	@SuppressWarnings("rawtypes")
-	public boolean supports(Class clazz) {
+	public boolean supports(final Class clazz) {
 		return Tenant.class.isAssignableFrom(clazz);
 	}
 
-	public void validate(Object object, Errors e) {
+	@Override
+	public void validate(final Object object, final Errors e) {
 		
-		Tenant tenant = (Tenant) object;		
-		BaseUser user = tenant.getOwner();
+		final Tenant tenant = (Tenant) object;		
+		final BaseUser user = tenant.getOwner();
 
 		ValidationUtils.rejectIfEmptyOrWhitespace(e, "company", 
 				"error.required", new Object[]{"Company"},"Company is required.");
@@ -52,6 +54,10 @@ public class TenantValidator implements Validator {
 		ValidationUtils.rejectIfEmptyOrWhitespace(e, "accountType", 
 				"error.required", new Object[]{"Account Type"},"Account type is required.");
 		
+		ValidationUtils.rejectIfEmptyOrWhitespace(e, "expirationDate",
+				"error.required", new Object[] { "Expiration Date" },
+				"Expiration date is required");
+
 		ValidationUtils.rejectIfEmptyOrWhitespace(e, "owner.firstName", 
 				"error.required", new Object[]{"First Name"},"First name is required.");
 
@@ -96,14 +102,16 @@ public class TenantValidator implements Validator {
 	 * @param username
 	 * @return boolean return true if duplicate username was found, false otherwise.
 	 */
-	private boolean isDuplicateUsername(BaseUser user) {
-		String userName = user.getCredential().getUsername();
+	private boolean isDuplicateUsername(final BaseUser user) {
+		final String userName = user.getCredential().getUsername();
 		if (userName != null && !StringUtil.isEmpty(userName)){
-			BaseUser userCheck = userDao.loadByUsername(userName);
-			if (userCheck != null && user.isNew())
-				return true;		
-			if (userCheck != null && !userCheck.getId().equals(user.getId())) 
+			final BaseUser userCheck = userDao.loadByUsername(userName);
+			if (userCheck != null && user.isNew()) {
 				return true;
+			}		
+			if (userCheck != null && !userCheck.getId().equals(user.getId())) {
+				return true;
+			}
 		}
 		return false;
 	}
@@ -113,14 +121,16 @@ public class TenantValidator implements Validator {
 	 * @param email
 	 * @return boolean returns true if duplicate email was found, false otherwise.
 	 */
-	private boolean isDuplicateEmail(BaseUser user) {
-		String email = user.getEmailAddress();
+	private boolean isDuplicateEmail(final BaseUser user) {
+		final String email = user.getEmailAddress();
 		if (email != null && !StringUtil.isEmpty(email)){
-			BaseUser userCheck = userDao.loadByEmailAddress(email);
-			if (userCheck != null && user.isNew())
-				return true;			
-			if (userCheck != null && !userCheck.getId().equals(user.getId())) 
+			final BaseUser userCheck = userDao.loadByEmailAddress(email);
+			if (userCheck != null && user.isNew()) {
 				return true;
+			}			
+			if (userCheck != null && !userCheck.getId().equals(user.getId())) {
+				return true;
+			}
 		}
 		return false;
 	}
@@ -128,7 +138,7 @@ public class TenantValidator implements Validator {
 	/**
 	 * @param ecmtUserDao the ecmtUserDao to set
 	 */
-	public void setUserDao(UserDao userDao) {
+	public void setUserDao(final UserDao userDao) {
 		this.userDao = userDao;
 	}
 }
