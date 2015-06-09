@@ -141,26 +141,31 @@ body.anonymous-page #hd .brand {
 	}
 }
 
-/* REGISTER PAGE */
-.panel {
-	padding: 15px;
-	width: 100%;
-	position: relative;
+/* REGISTRATION */
+.register-wrapper {
+	position: relative !important;
 }
-
+.register-wrapper form {
+	padding: 0;
+}
+.register-wrapper.modal {
+	width: 450px;
+	margin-left: -230px;
+}
+.register-wrapper .modal-header h4 {
+	text-align: center;
+}
+.register-wrapper.modal .modal-body .span6 {
+	padding: 0;
+	width: 100%;
+}
 .overflow-top {
 	top: 500px; 
 	display: none;
 }
-
-.subdomain {
-	width: 115px;
-}
-
 .none {
 	display: none;
 }
-
 .overflow-hidden.row-fluid {
 	height: 275px;
 }

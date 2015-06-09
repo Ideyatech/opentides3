@@ -23,8 +23,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.log4j.Logger;
 import org.opentides.bean.MessageResponse;
 import org.opentides.bean.user.AccountType;
 import org.opentides.bean.user.MultitenantUser;
@@ -38,8 +40,9 @@ import org.opentides.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -50,15 +53,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
  *
  */
 @Controller
-public class TenantRegisterController {
-	@Autowired
-	protected MessageSource messageSource;
+@RequestMapping(value = "/register-tenant")
+public class TenantRegisterController extends BaseCrudController<Tenant> {
+	private static final Logger _log = Logger
+			.getLogger(TenantRegisterController.class);
 
 	@Autowired
 	protected AccountTypeService accountTypeService;
-
-	@Autowired
-	protected TenantService tenantService;
 
 	@Autowired
 	@Qualifier("userService")
@@ -67,9 +68,12 @@ public class TenantRegisterController {
 	@Value("${property.subdomain}")
 	protected String subdomain;
 
-	@RequestMapping(value = "/register-tenant", method = RequestMethod.GET)
-	public String index() {
-		return "registration";
+	/**
+ * 
+ */
+	@PostConstruct
+	public void init() {
+		singlePage = "registration";
 	}
 
 	@RequestMapping(value = "/register-tenant", method = RequestMethod.POST, produces = "application/json")
@@ -90,19 +94,42 @@ public class TenantRegisterController {
 			owner.setTenant(command);
 		}
 
-		tenantService.createTenantSchema(command, command.getOwner());
-		tenantService.save(command);
+		((TenantService) getService()).createTenantSchema(command,
+				command.getOwner());
+		((TenantService) getService()).save(command);
 		messages.addAll(CrudUtil.buildSuccessMessage(command, "add",
 				request.getLocale(), messageSource));
 		model.put("formCommand", command);
 		model.put("messages", messages);
 		return model;
-
 	}
 
-	@ModelAttribute("formCommand")
-	public Tenant tenant() {
-		return new Tenant();
+	/**
+	 * Handles all binding errors and return as json object for display to the
+	 * user.
+	 * 
+	 * @param e
+	 * @param request
+	 * @return
+	 */
+	@Override
+	@ExceptionHandler(Exception.class)
+	public @ResponseBody Map<String, Object> handleBindException(
+			final Exception ex, final HttpServletRequest request)
+			throws Exception {
+		final Map<String, Object> response = new HashMap<String, Object>();
+		final List<MessageResponse> messages = new ArrayList<MessageResponse>();
+		if (ex instanceof BindException) {
+			final BindException e = (BindException) ex;
+			messages.addAll(CrudUtil.convertErrorMessage(e.getBindingResult(),
+					request.getLocale(), messageSource));
+			if (_log.isDebugEnabled()) {
+				_log.debug("Bind error encountered.", e);
+			}
+		}
+
+		response.put("messages", messages);
+		return response;
 	}
 
 	@ModelAttribute("accountTypeList")
