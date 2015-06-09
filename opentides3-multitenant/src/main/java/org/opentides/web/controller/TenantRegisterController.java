@@ -18,16 +18,11 @@
  *******************************************************************************/
 package org.opentides.web.controller;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.PostConstruct;
-import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
-import org.opentides.bean.MessageResponse;
 import org.opentides.bean.user.AccountType;
 import org.opentides.bean.user.MultitenantUser;
 import org.opentides.bean.user.Tenant;
@@ -35,18 +30,13 @@ import org.opentides.bean.user.UserCredential;
 import org.opentides.service.AccountTypeService;
 import org.opentides.service.TenantService;
 import org.opentides.service.UserService;
-import org.opentides.util.CrudUtil;
 import org.opentides.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindException;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * @author Jeric
@@ -76,13 +66,15 @@ public class TenantRegisterController extends BaseCrudController<Tenant> {
 		singlePage = "registration";
 	}
 
-	@RequestMapping(value = "/register-tenant", method = RequestMethod.POST, produces = "application/json")
-	public @ResponseBody Map<String, Object> register(
-			@ModelAttribute("formCommand") final Tenant command,
-			final HttpServletRequest request) {
-		final Map<String, Object> model = new HashMap<String, Object>();
-		final List<MessageResponse> messages = new ArrayList<MessageResponse>();
-
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.opentides.web.controller.BaseCrudController#preCreate(org.opentides
+	 * .bean.BaseEntity)
+	 */
+	@Override
+	protected void preCreate(final Tenant command) {
 		final MultitenantUser owner = command.getOwner();
 		if (owner != null) {
 			final UserCredential credential = owner.getCredential();
@@ -93,43 +85,19 @@ public class TenantRegisterController extends BaseCrudController<Tenant> {
 
 			owner.setTenant(command);
 		}
-
-		((TenantService) getService()).createTenantSchema(command,
-				command.getOwner());
-		((TenantService) getService()).save(command);
-		messages.addAll(CrudUtil.buildSuccessMessage(command, "add",
-				request.getLocale(), messageSource));
-		model.put("formCommand", command);
-		model.put("messages", messages);
-		return model;
 	}
 
-	/**
-	 * Handles all binding errors and return as json object for display to the
-	 * user.
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @param e
-	 * @param request
-	 * @return
+	 * @see
+	 * org.opentides.web.controller.BaseCrudController#postCreate(org.opentides
+	 * .bean.BaseEntity)
 	 */
 	@Override
-	@ExceptionHandler(Exception.class)
-	public @ResponseBody Map<String, Object> handleBindException(
-			final Exception ex, final HttpServletRequest request)
-			throws Exception {
-		final Map<String, Object> response = new HashMap<String, Object>();
-		final List<MessageResponse> messages = new ArrayList<MessageResponse>();
-		if (ex instanceof BindException) {
-			final BindException e = (BindException) ex;
-			messages.addAll(CrudUtil.convertErrorMessage(e.getBindingResult(),
-					request.getLocale(), messageSource));
-			if (_log.isDebugEnabled()) {
-				_log.debug("Bind error encountered.", e);
-			}
-		}
-
-		response.put("messages", messages);
-		return response;
+	protected void postCreate(final Tenant command) {
+		((TenantService) getService()).createTenantSchema(command,
+				command.getOwner());
 	}
 
 	@ModelAttribute("accountTypeList")
