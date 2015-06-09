@@ -132,14 +132,6 @@ public class BaseUser extends BaseEntity implements ImageUploadable {
 	@JsonView(Views.FormView.class)
 	private List<ImageInfo> images;
 
-	@Column(name = "SCHEMA_NAME")
-	@JsonView(Views.SearchView.class)
-	private String schemaName;
-
-	@Column(name = "TENANT_NAME")
-	@JsonView(Views.SearchView.class)
-	private String tenantName;
-
 	@Transient
 	private transient MultipartFile photo;
 
@@ -175,8 +167,6 @@ public class BaseUser extends BaseEntity implements ImageUploadable {
 		clone.prevLoginIP = prevLoginIP;
 		clone.totalLoginCount = totalLoginCount;
 		clone.failedLoginCount = failedLoginCount;
-		clone.schemaName = schemaName;
-		clone.tenantName = tenantName;
 		return clone;
 	}
 
@@ -687,36 +677,6 @@ public class BaseUser extends BaseEntity implements ImageUploadable {
 	}
 
 	// End of ImageUploadable requirements
-
-	/**
-	 * @param schemaName
-	 *            the schemaName to set
-	 */
-	public void setSchemaName(final String schemaName) {
-		this.schemaName = schemaName;
-	}
-
-	/**
-	 * @return the schemaName
-	 */
-	public String getSchemaName() {
-		return schemaName;
-	}
-
-	/**
-	 * @param tenantName
-	 *            the tenantName to set
-	 */
-	public void setTenantName(final String tenantName) {
-		this.tenantName = tenantName;
-	}
-
-	/**
-	 * @return the tenantName
-	 */
-	public String getTenantName() {
-		return tenantName;
-	}
 
 	/**
 	 * 

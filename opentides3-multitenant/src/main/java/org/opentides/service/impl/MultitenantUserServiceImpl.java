@@ -64,15 +64,12 @@ public class MultitenantUserServiceImpl extends
 		Assert.notNull(tenant);
 
 		final String schema = tenant.getSchema();
-		final String tenantName = tenant.getCompany();
 
 		// create a copy of the user since we are persisting this to the tenant
 		// db
 		final MultitenantUser userCopy = (MultitenantUser) CrudUtil
 				.clone(owner);
 		userCopy.setTenant(null);
-		userCopy.setSchemaName(schema);
-		userCopy.setTenantName(tenantName);
 
 		if (userCopy.getGroups() == null || userCopy.getGroups().isEmpty()) {
 			_log.debug("Switching to tenant schema " + schema);

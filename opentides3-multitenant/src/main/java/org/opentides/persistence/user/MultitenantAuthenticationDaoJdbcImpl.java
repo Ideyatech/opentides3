@@ -37,14 +37,6 @@ public class MultitenantAuthenticationDaoJdbcImpl extends
 	@Autowired
 	protected MultitenantJdbcTemplate jdbcTemplate;
 
-	/**
-	 * 
-	 */
-	public MultitenantAuthenticationDaoJdbcImpl() {
-		loadUserByUsernameQuery = "select U.USERID ID, FIRSTNAME, LASTNAME, EMAIL, P.LASTLOGIN LASTLOGIN, P.OFFICE OFFICE, P.SCHEMA_NAME SCHEMA_NAME, P.TENANT_NAME TENANT_NAME "
-				+ "from USER_PROFILE P inner join USERS U on P.ID=U.USERID where U.USERNAME=?";
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
