@@ -92,7 +92,6 @@ public class UserCrudController extends BaseCrudController<BaseUser> {
 		if (!StringUtil.isEmpty(credential.getNewPassword())) {
 			credential.setPassword(((UserService)service).encryptPassword(credential.getNewPassword()));
 		}
-		updateUserSchema(command);
 	}
 
 
@@ -111,7 +110,6 @@ public class UserCrudController extends BaseCrudController<BaseUser> {
         if (!StringUtil.isEmpty(credential.getNewPassword())) {
 			credential.setPassword(((UserService)service).encryptPassword(credential.getNewPassword()));
 		}
-		updateUserSchema(command);
 	}
 	
 	/* (non-Javadoc)
@@ -126,21 +124,5 @@ public class UserCrudController extends BaseCrudController<BaseUser> {
 			final Model uiModel, final HttpServletRequest request,
 			final HttpServletResponse response) {
 		uiModel.addAttribute("results", search(command, request));
-	}
-
-	protected void updateUserSchema(final BaseUser command) {
-		// update the schema of the created user to the schema of of the user
-		// that created it
-		final BaseUser currentUser = ((UserService) service).getCurrentUser();
-
-		final String schemaName = currentUser.getSchemaName();
-		if (!StringUtil.isEmpty(schemaName)) {
-			command.setSchemaName(schemaName);
-		}
-
-		final String tenantName = currentUser.getTenantName();
-		if (!StringUtil.isEmpty(tenantName)) {
-			command.setTenantName(tenantName);
-		}
 	}
 }
