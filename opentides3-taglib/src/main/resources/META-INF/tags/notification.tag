@@ -15,8 +15,10 @@ dropdown of notifications. --%>
 <%-- Flag if notification will be displayed as desktop notification. --%>
 <%@ attribute name="desktopNotify" required="false" type="java.lang.Boolean" %>
 
-					
+			
 <script type="text/javascript">
+	$("${notifyEl}").html("").hide();
+	
     $(document).ready(function() {
         function callback(response) {
             if (response.transport != "polling" && response.state == "messageReceived") {
@@ -31,18 +33,30 @@ dropdown of notifications. --%>
                                 desktopNotify('Notification', data.notifications[0].message);
                             }
                             $("${contentEl}").html("");
-                    	} 
+                    	}
+                    	else {
+                    		$("${notifyEl}").html("").hide();
+                    	}
+                    	
                     	len = data.notifications.length;
 						if (len==0) {
 	                    	// no notifications
                    			$("${contentEl}").html("No notifications.");
                     		$("${notifyEl}").html("").hide();							
 						} else {							
-	                    	if (len > 10) len = 10;
-	                        for (i=0;i<len;i++) {
-	                        	$("${contentEl}").append("<li>"+data.notifications[i].message+"</li>");
+	                    	if (len > 5) len = 5;
+	                        for (i=0;i<=len;i++) {
+	                      		var msg = data.notifications[i].message;
+	                        	
+	                      		if(msg.indexOf("[<a href='") > -1){
+	                      			var msgs = msg.split("[<a href='");
+		                        	
+		                        	msg = msgs[0] + "[<a href='" + '${home}/' + msgs[1];
+	                      		}
+	                      	
+	                        	$("${contentEl}").append("<li>"+msg+"</li>");
 	                        }
-	                        if (data.notifications.length >= 10) {
+	                        if (data.notifications.length >= 5) {
 	                            $("${contentEl}").append(
 	                            		"<li><a href='${home}/your-notifications/page'>View All</a></li>");                            	
 	                        }
@@ -87,7 +101,9 @@ dropdown of notifications. --%>
 			    });
 			}
 			if (window.Notification && Notification.permission === "granted") {
-			      var n = new Notification(title, { icon: '${home}/img/icon_notify.png', body: message });
+				  var content = message.replace(/<br\s*\/?>/, '\n');
+				  content = $('<div />').html(content).text();
+			      var n = new Notification(title, { icon: '${home}/img/icon_notify.png', body: content });
 			}; 
 		}
     });
