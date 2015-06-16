@@ -25,10 +25,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
-import org.opentides.persistence.jdbc.MultitenantJdbcTemplate;
 import org.opentides.util.StringUtil;
 import org.opentides.util.TenantContextHolder;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 
 /**
@@ -39,9 +37,6 @@ public class MultitenantLogoutListener extends LogoutListener {
 
 	private static final Logger _log = Logger
 			.getLogger(MultitenantLogoutListener.class);
-
-	@Autowired
-	private MultitenantJdbcTemplate jdbcTemplate;
 
 	/*
 	 * (non-Javadoc)
