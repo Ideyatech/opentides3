@@ -129,7 +129,7 @@ public class DatabaseUtil {
             		propertiesMap.put("javax.persistence.jdbc.password", password);
             	} else {
             		_log.debug("Connecting to JNDI [" + jndiName + "]");
-//				For Eclipselink only
+					// For Eclipselink only
             		propertiesMap.put("eclipselink.session.customizer", 
             				"org.opentides.persistence.config.JPAEclipseLinkSessionCustomizer");
             		propertiesMap.put("javax.persistence.nonJtaDataSource",jndiName);
@@ -156,9 +156,6 @@ public class DatabaseUtil {
 			DatabaseUtil.initialize();
 		}
 		
-		_log.info("Schema for databaseUtil is "
-				+ entityManager.unwrap(org.hibernate.Session.class)
-						.getTenantIdentifier());
         return entityManager;
     }
 	
