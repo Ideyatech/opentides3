@@ -23,6 +23,17 @@
 	<bean id="jdbcTemplate" class="org.opentides.persistence.jdbc.MultitenantJdbcTemplate" autowire="byName">
 		<property name="dataSource" ref="dataSource" />
 	</bean>
+	
+	<bean id="databaseUtil"
+		class="org.opentides.util.DatabaseUtil" autowire="byName">
+		<property name="driverClassName" value="${database.driver}" />
+		<property name="url" value="${database.url}" />
+		<property name="username" value="${database.username}" />
+		<property name="password" value="${database.password}" />
+		<property name="jndiName" value="${database.jndi}" />
+		<property name="jpaPropertyMap" ref="jpaPropertyMap" />
+		<property name="reinitializeAlways" value="true"></property>
+	</bean>
 
 	<!-- Property map injected into entity manager to enable multitenancy -->
 	<util:map id="jpaPropertyMap">

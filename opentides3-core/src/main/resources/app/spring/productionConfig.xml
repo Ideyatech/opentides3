@@ -98,6 +98,7 @@
 		<property name="username" value="${database.username}" />
 		<property name="password" value="${database.password}" />
 		<property name="jndiName" value="${database.jndi}" />
+		<property name="jpaPropertyMap" ref="jpaPropertyMap" />
 	</bean>
 
 	<!-- Define dataSource as JNDI -->

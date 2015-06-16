@@ -43,12 +43,12 @@ public class DatabaseUtil {
     /**
      * Local entity manager to manage database sessions.
      */
-    private static EntityManager entityManager;
+	private static EntityManager entityManager;
 
     /**
      * Persistence name in hibernate.
      */
-    private static String persistenceUnitName = "opentidesPU";
+	private static String persistenceUnitName = "opentidesPU";
     
     /**
      * Persistence file
@@ -86,7 +86,17 @@ public class DatabaseUtil {
      */
     private static Properties propertiesMap;
     
+	/**
+	 * Additional property map that will be merged with
+	 * {@link DatabaseUtil#propertiesMap}
+	 */
 	private static Map<String, Object> jpaPropertyMap;
+
+	/**
+	 * Flag that tells whether the entity manager is always reinitialized before
+	 * being provided by the util. Defaults to false.
+	 */
+	private static boolean reinitializeAlways = false;
 
     /**
      * List of classes handled by JPA/Hibernate.
@@ -96,18 +106,18 @@ public class DatabaseUtil {
     /**
      * Entity Manager Factory
      */
-    private static EntityManagerFactory emf;
+	private static EntityManagerFactory emf;
 
 	/**
 	 * Hide the constructor.
 	 */
-	private DatabaseUtil() {		
+	private DatabaseUtil() {
 	}
 	
     /**
      * Static initializer to establish database connection.
      */
-    private static void initialize() {
+	private static void initialize() {
         try { 
         	if (emf == null || !emf.isOpen()) {
             	propertiesMap = XMLPersistenceUtil.getProperties(persistenceFile, persistenceUnitName);        	
@@ -141,9 +151,14 @@ public class DatabaseUtil {
     }
 
     public static EntityManager getEntityManager() {
-    	if (entityManager==null || !entityManager.isOpen()) {
+		if (reinitializeAlways || entityManager == null
+				|| !entityManager.isOpen()) {
 			DatabaseUtil.initialize();
 		}
+		
+		_log.info("Schema for databaseUtil is "
+				+ entityManager.unwrap(org.hibernate.Session.class)
+						.getTenantIdentifier());
         return entityManager;
     }
 	
@@ -215,9 +230,18 @@ public class DatabaseUtil {
 	 * @param jpaPropertyMap
 	 *            the jpaPropertyMap to set
 	 */
-	public static void setJpaPropertyMap(
+	public final void setJpaPropertyMap(
 			final Map<String, Object> jpaPropertyMap) {
 		DatabaseUtil.jpaPropertyMap = jpaPropertyMap;
+	}
+
+	/**
+	 * @param reinitializeAlways
+	 *            the reinitializeAlways to set
+	 */
+	public final void setReinitializeAlways(final boolean reinitializeAlways) {
+		_log.info("Setting reinitialize always flag to " + reinitializeAlways);
+		DatabaseUtil.reinitializeAlways = reinitializeAlways;
 	}
 
 	/**
