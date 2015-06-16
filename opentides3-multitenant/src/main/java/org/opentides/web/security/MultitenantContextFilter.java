@@ -82,7 +82,9 @@ public class MultitenantContextFilter extends TenantContextFilter {
 		logger.debug("Clearing tenant context.");
 		TenantContextHolder.clearContext();
 
-		final String tenant = extractTenantName(req);
+		String tenant = extractTenantName(req);
+		String schema = defaultSchema;
+
 		logger.debug("Tenant name extracted is [" + tenant + "]");
 
 		if (StringUtil.isEmpty(tenant)) {
@@ -103,14 +105,14 @@ public class MultitenantContextFilter extends TenantContextFilter {
 				storeContextInSession(tenant, session);
 			}
 
-			final String sessionTenant = (String) session
-					.getAttribute("account");
-			final String sessionSchema = (String) session
-					.getAttribute("schema");
-
-			TenantContextHolder.setTenantName(sessionTenant);
-			TenantContextHolder.setSchemaName(sessionSchema);
+			tenant = (String) session.getAttribute("account");
+			schema = (String) session.getAttribute("schema");
+		} else {
+			schema = findSchema(tenant);
 		}
+
+		TenantContextHolder.setTenantName(tenant);
+		TenantContextHolder.setSchemaName(schema);
 
 		chain.doFilter(req, res);
 	}
@@ -122,11 +124,29 @@ public class MultitenantContextFilter extends TenantContextFilter {
 	 * @param tenant
 	 * @param session
 	 */
-	protected void storeContextInSession(String tenant, final HttpSession session) {
+	protected void storeContextInSession(String tenant,
+			final HttpSession session) {
 		// let us clear first the session attributes to be sure
 		session.removeAttribute("account");
 		session.removeAttribute("schema");
 
+		final String schema = findSchema(tenant);
+		// if not schema is found, revert to the default tenant
+		if (schema.equals(defaultSchema)) {
+			tenant = null;
+		}
+
+		session.setAttribute("account", tenant);
+		logger.debug("Tenant name [" + tenant + "] added to session.");
+		session.setAttribute("schema", schema);
+		logger.debug("Schema name [" + schema + "] added to session.");
+	}
+
+	/**
+	 * @param tenant
+	 * @return
+	 */
+	protected String findSchema(final String tenant) {
 		logger.debug("Looking for schema name in cache for tenant [" + tenant
 				+ "]");
 		String schema = schemas.get(tenant);
@@ -159,14 +179,10 @@ public class MultitenantContextFilter extends TenantContextFilter {
 						+ " not found. Using default master schema.");
 				// revert to defaults
 				schema = defaultSchema;
-				tenant = "";
 			}
 		}
 
-		session.setAttribute("account", tenant);
-		logger.debug("Tenant name [" + tenant + "] added to session.");
-		session.setAttribute("schema", schema);
-		logger.debug("Schema name [" + schema + "] added to session.");
+		return schema;
 	}
 
 	/**
