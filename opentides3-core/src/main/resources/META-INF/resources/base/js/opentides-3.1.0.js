@@ -652,7 +652,8 @@ var opentides3 = (function() {
 			'add'        : '.add-action',
 			'edit'       : '.edit-action',
 			'display'  	 : '.view-action',
-			'remove'     : '.remove-action'
+			'remove'     : '.remove-action',
+			'saveCallback' : null
 		}, options);
 
 		return this
@@ -929,6 +930,9 @@ var opentides3 = (function() {
 											&& json.command.id > 0) {
 										// successfully saved
 										firstForm.clearOTForm();
+		
+										if ($(settings['saveCallback']) != null) 
+											settings['saveCallback'](this, json);
 										if (button.data('submit') !== 'save-and-new') {
 											// hide modal
 											if (form.hasClass('modal'))
