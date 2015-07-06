@@ -8,8 +8,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.opentides.bean.ChangeLog;
+import org.opentides.dao.ChangeLogDao;
 import org.opentides.service.ChangeLogService;
 import org.springframework.stereotype.Service;
+
+import com.sun.corba.se.spi.legacy.connection.GetEndPointInfoAgainException;
 
 /**
  * @author allantan
@@ -20,9 +23,10 @@ public class ChangeLogServiceImpl extends BaseCrudServiceImpl<ChangeLog> impleme
 		ChangeLogService {
 
 	@Override
-	public List<ChangeLog> findAfterVersion(Long version) {
+	public List<ChangeLog> findAfterVersion(Long version, Long branchId) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("version", version);
+		map.put("branchId", branchId);
 		return getDao().findByNamedQuery("jpql.mobilesync.findChangesAfterVersion", map, 0, 250);
 	}
 	
@@ -34,6 +38,11 @@ public class ChangeLogServiceImpl extends BaseCrudServiceImpl<ChangeLog> impleme
 		}
 		
 		return null;
+	}
+
+	@Override
+	public ChangeLog findLatestChange(Long branchId) {
+		return ((ChangeLogDao)getDao()).findLatestChangeByBranch(branchId);
 	}
 
 }

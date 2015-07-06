@@ -81,6 +81,9 @@ public class ChangeLog extends BaseEntity {
     @Column(name = "DB_SYNC_ID", updatable = false)
     private Long dbSyncId;
     
+    @Column(name = "BRANCH_ID", updatable = false)
+    private Long branchId;
+        
     /**
      * Contains the list of fields for updating.
      */
@@ -141,7 +144,7 @@ public class ChangeLog extends BaseEntity {
 	 * @param entityClass
 	 */
 	@SuppressWarnings("rawtypes")
-	public ChangeLog(Long entityId, Class entityClass, String entityName, Long dbSyncId,
+	public ChangeLog(Long entityId, Class entityClass, String entityName, Long dbSyncId, Long branchId,
 			int action, String sqlCommand) {
 		super();
 		this.entityId = entityId;
@@ -149,6 +152,7 @@ public class ChangeLog extends BaseEntity {
 		this.action = action;
 		this.entityClass = entityClass;
 		this.dbSyncId = dbSyncId;
+		this.branchId = branchId;
 		this.sqlCommand = sqlCommand;
 	}
 	/**
@@ -255,6 +259,14 @@ public class ChangeLog extends BaseEntity {
 
 	public void setDbSyncId(Long dbSyncId) {
 		this.dbSyncId = dbSyncId;
+	}
+
+	public Long getBranchId() {
+		return branchId;
+	}
+
+	public void setBranchId(Long branchId) {
+		this.branchId = branchId;
 	}
 	
 	

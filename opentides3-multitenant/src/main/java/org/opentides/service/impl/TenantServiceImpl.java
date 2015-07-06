@@ -84,4 +84,9 @@ public class TenantServiceImpl extends BaseCrudServiceImpl<Tenant> implements
 		throw new UnsupportedOperationException(
 				"Deleting of tenant schema is not yet supported.");
 	}
+
+	@Override
+	public String getTenantSchemaName(String tenantName) {
+		return ((TenantDao) getDao()).getTenantSchemaName(tenantName);
+	}
 }

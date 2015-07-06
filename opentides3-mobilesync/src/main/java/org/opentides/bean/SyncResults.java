@@ -17,6 +17,10 @@ public class SyncResults implements Serializable {
 
 	private static final long serialVersionUID = -61347292723741700L;
 
+	public static enum Status {
+		SUCCESS, ERROR
+	}
+	
 	@JsonView(Views.FormView.class)
 	private long latestVersion;
 
@@ -31,6 +35,9 @@ public class SyncResults implements Serializable {
 
 	@JsonView({ Views.FormView.class })
 	private long targetVersion;
+	
+	@JsonView({ Views.FormView.class })
+	private Status status;
 
 	/**
 	 * @return the latestVersion
@@ -98,5 +105,13 @@ public class SyncResults implements Serializable {
 
 	public final void setTargetVersion(long targetVersion) {
 		this.targetVersion = targetVersion;
+	}
+
+	public Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
 	}
 }

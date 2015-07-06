@@ -23,6 +23,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.Query;
+
 import org.apache.log4j.Logger;
 import org.opentides.bean.user.Tenant;
 import org.opentides.dao.TenantDao;
@@ -52,5 +54,23 @@ public class TenantDaoJpaImpl extends BaseEntityDaoJpaImpl<Tenant, Long> impleme
 		} else {
 			return result.get(0);
 		}
+	}
+
+	@Override
+	public final String getTenantSchemaName(String tenantName) {
+		if (StringUtil.isEmpty(tenantName))
+			return null;
+		
+		String jpql = getJpqlQuery("jpql.tenant.findSchemaName");
+		
+		Query query = getEntityManager().createQuery(jpql);
+		query.setParameter("company", tenantName);
+		
+		try{
+			return (String) query.getResultList().get(0);
+		}catch(Exception e){
+			return null;
+		}
+
 	}
 }

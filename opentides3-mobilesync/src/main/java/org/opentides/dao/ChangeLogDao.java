@@ -13,4 +13,11 @@ import org.opentides.bean.ChangeLog;
  
 public interface ChangeLogDao extends BaseEntityDao<ChangeLog, Long> {
 
+	/**
+	 * Returns the latest change log filtered by id
+	 * @param branchId
+	 * @return
+	 */
+	public ChangeLog findLatestChangeByBranch(Long branchId);
+	
 }

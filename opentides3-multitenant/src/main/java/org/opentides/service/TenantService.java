@@ -46,4 +46,10 @@ public interface TenantService extends BaseCrudService<Tenant> {
 	public boolean deleteTenantSchema(Tenant tenant, 
 									  boolean createBackup);
 	
+	/**
+	 * Get schema name of tenant
+	 * @param tenantName
+	 * @return
+	 */
+	public String getTenantSchemaName(String tenantName);
 }

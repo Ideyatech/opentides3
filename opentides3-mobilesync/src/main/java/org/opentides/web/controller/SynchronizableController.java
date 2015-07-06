@@ -84,20 +84,21 @@ public class SynchronizableController {
 	 * @return
 	 */
 	@JsonView(Views.FormView.class)
-	@RequestMapping(value = "/{clientcode}", method = RequestMethod.GET, produces = "application/json")
+	@RequestMapping(value = "/{clientcode}/{branchId}", method = RequestMethod.GET, produces = "application/json")
 	public ResponseEntity getUpdates(
-			@PathVariable("clientcode") String clientcode) {
+			@PathVariable("clientcode") String clientcode,
+			@PathVariable("branchId") String branch) {
 		this.clientCode = clientcode;
 		getLogger();
 		
 		SyncResults results = new SyncResults();
 		SyncEndpoint endpoint = syncEndpointService.findSyncEndpointByClientCode(clientcode);
-
+		Long branchId = Long.parseLong(branch);
 
 		if (endpoint != null) {
 
 			List<ChangeLog> changes = changeLogService
-					.findAfterVersion(endpoint.getSyncVersion());
+					.findAfterVersion(endpoint.getSyncVersion(), branchId);
 
 			if (!changes.isEmpty()) {
 				ChangeLog last = changes.get(changes.size() - 1);
@@ -108,7 +109,7 @@ public class SynchronizableController {
 				//results.setLogs(new ArrayList<ChangeLog>());
 			}
 
-		    ChangeLog latestChange = this.changeLogService.findLatestChange();
+		    ChangeLog latestChange = this.changeLogService.findLatestChange(branchId);
 		    if (latestChange != null){
 		       Long targetVersion = latestChange.getId();
 		       results.setTargetVersion(targetVersion.longValue());
@@ -124,7 +125,8 @@ public class SynchronizableController {
 		}
 
 		Gson gSon = new Gson();
-
+		results.setStatus(SyncResults.Status.SUCCESS);
+		
 		return new ResponseEntity(gSon.toJson(results), httpHeaders,
 				HttpStatus.OK);
 	}
@@ -163,6 +165,8 @@ public class SynchronizableController {
 		}
 
 		results.setLatestVersion(version);
+		results.setStatus(SyncResults.Status.SUCCESS);
+		
 		Gson gSon = new Gson();
 
 		return new ResponseEntity(gSon.toJson(results), httpHeaders,
@@ -177,16 +181,18 @@ public class SynchronizableController {
 	 * 
 	 * @return
 	 */
-	@RequestMapping(value = "/upload/{clientcode}", method = {
+	@RequestMapping(value = "/upload/{clientcode}/{branchId}", method = {
 			RequestMethod.GET, RequestMethod.POST }, produces = "application/json")
 	public ResponseEntity updateServer(
 			@PathVariable("clientcode") String clientcode,
+			@PathVariable("branchId") String branch,
 			HttpServletRequest request) {
 		this.clientCode = clientcode;
 		getLogger();
 		
 		SyncEndpoint endpoint = syncEndpointService.findSyncEndpointByClientCode(clientcode);
-
+		Long branchId = Long.parseLong(branch);
+		
 		StringBuilder appender = new StringBuilder();
 		String result = SUCCESS;
 		String errorMsg = "";
@@ -209,7 +215,7 @@ public class SynchronizableController {
 		if (endpoint != null) {
 
 			List<ChangeLog> changes = changeLogService
-					.findAfterVersion(endpoint.getSyncVersion());
+					.findAfterVersion(endpoint.getSyncVersion(), branchId);
 
 			long latestVersion = 0L;
 
@@ -271,6 +277,7 @@ public class SynchronizableController {
 			errorMsg = "End point is null";
 		}
 
+		response.setStatus(SyncResults.Status.SUCCESS);
 		Gson gSon = new Gson();
 
 		_log.info("[" + clientcode + "] " + WEB_UPDATE + result
@@ -364,7 +371,7 @@ public class SynchronizableController {
 		appender.activateOptions();
 
 	}
-	
+
 	public String stackTraceToString(Throwable e) {
 	    StringBuilder sb = new StringBuilder();
 	    for (StackTraceElement element : e.getStackTrace()) {

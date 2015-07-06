@@ -35,4 +35,11 @@ public interface TenantDao extends BaseEntityDao<Tenant, Long> {
 	 */
 	public Tenant loadBySchema(String schema);
 	
+	/**
+	 * Get schema name of tenant
+	 * @param tenantName
+	 * @return
+	 */
+	public String getTenantSchemaName(String tenantName);
+	
 }
