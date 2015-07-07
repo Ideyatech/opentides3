@@ -110,15 +110,17 @@ public class SynchronizableController {
 			}
 
 		    ChangeLog latestChange = this.changeLogService.findLatestChange(branchId);
+		    Long targetVersion = 0L;
+		    
 		    if (latestChange != null){
-		       Long targetVersion = latestChange.getId();
+		       targetVersion = latestChange.getId();
 		       results.setTargetVersion(targetVersion.longValue());
 		    }
 		    
 			// Log updates from WEB to POS
 			_log.info("[" + clientcode + "] " + UPDATE_ENDPOINT
 					+ " Send Change Log version " + endpoint.getSyncVersion()
-					+ " to " + results.getLatestVersion());
+					+ " to " + results.getLatestVersion() + ". TARGET VERSION: " + targetVersion);
 		} else {
 			_log.info("[" + clientcode + "] " + UPDATE_ENDPOINT + FAIL
 					+ " End point is null");
