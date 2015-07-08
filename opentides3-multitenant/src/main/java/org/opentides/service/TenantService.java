@@ -52,4 +52,11 @@ public interface TenantService extends BaseCrudService<Tenant> {
 	 * @return
 	 */
 	public String getTenantSchemaName(String tenantName);
+	
+	/**
+	 * Change schema
+	 * @param schemaName
+	 * @return
+	 */
+	public void changeSchema(String schemaName);
 }

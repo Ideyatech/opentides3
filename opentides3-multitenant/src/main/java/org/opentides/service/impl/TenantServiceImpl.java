@@ -22,6 +22,7 @@ import org.opentides.bean.user.MultitenantUser;
 import org.opentides.bean.user.Tenant;
 import org.opentides.dao.TenantDao;
 import org.opentides.persistence.hibernate.MultiTenantSchemaUpdate;
+import org.opentides.persistence.jdbc.MultitenantJdbcTemplate;
 import org.opentides.service.MultitenantUserService;
 import org.opentides.service.TenantService;
 import org.opentides.util.StringUtil;
@@ -45,6 +46,9 @@ public class TenantServiceImpl extends BaseCrudServiceImpl<Tenant> implements
 
 	@Autowired
 	private MultitenantUserService multitenantUserService;
+	
+	@Autowired
+	private MultitenantJdbcTemplate jdbcTemplate;
 
 	@Override
 	public String findUniqueSchemaName(final String company) {
@@ -89,4 +93,13 @@ public class TenantServiceImpl extends BaseCrudServiceImpl<Tenant> implements
 	public String getTenantSchemaName(String tenantName) {
 		return ((TenantDao) getDao()).getTenantSchemaName(tenantName);
 	}
+
+	@Override
+	public void changeSchema(String schemaName) {
+		if (!jdbcTemplate.getCurrentSchemaName().equalsIgnoreCase(schemaName)) {
+			jdbcTemplate.switchSchema(schemaName);
+		}
+
+	}
+
 }
