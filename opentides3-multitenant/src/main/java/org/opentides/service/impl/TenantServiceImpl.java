@@ -18,9 +18,12 @@
  */
 package org.opentides.service.impl;
 
+import java.sql.SQLException;
+
 import org.opentides.bean.user.MultitenantUser;
 import org.opentides.bean.user.Tenant;
 import org.opentides.dao.TenantDao;
+import org.opentides.persistence.hibernate.MultiTenantConnectionProviderImpl;
 import org.opentides.persistence.hibernate.MultiTenantSchemaUpdate;
 import org.opentides.persistence.jdbc.MultitenantJdbcTemplate;
 import org.opentides.service.MultitenantUserService;
@@ -46,9 +49,12 @@ public class TenantServiceImpl extends BaseCrudServiceImpl<Tenant> implements
 
 	@Autowired
 	private MultitenantUserService multitenantUserService;
-	
+
 	@Autowired
 	private MultitenantJdbcTemplate jdbcTemplate;
+
+	@Autowired
+	private MultiTenantConnectionProviderImpl multiTenantConnectionProvider;
 
 	@Override
 	public String findUniqueSchemaName(final String company) {
@@ -77,14 +83,15 @@ public class TenantServiceImpl extends BaseCrudServiceImpl<Tenant> implements
 
 		multiTenantSchemaUpdate.schemaEvolve(schema);
 		multitenantUserService.persistUserToTenantDb(tenant, owner);
-		
+
 		// disable the copy in the master db so the owner won't be able to log
 		// in there
 		owner.getCredential().setEnabled(Boolean.FALSE);
 	}
 
 	@Override
-	public boolean deleteTenantSchema(final Tenant tenant, final boolean createBackup) {
+	public boolean deleteTenantSchema(final Tenant tenant,
+			final boolean createBackup) {
 		throw new UnsupportedOperationException(
 				"Deleting of tenant schema is not yet supported.");
 	}
@@ -95,10 +102,8 @@ public class TenantServiceImpl extends BaseCrudServiceImpl<Tenant> implements
 	}
 
 	@Override
-	public void changeSchema(String schemaName) {
-		if (!jdbcTemplate.getCurrentSchemaName().equalsIgnoreCase(schemaName)) {
-			jdbcTemplate.switchSchema(schemaName);
-		}
+	public void changeSchema(String schemaName) throws SQLException {
+		multiTenantConnectionProvider.getConnection(schemaName);
 
 	}
 

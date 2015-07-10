@@ -19,6 +19,8 @@
 
 package org.opentides.service;
 
+import java.sql.SQLException;
+
 import org.opentides.bean.user.MultitenantUser;
 import org.opentides.bean.user.Tenant;
 
@@ -58,5 +60,5 @@ public interface TenantService extends BaseCrudService<Tenant> {
 	 * @param schemaName
 	 * @return
 	 */
-	public void changeSchema(String schemaName);
+	public void changeSchema(String schemaName) throws SQLException;
 }
