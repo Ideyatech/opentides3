@@ -20,6 +20,7 @@ package org.opentides.service.impl;
 
 import java.sql.SQLException;
 
+import org.apache.log4j.Logger;
 import org.opentides.bean.user.MultitenantUser;
 import org.opentides.bean.user.Tenant;
 import org.opentides.dao.TenantDao;
@@ -56,6 +57,8 @@ public class TenantServiceImpl extends BaseCrudServiceImpl<Tenant> implements
 	@Autowired
 	private MultiTenantConnectionProviderImpl multiTenantConnectionProvider;
 
+	Logger _log = Logger.getLogger(TenantServiceImpl.class);
+	
 	@Override
 	public String findUniqueSchemaName(final String company) {
 		final String schema = company.replaceAll("[^a-zA-Z]", "");
@@ -103,8 +106,11 @@ public class TenantServiceImpl extends BaseCrudServiceImpl<Tenant> implements
 
 	@Override
 	public void changeSchema(String schemaName) throws SQLException {
+		_log.debug("Changing schema to " + schemaName);
+		
 		multiTenantConnectionProvider.getConnection(schemaName);
 
+		_log.debug("Success changing schema to " + schemaName);
 	}
 
 }
