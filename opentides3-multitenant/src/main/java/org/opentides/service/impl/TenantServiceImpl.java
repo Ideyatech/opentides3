@@ -20,11 +20,9 @@ package org.opentides.service.impl;
 
 import java.sql.SQLException;
 
-import org.apache.log4j.Logger;
 import org.opentides.bean.user.MultitenantUser;
 import org.opentides.bean.user.Tenant;
 import org.opentides.dao.TenantDao;
-import org.opentides.persistence.hibernate.MultiTenantConnectionProviderImpl;
 import org.opentides.persistence.hibernate.MultiTenantSchemaUpdate;
 import org.opentides.persistence.jdbc.MultitenantJdbcTemplate;
 import org.opentides.service.MultitenantUserService;
@@ -50,15 +48,10 @@ public class TenantServiceImpl extends BaseCrudServiceImpl<Tenant> implements
 
 	@Autowired
 	private MultitenantUserService multitenantUserService;
-
+	
 	@Autowired
 	private MultitenantJdbcTemplate jdbcTemplate;
 
-	@Autowired
-	private MultiTenantConnectionProviderImpl multiTenantConnectionProvider;
-
-	Logger _log = Logger.getLogger(TenantServiceImpl.class);
-	
 	@Override
 	public String findUniqueSchemaName(final String company) {
 		final String schema = company.replaceAll("[^a-zA-Z]", "");
@@ -86,15 +79,14 @@ public class TenantServiceImpl extends BaseCrudServiceImpl<Tenant> implements
 
 		multiTenantSchemaUpdate.schemaEvolve(schema);
 		multitenantUserService.persistUserToTenantDb(tenant, owner);
-
+		
 		// disable the copy in the master db so the owner won't be able to log
 		// in there
 		owner.getCredential().setEnabled(Boolean.FALSE);
 	}
 
 	@Override
-	public boolean deleteTenantSchema(final Tenant tenant,
-			final boolean createBackup) {
+	public boolean deleteTenantSchema(final Tenant tenant, final boolean createBackup) {
 		throw new UnsupportedOperationException(
 				"Deleting of tenant schema is not yet supported.");
 	}
@@ -106,11 +98,10 @@ public class TenantServiceImpl extends BaseCrudServiceImpl<Tenant> implements
 
 	@Override
 	public void changeSchema(String schemaName) throws SQLException {
-		_log.debug("Changing schema to " + schemaName);
-		
-		multiTenantConnectionProvider.getConnection(schemaName);
+		if (!jdbcTemplate.getCurrentSchemaName().equalsIgnoreCase(schemaName)) {
+			jdbcTemplate.switchSchema(schemaName);
+		}
 
-		_log.debug("Success changing schema to " + schemaName);
 	}
 
 }
