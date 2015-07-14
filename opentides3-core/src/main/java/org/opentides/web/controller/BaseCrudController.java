@@ -52,6 +52,7 @@ import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
@@ -168,7 +169,7 @@ public abstract class BaseCrudController<T extends BaseEntity> {
 		if (ex instanceof BindException) {
 			BindException e = (BindException) ex;
 			messages.addAll(CrudUtil.convertErrorMessage(e.getBindingResult(),
-					request.getLocale(), messageSource));
+					LocaleContextHolder.getLocale(), messageSource));
 			if (_log.isDebugEnabled())
 				_log.debug("Bind error encountered.", e);
 		} else {
@@ -497,6 +498,7 @@ public abstract class BaseCrudController<T extends BaseEntity> {
 			final Model uiModel, final HttpServletRequest request,
 			final HttpServletResponse response) {
 		transactionTemplate.execute(new TransactionCallbackWithoutResult() {
+			@Override
 			protected void doInTransactionWithoutResult(TransactionStatus status) {
 				preProcessTaggableEntities(command);
 				preCreate(command, bindingResult, uiModel, request, response);
@@ -593,6 +595,7 @@ public abstract class BaseCrudController<T extends BaseEntity> {
 			final Model uiModel, final HttpServletRequest request,
 			final HttpServletResponse response) {
 		transactionTemplate.execute(new TransactionCallbackWithoutResult() {
+			@Override
 			protected void doInTransactionWithoutResult(TransactionStatus status) {
 				preProcessTaggableEntities(command);
 				preUpdate(command, bindingResult, uiModel, request, response);
@@ -652,6 +655,7 @@ public abstract class BaseCrudController<T extends BaseEntity> {
 			final Model uiModel, final HttpServletRequest request,
 			final HttpServletResponse response) {
 		transactionTemplate.execute(new TransactionCallbackWithoutResult() {
+			@Override
 			protected void doInTransactionWithoutResult(TransactionStatus status) {
 				preDelete(id, bindingResult, uiModel, request, response);
 				service.delete(id);
