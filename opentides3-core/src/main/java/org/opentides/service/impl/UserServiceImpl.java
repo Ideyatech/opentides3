@@ -82,7 +82,7 @@ public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 	@Value("#{applicationSettings['confirm.password.reset.url']}")
 	private String confirmURL;
 
-	@Value("#{'domain.url'}")
+	@Value("${domain.url}")
 	private String domainURL;
 
 	@Autowired
