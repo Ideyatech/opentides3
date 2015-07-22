@@ -26,7 +26,7 @@ import org.apache.log4j.Logger;
  */
 public class TenantContextHolder {
 	
-	private static final Logger _log = Logger.getLogger(MultitenancyUtil.class);
+	private static final Logger _log = Logger.getLogger(TenantContextHolder.class);
 
 	/**
 	 * This is used to store the tenant name of the account during log in

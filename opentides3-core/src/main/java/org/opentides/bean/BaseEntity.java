@@ -95,6 +95,9 @@ public abstract class BaseEntity implements Serializable {
     @Column(name = "VERSION")
     private Long version;
     
+    @Column(name = "SCHEMA_NAME")
+    private String schemaName;
+    
     /**
      * Random id generated used for session mapping.
      * This id is used to avoid security hacks when user attempts
@@ -513,6 +516,14 @@ public abstract class BaseEntity implements Serializable {
 	
 	public void setAliasMapping(Set<String> aliasMapping) {
 		this.aliasMapping = aliasMapping;
+	}
+
+	public String getSchemaName() {
+		return schemaName;
+	}
+
+	public void setSchemaName(String schemaName) {
+		this.schemaName = schemaName;
 	}
 	
 }
