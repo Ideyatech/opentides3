@@ -95,7 +95,7 @@ public abstract class BaseEntity implements Serializable {
     @Column(name = "VERSION")
     private Long version;
     
-    @Column(name = "SCHEMA_NAME")
+    @Column(name = "SCHEMANAME_")
     private String schemaName;
     
     /**
