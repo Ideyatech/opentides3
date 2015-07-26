@@ -20,4 +20,18 @@ public interface ChangeLogDao extends BaseEntityDao<ChangeLog, Long> {
 	 */
 	public ChangeLog findLatestChangeByBranch(Long branchId);
 	
+	/**
+	 * Find latest change id
+	 * @return
+	 */
+	public Long findTargetVersion();
+	
+	
+	/**
+	 * Find latest changelog id by id
+	 * @param branchId
+	 * @return
+	 */
+	public Long findTargetVersion(Long branchId);
+	
 }

@@ -35,5 +35,18 @@ public interface ChangeLogService extends BaseCrudService<ChangeLog> {
 	 * @return
 	 */
 	public ChangeLog findLatestChange(Long branchId);
+	
+	/**
+	 * Find latest changelog id
+	 * @return
+	 */
+	public Long findTargetVersion();
+	
+	/**
+	 * Find latest changelog id by id
+	 * @param branchId
+	 * @return
+	 */
+	public Long findTargetVersion(Long branchId);
 		
 }

@@ -39,6 +39,20 @@ public class ChangeLogServiceImpl extends BaseCrudServiceImpl<ChangeLog> impleme
 		
 		return null;
 	}
+	
+	@Override
+	public Long findTargetVersion(){
+		
+		return ((ChangeLogDao)getDao()).findTargetVersion();
+		
+	}
+	
+	@Override
+	public Long findTargetVersion(Long branchId){
+		
+		return ((ChangeLogDao)getDao()).findTargetVersion(branchId);
+		
+	}
 
 	@Override
 	public ChangeLog findLatestChange(Long branchId) {

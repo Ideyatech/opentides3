@@ -109,14 +109,11 @@ public class SynchronizableController {
 				//results.setLogs(new ArrayList<ChangeLog>());
 			}
 
-		    ChangeLog latestChange = this.changeLogService.findLatestChange(branchId);
-		    Long targetVersion = 0L;
+		    Long targetVersion = this.changeLogService.findTargetVersion(branchId) != null ?
+		    		this.changeLogService.findTargetVersion(branchId) : 0L;
 		    
-		    if (latestChange != null){
-		       targetVersion = latestChange.getId();
-		       results.setTargetVersion(targetVersion.longValue());
-		    }
-		    
+		    results.setTargetVersion(targetVersion);
+		
 			// Log updates from WEB to POS
 			_log.info("[" + clientcode + "] " + UPDATE_ENDPOINT
 					+ " Send Change Log version " + endpoint.getSyncVersion()

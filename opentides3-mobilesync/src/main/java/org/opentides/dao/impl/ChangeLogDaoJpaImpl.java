@@ -36,5 +36,37 @@ public class ChangeLogDaoJpaImpl extends BaseEntityDaoJpaImpl<ChangeLog, Long>
 		
 		return null;
 	}
+	
+	public Long findTargetVersion(){
+		String jpql = getJpqlQuery("jpql.mobilesync.findLastestChangeAll");
+		
+		Query query = getEntityManager().createQuery(jpql);
+		query.setMaxResults(1);
+		
+		ArrayList<Long> logs = (ArrayList<Long>) query.getResultList();
+		
+		if(!logs.isEmpty()){
+			return (Long)query.getResultList().get(0);
+		}
+		
+		return null;
+	}
+
+	@Override
+	public Long findTargetVersion(Long branchId) {
+		String jpql = getJpqlQuery("jpql.mobilesync.findLastestChangeByBranchId");
+		
+		Query query = getEntityManager().createQuery(jpql);
+		query.setParameter("branchId", branchId);
+		query.setMaxResults(1);
+		
+		ArrayList<Long> logs = (ArrayList<Long>) query.getResultList();
+		
+		if(!logs.isEmpty()){
+			return (Long)query.getResultList().get(0);
+		}
+		
+		return null;
+	}
 
 }
