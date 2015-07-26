@@ -384,8 +384,8 @@ public class BaseEntityDaoJpaImpl<T extends BaseEntity,ID extends Serializable>
 		setAuditUserId(obj);
 		_log.debug("User ID is " + obj.getAuditUserId());
 		
-		obj.setSchemaName(TenantContextHolder.getSchemaName());
-		_log.debug("Schema name is " + obj.getSchemaName());
+		obj.setDbName(TenantContextHolder.getSchemaName());
+		_log.debug("Schema name is " + obj.getDbName());
 		
 		if (obj.isNew()) 
 			getEntityManager().persist(obj);
