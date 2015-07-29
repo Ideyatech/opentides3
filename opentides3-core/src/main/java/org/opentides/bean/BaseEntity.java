@@ -91,7 +91,7 @@ public abstract class BaseEntity implements Serializable {
     @Column(name = "CREATEDBY")
     private String createdBy;
     
-    @Version
+    //@Version
     @Column(name = "VERSION")
     private Long version;
     
