@@ -127,12 +127,13 @@ public class FileUtil {
 			_log.error(ioe, ioe);
 			throw new InvalidImplementationException(msg, ioe);
 		} finally {
-			if (reader!=null)
+			if (reader!=null) {
 				try {
 					reader.close();
 				} catch (IOException e) {
 					// do nothing
 				}
+			}
 		}
 	}
 	
@@ -201,8 +202,9 @@ public class FileUtil {
 			throw new InvalidImplementationException(msg, ioe);
 		} finally {
 			try {
-				if (inStream != null)
+				if (inStream != null) {
 					inStream.close();
+				}
 			} catch (IOException e) {
 				// do nothing
 			}
@@ -283,7 +285,16 @@ public class FileUtil {
 			if (file.exists()) {
 				return new FileInputStream(file);
 			} else {
-				return FileUtil.class.getClassLoader().getResourceAsStream(name);
+				InputStream is = FileUtil.class.getClassLoader()
+						.getResourceAsStream(name);
+				if (is == null) {
+					// we need to throw this since getResourceAsStream would
+					// only return null if the resource is not found
+					throw new FileNotFoundException("File [" + name
+							+ "] cannot be found.");
+				}
+
+				return is;
 			}
 		}
 	}
@@ -395,11 +406,12 @@ public class FileUtil {
 		} catch (IOException e) {
 			_log.error("Failed to load properties ["+f.getAbsolutePath()+"]", e);
 		} finally {
-		    if (fis!=null)
-                try {
+		    if (fis!=null) {
+				try {
                     fis.close();
                 } catch (IOException e) {
                 }
+			}
 		}
 		return properties;			
 	}
@@ -423,8 +435,9 @@ public class FileUtil {
 			_log.error(e,e);
 		} finally {
 			try {
-				if(out != null)
+				if(out != null) {
 					out.close();
+				}
 			} catch (IOException e) { }
 		}
 	}
@@ -435,8 +448,9 @@ public class FileUtil {
 	 * @return
 	 */
 	public static String getFilename(String filepath) {
-		if (StringUtil.isEmpty(filepath))
+		if (StringUtil.isEmpty(filepath)) {
 			return "";
+		}
 		File file = new File(filepath);
 		return file.getName();
 	}

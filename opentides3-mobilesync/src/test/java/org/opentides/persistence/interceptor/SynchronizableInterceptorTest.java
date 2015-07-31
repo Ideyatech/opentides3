@@ -16,27 +16,31 @@ public class SynchronizableInterceptorTest {
 		SystemCodes sc = new SystemCodes("category1","key1","value1");
 		SynchronizableInterceptor s = new SynchronizableInterceptor();
 		s.buildInsertStatement(sc);
-		Assert.assertEquals("insert into system_codes (key,value,category) values ('KEY1','value1','CATEGORY1')",
+		Assert.assertEquals(
+				"insert into system_codes (KEY_,VALUE_,CATEGORY_) values ('KEY1','value1','CATEGORY1')",
 				s.buildInsertStatement(sc));
 		
 		Date now = new Date();
 		sc.setCreateDate(now);
-		String nowString = DateUtil.dateToString(now, "MM/dd/yy HH:mm:ss z");
-		Assert.assertEquals("insert into system_codes (createDate,key,value,category) values ('"+nowString+"','KEY1','value1','CATEGORY1')",
+		String nowString = DateUtil.dateToString(now, "yyyy-MM-dd HH:mm:ss");
+		Assert.assertEquals(
+				"insert into system_codes (CREATEDATE,KEY_,VALUE_,CATEGORY_) values ('"
+						+ nowString + "','KEY1','value1','CATEGORY1')",
 				s.buildInsertStatement(sc));
 		
 		SystemCodes p = new SystemCodes("categoryP","keyP","parentP");
 		p.setId(2l);
 		sc.setParent(p);
 		sc.setId(3l);
-		Assert.assertEquals("insert into system_codes (id,createDate,key,value,category,parent) values (3,'"+nowString+"','KEY1','value1','CATEGORY1',2)",
+		Assert.assertEquals(
+				"insert into system_codes (ID,CREATEDATE,KEY_,VALUE_,CATEGORY_,PARENT_) values (3,'"
+						+ nowString + "','KEY1','value1','CATEGORY1',2)",
 				s.buildInsertStatement(sc));
 		
 	}
 	
 	@Test
-	public void buildUpdatetatement() {
-		SystemCodes old = new SystemCodes("category1","key1","value1");
+	public void buildUpdateStatement() {
 		SystemCodes _new = new SystemCodes("category2","key1","value2");
 		_new.setId(1l);
 		
@@ -45,7 +49,8 @@ public class SynchronizableInterceptorTest {
 		updatedFields.add("value");
 
 		SynchronizableInterceptor s = new SynchronizableInterceptor();		
-		Assert.assertEquals("update system_codes set category='CATEGORY2',value='value2' where id=1",
+		Assert.assertEquals(
+				"update system_codes set CATEGORY_='CATEGORY2',VALUE_='value2' where id=1",
 				s.buildUpdateStatement(_new, updatedFields));
 		
 	}

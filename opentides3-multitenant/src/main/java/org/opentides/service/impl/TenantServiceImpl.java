@@ -18,12 +18,18 @@
  */
 package org.opentides.service.impl;
 
+import java.sql.SQLException;
+
+import org.opentides.bean.user.MultitenantUser;
 import org.opentides.bean.user.Tenant;
 import org.opentides.dao.TenantDao;
 import org.opentides.persistence.hibernate.MultiTenantSchemaUpdate;
+import org.opentides.persistence.jdbc.MultitenantJdbcTemplate;
+import org.opentides.service.MultitenantUserService;
 import org.opentides.service.TenantService;
 import org.opentides.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 /**
@@ -31,34 +37,71 @@ import org.springframework.stereotype.Service;
  *
  */
 @Service("tenantService")
-public class TenantServiceImpl extends BaseCrudServiceImpl<Tenant> implements TenantService {
+public class TenantServiceImpl extends BaseCrudServiceImpl<Tenant> implements
+		TenantService {
+
+	@Value("${database.default_schema}")
+	private String defaultSchema = "master";
 
 	@Autowired
 	private MultiTenantSchemaUpdate multiTenantSchemaUpdate;
+
+	@Autowired
+	private MultitenantUserService multitenantUserService;
 	
+	@Autowired
+	private MultitenantJdbcTemplate jdbcTemplate;
+
 	@Override
-	public String findUniqueSchemaName(String company) {
-		String schema = company.replaceAll("[^a-zA-Z]", "");
-		String uniqueSchema = schema;
-		Tenant t = ((TenantDao)getDao()).loadBySchema(uniqueSchema);
-		while (t!=null) {
-			uniqueSchema = schema + StringUtil.generateRandomString(3);
-			t = ((TenantDao)getDao()).loadBySchema(uniqueSchema);
+	public String findUniqueSchemaName(final String company) {
+		final String schema = company.replaceAll("[^a-zA-Z]", "");
+		final StringBuffer uniqueSchema = new StringBuffer(defaultSchema + "_"
+				+ schema);
+		Tenant t = ((TenantDao) getDao()).loadBySchema(uniqueSchema.toString());
+
+		while (t != null) {
+			uniqueSchema.append(StringUtil.generateRandomString(3));
+			t = ((TenantDao) getDao()).loadBySchema(uniqueSchema.toString());
 		}
-		return uniqueSchema;
+
+		return uniqueSchema.toString();
 	}
 
 	@Override
-	public boolean createTenantSchema(Tenant tenant) {
-		// create the schema
-		String schema = (tenant==null)?"":"_"+tenant.getSchema();
+	public void createTenantSchema(final Tenant tenant,
+			final MultitenantUser owner) {
+
+		final String company = tenant.getCompany();
+		final String schema = findUniqueSchemaName(company);
+
+		tenant.setSchema(schema);
+		tenant.setDbVersion(1l);
+
 		multiTenantSchemaUpdate.schemaEvolve(schema);
-		return true;
+		multitenantUserService.persistUserToTenantDb(tenant, owner);
+		
+		// disable the copy in the master db so the owner won't be able to log
+		// in there
+		owner.getCredential().setEnabled(Boolean.FALSE);
 	}
 
 	@Override
-	public boolean deleteTenantSchema(Tenant tenant, boolean createBackup) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean deleteTenantSchema(final Tenant tenant, final boolean createBackup) {
+		throw new UnsupportedOperationException(
+				"Deleting of tenant schema is not yet supported.");
 	}
+
+	@Override
+	public String getTenantSchemaName(String tenantName) {
+		return ((TenantDao) getDao()).getTenantSchemaName(tenantName);
+	}
+
+	@Override
+	public void changeSchema(String schemaName) throws SQLException {
+		if (!jdbcTemplate.getCurrentSchemaName().equalsIgnoreCase(schemaName)) {
+			jdbcTemplate.switchSchema(schemaName);
+		}
+
+	}
+
 }

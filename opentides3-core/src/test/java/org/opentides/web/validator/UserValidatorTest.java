@@ -1,6 +1,9 @@
 package org.opentides.web.validator;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -14,7 +17,7 @@ import org.mockito.MockitoAnnotations;
 import org.opentides.bean.user.BaseUser;
 import org.opentides.bean.user.UserCredential;
 import org.opentides.bean.user.UserGroup;
-import org.opentides.dao.UserDao;
+import org.opentides.service.UserService;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
@@ -28,10 +31,10 @@ import org.springframework.validation.ObjectError;
 public class UserValidatorTest {
 	
 	@InjectMocks
-	private UserValidator userValidator = new UserValidator();
+	private final UserValidator userValidator = new UserValidator();
 	
 	@Mock
-	private UserDao userDao;
+	private UserService userService;
 	
 	@Before
 	public void init() {
@@ -55,9 +58,9 @@ public class UserValidatorTest {
 		obj.setEmailAddress("test@test.com");
 		
 		//There should be no duplicate user so just return null
-		Mockito.when(userDao.loadByUsername("flast")).thenReturn(null);
+		Mockito.when(userService.loadByUsername("flast")).thenReturn(null);
 		//There should be no user with the same email so just return null
-		Mockito.when(userDao.loadByEmailAddress("test@test.com")).thenReturn(null);
+		Mockito.when(userService.loadByEmailAddress("test@test.com")).thenReturn(null);
 		
 		//Just put a non-empty set of UserGroup
 		Set<UserGroup> groups = new HashSet<UserGroup>();
@@ -88,9 +91,9 @@ public class UserValidatorTest {
 		obj.setEmailAddress("test@test.com");
 		
 		//There should be no duplicate user so just return null
-		Mockito.when(userDao.loadByUsername("flast")).thenReturn(null);
+		Mockito.when(userService.loadByUsername("flast")).thenReturn(null);
 		//There should be no user with the same email so just return null
-		Mockito.when(userDao.loadByEmailAddress("test@test.com")).thenReturn(null);
+		Mockito.when(userService.loadByEmailAddress("test@test.com")).thenReturn(null);
 		
 		//Just put a non-empty set of UserGroup
 		Set<UserGroup> groups = new HashSet<UserGroup>();
@@ -121,8 +124,8 @@ public class UserValidatorTest {
 		
 		userValidator.validate(obj, errors);
 		
-		Mockito.verify(userDao, Mockito.never()).loadByUsername("flast");
-		Mockito.verify(userDao, Mockito.never()).loadByEmailAddress("test@test.com");
+		Mockito.verify(userService, Mockito.never()).loadByUsername("flast");
+		Mockito.verify(userService, Mockito.never()).loadByEmailAddress("test@test.com");
 		
 		assertTrue(errors.hasErrors());
 		
@@ -179,9 +182,9 @@ public class UserValidatorTest {
 		userCheck.setId(1l);
 		userCheck.setEmailAddress("test@test.com");
 		userCheck.setCredential(credential);
-		Mockito.when(userDao.loadByUsername("flast")).thenReturn(userCheck);
+		Mockito.when(userService.loadByUsername("flast")).thenReturn(userCheck);
 		//There should be user with the same email so return something
-		Mockito.when(userDao.loadByEmailAddress("test@test.com")).thenReturn(userCheck);
+		Mockito.when(userService.loadByEmailAddress("test@test.com")).thenReturn(userCheck);
 		
 		//Just put a non-empty set of UserGroup
 		Set<UserGroup> groups = new HashSet<UserGroup>();
@@ -190,19 +193,19 @@ public class UserValidatorTest {
 		
 		userValidator.validate(obj, errors);
 		
-		Mockito.verify(userDao).loadByUsername("flast");
-		Mockito.verify(userDao).loadByEmailAddress("test@test.com");
+		Mockito.verify(userService).loadByUsername("flast");
+		Mockito.verify(userService).loadByEmailAddress("test@test.com");
 		
 		assertTrue(errors.hasErrors());
-		assertEquals(1, errors.getGlobalErrorCount());
+		assertEquals(2, errors.getErrorCount());
 		int errorCheck = 0;
-		for(ObjectError error : errors.getGlobalErrors()) {
+		for (ObjectError error : errors.getAllErrors()) {
 			if(error.getCode().equals("error.duplicate-field")) {
 				errorCheck ++;
 			}
 		}
 		//The code for both errors should be error.duplicate-field
-		assertEquals(1, errorCheck);
+		assertEquals(2, errorCheck);
 		
 	}
 	
@@ -223,9 +226,9 @@ public class UserValidatorTest {
 		obj.setEmailAddress("testtest.com");
 		
 		//There should be no duplicate user so just return null
-		Mockito.when(userDao.loadByUsername("flast")).thenReturn(null);
+		Mockito.when(userService.loadByUsername("flast")).thenReturn(null);
 		//There should be no user with the same email so just return null
-		Mockito.when(userDao.loadByEmailAddress("test@test.com")).thenReturn(null);
+		Mockito.when(userService.loadByEmailAddress("test@test.com")).thenReturn(null);
 		
 		//Just put a non-empty set of UserGroup
 		Set<UserGroup> groups = new HashSet<UserGroup>();

@@ -15,14 +15,16 @@
 
 	<sec:http auto-config='false' use-expressions="true"
 		access-decision-manager-ref="httpRequestAccessDecisionManager">
-		<sec:intercept-url pattern="/"  access="permitAll"/>
-
 		<sec:form-login login-page="/"
 			default-target-url="/"
-			authentication-failure-url="/?login_error=authentication-failed" login-processing-url="/login"/>
+			authentication-failure-handler-ref="authenticationFailureHandler" login-processing-url="/login"/>
 
-		<sec:logout logout-url="/logout" logout-success-url="/" />
+		<sec:logout logout-url="/logout"  success-handler-ref="logoutHandler" />
+		
+		<sec:intercept-url pattern="/"  access="permitAll"/>
 		<sec:intercept-url pattern="/**" access="isAuthenticated()" />
+		
+		<sec:custom-filter ref="tenantContextFilter" after="SECURITY_CONTEXT_FILTER" />
 
 		<sec:anonymous />
 		<sec:http-basic />
@@ -53,7 +55,9 @@
 			<sec:password-encoder ref="passwordEncoder" />
 		</sec:authentication-provider>
 	</sec:authentication-manager>
-
+	
+	<bean id="tenantContextFilter" class="org.opentides.web.security.TenantContextFilter" />
+	
 	<bean id="httpRequestAccessDecisionManager"
 		class="org.springframework.security.access.vote.AffirmativeBased">
 		<property name="allowIfAllAbstainDecisions">
@@ -68,22 +72,22 @@
 		</property>
 	</bean>
 	
-	<!-- to keep track of last login and last login error -->
-	<bean id="loginListener" class="org.opentides.listener.LoginListener" autowire="byName" />
-	
 	<bean id="logoutHandler" class="org.opentides.listener.LogoutListener" autowire="byName">
-		<property name="defaultTargetUrl" value="/login?login_error=logout" />
+		<property name="defaultTargetUrl" value="/?login_error=logout" />
 	</bean>
 	
-<!-- 	
-	<bean id="promptChangePasswordHandler" class="com.attache.web.security.PromptChangePasswordHandler">
-		<property name="promptEnabled" value="${change-password-prompt}" />
+	<bean id="loginEntryPoint" class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
+		<constructor-arg type="java.lang.String" value="/login" />
 	</bean>
--->	
+	
+	<bean id="authenticationFailureHandler" class="org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler">
+		<property name="defaultFailureUrl" value="/?login_error=authentication-failed" />
+	</bean>
+	
 	<bean id="roleVoter" class="org.springframework.security.access.vote.RoleVoter">
 		<property name="rolePrefix" value="ROLE_" />
 	</bean>
-
+	
 	<bean id="authenticatedVoter"
 		class="org.springframework.security.access.vote.AuthenticatedVoter" />
 

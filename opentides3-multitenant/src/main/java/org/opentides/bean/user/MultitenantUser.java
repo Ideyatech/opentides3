@@ -46,10 +46,10 @@ public class MultitenantUser extends BaseUser {
 	@JoinColumn(name = "TENANT_ID")
 	@JsonIgnore
 	private Tenant tenant;
-	
+
 	@RestableFields
 	public List<String> restableFields() {
-		List<String> props = new ArrayList<String>();
+		final List<String> props = new ArrayList<String>();
 		props.add("id");
 		props.add("firstName");
 		props.add("lastName");
@@ -74,8 +74,7 @@ public class MultitenantUser extends BaseUser {
 	/**
 	 * @param tenant the tenant to set
 	 */
-	public final void setTenant(Tenant tenant) {
+	public final void setTenant(final Tenant tenant) {
 		this.tenant = tenant;
 	}
-	
 }

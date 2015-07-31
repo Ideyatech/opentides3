@@ -1,10 +1,21 @@
-/*
- * This source code is property of Ideyatech,Inc.
- * All rights reserved. 
- * 
- * AttacheSequence.java
- * Created on Jul 24, 2012 5:34:32 PM
- */
+/*******************************************************************************
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ *  with the License.  You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.    
+ *******************************************************************************/
 package org.opentides.bean;
 
 import javax.persistence.Column;
@@ -30,11 +41,11 @@ public class Sequence extends BaseEntity {
 	public Sequence() {
 	}
 	
-	public Sequence(String key) {
+	public Sequence(final String key) {
 		this(key,1l);
 	}
 	
-	public Sequence(String key, Long value) {
+	public Sequence(final String key, final Long value) {
 		this.key = key;
 		this.value = value;
 	}
@@ -49,7 +60,7 @@ public class Sequence extends BaseEntity {
 	/**
 	 * @param key the key to set
 	 */
-	public final void setKey(String key) {
+	public final void setKey(final String key) {
 		this.key = key;
 	}
 
@@ -63,18 +74,18 @@ public class Sequence extends BaseEntity {
 	/**
 	 * @param value the value to set
 	 */
-	public final void setValue(Long value) {
+	public final void setValue(final Long value) {
 		this.value = value;
 	}
 	
 	/**
 	 * Increment the value by the given step
 	 */
-	public final synchronized void incrementValue(int step) {
-		if(this.value == null) {
-			this.value = Long.valueOf(1l);
+	public final synchronized void incrementValue(final int step) {
+		if(value == null) {
+			value = Long.valueOf(1l);
 		} else {
-			this.value += step;
+			value += step;
 		}
 	}
 
@@ -87,17 +98,21 @@ public class Sequence extends BaseEntity {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
+	public boolean equals(final Object obj) {
+		if (this == obj) {
 			return true;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
-		Sequence other = (Sequence) obj;
+		}
+		final Sequence other = (Sequence) obj;
 		if (key == null) {
-			if (other.key != null)
+			if (other.key != null) {
 				return false;
-		} else if (!key.equals(other.key))
+			}
+		} else if (!key.equals(other.key)) {
 			return false;
+		}
 		return true;
 	}
 	

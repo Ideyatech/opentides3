@@ -97,12 +97,17 @@ public class SecurityUtil {
 	 * @return
 	 */
 	public static Date userNow() {
+<<<<<<< HEAD
 		try {
 			Integer tzDiff = SecurityUtil.userTimeZone();
 			return DateUtils.addHours(new Date(), tzDiff);
 		} catch (Exception e) {
 			return null;
 		}
+=======
+		final Integer tzDiff = SecurityUtil.userTimeZone();
+		return DateUtils.addHours(new Date(), tzDiff);
+>>>>>>> branch 'master' of https://github.com/Ideyatech/opentides3.git
 	}
 
 	/**

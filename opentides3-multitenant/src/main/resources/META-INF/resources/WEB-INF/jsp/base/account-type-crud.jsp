@@ -101,10 +101,10 @@
 		<form:form modelAttribute="formCommand" id="account-type-form">
 			<div class="modal-body">
 				<div class="message-container"></div>
-				<tides:input path="name" label="label.account-type.name" />
+				<tides:input path="name" label="label.account-type.name" required="true"/>
 				<tides:input textarea="true" path="description" label="label.account-type.description" />
 				<tides:input path="amount" label="label.account-type.amount" />
-				<tides:select path="period" label="label.account-type.period" items="${periodList}"/>
+				<tides:select path="period" label="label.account-type.period" items="${periodList}" required="true"/>
 				<tides:checkbox path="active" label="label.account-type.active"/>
 				
 			</div>

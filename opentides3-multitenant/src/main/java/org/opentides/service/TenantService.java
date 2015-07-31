@@ -19,6 +19,9 @@
 
 package org.opentides.service;
 
+import java.sql.SQLException;
+
+import org.opentides.bean.user.MultitenantUser;
 import org.opentides.bean.user.Tenant;
 
 /**
@@ -37,7 +40,7 @@ public interface TenantService extends BaseCrudService<Tenant> {
 	/**
 	 * Creates the schema of the tenant using JPA database create.
 	 */
-	public boolean createTenantSchema(Tenant tenant);
+	public void createTenantSchema(Tenant tenant, MultitenantUser owner);
 	
 	/**
 	 * Backups and drop the schema of the tenant.
@@ -45,4 +48,17 @@ public interface TenantService extends BaseCrudService<Tenant> {
 	public boolean deleteTenantSchema(Tenant tenant, 
 									  boolean createBackup);
 	
+	/**
+	 * Get schema name of tenant
+	 * @param tenantName
+	 * @return
+	 */
+	public String getTenantSchemaName(String tenantName);
+	
+	/**
+	 * Change schema
+	 * @param schemaName
+	 * @return
+	 */
+	public void changeSchema(String schemaName) throws SQLException;
 }

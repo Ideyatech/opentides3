@@ -72,7 +72,9 @@ public class PackageUtil {
 			return null;
 		}
 		if (name.endsWith(".java")) {
-			return name.substring(0, name.length()-5).replaceAll("\\.",File.separator) + ".java";
+			return name.substring(0, name.length() - 5).replaceAll("\\.",
+					separator)
+					+ ".java";
 		} else {
 			return name.replaceAll("\\.", separator);
 		}
@@ -100,10 +102,11 @@ public class PackageUtil {
 				String name = url.getFile();
 				if (name.startsWith("file:")) {
 					int excIndex = name.indexOf("!");
-					if (excIndex > 0)
+					if (excIndex > 0) {
 						templateJars.add(name.substring(5,excIndex));
-					else
+					} else {
 						templateJars.add(name.substring(5));
+					}
 				} else {
 					templateFolders.add(name);
 				}
@@ -115,8 +118,9 @@ public class PackageUtil {
 				}
 				props.load(inputStream);
 			} finally {
-				if (inputStream != null)
+				if (inputStream != null) {
 					inputStream.close();
+				}
 			}
 			combined.putAll(props);
 		}

@@ -20,6 +20,7 @@
 package org.opentides.util;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.persistence.EntityManager;
@@ -27,6 +28,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
 import org.apache.log4j.Logger;
+import org.springframework.util.CollectionUtils;
 
 /**
  * This utility allows creation of Hibernate session directly.
@@ -41,12 +43,12 @@ public class DatabaseUtil {
     /**
      * Local entity manager to manage database sessions.
      */
-    private static EntityManager entityManager;
+	private static EntityManager entityManager;
 
     /**
      * Persistence name in hibernate.
      */
-    private static String persistenceUnitName = "opentidesPU";
+	private static String persistenceUnitName = "opentidesPU";
     
     /**
      * Persistence file
@@ -84,6 +86,18 @@ public class DatabaseUtil {
      */
     private static Properties propertiesMap;
     
+	/**
+	 * Additional property map that will be merged with
+	 * {@link DatabaseUtil#propertiesMap}
+	 */
+	private static Map<String, Object> jpaPropertyMap;
+
+	/**
+	 * Flag that tells whether the entity manager is always reinitialized before
+	 * being provided by the util. Defaults to false.
+	 */
+	private static boolean reinitializeAlways = false;
+
     /**
      * List of classes handled by JPA/Hibernate.
      */
@@ -92,18 +106,18 @@ public class DatabaseUtil {
     /**
      * Entity Manager Factory
      */
-    private static EntityManagerFactory emf;
+	private static EntityManagerFactory emf;
 
 	/**
 	 * Hide the constructor.
 	 */
-	private DatabaseUtil() {		
+	private DatabaseUtil() {
 	}
 	
     /**
      * Static initializer to establish database connection.
      */
-    private static void initialize() {
+	private static void initialize() {
         try { 
         	if (emf == null || !emf.isOpen()) {
             	propertiesMap = XMLPersistenceUtil.getProperties(persistenceFile, persistenceUnitName);        	
@@ -115,16 +129,21 @@ public class DatabaseUtil {
             		propertiesMap.put("javax.persistence.jdbc.password", password);
             	} else {
             		_log.debug("Connecting to JNDI [" + jndiName + "]");
-//				For Eclipselink only
+					// For Eclipselink only
             		propertiesMap.put("eclipselink.session.customizer", 
             				"org.opentides.persistence.config.JPAEclipseLinkSessionCustomizer");
             		propertiesMap.put("javax.persistence.nonJtaDataSource",jndiName);
               }
-            	emf = Persistence.createEntityManagerFactory(persistenceUnitName, propertiesMap);
-            	
+
+				// merge jpa properties configured in XML, if any
+				CollectionUtils.mergePropertiesIntoMap(propertiesMap,
+						jpaPropertyMap);
+
+				emf = Persistence.createEntityManagerFactory(
+						persistenceUnitName, jpaPropertyMap);
         	}
-        	entityManager = emf.createEntityManager();        	
-        } catch (Throwable ex) {
+			entityManager = emf.createEntityManager();
+        } catch (final Throwable ex) {
             // Make sure you log the exception, as it might be swallowed
             _log.error("Initial EntityManager creation failed.", ex);
             throw new ExceptionInInitializerError(ex);
@@ -132,15 +151,18 @@ public class DatabaseUtil {
     }
 
     public static EntityManager getEntityManager() {
-    	if (entityManager==null || !entityManager.isOpen())
-    		DatabaseUtil.initialize();
+		if (reinitializeAlways || entityManager == null
+				|| !entityManager.isOpen()) {
+			DatabaseUtil.initialize();
+		}
+		
         return entityManager;
     }
 	
 	/**
 	 * @param driverClass the driverClass to set
 	 */
-	public final void setDriverClassName(String driverClass) {
+	public final void setDriverClassName(final String driverClass) {
 		_log.info("Setting Driver Class Name to " + driverClass);
 		DatabaseUtil.driverClassName = driverClass;
 	}
@@ -148,7 +170,7 @@ public class DatabaseUtil {
 	/**
 	 * @param url the url to set
 	 */
-	public final void setUrl(String url) {
+	public final void setUrl(final String url) {
 		_log.info("Setting URL to " + url);
 		DatabaseUtil.url = url;
 	}
@@ -156,7 +178,7 @@ public class DatabaseUtil {
 	/**
 	 * @param username the username to set
 	 */
-	public final void setUsername(String username) {
+	public final void setUsername(final String username) {
 		_log.info("Setting Username to " + username);
 		DatabaseUtil.username = username;
 	}
@@ -164,7 +186,7 @@ public class DatabaseUtil {
 	/**
 	 * @param password the password to set
 	 */
-	public final void setPassword(String password) {
+	public final void setPassword(final String password) {
 		_log.info("Setting password to " + password);
 		DatabaseUtil.password = password;
 	}
@@ -177,7 +199,7 @@ public class DatabaseUtil {
 	 * @param jndiName
 	 */
 	
-	public final void setJndiName(String jndiName) {
+	public final void setJndiName(final String jndiName) {
 		_log.info("Setting JNDI Name to " + jndiName);
 		DatabaseUtil.jndiName = jndiName;
 	}
@@ -187,7 +209,7 @@ public class DatabaseUtil {
 	 *
 	 * @param persistenceUnitName the persistenceUnitName to set
 	 */
-	public final void setPersistenceUnitName(String persistenceUnitName) {
+	public final void setPersistenceUnitName(final String persistenceUnitName) {
 		_log.info("Setting Persistence Unit Name to " + persistenceUnitName);
 		DatabaseUtil.persistenceUnitName = persistenceUnitName;
 	}
@@ -196,9 +218,27 @@ public class DatabaseUtil {
 	 * 
 	 * @param persistenceFile
 	 */
-	public final void setPersistenceFile(String persistenceFile) {
+	public final void setPersistenceFile(final String persistenceFile) {
 		_log.info("Setting Persistence file to " + persistenceFile);
 		DatabaseUtil.persistenceFile = persistenceFile;
+	}
+
+	/**
+	 * @param jpaPropertyMap
+	 *            the jpaPropertyMap to set
+	 */
+	public final void setJpaPropertyMap(
+			final Map<String, Object> jpaPropertyMap) {
+		DatabaseUtil.jpaPropertyMap = jpaPropertyMap;
+	}
+
+	/**
+	 * @param reinitializeAlways
+	 *            the reinitializeAlways to set
+	 */
+	public final void setReinitializeAlways(final boolean reinitializeAlways) {
+		_log.info("Setting reinitialize always flag to " + reinitializeAlways);
+		DatabaseUtil.reinitializeAlways = reinitializeAlways;
 	}
 
 	/**
@@ -212,8 +252,9 @@ public class DatabaseUtil {
 	 * @return the propertiesMap
 	 */
 	public static final Properties getPropertiesMap() {
-    	if (entityManager == null || !entityManager.isOpen())
-    		DatabaseUtil.initialize();		
+    	if (entityManager == null || !entityManager.isOpen()) {
+			DatabaseUtil.initialize();
+		}		
 		return propertiesMap;
 	}
 	
@@ -221,8 +262,9 @@ public class DatabaseUtil {
 	 * @return the classes mapped in persistence.xml
 	 */
 	public static final List<String> getClasses() {
-    	if (entityManager == null || !entityManager.isOpen())
-    		DatabaseUtil.initialize();		
+    	if (entityManager == null || !entityManager.isOpen()) {
+			DatabaseUtil.initialize();
+		}		
 		return classes;
 	}
 	

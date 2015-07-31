@@ -7,12 +7,9 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<%@ page import="java.util.Date" %>
-<%@ page import="org.opentides.util.SecurityUtil" %>
+ 
+<app:header pageTitle="label.notification.your-notifications" active="system" />
 
-<app:header pageTitle="label.notification.your-notifications" active="system">
-</app:header>
-<c:out value=""></c:out>
 <div id="bd" class="container">
 
 	<!-- START OF CONTENT -->
@@ -51,11 +48,14 @@
         </div>
     	</c:if>
     	<c:if test="${not empty notifications}">
-    		<fmt:formatDate pattern="E MMMM dd, yyyy" value="${notifications[0].notifyDate}" var="dateLoop" />
-			<c:set var="now" value="<%=SecurityUtil.userNow()%>"/>
-    		<fmt:formatDate pattern="E MMMM dd, yyyy" value="${now}" var="today" />
-    		<c:set var="yest" value="<%=new Date(SecurityUtil.userNow().getTime() - 60*60*24*1000)%>"/>
-    		<fmt:formatDate pattern="E MMMM dd, yyyy" value="${yest}" var="yesterday" />
+    		<jsp:useBean id="now" class="java.util.Date"/>
+    		<jsp:useBean id="yest" class="java.util.Date"/>
+    		<jsp:setProperty name="yest" property="time" value="${yest.time - 86400000}"/> <!-- 86400000 = 60*60*24*1000  -->
+    		
+    		<fmt:formatDate pattern="MMMM dd, yyyy" value="${notifications[0].createDate}" var="dateLoop" />
+    		<fmt:formatDate pattern="MMMM dd, yyyy" value="${now}" var="today" />
+    		<fmt:formatDate pattern="MMMM dd, yyyy" value="${yest}" var="yesterday" />
+    		
 	    	<div>    	
 	        	<p class="date">
 	        		<c:choose>
@@ -65,11 +65,12 @@
 					</c:choose>
 	        	</p>    		
     		<c:forEach items="${notifications}" var="notification">
-    			<fmt:formatDate pattern="E MMMM dd, yyyy" value="${notification.notifyDate}" var="dateCurr" />
+    			<fmt:formatDate pattern="MMMM dd, yyyy" value="${notification.createDate}" var="dateCurr" />
     			<c:if test="${dateLoop ne dateCurr}">
     			<c:set var="dateLoop" value="${dateCurr}"/>
     		</div>
-	    	<div class="notify-wrapper-2">
+	    	<div>
+
 		        	<p class="date">
 	        		<c:choose>
       					<c:when test="${dateLoop eq today}">Today</c:when>
@@ -79,9 +80,9 @@
 					</p>        		
 				</c:if>
 	            <p class="item"><span class="time">
-	            	<fmt:formatDate pattern="hh:mm a" value="${notification.notifyDate}" var="time" />
+	            	<fmt:formatDate pattern="hh:mm a" value="${notification.createDate}" var="time" />
 	            	${time}
-	            	</span> <c:out value="${notification.message}"/>
+	            	</span>${notification.message}
 	            </p>
     		</c:forEach>
 	    	</div>

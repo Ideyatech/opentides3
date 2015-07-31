@@ -44,6 +44,7 @@ import org.opentides.listener.ApplicationStartupListener;
 import org.opentides.util.CrudUtil;
 import org.opentides.util.SecurityUtil;
 import org.opentides.util.StringUtil;
+import org.opentides.util.TenantContextHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
@@ -382,6 +383,10 @@ public class BaseEntityDaoJpaImpl<T extends BaseEntity,ID extends Serializable>
 		_log.debug("Saving object " + obj.getClass());
 		setAuditUserId(obj);
 		_log.debug("User ID is " + obj.getAuditUserId());
+		
+		obj.setDbName(TenantContextHolder.getSchemaName());
+		_log.debug("Schema name is " + obj.getDbName());
+		
 		if (obj.isNew()) 
 			getEntityManager().persist(obj);
 		else {

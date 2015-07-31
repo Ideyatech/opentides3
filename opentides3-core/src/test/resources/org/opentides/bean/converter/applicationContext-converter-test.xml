@@ -10,7 +10,7 @@
 
 
 	<bean id="baseEntityRegistry" class="org.opentides.bean.factory.support.BaseEntityRegistry">
-		<property name="packages">
+		<property name="packagesToScan">
 			<list>
 				<value>com.ideyatech.bean</value>
 			</list>

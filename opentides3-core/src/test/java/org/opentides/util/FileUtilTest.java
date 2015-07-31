@@ -57,8 +57,8 @@ public class FileUtilTest {
 	@Test
 	public void testReadFileWithFileParam() {
 		File file = new File("src/test/resources/test.properties");
-		String expected = "run.environment=test\n" + 
-						  "application.mode.debug=true";
+		String expected = "run.environment=test" + System.lineSeparator()
+				+ "application.mode.debug=true";
 		String actual = FileUtil.readFile(file).trim();
 		assertEquals(expected, actual);
 	}
@@ -78,8 +78,9 @@ public class FileUtilTest {
 		byte[] expected = {105, 100, 101, 121, 97, 116, 101, 99, 104, 10, 115, 
 							97, 109, 112, 108, 101, 32, 102, 105, 108, 101};
 		Assert.assertEquals(21,bytes.length);
-		for (int i=0;i<expected.length; i++) 
+		for (int i=0;i<expected.length; i++) {
 			Assert.assertEquals(expected[i], bytes[i]);
+		}
 
 		try {
 			FileUtil.readFileAsBytes("test/missing.txt");
@@ -116,7 +117,9 @@ public class FileUtilTest {
 	@Test
 	public void testWriteFile() throws IOException {
 		File tmpFile = File.createTempFile("ot-unit-test-write", ".txt");
-		String content ="write\noutput file\nTest's out\n";
+		String content = "write" + System.lineSeparator() + "output file"
+				+ System.lineSeparator() + "Test's out"
+				+ System.lineSeparator();
 		FileUtil.writeFile(tmpFile.getAbsolutePath(), content);
 		String written = FileUtil.readFile(tmpFile.getAbsolutePath());
 		Assert.assertEquals(content, written);
@@ -129,7 +132,9 @@ public class FileUtilTest {
 	@Test
 	public void testAppendFile() throws IOException {
 		File tmpFile = File.createTempFile("ot-unit-test-append", ".txt");
-		String content ="write\noutput file\nTest's out\n";
+		String content = "write" + System.lineSeparator() + "output file"
+				+ System.lineSeparator() + "Test's out"
+				+ System.lineSeparator();
 		FileUtil.writeFile(tmpFile.getAbsolutePath(), content);
 		FileUtil.appendFile(tmpFile.getAbsolutePath(), content);
 		String written = FileUtil.readFile(tmpFile.getAbsolutePath());
@@ -173,10 +178,14 @@ public class FileUtilTest {
 		props.put("two.two", "two");
 		props.put("one.one", "one");
 		props.put("_sample", "3");
-		FileUtil.saveProperty("saved.properties", props, "HEADER");
-		
-		String actual = FileUtil.readFile("saved.properties");
-		String expected = "#HEADER\n.*?\n_sample=3\none.one=one\ntwo.two=two\n";
+		String path = "src/test/resources/saved.properties";
+
+		FileUtil.saveProperty(path, props, "HEADER");
+		String actual = FileUtil.readFile(path);
+		String expected = "#HEADER" + System.lineSeparator() + ".*?"
+				+ System.lineSeparator() + "_sample=3" + System.lineSeparator()
+				+ "one.one=one" + System.lineSeparator() + "two.two=two"
+				+ System.lineSeparator();
 		Assert.assertTrue(actual.matches(expected));
 	}
 

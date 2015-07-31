@@ -138,8 +138,9 @@ public abstract class BaseCrudController<T extends BaseEntity> implements Initia
 	@InitBinder
 	protected void attachValidator(WebDataBinder binder) throws Exception {
 		if ((formValidator != null) && (binder.getTarget() != null)
-				&& formValidator.supports(binder.getTarget().getClass()))
+				&& formValidator.supports(binder.getTarget().getClass())) {
 			binder.setValidator(formValidator);
+		}
 	}
 
 	/**
@@ -160,8 +161,9 @@ public abstract class BaseCrudController<T extends BaseEntity> implements Initia
 			BindException e = (BindException) ex;
 			messages.addAll(CrudUtil.convertErrorMessage(e.getBindingResult(),
 					request.getLocale(), messageSource));
-			if (_log.isDebugEnabled())
+			if (_log.isDebugEnabled()) {
 				_log.debug("Bind error encountered.", e);
+			}
 		} else {
 			if (!request.getHeader("Accept").contains("application/json")) {
 				throw ex;
@@ -296,8 +298,9 @@ public abstract class BaseCrudController<T extends BaseEntity> implements Initia
 			HttpServletResponse response) {
 		Map<String, Object> model = new HashMap<String, Object>();
 		List<MessageResponse> messages = new ArrayList<MessageResponse>();
-		if (command.getId() == null) 
+		if (command.getId() == null) {
 			command.setId(id);
+		}
 		updateTx(command, bindingResult, uiModel, request, response);
 		messages.addAll(CrudUtil.buildSuccessMessage(command, "update",
 				request.getLocale(), messageSource));
@@ -492,6 +495,7 @@ public abstract class BaseCrudController<T extends BaseEntity> implements Initia
 			final Model uiModel, final HttpServletRequest request,
 			final HttpServletResponse response) {
 		transactionTemplate.execute(new TransactionCallbackWithoutResult() {
+			@Override
 			protected void doInTransactionWithoutResult(TransactionStatus status) {
 				preProcessTaggableEntities(command);
 				preCreate(command, bindingResult, uiModel, request, response);
@@ -588,6 +592,7 @@ public abstract class BaseCrudController<T extends BaseEntity> implements Initia
 			final Model uiModel, final HttpServletRequest request,
 			final HttpServletResponse response) {
 		transactionTemplate.execute(new TransactionCallbackWithoutResult() {
+			@Override
 			protected void doInTransactionWithoutResult(TransactionStatus status) {
 				preProcessTaggableEntities(command);
 				preUpdate(command, bindingResult, uiModel, request, response);
@@ -647,6 +652,7 @@ public abstract class BaseCrudController<T extends BaseEntity> implements Initia
 			final Model uiModel, final HttpServletRequest request,
 			final HttpServletResponse response) {
 		transactionTemplate.execute(new TransactionCallbackWithoutResult() {
+			@Override
 			protected void doInTransactionWithoutResult(TransactionStatus status) {
 				preDelete(id, bindingResult, uiModel, request, response);
 				service.delete(id);
@@ -773,8 +779,9 @@ public abstract class BaseCrudController<T extends BaseEntity> implements Initia
 		}
 		
 		if (this.formValidator == null
-				&& beanFactory.containsBean(validatorBean))
+				&& beanFactory.containsBean(validatorBean)) {
 			this.formValidator = (Validator) beanFactory.getBean(validatorBean);
+		}
 		if (StringUtil.isEmpty(this.singlePage)) {
 			this.singlePage = "app/"
 					+ NamingUtil.toElementName(this.entityBeanType

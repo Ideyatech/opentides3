@@ -35,6 +35,8 @@
 	
 	<bean class="org.opentides.web.controller.NinjaCrudController" id="ninjaCrudController"/>
 	
+	<bean class="org.springframework.mock.web.MockServletContext" autowire="byName" />
+	
 	<util:properties id="applicationSettings" location="classpath:application-settings-test.properties" />
 	
 </beans>

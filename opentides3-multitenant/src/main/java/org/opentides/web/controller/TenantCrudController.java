@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.opentides.bean.user.AccountType;
+import org.opentides.bean.user.MultitenantUser;
 import org.opentides.bean.user.Tenant;
 import org.opentides.bean.user.UserCredential;
 import org.opentides.service.AccountTypeService;
@@ -46,16 +47,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/system/tenant")
 @Controller
 public class TenantCrudController extends BaseCrudController<Tenant> {
-	
+
 	@Autowired
-	private AccountTypeService accountTypeService;
-	
+	protected AccountTypeService accountTypeService;
+
 	@Autowired
 	@Qualifier("userService")
-	private UserService userService;
-	
+	protected UserService userService;
+
 	/**
-	 * Post construct that initializes the crud page to {@code "/base/tenant-crud"}.
+	 * Post construct that initializes the crud page to
+	 * {@code "/base/tenant-crud"}.
 	 */
 	@PostConstruct
 	public void init() {
@@ -66,56 +68,60 @@ public class TenantCrudController extends BaseCrudController<Tenant> {
 	public List<AccountType> accountTypeList() {
 		return accountTypeService.findAll();
 	}
-	
+
 	/**
-	 * Responsible for changing the password of the {@code BaseUser} if a 
+	 * Responsible for changing the password of the {@code BaseUser} if a
 	 * {@code newPassword} is set.
+	 * 
+	 * This will also trigger the creation of the tenant schema.
 	 * 
 	 * @param command
 	 */
 	@Override
-	protected void preCreate(Tenant command) {
-		if (command.getOwner() != null) {
-			UserCredential credential = command.getOwner().getCredential();
-			if (!StringUtil.isEmpty(credential.getNewPassword()))
-				credential.setPassword(userService.encryptPassword(credential.getNewPassword()));			
-		}
-		command.setSchema(((TenantService)service).findUniqueSchemaName(command.getCompany()));
-		command.setDbVersion(1l);
-	}
-	
+	protected void preCreate(final Tenant command) {
+		final MultitenantUser owner = command.getOwner();
+		if (owner != null) {
+			final UserCredential credential = owner.getCredential();
+			if (!StringUtil.isEmpty(credential.getNewPassword())) {
+				credential.setPassword(userService.encryptPassword(credential
+						.getNewPassword()));
+			}
 
-	/* (non-Javadoc)
-	 * @see org.opentides.web.controller.BaseCrudController#postCreate(org.opentides.bean.BaseEntity)
-	 */
-	@Override
-	protected void postCreate(Tenant tenant) {
-		((TenantService)getService()).createTenantSchema(tenant);
+			owner.setTenant(command);
+		}
+
+		((TenantService) getService()).createTenantSchema(command, owner);
 	}
 
 	/**
-	 * Responsible for changing the password of the {@code BaseUser} if a 
+	 * Responsible for changing the password of the {@code BaseUser} if a
 	 * {@code newPassword} is set.
+	 * 
+	 * Also responsible for ensuring that {@code BaseUser} is linked to the
+	 * {@code Tenant}.
 	 * 
 	 * @param command
 	 */
 	@Override
-	protected void preUpdate(Tenant command) {
-		if (command.getOwner() != null) {
-			UserCredential credential = command.getOwner().getCredential();
-			if (!StringUtil.isEmpty(credential.getNewPassword()))
-				credential.setPassword(userService.encryptPassword(credential.getNewPassword()));			
+	protected void preUpdate(final Tenant command) {
+		final MultitenantUser owner = command.getOwner();
+		if (owner != null) {
+			final UserCredential credential = owner.getCredential();
+			if (!StringUtil.isEmpty(credential.getNewPassword())) {
+				credential.setPassword(userService.encryptPassword(credential
+						.getNewPassword()));
+			}
 		}
 	}
-	
+
 	/**
-	 * Method that adds to the model parameter {@code uiModel} the results {@code results} 
-	 * of {@link BaseCrudController } search method.
+	 * Method that adds to the model parameter {@code uiModel} the results
+	 * {@code results} of {@link BaseCrudController } search method.
 	 */
 	@Override
-	protected void onLoadSearch(Tenant command, BindingResult bindingResult, 
-			Model uiModel, HttpServletRequest request,
-			HttpServletResponse response) {
+	protected void onLoadSearch(final Tenant command,
+			final BindingResult bindingResult, final Model uiModel,
+			final HttpServletRequest request, final HttpServletResponse response) {
 		uiModel.addAttribute("results", search(command, request));
 	}
 }

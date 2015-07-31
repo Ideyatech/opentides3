@@ -38,8 +38,9 @@ public class NamingUtil {
 	 * @return
 	 */
 	public static String toLabel(String name) {
-		if (StringUtil.isEmpty(name))
+		if (StringUtil.isEmpty(name)) {
 			return "";
+		}
 
     	String label = name.startsWith("get")?name.replaceFirst("get", ""):name;
 
@@ -50,8 +51,9 @@ public class NamingUtil {
 				buffer.append(label.substring(0, 1).toUpperCase());
 			} else {
 				// append spaces between words
-				if (label.charAt(i) >= 'A' && label.charAt(i)<= 'Z') 
+				if (label.charAt(i) >= 'A' && label.charAt(i)<= 'Z') {
 					buffer.append(" ");
+				}
 				buffer.append(label.charAt(i));
 			}
 		}
@@ -64,8 +66,9 @@ public class NamingUtil {
 	 * @return
 	 */
 	public static String toGetterName(String name) {
-    	if (StringUtil.isEmpty(name))
-    		return "";
+    	if (StringUtil.isEmpty(name)) {
+			return "";
+		}
 		return "get" + name.substring(0,1).toUpperCase() + name.substring(1);
 	}
 	
@@ -75,8 +78,9 @@ public class NamingUtil {
 	 * @return
 	 */
 	public static String toSetterName(String name) {
-    	if (StringUtil.isEmpty(name))
-    		return "";
+    	if (StringUtil.isEmpty(name)) {
+			return "";
+		}
 		return "set" + name.substring(0,1).toUpperCase() + name.substring(1);
 	}
 
@@ -87,13 +91,15 @@ public class NamingUtil {
 	 */
 	public static String toAttributeName(String name) {
 
-		if (StringUtil.isEmpty(name))
+		if (StringUtil.isEmpty(name)) {
 			return "";
+		}
 		
 		if (name.length()>=2) {
 			return name.substring(0,1).toLowerCase() + name.substring(1);
-		} else
+		} else {
 			return name.toLowerCase();
+		}
 		
 		// how about names with several words?
 	}
@@ -104,42 +110,48 @@ public class NamingUtil {
 	 * @return
 	 */
 	public static String toElementName(String name) {
-		if (StringUtil.isEmpty(name))
+		if (StringUtil.isEmpty(name)) {
 			return "";
+		}
 		StringBuilder buffer = new StringBuilder();
 		int startIndex = 0;
 		for (int i=0; i<name.length();i++) {
 			if (name.charAt(i) >= 'A' && name.charAt(i)<= 'Z') {
-				if (startIndex!=0)
+				if (startIndex!=0) {
 					buffer.append("-");
+				}
 				buffer.append(name.substring(startIndex, i).toLowerCase());
 				startIndex = i;				
 			}
 		}
 		if (startIndex<name.length()) {
-			if (startIndex!=0)
+			if (startIndex!=0) {
 				buffer.append("-");
+			}
 			buffer.append(name.substring(startIndex).toLowerCase());
 		}
 		return buffer.toString();
 	}
 	
 	public static String toDisplayName(String name) {
-		if (StringUtil.isEmpty(name))
+		if (StringUtil.isEmpty(name)) {
 			return "";
+		}
 		StringBuffer buffer = new StringBuffer();
 		int startIndex = 0;
 		for (int i=0; i<name.length();i++) {
 			if (name.charAt(i) >= 'A' && name.charAt(i)<= 'Z') {
-				if (startIndex!=0)
+				if (startIndex!=0) {
 					buffer.append(" ");
+				}
 				buffer.append(name.substring(startIndex, i));
 				startIndex = i;				
 			}
 		}
 		if (startIndex<name.length()) {
-			if (startIndex!=0)
+			if (startIndex!=0) {
 				buffer.append(" ");
+			}
 			buffer.append(name.substring(startIndex));
 		}
 		return buffer.toString();
@@ -151,21 +163,24 @@ public class NamingUtil {
 	 * @return
 	 */
 	public static String toSQLName(String name) {
-		if (StringUtil.isEmpty(name))
+		if (StringUtil.isEmpty(name)) {
 			return "";
+		}
 		StringBuilder buffer = new StringBuilder();
 		int startIndex = 0;
 		for (int i=0; i<name.length();i++) {
 			if (name.charAt(i) >= 'A' && name.charAt(i)<= 'Z') {
-				if (startIndex!=0)
+				if (startIndex!=0) {
 					buffer.append("_");
+				}
 				buffer.append(name.substring(startIndex, i).toLowerCase());
 				startIndex = i;				
 			}
 		}
 		if (startIndex<name.length()) {
-			if (startIndex!=0)
+			if (startIndex!=0) {
 				buffer.append("_");
+			}
 			buffer.append(name.substring(startIndex).toLowerCase());
 		}
 		return buffer.toString();
@@ -178,14 +193,16 @@ public class NamingUtil {
      * @return
      */
     public static String getPropertyName(String methodName) {
-    	if (StringUtil.isEmpty(methodName) || methodName.length()<=3)
-    		return null;
+    	if (StringUtil.isEmpty(methodName) || methodName.length()<=3) {
+			return null;
+		}
     	if (methodName.startsWith("get") || methodName.startsWith("set")) {
     		String prop = methodName.substring(4);
     		char c = Character.toLowerCase(methodName.charAt(3));
     		return c+prop;
-    	} else 
-    		return null;
+    	} else {
+			return null;
+		}
     }
 
     /**
@@ -196,10 +213,11 @@ public class NamingUtil {
      */
     public static String getSimpleName(String qualifiedName) {
 		int idx = qualifiedName.lastIndexOf(".");
-		if (idx > 0)
-			return qualifiedName.substring(idx+1);	
-		else
+		if (idx > 0) {
+			return qualifiedName.substring(idx+1);
+		} else {
 			return qualifiedName;
+		}
     }
 
     /**
@@ -210,10 +228,12 @@ public class NamingUtil {
      */
     public static String getPackageName(String qualifiedName) {
 		int idx = qualifiedName.lastIndexOf(".");
-		if (idx > 0)
-			return qualifiedName.substring(0,idx);	
-		else
+		if (idx > 0) {
+			return qualifiedName.substring(0,idx);
+		}
+		else {
 			return ""; // no package
+		}
     }
 
 }

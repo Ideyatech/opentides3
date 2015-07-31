@@ -18,7 +18,7 @@
  */
 package org.opentides.context.support;
 
-import java.io.IOException; 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,7 +40,7 @@ public class PatternResourceBundleMessageSource extends ReloadableResourceBundle
 
 	private static Log _log = LogFactory.getLog(PatternResourceBundleMessageSource.class);
 	
-	private ResourcePatternResolver patternResolver = new PathMatchingResourcePatternResolver();
+	private final ResourcePatternResolver patternResolver = new PathMatchingResourcePatternResolver();
 	
 	/* (non-Javadoc)
 	 * @see org.springframework.context.support.ReloadableResourceBundleMessageSource#setBasenames(java.lang.String[])

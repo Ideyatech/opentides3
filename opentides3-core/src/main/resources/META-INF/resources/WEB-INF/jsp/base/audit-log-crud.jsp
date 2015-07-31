@@ -51,8 +51,8 @@
 						})();
 						</script>
 					</div>
-					<tides:input label="label.audit-log.date-from" path="startDate" datepicker="true" appendIcon="icon-calendar"/>
-					<tides:input label="label.audit-log.date-to" path="endDate" datepicker="true" appendIcon="icon-calendar"/>
+					<tides:date_picker label="label.audit-log.date-from" path="startDate" placeholder="Start Date" />
+					<tides:date_picker label="label.audit-log.date-to" path="endDate" placeholder="End Date" />
 					<div class="control-group">
 						<form:label path="logAction" cssClass="control-label" cssErrorClass="highlight-error">
 							<spring:message code="label.audit-log.action"/>

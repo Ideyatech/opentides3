@@ -141,6 +141,31 @@ body.anonymous-page #hd .brand {
 	}
 }
 
+/* REGISTRATION */
+.register-wrapper {
+	position: relative !important;
+}
+.register-wrapper form {
+	padding: 0;
+}
+.register-wrapper.modal {
+	width: 450px;
+	margin-left: -230px;
+}
+.register-wrapper .modal-header h4 {
+	text-align: center;
+}
+.register-wrapper.modal .modal-body .span6 {
+	padding: 0;
+	width: 100%;
+}
+.overflow-top {
+	top: 500px; 
+	display: none;
+}
+.none {
+	display: none;
+}
 
 /* HEADER */
 
@@ -589,6 +614,7 @@ input[type="search"], input[type="tel"], input[type="color"],
 .ot-upload-file table.ot-image-list p.name {
 	word-break: break-all;
 }
+
 /**************************/
 /* SOCIAL INTEGRATION CSS */
 /**************************/

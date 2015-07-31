@@ -64,7 +64,7 @@ public class AuditableField {
      */
     public AuditableField(final String fieldName) {
         this.fieldName = fieldName;
-        this.title = NamingUtil.toLabel(fieldName);
+        title = NamingUtil.toLabel(fieldName);
     }
 
     /**
@@ -73,7 +73,7 @@ public class AuditableField {
      * @return the title field
      */
     public final String getTitle() {
-        return this.title;
+        return title;
     }
 
     /**
@@ -92,7 +92,7 @@ public class AuditableField {
      * @return the fieldName
      */
     public final String getFieldName() {
-        return this.fieldName;
+        return fieldName;
     }
 
     /**
@@ -123,24 +123,41 @@ public class AuditableField {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		AuditableField other = (AuditableField) obj;
 		if (fieldName == null) {
-			if (other.fieldName != null)
+			if (other.fieldName != null) {
 				return false;
-		} else if (!fieldName.equals(other.fieldName))
+			}
+		} else if (!fieldName.equals(other.fieldName)) {
 			return false;
+		}
 		if (title == null) {
-			if (other.title != null)
+			if (other.title != null) {
 				return false;
-		} else if (!title.equals(other.title))
+			}
+		} else if (!title.equals(other.title)) {
 			return false;
+		}
 		return true;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return title;
 	}
     
 }

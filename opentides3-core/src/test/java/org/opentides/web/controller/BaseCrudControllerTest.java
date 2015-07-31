@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -17,6 +16,7 @@ import org.opentides.bean.SearchResults;
 import org.opentides.exception.DataAccessException;
 import org.opentides.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.ContextConfiguration;
@@ -55,6 +55,20 @@ public class BaseCrudControllerTest {
 	@Autowired
 	private PlatformTransactionManager transactionManager;
 	
+	/**
+	 * This is the page size for the search results table. Defaults to 20
+	 * results per table.
+	 */
+	@Value("#{applicationSettings.pageSize}")
+	protected Integer pageSize = 20;
+
+	/**
+	 * This is the total number of pages displayed on the pagination links.
+	 * Defaults to 10 links.
+	 */
+	@Value("#{applicationSettings.linksCount}")
+	protected Integer numLinks = 10;
+
 	//Mocks
 	MockHttpServletRequest mockRequest;
 	MockHttpServletResponse mockResponse;
@@ -116,19 +130,20 @@ public class BaseCrudControllerTest {
 	}
 	@Test
 	public void testSearchEverythingWithPaging() {
-		List<Ninja> expected = new ArrayList<Ninja>();
-		expected.add(new Ninja());
+		SearchResults<Ninja> expected = new SearchResults<Ninja>(pageSize,
+				numLinks);
+		expected.addResults(new Ninja());
+
 		//command is null
-		Mockito.when(ninjaService.findAll(0, 20)).thenReturn(expected);
-		Mockito.when(ninjaService.countAll()).thenReturn(1l);
+		Mockito.when(ninjaService.search(null, 1)).thenReturn(expected);
+
 		SearchResults<Ninja> results = ninjaCrudController.search(null, mockRequest);
 		
 		//Verify that ninjaService methods expected to run were invoked once...
-		Mockito.verify(ninjaService).findAll(0, 20);
-		Mockito.verify(ninjaService).countAll();
+		Mockito.verify(ninjaService).search(null, 1);
 		
 		assertNotNull(results);
-		assertEquals(1, results.getTotalResults());
+		assertEquals(expected.getTotalResults(), results.getTotalResults());
 		assertNotNull(results.getSearchTime());
 	}
 	
@@ -243,6 +258,7 @@ public class BaseCrudControllerTest {
 		
 		BindingResult bindingResult = new BeanPropertyBindingResult(command, "ninja");
 		
+		Mockito.doNothing().when(ninjaService).delete(id);
 		Map<String, Object> model = ninjaCrudController.delete(id, command,
 				bindingResult, modelMap, mockRequest, mockResponse);
 		
@@ -251,10 +267,6 @@ public class BaseCrudControllerTest {
 		
 		MessageResponse message = messages.get(0);
 		assertEquals("Record has been successfully deleted.", message.getMessage());
-		
-		//Verify that method delete(Long id) is called
-		Mockito.verify(ninjaService).delete(id);
-		
 	}
 	
 	@Test(expected = DataAccessException.class)

@@ -41,13 +41,29 @@ public class StringUtil {
 	 * @param obj
 	 * @return
 	 */
-    public static boolean isEmpty(String obj) {
-    	if ((obj==null) || (obj.trim().length()==0))
-    		return true;
-    	else
-    		return false;
+    public static boolean isEmpty(final String obj) {
+    	if ((obj==null) || (obj.trim().length()==0)) {
+			return true;
+		} else {
+			return false;
+		}
     }
     
+	public static boolean compareNullableStrings(final String str1,
+			final String str2) {
+		if (str1 == null && str2 == null) {
+			return true;
+		}
+		if (str1 == null && str2 != null) {
+			return false;
+		}
+		if (str1 != null && str2 == null) {
+			return false;
+		}
+
+		return str1.equals(str2);
+	}
+
     /**
      * <p>Replaces all occurrences of a String within another String.</p>
      * 
@@ -72,7 +88,7 @@ public class StringUtil {
      * @return the text with any replacements processed,
      *  {@code null} if null String input
      */
-    public static String replace(String text, String searchString, String replacement) {
+    public static String replace(final String text, final String searchString, final String replacement) {
         return replace(text, searchString, replacement, -1);
     }
 
@@ -105,7 +121,7 @@ public class StringUtil {
      * @return the text with any replacements processed,
      *  {@code null} if null String input
      */
-    public static String replace(String text, String searchString, String replacement, int max) {
+    public static String replace(final String text, final String searchString, final String replacement, int max) {
         if (isEmpty(text) || isEmpty(searchString) || replacement == null || max == 0) {
             return text;
         }
@@ -114,11 +130,11 @@ public class StringUtil {
         if (end == -1) {
             return text;
         }
-        int replLength = searchString.length();
+        final int replLength = searchString.length();
         int increase = replacement.length() - replLength;
         increase = increase < 0 ? 0 : increase;
         increase *= max < 0 ? 16 : max > 64 ? 64 : max;
-        StringBuilder buf = new StringBuilder(text.length() + increase);
+        final StringBuilder buf = new StringBuilder(text.length() + increase);
         while (end != -1) {
             buf.append(text.substring(start, end)).append(replacement);
             start = end + replLength;
@@ -137,7 +153,7 @@ public class StringUtil {
      * @param str
      * @param escapeForLike
      */
-    public static String escapeSql(String str, boolean escapeForLike){
+    public static String escapeSql(String str, final boolean escapeForLike){
 		if (str == null) {
 			return null;
 		} else {
@@ -164,9 +180,9 @@ public class StringUtil {
      * @param s
      * @return
      */
-    public static byte[] convertHexToArray(String s) {
-        int len = s.length();
-        byte[] data = new byte[len / 2];
+    public static byte[] convertHexToArray(final String s) {
+        final int len = s.length();
+        final byte[] data = new byte[len / 2];
         for (int i = 0; i < len; i += 2) {
             data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4)
                                  + Character.digit(s.charAt(i+1), 16));
@@ -182,13 +198,14 @@ public class StringUtil {
      * @param length
      * @return
      */
-    public static String toFixedString(int value, int length) {
-    	String val = Integer.toString(value);
-    	int diff = length-val.length();
-    	if (diff>0)
-    		return (zeros.substring(10-diff)+val);
-    	else
-    		return val;
+    public static String toFixedString(final int value, final int length) {
+    	final String val = Integer.toString(value);
+    	final int diff = length-val.length();
+    	if (diff>0) {
+			return (zeros.substring(10-diff)+val);
+		} else {
+			return val;
+		}
     }
     
     /**
@@ -197,7 +214,7 @@ public class StringUtil {
      * @param html
      * @return
      */
-    public static String removeHTMLTags(String html) {
+    public static String removeHTMLTags(final String html) {
     	return  html.replaceAll("<(.*?)>"," ")
     				.replaceAll("\\s+"," ");
     }
@@ -210,11 +227,11 @@ public class StringUtil {
      * @param defValue
      * @return
      */
-    public static int convertToInt(String str, int defValue) {
+    public static int convertToInt(final String str, final int defValue) {
 		int value = defValue;
 		try {
 			value = Integer.parseInt(str);
-		} catch (NumberFormatException nfe) {
+		} catch (final NumberFormatException nfe) {
 			// do nothing...
 		}
 		return value;
@@ -228,11 +245,11 @@ public class StringUtil {
      * @param defValue
      * @return
      */
-    public static long convertToLong(String str, long defValue) {
+    public static long convertToLong(final String str, final long defValue) {
 		long value = defValue;
 		try {
 			value = Long.parseLong(str);
-		} catch (NumberFormatException nfe) {
+		} catch (final NumberFormatException nfe) {
 			// do nothing...
 		}
 		return value;
@@ -246,21 +263,21 @@ public class StringUtil {
      * @param defValue
      * @return
      */
-    public static double convertToDouble(String str, double defValue){
+    public static double convertToDouble(final String str, final double defValue){
     	double doub = defValue;
 		try {
 			doub = Double.parseDouble(str);			
-		} catch (NumberFormatException nfe) {
+		} catch (final NumberFormatException nfe) {
 			// do nothing...
 		}
     	return doub;
     }
     
-    public static Float convertToFloat(String str, Float defValue) {
+    public static Float convertToFloat(final String str, final Float defValue) {
 		Float value = null;
 		try {
 			value = Float.parseFloat(str);
-		} catch (NumberFormatException nfe) {
+		} catch (final NumberFormatException nfe) {
 			// do nothing...
 		}
 		return value;
@@ -271,8 +288,8 @@ public class StringUtil {
      * @param length # of characters to generate
      * @return random string
      */
-    public static String generateRandomString(int length) {
-    	char[] values = {'a','b','c','d','e','f','g','h','i','j',
+    public static String generateRandomString(final int length) {
+    	final char[] values = {'a','b','c','d','e','f','g','h','i','j',
     					 'k','l','m','n','o','p','q','r','s','t',
     					 'u','v','w','x','y','z','0','1','2','3',
     					 '4','5','6','7','8','9','A','B','C','D',
@@ -281,7 +298,7 @@ public class StringUtil {
     					 'Y','Z'};
     	String out = "";
     	for (int i=0;i<length;i++) {
-        	int idx=random.nextInt(values.length);
+        	final int idx=random.nextInt(values.length);
     		out += values[idx];
     	}
     	return out;
@@ -296,12 +313,13 @@ public class StringUtil {
 	 * reference http://java.sun.com/j2se/1.4.2/docs/api/java/security/MessageDigest.html
 	 */
 	@SuppressWarnings("restriction")
-	public static String getEncryptedPassword(String clearTextPassword)	throws NoSuchAlgorithmException {	
+	public static String getEncryptedPassword(final String clearTextPassword)	throws NoSuchAlgorithmException {	
 		// handler for empty string
-		if (StringUtil.isEmpty(clearTextPassword))
+		if (StringUtil.isEmpty(clearTextPassword)) {
 			return"";
+		}
 		
-		MessageDigest md = MessageDigest.getInstance("SHA-256");
+		final MessageDigest md = MessageDigest.getInstance("SHA-256");
 		md.update(clearTextPassword.getBytes());
 		return new sun.misc.BASE64Encoder().encode(md.digest());
 	}
@@ -313,11 +331,11 @@ public class StringUtil {
      * @throws Exception
      */
 	@SuppressWarnings("restriction")	
-	public static String encrypt(String userId) {	
-		sun.misc.BASE64Encoder encoder = new sun.misc.BASE64Encoder();
+	public static String encrypt(final String userId) {	
+		final sun.misc.BASE64Encoder encoder = new sun.misc.BASE64Encoder();
 
 		// let's create some dummy salt
-		byte[] salt = new byte[8];
+		final byte[] salt = new byte[8];
 		random.nextBytes(salt);
 		return encoder.encode(salt)+
 			encoder.encode(userId.getBytes());
@@ -331,20 +349,21 @@ public class StringUtil {
 	 * @throws Exception
 	 */
 	@SuppressWarnings("restriction")
-	public static String decrypt(String encryptKey) throws Exception {
+	public static String decrypt(final String encryptKey) throws Exception {
 		// let's ignore the salt
 		if (!StringUtil.isEmpty(encryptKey) &&
 				encryptKey.length() > 12) {
-			String cipher = encryptKey.substring(12);
-			sun.misc.BASE64Decoder decoder = new sun.misc.BASE64Decoder();
+			final String cipher = encryptKey.substring(12);
+			final sun.misc.BASE64Decoder decoder = new sun.misc.BASE64Decoder();
 			try {
 				return new String(decoder.decodeBuffer(cipher));
-			} catch (IOException e) {
+			} catch (final IOException e) {
 				throw new Exception(
 						"Failed to perform decryption for key ["+encryptKey+"]",e);
 			}
-		} else
-			return null;				
+		} else {
+			return null;
+		}				
 	}
 	
 	/**
@@ -352,7 +371,7 @@ public class StringUtil {
 	 * @param csvLine
 	 * @return
 	 */
-    public static List<String> parseCsvLine(String csvLine) {
+    public static List<String> parseCsvLine(final String csvLine) {
     	return StringUtil.parseCsvLine(csvLine, ',', '"', '\\', false);
     }
     
@@ -369,17 +388,17 @@ public class StringUtil {
 	 * @return
 	 * @throws IOException
 	 */
-    public static List<String> parseCsvLine(String csvLine, 
-    									char separator, char quotechar, 
-    									char escape, boolean strictQuotes) {
+    public static List<String> parseCsvLine(final String csvLine, 
+    									final char separator, final char quotechar, 
+    									final char escape, final boolean strictQuotes) {
     	
-        List<String>tokensOnThisLine = new ArrayList<String>();
+        final List<String>tokensOnThisLine = new ArrayList<String>();
         StringBuilder sb = new StringBuilder(50);
         boolean inQuotes = false;
         for (int i = 0; i < csvLine.length(); i++) {
-        	char c = csvLine.charAt(i);
+        	final char c = csvLine.charAt(i);
         	if (c == escape) {
-    		    boolean isNextCharEscapable = inQuotes  // we are in quotes, therefore there can be escaped quotes in here.
+    		    final boolean isNextCharEscapable = inQuotes  // we are in quotes, therefore there can be escaped quotes in here.
     		    						    && csvLine.length() > (i+1)  // there is indeed another character to check.
     		    						    && ( csvLine.charAt(i+1) == quotechar || csvLine.charAt(i+1) == escape);
 
@@ -388,7 +407,7 @@ public class StringUtil {
         			i++;
         		} 
         	} else if (c == quotechar) {
-        		boolean isNextCharEscapedQuote = inQuotes  // we are in quotes, therefore there can be escaped quotes in here.
+        		final boolean isNextCharEscapedQuote = inQuotes  // we are in quotes, therefore there can be escaped quotes in here.
 								&& csvLine.length() > (i+1)  // there is indeed another character to check.
 								&& csvLine.charAt(i+1) == quotechar;
         		if( isNextCharEscapedQuote ){
@@ -411,8 +430,9 @@ public class StringUtil {
         		tokensOnThisLine.add(sb.toString());
         		sb = new StringBuilder(50); // start work on next token
         	} else {
-                if (!strictQuotes || inQuotes)
-                    sb.append(c);
+                if (!strictQuotes || inQuotes) {
+					sb.append(c);
+				}
         	}
         }
         // line is done - check status
@@ -431,14 +451,16 @@ public class StringUtil {
      * @param input
      * @return
      */
-    public static final String explode(char separator, String[] input) {
-    	if (input==null) 
-    		return null;
+    public static final String explode(final char separator, final String[] input) {
+    	if (input==null) {
+			return null;
+		}
     	int count=0;
-    	StringBuilder out = new StringBuilder();
-    	for (String word:input) {
-    		if (count++ > 0)
-    			out.append(separator);
+    	final StringBuilder out = new StringBuilder();
+    	for (final String word:input) {
+    		if (count++ > 0) {
+				out.append(separator);
+			}
     		out.append(word);
     	}
     	return out.toString();

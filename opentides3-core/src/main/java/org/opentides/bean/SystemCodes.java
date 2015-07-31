@@ -38,6 +38,7 @@ import org.opentides.web.json.Views;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * The system codes class is a lookup table used for drop-downs. Developer must
@@ -53,7 +54,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Auditable(label = "System Codes")
 @JsonInclude(Include.NON_NULL)
-
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class SystemCodes extends BaseEntity implements Serializable {
 
 	private static final long serialVersionUID = -4142599915292096152L;

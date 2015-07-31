@@ -91,9 +91,12 @@ public abstract class BaseEntity implements Serializable {
     @Column(name = "CREATEDBY")
     private String createdBy;
     
-    @Version
+    //@Version
     @Column(name = "VERSION")
     private Long version;
+    
+    @Column(name = "SCHEMANAME_")
+    private String dbName;
     
     /**
      * Random id generated used for session mapping.
@@ -514,5 +517,15 @@ public abstract class BaseEntity implements Serializable {
 	public void setAliasMapping(Set<String> aliasMapping) {
 		this.aliasMapping = aliasMapping;
 	}
+
+	public String getDbName() {
+		return dbName;
+	}
+
+	public void setDbName(String dbName) {
+		this.dbName = dbName;
+	}
+
+
 	
 }

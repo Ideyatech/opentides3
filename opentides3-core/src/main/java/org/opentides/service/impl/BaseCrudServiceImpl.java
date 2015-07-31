@@ -84,16 +84,18 @@ public class BaseCrudServiceImpl<T extends BaseEntity> extends
 	@Override
 	public List<T> findByNamedQuery(String name, Map<String, Object> params, 
 			int start, int total, boolean bypassSecurity) {
-		if (!bypassSecurity) 
+		if (!bypassSecurity) {
 			checkAccess("SEARCH");
+		}
 		return dao.findByNamedQuery(name, params, start, total);
 	}
 	
 	@Override
 	public List<T> findByNamedQuery(String name, int start, int total, 
 			boolean bypassSecurity, Object... params) {
-		if (!bypassSecurity) 
+		if (!bypassSecurity) {
 			checkAccess("SEARCH");
+		}
 		return dao.findByNamedQuery(name, start, total, params);		
 	}
 
@@ -106,8 +108,9 @@ public class BaseCrudServiceImpl<T extends BaseEntity> extends
 	@Override
 	public T findSingleResultByNamedQuery(String name,
 			Map<String, Object> params, boolean bypassSecurity) {
-		if (!bypassSecurity) 
+		if (!bypassSecurity) {
 			checkAccess("SEARCH");
+		}
 		return dao.findSingleResultByNamedQuery(name, params);
 	}
 
@@ -118,8 +121,9 @@ public class BaseCrudServiceImpl<T extends BaseEntity> extends
 	
 	@Override
 	public T findSingleResultByNamedQuery(String name, boolean bypassSecurity, Object... params) {
-		if (!bypassSecurity) 
+		if (!bypassSecurity) {
 			checkAccess("SEARCH");
+		}
 		return dao.findSingleResultByNamedQuery(name, params);
 	}
 
@@ -146,8 +150,9 @@ public class BaseCrudServiceImpl<T extends BaseEntity> extends
 	 */
 	@Override
 	public List<T> findAll(final boolean bypassSecurity) {
-		if (!bypassSecurity)
+		if (!bypassSecurity) {
 			checkAccess("SEARCH");
+		}
 		return dao.findAll();
 	}
 	
@@ -164,8 +169,9 @@ public class BaseCrudServiceImpl<T extends BaseEntity> extends
 	 */
 	@Override
 	public List<T> findAll(final int start, final int total, final boolean bypassSecurity) {
-		if (!bypassSecurity) 
+		if (!bypassSecurity) {
 			checkAccess("SEARCH");
+		}
 		return dao.findAll(start, total);
 	}
 
@@ -191,8 +197,9 @@ public class BaseCrudServiceImpl<T extends BaseEntity> extends
 	@Override
 	public List<T> findByExample(final T example, final int start, final int total,
 			final boolean bypassSecurity) {
-		if (!bypassSecurity) 
+		if (!bypassSecurity) {
 			checkAccess("SEARCH");
+		}
 		return dao.findByExample(example, start, total);
 	}
 
@@ -211,8 +218,9 @@ public class BaseCrudServiceImpl<T extends BaseEntity> extends
 	@Override
 	public List<T> findByExample(T example, boolean exactMatch,
 			boolean bypassSecurity) {
-		if (!bypassSecurity)
+		if (!bypassSecurity) {
 			checkAccess("SEARCH");
+		}
 		return dao.findByExample(example, exactMatch);
 	}
 
@@ -231,8 +239,9 @@ public class BaseCrudServiceImpl<T extends BaseEntity> extends
 	@Override
 	public List<T> findByExample(T example, boolean exactMatch, int start,
 			int total, boolean bypassSecurity) {
-		if (!bypassSecurity)
+		if (!bypassSecurity) {
 			checkAccess("SEARCH");
+		}
 		return dao.findByExample(example, exactMatch, start, total);
 	}
 
@@ -341,8 +350,9 @@ public class BaseCrudServiceImpl<T extends BaseEntity> extends
 	 */	
 	@Override
 	public T load(String sid, boolean filter, boolean bypassSecurity) {
-		if (!bypassSecurity)
+		if (!bypassSecurity) {
 			checkAccess("VIEW");
+		}
 		if (StringUtil.isEmpty(sid)) {
 			throw new InvalidImplementationException("id parameter is empty.");
 		} else {
@@ -368,8 +378,9 @@ public class BaseCrudServiceImpl<T extends BaseEntity> extends
 	 */	
 	@Override
 	public T load(Long id, boolean filter, boolean bypassSecurity) {
-		if (!bypassSecurity)
-			checkAccess("VIEW");		
+		if (!bypassSecurity) {
+			checkAccess("VIEW");
+		}		
 		return dao.loadEntityModel(id, filter, false);
 	}
 	
@@ -387,10 +398,11 @@ public class BaseCrudServiceImpl<T extends BaseEntity> extends
 	@Override
 	public void save(T entity, boolean bypassSecurity) {
 		if (!bypassSecurity) {
-			if (entity.getIsNew())
+			if (entity.getIsNew()) {
 				checkAccess("ADD");
-			else
-				checkAccess("EDIT");			
+			} else {
+				checkAccess("EDIT");
+			}			
 		}
 		dao.saveEntityModel(entity);
 	}
@@ -408,8 +420,9 @@ public class BaseCrudServiceImpl<T extends BaseEntity> extends
 	 */	
 	@Override
 	public void delete(String sid, boolean bypassSecurity) {
-		if (!bypassSecurity)
+		if (!bypassSecurity) {
 			checkAccess("DELETE");
+		}
 		if (StringUtil.isEmpty(sid)) {
 			throw new InvalidImplementationException("ID parameter is empty.");
 		} else {
@@ -435,8 +448,9 @@ public class BaseCrudServiceImpl<T extends BaseEntity> extends
 	 */
 	@Override
 	public void delete(Long id, boolean bypassSecurity) {
-		if (!bypassSecurity)
+		if (!bypassSecurity) {
 			checkAccess("DELETE");
+		}
 		dao.deleteEntityModel(id);		
 	}
 	
@@ -458,8 +472,9 @@ public class BaseCrudServiceImpl<T extends BaseEntity> extends
 		String attributeName = NamingUtil.toAttributeName(this.entityBeanType.getSimpleName());
         String daoBean   = attributeName + "Dao";
         
-        if (this.dao==null && beanFactory.containsBean(daoBean))
-        	this.dao = (BaseEntityDao<T,Long>) beanFactory.getBean(daoBean);
+        if (this.dao==null && beanFactory.containsBean(daoBean)) {
+			this.dao = (BaseEntityDao<T,Long>) beanFactory.getBean(daoBean);
+		}
         
         Assert.notNull(this.dao, this.getClass().getSimpleName() + 
         					" is not associated with a dao class [" + daoBean +
@@ -474,10 +489,12 @@ public class BaseCrudServiceImpl<T extends BaseEntity> extends
 	private void checkAccess(String action) {
 		if (this.getClass().isAnnotationPresent(CrudSecure.class)) {
 			String name = this.getClass().getAnnotation(CrudSecure.class).value();
-			if (StringUtil.isEmpty(name))
-				name = this.entityBeanType.getSimpleName().toUpperCase();			
-			if (!SecurityUtil.currentUserHasPermission(action+"_"+name))
-				throw new AccessDeniedException("Unauthorized access. You do not have permission to perform "+action+" on " + this.entityBeanType + ".");			
+			if (StringUtil.isEmpty(name)) {
+				name = this.entityBeanType.getSimpleName().toUpperCase();
+			}			
+			if (!SecurityUtil.currentUserHasPermission(action+"_"+name)) {
+				throw new AccessDeniedException("Unauthorized access. You do not have permission to perform "+action+" on " + this.entityBeanType + ".");
+			}			
 		}		
 	}
 

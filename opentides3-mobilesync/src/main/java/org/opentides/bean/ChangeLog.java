@@ -21,6 +21,7 @@ package org.opentides.bean;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Lob;
 
 import org.opentides.exception.InvalidImplementationException;
 import org.opentides.web.json.Views;
@@ -57,7 +58,7 @@ public class ChangeLog extends BaseEntity {
      */
     @Column(name = "ENTITY_ID", nullable = false, updatable = false)
     private Long entityId;
-    
+        
     /**
      * Class type of object being tracked.
      */
@@ -71,6 +72,18 @@ public class ChangeLog extends BaseEntity {
     @Column(name = "ACTION")
     private int action;
     
+    @Column(name="PARAMS")
+    private String params;
+    
+    @Column(name="ENTITY_NAME")
+    private String entityName;
+    
+    @Column(name = "DB_SYNC_ID", updatable = false)
+    private Long dbSyncId;
+    
+    @Column(name = "BRANCH_ID", updatable = false)
+    private Long branchId;
+        
     /**
      * Contains the list of fields for updating.
      */
@@ -80,7 +93,8 @@ public class ChangeLog extends BaseEntity {
     /**
      * SQL statement to be executed in the device.
      */
-    @Column(name = "SQL_COMMAND")
+    @Column(name = "SQL_COMMAND", length=1024)
+    @Lob
     @JsonView(Views.FormView.class)
     private String sqlCommand;
     
@@ -120,6 +134,27 @@ public class ChangeLog extends BaseEntity {
 		this.action = action;
 	}
 
+	/**
+	 * 
+	 * @param entityId
+	 * @param entityName
+	 * @param dbSyncId
+	 * @param action
+	 * @param sqlCommand
+	 * @param entityClass
+	 */
+	@SuppressWarnings("rawtypes")
+	public ChangeLog(Long entityId, Class entityClass, String entityName, Long dbSyncId, Long branchId,
+			int action, String sqlCommand) {
+		super();
+		this.entityId = entityId;
+		this.entityName = entityName;
+		this.action = action;
+		this.entityClass = entityClass;
+		this.dbSyncId = dbSyncId;
+		this.branchId = branchId;
+		this.sqlCommand = sqlCommand;
+	}
 	/**
 	 * @return the entityId
 	 */
@@ -195,6 +230,44 @@ public class ChangeLog extends BaseEntity {
 		this.sqlCommand = sqlCommand;
 	}
 	
+	
+	/**
+	 * @return the sqlCommand
+	 */
+	public final String getParams() {
+		return params;
+	}
+
+	/**
+	 * @param sqlCommand the sqlCommand to set
+	 */
+	public final void setParams(String params) {
+		this.params = params;
+	}
+
+	public String getEntityName() {
+		return entityName;
+	}
+
+	public void setEntityName(String entityName) {
+		this.entityName = entityName;
+	}
+
+	public Long getDbSyncId() {
+		return dbSyncId;
+	}
+
+	public void setDbSyncId(Long dbSyncId) {
+		this.dbSyncId = dbSyncId;
+	}
+
+	public Long getBranchId() {
+		return branchId;
+	}
+
+	public void setBranchId(Long branchId) {
+		this.branchId = branchId;
+	}
 	
 	
 }
