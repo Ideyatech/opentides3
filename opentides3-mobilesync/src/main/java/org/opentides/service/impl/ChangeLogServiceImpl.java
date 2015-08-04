@@ -12,8 +12,6 @@ import org.opentides.dao.ChangeLogDao;
 import org.opentides.service.ChangeLogService;
 import org.springframework.stereotype.Service;
 
-import com.sun.corba.se.spi.legacy.connection.GetEndPointInfoAgainException;
-
 /**
  * @author allantan
  *
