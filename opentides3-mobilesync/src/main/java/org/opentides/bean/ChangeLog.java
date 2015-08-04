@@ -72,7 +72,7 @@ public class ChangeLog extends BaseEntity {
     @Column(name = "ACTION")
     private int action;
     
-    @Column(name="PARAMS")
+    @Column(name="PARAMS", columnDefinition="LONGBLOB")
     private String params;
     
     @Column(name="ENTITY_NAME")
@@ -93,7 +93,7 @@ public class ChangeLog extends BaseEntity {
     /**
      * SQL statement to be executed in the device.
      */
-    @Column(name = "SQL_COMMAND", length=1024)
+    @Column(name = "SQL_COMMAND", columnDefinition="LONGBLOB")
     @Lob
     @JsonView(Views.FormView.class)
     private String sqlCommand;
