@@ -136,7 +136,7 @@ public class DatabaseUtil {
               }
 
 				// merge jpa properties configured in XML, if any
-				CollectionUtils.mergePropertiesIntoMap(propertiesMap,
+           		CollectionUtils.mergePropertiesIntoMap(propertiesMap,
 						jpaPropertyMap);
 
 				emf = Persistence.createEntityManagerFactory(

@@ -57,6 +57,16 @@ public class TenantDaoJpaImpl extends BaseEntityDaoJpaImpl<Tenant, Long> impleme
 	}
 
 	@Override
+	public Tenant findByName(String company) {
+		List<Tenant> result = findByNamedQuery("jpql.tenant.findLikeCompany", 0, 2, company);
+		if (result == null || result.size() == 0) {
+			return null;
+		} else {
+			return result.get(0);
+		}		
+	}
+	
+	@Override
 	public final String getTenantSchemaName(String tenantName) {
 		if (StringUtil.isEmpty(tenantName))
 			return null;

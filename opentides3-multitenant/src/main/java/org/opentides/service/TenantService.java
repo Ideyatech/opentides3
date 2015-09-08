@@ -38,6 +38,13 @@ public interface TenantService extends BaseCrudService<Tenant> {
 	public String findUniqueSchemaName(String company);
 	
 	/**
+	 * Finds the tenant for the given name.
+	 * @param company
+	 * @return
+	 */
+	public Tenant findByName(String company);
+	
+	/**
 	 * Creates the schema of the tenant using JPA database create.
 	 */
 	public void createTenantSchema(Tenant tenant, MultitenantUser owner);

@@ -1,4 +1,5 @@
 /*
+                AtmosphereResource resource = (AtmosphereResource) request.getAttribute(ApplicationConfig.ATMOSPHERE_RESOURCE);                
  * Copyright 2007-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -29,8 +30,6 @@ import javax.transaction.Transactional;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.log4j.Logger;
 import org.apache.velocity.app.VelocityEngine;
-import org.atmosphere.cpr.Broadcaster;
-import org.atmosphere.cpr.BroadcasterFactory;
 import org.ocpsoft.prettytime.PrettyTime;
 import org.opentides.bean.BaseEntity;
 import org.opentides.bean.Event;
@@ -46,9 +45,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * @author allantan
@@ -192,22 +188,22 @@ public class NotificationServiceImpl extends BaseCrudServiceImpl<Notification>
 	public void notify(String userId, int timezoneDiff) {
 		_log.info("Trying to notify user with userId " + userId
 				+ ". Retrieving Broadcaster...");
-		Broadcaster b = BroadcasterFactory.getDefault().lookup(userId);
-		ObjectMapper mapper = new ObjectMapper();
-		if (b != null) {
-			String jsonString;
-			try {
-				jsonString = mapper.writeValueAsString(buildNotification(
-						new Long(userId), timezoneDiff, "alert"));
-				b.broadcast(jsonString);
-			} catch (NumberFormatException e) {
-				_log.error("Failed to convert to JSON.", e);
-			} catch (JsonProcessingException e) {
-				_log.error("Failed to convert to JSON.", e);
-			}
-		} else {
-			_log.warn("Broadcaster not found... Exiting...");
-		}
+//		Broadcaster b = atmosphereFramework.getBroadcasterFactory().lookup(userId);
+//		ObjectMapper mapper = new ObjectMapper();
+//		if (b != null) {
+//			String jsonString;
+//			try {
+//				jsonString = mapper.writeValueAsString(buildNotification(
+//						new Long(userId), timezoneDiff, "alert"));
+////				b.broadcast(jsonString);
+//			} catch (NumberFormatException e) {
+//				_log.error("Failed to convert to JSON.", e);
+//			} catch (JsonProcessingException e) {
+//				_log.error("Failed to convert to JSON.", e);
+//			}
+//		} else {
+//			_log.warn("Broadcaster not found... Exiting...");
+//		}
 	}
 
 	@Override

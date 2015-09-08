@@ -450,7 +450,7 @@ public class CrudUtil {
 								.append(" like '%")
 								.append(StringUtil.escapeSql(ret.toString(),
 										true)).append("%'")
-								.append(" escape '\\\\'"); // escape for Oracle
+								.append(" escape '\\'"); // escape for Oracle
 															// database
 						count++;
 					}

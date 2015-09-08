@@ -66,6 +66,12 @@ public class TenantServiceImpl extends BaseCrudServiceImpl<Tenant> implements
 
 		return uniqueSchema.toString();
 	}
+	
+
+	@Override
+	public Tenant findByName(String company) {
+		return ((TenantDao) getDao()).findByName(company);	
+	}
 
 	@Override
 	public void createTenantSchema(final Tenant tenant,

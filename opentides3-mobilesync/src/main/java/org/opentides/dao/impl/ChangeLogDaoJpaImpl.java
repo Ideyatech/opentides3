@@ -4,10 +4,12 @@
 package org.opentides.dao.impl;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Query;
 
 import org.opentides.bean.ChangeLog;
+import org.opentides.bean.SqlStatement;
 import org.opentides.dao.ChangeLogDao;
 import org.springframework.stereotype.Repository;
 
@@ -28,10 +30,10 @@ public class ChangeLogDaoJpaImpl extends BaseEntityDaoJpaImpl<ChangeLog, Long>
 		query.setParameter("branchId", branchId);
 		query.setMaxResults(1);
 
-		ArrayList<ChangeLog> logs = (ArrayList<ChangeLog>) query.getResultList();
+		List<ChangeLog> logs = (ArrayList<ChangeLog>) query.getResultList();
 		
 		if(!logs.isEmpty()){
-			return (ChangeLog) query.getResultList().get(0);
+			return (ChangeLog) logs.get(0);
 		}
 		
 		return null;
@@ -43,10 +45,10 @@ public class ChangeLogDaoJpaImpl extends BaseEntityDaoJpaImpl<ChangeLog, Long>
 		Query query = getEntityManager().createQuery(jpql);
 		query.setMaxResults(1);
 		
-		ArrayList<Long> logs = (ArrayList<Long>) query.getResultList();
+		List<Long> logs = (ArrayList<Long>) query.getResultList();
 		
 		if(!logs.isEmpty()){
-			return (Long)query.getResultList().get(0);
+			return (Long) logs.get(0);
 		}
 		
 		return null;
@@ -60,13 +62,27 @@ public class ChangeLogDaoJpaImpl extends BaseEntityDaoJpaImpl<ChangeLog, Long>
 		query.setParameter("branchId", branchId);
 		query.setMaxResults(1);
 		
-		ArrayList<Long> logs = (ArrayList<Long>) query.getResultList();
+		List<Long> logs = (ArrayList<Long>) query.getResultList();
 		
 		if(!logs.isEmpty()){
-			return (Long)query.getResultList().get(0);
+			return (Long) logs.get(0);
 		}
 		
 		return null;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<SqlStatement> findUpdates(Long version, Long branchId, String clientCode) {
+		String jpql = getJpqlQuery("jpql.mobilesync.findUpdates");
+
+		Query query = getEntityManager().createQuery(jpql);
+		query.setParameter(1, version);
+		query.setParameter(2, branchId);
+		query.setParameter(3, clientCode);
+		query.setMaxResults(250);
+		
+		return (List<SqlStatement>) query.getResultList();		
 	}
 
 }

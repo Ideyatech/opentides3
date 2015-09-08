@@ -26,9 +26,12 @@ public class SyncEndpoint extends BaseEntity {
 	@Column(name="CLIENT_CODE")
 	private String clientCode;
 	
+	@Column(name="TOKEN_ID")
+	private String tokenId;
+	
 	@Column(name="SYNC_VERSION")
 	private Long syncVersion;
-
+	
 	/**
 	 * @return the clientCode
 	 */
@@ -55,6 +58,20 @@ public class SyncEndpoint extends BaseEntity {
 	 */
 	public final void setSyncVersion(Long syncVersion) {
 		this.syncVersion = syncVersion;
+	}
+
+	/**
+	 * @return the tokenId
+	 */
+	public String getTokenId() {
+		return tokenId;
+	}
+
+	/**
+	 * @param tokenId the tokenId to set
+	 */
+	public void setTokenId(String tokenId) {
+		this.tokenId = tokenId;
 	}
 	
 }

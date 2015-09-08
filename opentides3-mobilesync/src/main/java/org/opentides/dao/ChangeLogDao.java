@@ -3,7 +3,10 @@
  */
 package org.opentides.dao;
 
+import java.util.List;
+
 import org.opentides.bean.ChangeLog;
+import org.opentides.bean.SqlStatement;
 
 /**
  * This is the dao interface for ChangeLog.
@@ -18,7 +21,18 @@ public interface ChangeLogDao extends BaseEntityDao<ChangeLog, Long> {
 	 * @param branchId
 	 * @return
 	 */
+	@Deprecated
 	public ChangeLog findLatestChangeByBranch(Long branchId);
+	
+	/**
+	 * Returns the updates for the given branch and clientCode
+	 * @param version
+	 * @param branchId
+	 * @param clientCode
+	 * @return
+	 */
+	public List<SqlStatement> findUpdates(Long version, Long branchId,
+			String clientCode);
 	
 	/**
 	 * Find latest change id

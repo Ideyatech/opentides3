@@ -42,4 +42,11 @@ public interface TenantDao extends BaseEntityDao<Tenant, Long> {
 	 */
 	public String getTenantSchemaName(String tenantName);
 	
+	/**
+	 * Find tenant by company name.
+	 * @param company
+	 * @return
+	 */
+	public Tenant findByName(String company);
+	
 }

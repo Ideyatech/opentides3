@@ -3,6 +3,7 @@ package org.opentides.service;
 import java.util.List;
 
 import org.opentides.bean.ChangeLog;
+import org.opentides.bean.SqlStatement;
 
 /**
  * 
@@ -18,15 +19,18 @@ public interface ChangeLogService extends BaseCrudService<ChangeLog> {
 	 * @param branchId
 	 * @return
 	 */
+	@Deprecated
 	public List<ChangeLog> findAfterVersion(Long version, Long branchId);
 	
 	/**
-	 * Returns the latest change log
+	 * Returns the list of sql update after the given version for the device.
 	 * 
-	 * @param
+	 * @param version
+	 * @param branchId
+	 * @param clientCode
 	 * @return
 	 */
-	public ChangeLog findLatestChange();
+	public List<SqlStatement> findUpdates(Long version, Long branchId, String clientCode);
 	
 	/**
 	 * Returns the latest change log filtered by id
