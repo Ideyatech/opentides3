@@ -20,15 +20,15 @@ package org.opentides.bean;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Table;
 import javax.persistence.Lob;
+import javax.persistence.Table;
 
 import org.opentides.exception.InvalidImplementationException;
 import org.opentides.web.json.Views;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonView;
 
 /**
  * This class is recording all the changes made on the database.
@@ -72,7 +72,7 @@ public class ChangeLog extends BaseEntity {
     @Column(name = "ACTION")
     private int action;
     
-    @Column(name="PARAMS")
+    @Column(name="PARAMS", columnDefinition="LONGBLOB")
     private String params;
     
     @Column(name="ENTITY_NAME")
@@ -83,7 +83,10 @@ public class ChangeLog extends BaseEntity {
     
     @Column(name = "BRANCH_ID", updatable = false)
     private Long branchId;
-        
+    
+    @Column(name = "SOURCE_")
+    private String source;
+  
     /**
      * Contains the list of fields for updating.
      */
@@ -93,7 +96,7 @@ public class ChangeLog extends BaseEntity {
     /**
      * SQL statement to be executed in the device.
      */
-    @Column(name = "SQL_COMMAND", length=1024)
+    @Column(name = "SQL_COMMAND", columnDefinition="LONGBLOB")
     @Lob
     @JsonView(Views.FormView.class)
     private String sqlCommand;
@@ -267,6 +270,20 @@ public class ChangeLog extends BaseEntity {
 
 	public void setBranchId(Long branchId) {
 		this.branchId = branchId;
+	}
+
+	/**
+	 * @return the source
+	 */
+	public String getSource() {
+		return source;
+	}
+
+	/**
+	 * @param source the source to set
+	 */
+	public void setSource(String source) {
+		this.source = source;
 	}
 	
 	
