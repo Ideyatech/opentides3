@@ -931,7 +931,8 @@ var opentides3 = (function() {
 										// successfully saved
 										firstForm.clearOTForm();
 		
-										if ($(settings['saveCallback']) != null) 
+										if ($(settings['saveCallback']) != null &&
+												$(settings['saveCallback']) === 'function') 
 											settings['saveCallback'](this, json);
 										if (button.data('submit') !== 'save-and-new') {
 											// hide modal

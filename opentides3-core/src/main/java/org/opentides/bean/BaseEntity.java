@@ -40,6 +40,7 @@ import org.apache.log4j.Logger;
 import org.opentides.bean.user.SessionUser;
 import org.opentides.persistence.listener.EntityCreatedByListener;
 import org.opentides.persistence.listener.EntityDateListener;
+import org.opentides.persistence.listener.EntitySchemaNameListener;
 import org.opentides.util.SecurityUtil;
 import org.opentides.web.json.Views;
 
@@ -52,7 +53,7 @@ import com.fasterxml.jackson.annotation.JsonView;
  * @author allantan
  */
 @MappedSuperclass
-@EntityListeners({ EntityDateListener.class, EntityCreatedByListener.class })
+@EntityListeners({ EntityDateListener.class, EntityCreatedByListener.class, EntitySchemaNameListener.class })
 public abstract class BaseEntity implements Serializable {
     
 	private static final long serialVersionUID = 6411733051595827829L;
