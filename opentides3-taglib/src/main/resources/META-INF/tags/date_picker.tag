@@ -51,7 +51,8 @@
 		$target.datepicker({
 			format: "${format}",
 			autoclose : ${empty autoClose ? false : true},
-			todayBtn : true
+			todayBtn : true,
+			forceParse: false
 		});
 		$target.siblings().on("click", function(){
 			$target.focus();
