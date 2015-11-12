@@ -158,7 +158,7 @@ public class NamingUtil {
 	}
 	
 	/**
-	 * Ensures that name are in html element format (e.g. system-codes)
+	 * Ensures that name are in SQL element format (e.g. system-codes)
 	 * @param name
 	 * @return
 	 */
