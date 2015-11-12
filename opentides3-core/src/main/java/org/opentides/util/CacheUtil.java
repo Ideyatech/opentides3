@@ -18,30 +18,33 @@
  */
 package org.opentides.util;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
-import java.lang.annotation.Annotation;
-import org.hibernate.annotations.Columns;
+
+import javax.persistence.Column;
+import javax.persistence.JoinColumn;
 import javax.persistence.Transient;
 
 import org.apache.log4j.Logger;
+import org.hibernate.annotations.Columns;
 import org.opentides.annotation.Auditable;
+import org.opentides.annotation.BuildDeleteStatement;
+import org.opentides.annotation.BuildInsertStatement;
+import org.opentides.annotation.BuildUpdateStatement;
 import org.opentides.annotation.FormBind;
 import org.opentides.annotation.FormBind.Load;
 import org.opentides.annotation.PrimaryField;
 import org.opentides.annotation.SearchableFields;
 import org.opentides.bean.AuditableField;
 import org.opentides.bean.BaseEntity;
-
-import javax.persistence.Column;
-import javax.persistence.JoinColumn;
 
 /**
  * Helper class to keep a cache of reusable attributes.
@@ -69,6 +72,12 @@ public class CacheUtil {
 
 	private static final Map<Class<?>, Method> formBindUpdateMethods = new ConcurrentHashMap<Class<?>, Method>();
 
+	private static final Map<Class<?>, Method> insertMethods = new ConcurrentHashMap<Class<?>, Method>();
+
+	private static final Map<Class<?>, Method> updateMethods = new ConcurrentHashMap<Class<?>, Method>();
+
+	private static final Map<Class<?>, Method> deleteMethods = new ConcurrentHashMap<Class<?>, Method>();
+	
 	static {
 		excludeFields.add("createDate");
 		excludeFields.add("updateDate");
@@ -227,6 +236,16 @@ public class CacheUtil {
 	}
 
 	/**
+	 * Retrieves persistent fields, including inherited fields from parent class.
+	 * 
+	 * @param obj
+	 * @return
+	 */
+	public static List<String> getPersistentFields(BaseEntity obj) {
+		return getPersistentFields(obj, true);
+	}
+	
+	/**
 	 * Retrieves persistent fields from the cache, if available. Otherwise,
 	 * returns the list of field names that are persisted in database. These
 	 * includes all non-transient fields. This method uses reflection and
@@ -235,12 +254,12 @@ public class CacheUtil {
 	 * @param obj
 	 * @return
 	 */
-	public static List<String> getPersistentFields(BaseEntity obj) {
+	public static List<String> getPersistentFields(BaseEntity obj, boolean includeParent) {
 		Class<?> clazz = obj.getClass();
 		List<String> ret = persistentFields.get(clazz);
 		if (ret == null) {
 			List<String> persistents = new ArrayList<String>();
-			final List<Field> fields = CrudUtil.getAllFields(clazz);
+			final List<Field> fields = CrudUtil.getAllFields(clazz, includeParent);
 			for (Field field : fields) {
 				if ((!Modifier.isTransient(field.getModifiers()))
 						&& (!Modifier.isVolatile(field.getModifiers()))
@@ -263,6 +282,16 @@ public class CacheUtil {
 	}
 
 	/**
+	 * Overloaded method to retrieve fields from cache, including parent fields.
+	 * 
+	 * @param obj
+	 * @return
+	 */
+	public static Map<String, String> getColumnNames(BaseEntity obj) {
+		return getColumnNames(obj, true);
+	}
+
+	/**
 	 * Retrieves persistent fields from the cache, if available. Otherwise,
 	 * returns the list of field names that are persisted in database. These
 	 * includes all non-transient fields. This method uses reflection and
@@ -271,10 +300,10 @@ public class CacheUtil {
 	 * @param obj
 	 * @return
 	 */
-	public static Map<String, String> getColumnNames(BaseEntity obj) {
+	public static Map<String, String> getColumnNames(BaseEntity obj, boolean includeParent) {
 		Class<?> clazz = obj.getClass();
 		Map<String, String> columns = new HashMap<String, String>();
-		final List<Field> fields = CrudUtil.getAllFields(clazz);
+		final List<Field> fields = CrudUtil.getAllFields(clazz, includeParent);
 		for (Field field : fields) {
 			if ((!Modifier.isTransient(field.getModifiers()))
 					&& (!Modifier.isVolatile(field.getModifiers()))
@@ -420,6 +449,69 @@ public class CacheUtil {
 						method = formBindUpdateMethods.get(clazz);
 						break;
 					}
+				}
+			}
+		}
+		return method;
+	}
+	
+	/**
+	 * Retrieves the method annotated with @BuildInsertStatement, if
+	 * available. Otherwise, null method is returned.
+	 * 
+	 * @param clazz
+	 * @return
+	 */
+	public static Method getInsertMethod(Class<?> clazz) {
+		Method method = insertMethods.get(clazz);
+		if (method == null) {
+			for (Method m : clazz.getMethods()) {
+				if (m.isAnnotationPresent(BuildInsertStatement.class)) {
+					insertMethods.put(clazz, m);
+					method = insertMethods.get(clazz);
+					break;
+				}
+			}
+		}
+		return method;
+	}
+	
+	/**
+	 * Retrieves the method annotated with @BuildUpdateStatement, if
+	 * available. Otherwise, null method is returned.
+	 * 
+	 * @param clazz
+	 * @return
+	 */
+	public static Method getUpdateMethod(Class<?> clazz) {
+		Method method = insertMethods.get(clazz);
+		if (method == null) {
+			for (Method m : clazz.getMethods()) {
+				if (m.isAnnotationPresent(BuildUpdateStatement.class)) {
+					updateMethods.put(clazz, m);
+					method = updateMethods.get(clazz);
+					break;
+				}
+			}
+		}
+		return method;
+	}
+	
+	/**
+	 * Retrieves the method annotated with @BuildDeleteStatement, if
+	 * available. Otherwise, null method is returned.
+	 * 
+	 * @param clazz
+	 * @return
+	 */
+	public static Method getDeleteMethod(Class<?> clazz) {
+		Method method = deleteMethods.get(clazz);
+		if (method == null) {
+			for (Method m : clazz.getMethods()) {
+				if (m.isAnnotationPresent(BuildDeleteStatement.class)) {
+					deleteMethods.put(clazz, m);
+					method = deleteMethods.get(clazz);
+					break;
 				}
 			}
 		}

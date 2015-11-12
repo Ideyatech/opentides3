@@ -50,6 +50,7 @@ import org.opentides.bean.BaseEntity;
 import org.opentides.bean.ImageInfo;
 import org.opentides.bean.ImageUploadable;
 import org.opentides.util.StringUtil;
+import org.opentides.util.SyncUtil;
 import org.opentides.web.json.Views;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -291,6 +292,17 @@ public class BaseUser extends BaseEntity implements ImageUploadable {
 		return props;
 	}
 
+	/**
+	 * Invoked by subclasses to manually handle change log.
+	 * @param obj
+	 * @return
+	 */
+	public List<String[]> buildInsertStatement(BaseUser obj) {
+		List<String[]> sqlStatements = new ArrayList<String[]>();
+		sqlStatements.add(SyncUtil.buildInsertStatement(obj, "USER_PROFILE", false));
+		return sqlStatements;
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

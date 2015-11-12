@@ -27,7 +27,7 @@
 		<properties>
 			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect" />
 			<property name="hibernate.hbm2ddl.auto" value="update" />
-			<property name="hibernate.show_sql" value="true" />
+			<property name="hibernate.show_sql" value="false" />
 			<property name="hibernate.ejb.autodetection" value="class" />
 			<property name="hibernate.ejb.interceptor"
 				value="org.opentides.persistence.interceptor.AuditLogInterceptor" />

@@ -46,6 +46,19 @@ public class Evolver {
 		return q.executeUpdate();
 	}
 
+	@Transactional(noRollbackFor=Exception.class)
+	public int executeSqlUpdate(String query, boolean ignoreError) {
+		try {
+			Query q = em.createNativeQuery(query);
+			return q.executeUpdate();
+		} catch (Exception e) {
+			if (!ignoreError)
+				throw e;
+			// ignore SQL errors
+		}
+		return 0;
+	}
+
 	/**
 	 * Sets the EntityManager
 	 * @param em
