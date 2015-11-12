@@ -24,6 +24,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.opentides.annotation.Auditable;
+import org.opentides.annotation.BuildInsertStatement;
 import org.opentides.annotation.RestableFields;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -61,7 +62,20 @@ public class MultitenantUser extends BaseUser {
 		props.add("credential.confirmPassword");
 		props.add("credential.enabled");
 		return props;
-		
+	}
+	
+	@BuildInsertStatement
+	public List<String[]> buildInsertStatement() {
+		List<String[]> sqlStatements = new ArrayList<String[]>();
+		sqlStatements.addAll(super.buildInsertStatement(this));
+		String[] myStmt = new String[2];
+		myStmt[0] = "insert into MT_USER_PROFILE(ID, TENANT_ID) values (?,?)";
+		if (getTenant() == null)
+			myStmt[1] =	"["+getId()+",null]";
+		else
+			myStmt[1] =	"["+getId()+","+getTenant().getId()+"]";
+		sqlStatements.add(myStmt);		
+		return sqlStatements;
 	}
 	
 	/**

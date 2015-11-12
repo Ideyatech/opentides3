@@ -70,6 +70,8 @@ public class MultitenantUserServiceImpl extends
 		final MultitenantUser userCopy = (MultitenantUser) CrudUtil
 				.clone(owner);
 		userCopy.setTenant(null);
+		userCopy.setDbName(schema);
+		userCopy.getCredential().setDbName(schema);
 
 		if (userCopy.getGroups() == null || userCopy.getGroups().isEmpty()) {
 			_log.debug("Switching to tenant schema " + schema);
