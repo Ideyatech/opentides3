@@ -21,14 +21,6 @@ import org.springframework.stereotype.Service;
 public class ChangeLogServiceImpl extends BaseCrudServiceImpl<ChangeLog> implements
 		ChangeLogService {
 
-	@Override
-	public List<ChangeLog> findAfterVersion(Long version, Long branchId) {
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("version", version);
-		map.put("branchId", branchId);
-		return getDao().findByNamedQuery("jpql.mobilesync.findChangesAfterVersion", map, 0, 250);
-	}
-	
 
 	@Override
 	public List<SqlStatement> findUpdates(Long version, Long branchId,
@@ -38,19 +30,34 @@ public class ChangeLogServiceImpl extends BaseCrudServiceImpl<ChangeLog> impleme
 	}
 	
 	@Override
+	public Long findTargetVersion(Long branchId, String clientCode){
+		return ((ChangeLogDao)getDao()).findTargetVersion(branchId, clientCode);
+	}
+
+	@Override
+	@Deprecated
+	public List<ChangeLog> findAfterVersion(Long version, Long branchId) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("version", version);
+		map.put("branchId", branchId);
+		return getDao().findByNamedQuery("jpql.mobilesync.findChangesAfterVersion", map, 0, 250);
+	}
+	
+	@Override
+	@Deprecated
 	public Long findTargetVersion(){
 		return ((ChangeLogDao)getDao()).findTargetVersion();
 		
 	}
-	
-	@Override
-	public Long findTargetVersion(Long branchId){
-		
-		return ((ChangeLogDao)getDao()).findTargetVersion(branchId);
-		
-	}
 
 	@Override
+	@Deprecated
+	public Long findTargetVersion(Long branchId){
+		return ((ChangeLogDao)getDao()).findTargetVersion(branchId);
+	}	
+
+	@Override
+	@Deprecated
 	public ChangeLog findLatestChange(Long branchId) {
 		return ((ChangeLogDao)getDao()).findLatestChangeByBranch(branchId);
 	}

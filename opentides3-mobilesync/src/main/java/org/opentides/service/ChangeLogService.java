@@ -13,15 +13,13 @@ import org.opentides.bean.SqlStatement;
 public interface ChangeLogService extends BaseCrudService<ChangeLog> {
 
 	/**
-	 * Returns the list of changes after the given version.
-	 * 
-	 * @param version
+	 * Returns the target version for the branch and clientCode
 	 * @param branchId
+	 * @param clientCode
 	 * @return
 	 */
-	@Deprecated
-	public List<ChangeLog> findAfterVersion(Long version, Long branchId);
-	
+	public Long findTargetVersion(Long branchId, String clientCode);
+
 	/**
 	 * Returns the list of sql update after the given version for the device.
 	 * 
@@ -31,19 +29,33 @@ public interface ChangeLogService extends BaseCrudService<ChangeLog> {
 	 * @return
 	 */
 	public List<SqlStatement> findUpdates(Long version, Long branchId, String clientCode);
-	
+
+		
+	/**
+	 * Returns the list of changes after the given version.
+	 * 
+	 * @param version
+	 * @param branchId
+	 * @return
+	 */
+	@Deprecated
+	public List<ChangeLog> findAfterVersion(Long version, Long branchId);
+		
 	/**
 	 * Returns the latest change log filtered by id
 	 * 
 	 * @param branchId
 	 * @return
 	 */
+	@Deprecated	
 	public ChangeLog findLatestChange(Long branchId);
+	
 	
 	/**
 	 * Find latest changelog id
 	 * @return
 	 */
+	@Deprecated	
 	public Long findTargetVersion();
 	
 	/**
@@ -51,6 +63,7 @@ public interface ChangeLogService extends BaseCrudService<ChangeLog> {
 	 * @param branchId
 	 * @return
 	 */
+	@Deprecated	
 	public Long findTargetVersion(Long branchId);
 		
 }

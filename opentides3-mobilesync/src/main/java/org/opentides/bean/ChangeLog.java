@@ -84,6 +84,9 @@ public class ChangeLog extends BaseEntity {
     @Column(name = "BRANCH_ID", updatable = false)
     private Long branchId;
     
+    @Column(name = "CLIENT_CODE", updatable = false)
+    private String clientCode;
+    
     @Column(name = "SOURCE_")
     private String source;
   
@@ -248,28 +251,60 @@ public class ChangeLog extends BaseEntity {
 		this.params = params;
 	}
 
+	/**
+	 * @return the entityName
+	 */
 	public String getEntityName() {
 		return entityName;
 	}
 
+	/**
+	 * @param entityName the entityName to set
+	 */
 	public void setEntityName(String entityName) {
 		this.entityName = entityName;
 	}
 
+	/**
+	 * @return the dbSyncId
+	 */
 	public Long getDbSyncId() {
 		return dbSyncId;
 	}
 
+	/**
+	 * @param dbSyncId the dbSyncId to set
+	 */
 	public void setDbSyncId(Long dbSyncId) {
 		this.dbSyncId = dbSyncId;
 	}
 
+	/**
+	 * @return the branchId
+	 */
 	public Long getBranchId() {
 		return branchId;
 	}
 
+	/**
+	 * @param branchId the branchId to set
+	 */
 	public void setBranchId(Long branchId) {
 		this.branchId = branchId;
+	}
+
+	/**
+	 * @return the clientCode
+	 */
+	public String getClientCode() {
+		return clientCode;
+	}
+
+	/**
+	 * @param clientCode the clientCode to set
+	 */
+	public void setClientCode(String clientCode) {
+		this.clientCode = clientCode;
 	}
 
 	/**

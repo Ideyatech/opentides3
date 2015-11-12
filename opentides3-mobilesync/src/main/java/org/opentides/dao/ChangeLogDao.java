@@ -17,12 +17,11 @@ import org.opentides.bean.SqlStatement;
 public interface ChangeLogDao extends BaseEntityDao<ChangeLog, Long> {
 
 	/**
-	 * Returns the latest change log filtered by id
-	 * @param branchId
+	 * Finds the latest version applicable for this clientCode.
+	 * @param clientCode
 	 * @return
 	 */
-	@Deprecated
-	public ChangeLog findLatestChangeByBranch(Long branchId);
+	public Long findTargetVersion(Long branchId, String clientCode);
 	
 	/**
 	 * Returns the updates for the given branch and clientCode
@@ -35,17 +34,34 @@ public interface ChangeLogDao extends BaseEntityDao<ChangeLog, Long> {
 			String clientCode);
 	
 	/**
+	 * Returns the latest change log filtered by id
+	 * @param branchId
+	 * @return
+	 */
+	@Deprecated
+	public ChangeLog findLatestChangeByBranch(Long branchId);
+	
+	/**
 	 * Find latest change id
 	 * @return
 	 */
+	@Deprecated	
 	public Long findTargetVersion();
-	
 	
 	/**
 	 * Find latest changelog id by id
 	 * @param branchId
 	 * @return
 	 */
+	@Deprecated	
 	public Long findTargetVersion(Long branchId);
+	
+	/**
+	 * Returns the latest version of the clientCode
+	 * @param clientCode
+	 * @return
+	 */
+	@Deprecated	
+	public Long getLatestVersion(String clientCode);
 	
 }

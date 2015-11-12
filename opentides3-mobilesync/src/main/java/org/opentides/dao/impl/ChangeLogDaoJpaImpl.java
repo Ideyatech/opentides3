@@ -70,6 +70,25 @@ public class ChangeLogDaoJpaImpl extends BaseEntityDaoJpaImpl<ChangeLog, Long>
 		
 		return null;
 	}
+	
+	@Override
+	public Long findTargetVersion(Long branchId, String clientCode) {
+		String jpql = getJpqlQuery("jpql.mobilesync.findLastestChangeforClientCode");
+		
+		Query query = getEntityManager().createQuery(jpql);
+		query.setParameter("clientCode", clientCode);
+		query.setParameter("branchId", branchId);
+		query.setMaxResults(1);
+		Long maxV = 0l;
+		try {
+			maxV = (Long) query.getSingleResult();			
+		} catch (Exception e) {
+			// ignore the error.
+		}
+		
+		return maxV;
+		
+	}
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -83,6 +102,21 @@ public class ChangeLogDaoJpaImpl extends BaseEntityDaoJpaImpl<ChangeLog, Long>
 		query.setMaxResults(250);
 		
 		return (List<SqlStatement>) query.getResultList();		
+	}
+
+	@Override
+	public Long getLatestVersion(String clientCode) {
+		String jpql = getJpqlQuery("jpql.mobilesync.getLatestVersion");
+
+		Query query = getEntityManager().createQuery(jpql);
+		query.setParameter(1, clientCode);
+		
+		List r = query.getResultList();
+		if (r.size() > 0) {
+			return (Long) r.get(0);			
+		} else
+			return 0l;
+		
 	}
 
 }
