@@ -2,6 +2,9 @@ package org.opentides.bean;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 /**
  * Standard message format for transferring data from device to server
  * and vice versa.
@@ -9,6 +12,7 @@ import java.util.List;
  * @author allantan
  *
  */
+@JsonInclude(Include.NON_NULL)
 public class SyncMessage {
 
 	public static enum Status {
@@ -31,6 +35,8 @@ public class SyncMessage {
 	
 	private Long deviceVersion;
 	
+	private Long maxLookupId;
+	
 	private List<SqlStatement> queries;
 	
 	public SyncMessage(String clientCode, String command,
@@ -41,8 +47,7 @@ public class SyncMessage {
 		this.startVersion = startVersion;
 		this.endVersion = endVersion;
 		this.targetVersion = targetVersion;
-		this.queries = queries;
-		
+		this.queries = queries;	
 	}
 
 	public SyncMessage(String clientCode, String command, String message, Status status) {
@@ -163,6 +168,20 @@ public class SyncMessage {
 	 */
 	public void setDeviceVersion(Long deviceVersion) {
 		this.deviceVersion = deviceVersion;
+	}
+
+	/**
+	 * @return the maxLookupId
+	 */
+	public Long getMaxLookupId() {
+		return maxLookupId;
+	}
+
+	/**
+	 * @param maxLookupId the maxLookupId to set
+	 */
+	public void setMaxLookupId(Long maxLookupId) {
+		this.maxLookupId = maxLookupId;
 	}
 
 	/**

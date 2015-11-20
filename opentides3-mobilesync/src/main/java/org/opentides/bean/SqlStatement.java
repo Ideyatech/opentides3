@@ -10,11 +10,9 @@ package org.opentides.bean;
 public class SqlStatement {
 	
 	private Long   syncId;
-
+	private Long   lookupId;
 	private String stmt;
-	
 	private String value;
-
 	
 	public SqlStatement(Long syncId, String stmt, String value) {
 		super();
@@ -22,7 +20,15 @@ public class SqlStatement {
 		this.stmt = stmt;
 		this.value = value;
 	}
-
+	
+	public SqlStatement(Long syncId, String stmt, String value, Long lookupId) {
+		super();
+		this.syncId = syncId;
+		this.stmt = stmt;
+		this.value = value;
+		this.lookupId = lookupId;
+	}
+	
 
 	/**
 	 * @return the syncId
@@ -69,6 +75,29 @@ public class SqlStatement {
 	 */
 	public void setValue(String value) {
 		this.value = value;
+	}
+
+	/**
+	 * @return the lookupId
+	 */
+	public Long getLookupId() {
+		return lookupId;
+	}
+
+	/**
+	 * @param lookupId the lookupId to set
+	 */
+	public void setLookupId(Long lookupId) {
+		this.lookupId = lookupId;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "SqlStatement [syncId=" + syncId + ", lookupId=" + lookupId
+				+ ", stmt=" + stmt + ", value=" + value + "]";
 	}
 
 }
