@@ -29,6 +29,9 @@ public class SqlStatement {
 		this.lookupId = lookupId;
 	}
 	
+	public SqlStatement() {
+		super();
+	}
 
 	/**
 	 * @return the syncId

@@ -27,6 +27,8 @@ public class SyncMessage {
 	
 	private Status status;
 	
+	private String resetSync;
+	
 	private Long startVersion;
 	
 	private Long endVersion;
@@ -56,6 +58,10 @@ public class SyncMessage {
 		this.command = command;
 		this.message = message;
 		this.status  = status;
+	}
+		
+	public SyncMessage() {
+		super();
 	}
 
 	/**
@@ -112,6 +118,20 @@ public class SyncMessage {
 	 */
 	public void setStatus(Status status) {
 		this.status = status;
+	}
+
+	/**
+	 * @return the resetSync
+	 */
+	public String getResetSync() {
+		return resetSync;
+	}
+
+	/**
+	 * @param resetSync the resetSync to set
+	 */
+	public void setResetSync(String resetSync) {
+		this.resetSync = resetSync;
 	}
 
 	/**
