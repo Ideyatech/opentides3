@@ -82,6 +82,8 @@ public class Tenant extends BaseEntity {
 	@Transient
 	private transient String name;
 	
+	@Transient
+	private transient String template;
 	/**
 	 * @return the owner
 	 */
@@ -144,6 +146,18 @@ public class Tenant extends BaseEntity {
 	public final AccountType getAccountType() {
 		return accountType;
 	}
+	
+	/**
+	 * Returns the display of account type.
+	 * @return
+	 */
+	@JsonView(Views.SearchView.class)	
+	public final String getAccountTypeDisplay() {
+		if (accountType == null)
+			return "";
+		else
+			return accountType.getName();
+	}
 
 	/**
 	 * @param accountType the accountType to set
@@ -192,6 +206,20 @@ public class Tenant extends BaseEntity {
 	 */
 	public final void setName(final String name) {
 		this.name = name;
+	}
+
+	/**
+	 * @return the template
+	 */
+	public String getTemplate() {
+		return template;
+	}
+
+	/**
+	 * @param template the template to set
+	 */
+	public void setTemplate(String template) {
+		this.template = template;
 	}
 	
 	// payment details go here as well.

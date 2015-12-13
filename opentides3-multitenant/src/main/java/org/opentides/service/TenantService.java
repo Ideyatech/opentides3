@@ -45,10 +45,32 @@ public interface TenantService extends BaseCrudService<Tenant> {
 	public Tenant findByName(String company);
 	
 	/**
+	 * Finds the tenant for the given schema.
+	 * @param company
+	 * @return
+	 */
+	public Tenant findBySchema(String schema);
+
+	/**
 	 * Creates the schema of the tenant using JPA database create.
 	 */
 	public void createTenantSchema(Tenant tenant, MultitenantUser owner);
 	
+	/**
+	 * Clones the template to create new tenant. 
+	 * This uses mysql command line statement, so it is required that mysql client
+	 * is installed on the server.
+	 * 
+	 * @param template
+	 * @param tenant
+	 */
+	public void cloneTenantSchema(Tenant template, Tenant tenant, MultitenantUser owner, String[] userGroups);
+
+	/**
+	 * Creates the schema of the tenant using JPA database create.
+	 */
+	public void createTemplateSchema(Tenant tenant);	
+
 	/**
 	 * Backups and drop the schema of the tenant.
 	 */

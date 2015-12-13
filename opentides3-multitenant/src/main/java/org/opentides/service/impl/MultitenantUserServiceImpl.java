@@ -59,7 +59,8 @@ public class MultitenantUserServiceImpl extends
 	@Override
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public void persistUserToTenantDb(final Tenant tenant,
-			final MultitenantUser owner) {
+			final MultitenantUser owner,
+			final String[] userGroups) {
 		Assert.notNull(owner);
 		Assert.notNull(tenant);
 
@@ -72,16 +73,14 @@ public class MultitenantUserServiceImpl extends
 		userCopy.setTenant(null);
 		userCopy.setDbName(schema);
 		userCopy.getCredential().setDbName(schema);
-
-		if (userCopy.getGroups() == null || userCopy.getGroups().isEmpty()) {
-			_log.debug("Switching to tenant schema " + schema);
-			jdbcTemplate.switchSchema(schema);
-
-			final UserGroup userGroup = userGroupService
-					.loadUserGroupByName("Administrator");
+				
+		_log.debug("Switching to tenant schema " + schema);
+		jdbcTemplate.switchSchema(schema);
+		for (String ug:userGroups) {
+			final UserGroup userGroup = userGroupService.loadUserGroupByName(ug);
 			if (userGroup != null) {
 				userCopy.addGroup(userGroup);
-				_log.info("Adding Administrator user group");
+				_log.info("Adding "+ug+" to user.");
 			}
 		}
 

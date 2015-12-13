@@ -33,5 +33,6 @@ public interface MultitenantUserService extends
 	 * @param user
 	 */
 	public void persistUserToTenantDb(final Tenant tenant,
-			final MultitenantUser owner);
+			final MultitenantUser owner,
+			final String[] userGroups);
 }

@@ -113,7 +113,7 @@ public class MultiTenantSchemaUpdate {
 				try {
 					cfg.addAnnotatedClass(Class.forName(clazz));
 				} catch (final ClassNotFoundException e) {
-					_log.error("Class not found for schema upate [" + clazz
+					_log.error("Class not found for schema update [" + clazz
 							+ "]", e);
 				}
 			}
@@ -122,7 +122,7 @@ public class MultiTenantSchemaUpdate {
 				try {
 					cfg.addAnnotatedClass(Class.forName(clazz));
 				} catch (final ClassNotFoundException e) {
-					_log.error("Class not found for schema upate [" + clazz
+					_log.error("Class not found for schema update [" + clazz
 							+ "]", e);
 				}
 			}

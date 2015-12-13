@@ -43,7 +43,6 @@ public class MultitenantJdbcTemplate extends JdbcTemplate {
 	 */
 	public void switchSchema(final String schema) {
 		Assert.notNull(schema);
-
 		execute("USE " + schema);
 	}
 

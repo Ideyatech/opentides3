@@ -43,12 +43,10 @@ public class MultiTenantDBEvolveManager extends DBEvolveManager {
 	 * 
 	 * @param schema
 	 */
-	@Transactional
+	@Transactional()
 	public void evolve(final String schemaName) {
 		Assert.notNull(schemaName);
-
 		final String originatingSchema = jdbcTemplate.getCurrentSchemaName();
-
 		_log.debug("Evolving schema [" + schemaName + "]");
 		jdbcTemplate.switchSchema(schemaName);
 		super.evolve();
