@@ -1,7 +1,9 @@
 package org.opentides.util;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.opentides.bean.BaseEntity;
@@ -38,15 +41,14 @@ public class EvolveUtil {
 			throws Exception {
 		importCSV(filename, tableName, session, true);
 	}
-
+	
 	public static void importCSV(String filename, String tableName, Session session, boolean useHibernate)
 			throws Exception {
 		int line = 1;
-
+			BufferedReader reader = null;
 		try {
-			BufferedReader reader = new BufferedReader(
-					new InputStreamReader(EvolveUtil.class.getClassLoader()
-							.getResourceAsStream(filename)));
+			reader = new BufferedReader(
+					new InputStreamReader(new FileInputStream(filename)));
 			// read the column header
 			String csvLine = reader.readLine();
 			if (csvLine==null) {
@@ -83,10 +85,13 @@ public class EvolveUtil {
 				}
 				line++;
 			}
-			reader.close();
 		} catch (Exception e) {
 			_log.error("Failed to import csv file [" + filename + "] at line #"+line, e);
 			throw e;
+		} finally {
+			if (reader != null) {
+				try { reader.close(); } catch (Exception e) {};
+			}
 		}
 		return;
 	}
@@ -138,21 +143,49 @@ public class EvolveUtil {
 		for(int i = 0; i < headers.size(); i++) {
 			String property = headers.get(i);
 			String value = values.get(i);
-			Class<?> type = CrudUtil.retrieveObjectType(entity, property);
-			Method method = entity.getClass().getMethod(NamingUtil.toSetterName(property), CrudUtil.retrieveObjectType(entity, property));
+			String[] props = property.split("\\.");
+			Class<?> type = null;
+			Method method = null;
+			if (props.length > 1) {
+				type = CrudUtil.retrieveObjectType(entity, props[0]);
+				method = entity.getClass().getMethod(NamingUtil.toSetterName(props[0]), CrudUtil.retrieveObjectType(entity, props[0]));
+			} else {	
+				type = CrudUtil.retrieveObjectType(entity, property);
+				method = entity.getClass().getMethod(NamingUtil.toSetterName(property), CrudUtil.retrieveObjectType(entity, property));
+			}
 			_log.debug("Casting value : [" + value + "] to " + type.getName());
-			if(type.equals(Long.class) && !StringUtil.isEmpty(value)) {
-				method.invoke(entity, new Long(value));
-			} else if(Enum.class.isAssignableFrom(type)) {
+			if (Enum.class.isAssignableFrom(type)) {
 				method.invoke(entity, Enum.valueOf((Class<Enum>)type, value));
-			} else if(BaseEntity.class.isAssignableFrom(type)) {
-				Long id = Long.parseLong(value);
-				method.invoke(entity, session.load(type, id));
+			} else if (BaseEntity.class.isAssignableFrom(type)) {
+				if (props.length > 1) {
+					try {
+						Query q = session.createQuery("from " + type.getSimpleName() + " where " + props[1] + " = ?").setParameter(0, value);
+						method.invoke(entity, q.uniqueResult());
+					} catch(Exception e) {
+						_log.error("Unable to convert "+value+" to "+type.getName(), e);
+						throw new Exception("Unable to convert "+value+" to "+type.getName(),e);
+					}
+				} else {
+					Long id = StringUtil.convertToLong(value, -1l);
+					if (id > 0)
+						method.invoke(entity, session.load(type, id));
+					else {
+						_log.error("Unable to load id "+value+" of "+type.getName());
+						throw new Exception("Unable to load id "+value+" of "+type.getName());						
+					}
+				}
 			} else {
-				method.invoke(entity, type.cast(value));
+				Constructor c =
+					type.getConstructor(new Class[]{String.class});
+				if (c != null)
+					method.invoke(entity, c.newInstance(value));
+				else {
+					_log.error("Unable to convert "+value+" to "+type.getName());
+					throw new Exception("Unable to convert "+value+" to "+type.getName());
+				}
 			}
 		}
-		BaseEntity baseEntity = (BaseEntity)entity;
+		BaseEntity baseEntity = (BaseEntity) entity;
 		baseEntity.setSkipAudit(true);
 		session.persist(baseEntity);
 	}

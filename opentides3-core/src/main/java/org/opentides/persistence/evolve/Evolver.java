@@ -32,7 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class Evolver {
 	// the entity manager
 	@PersistenceContext
-    private EntityManager em;
+    protected EntityManager em;
 	
 	@Transactional
 	public int executeJpqlUpdate(String query) {
