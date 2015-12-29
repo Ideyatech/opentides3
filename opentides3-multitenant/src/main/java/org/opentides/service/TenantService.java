@@ -64,7 +64,7 @@ public interface TenantService extends BaseCrudService<Tenant> {
 	 * @param template
 	 * @param tenant
 	 */
-	public void cloneTenantSchema(Tenant template, Tenant tenant, MultitenantUser owner, String[] userGroups);
+	public void cloneTenantSchema(Tenant template, Tenant tenant);
 
 	/**
 	 * Creates the schema of the tenant using JPA database create.

@@ -86,7 +86,6 @@ public class TenantCrudController extends BaseCrudController<Tenant> {
 				credential.setPassword(userService.encryptPassword(credential
 						.getNewPassword()));
 			}
-
 			owner.setTenant(command);
 		}
 

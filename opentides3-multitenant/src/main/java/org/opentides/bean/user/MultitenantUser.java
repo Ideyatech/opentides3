@@ -67,7 +67,7 @@ public class MultitenantUser extends BaseUser {
 	@BuildInsertStatement
 	public List<String[]> buildInsertStatement() {
 		List<String[]> sqlStatements = new ArrayList<String[]>();
-		sqlStatements.addAll(super.buildInsertStatement(this));
+		sqlStatements.addAll(super.buildInsertStatement());
 		String[] myStmt = new String[2];
 		myStmt[0] = "insert into MT_USER_PROFILE(ID, TENANT_ID) values (?,?)";
 		if (getTenant() == null)

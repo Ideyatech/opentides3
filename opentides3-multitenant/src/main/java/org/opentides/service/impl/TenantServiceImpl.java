@@ -151,9 +151,7 @@ public class TenantServiceImpl extends BaseCrudServiceImpl<Tenant> implements
 
 
 	@Override
-	public void cloneTenantSchema(Tenant template, Tenant tenant,
-			MultitenantUser owner,
-			String[] userGroups) {
+	public void cloneTenantSchema(Tenant template, Tenant tenant) {
 		final String dir = ddlLogs + "/"
 				+ DateUtil.convertShortDate(new Date());
 		final String company = tenant.getCompany();
@@ -177,7 +175,6 @@ public class TenantServiceImpl extends BaseCrudServiceImpl<Tenant> implements
 			this.executeShell(createSchema, logFile);
 			this.executeShell(dumpSchema, logFile);
 			this.executeShell(loadSchema, logFile);
-			multitenantUserService.persistUserToTenantDb(tenant, owner, userGroups);
 		} catch (Exception e) {
 			_log.error("Failed to execute command for cloning tenant.",e);
 		}

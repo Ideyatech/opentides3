@@ -22,7 +22,6 @@ import org.apache.log4j.Logger;
 import org.opentides.bean.user.MultitenantUser;
 import org.opentides.bean.user.Tenant;
 import org.opentides.bean.user.UserGroup;
-import org.opentides.dao.MultitenantUserDao;
 import org.opentides.persistence.jdbc.MultitenantJdbcTemplate;
 import org.opentides.service.MultitenantUserService;
 import org.opentides.service.UserGroupService;
@@ -82,8 +81,7 @@ public class MultitenantUserServiceImpl extends
 				userCopy.addGroup(userGroup);
 				_log.info("Adding "+ug+" to user.");
 			}
-		}
-
-		((MultitenantUserDao) getDao()).persistUserToTenantDb(schema, userCopy);
+		}		
+		getDao().saveEntityModel(userCopy);
 	}
 }
