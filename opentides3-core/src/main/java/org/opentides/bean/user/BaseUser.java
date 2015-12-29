@@ -44,6 +44,7 @@ import javax.persistence.Transient;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.opentides.annotation.Auditable;
+import org.opentides.annotation.BuildInsertStatement;
 import org.opentides.annotation.PrimaryField;
 import org.opentides.annotation.SearchableFields;
 import org.opentides.bean.BaseEntity;
@@ -297,9 +298,16 @@ public class BaseUser extends BaseEntity implements ImageUploadable {
 	 * @param obj
 	 * @return
 	 */
-	public List<String[]> buildInsertStatement(BaseUser obj) {
+	@BuildInsertStatement
+	public List<String[]> buildInsertStatement() {
 		List<String[]> sqlStatements = new ArrayList<String[]>();
-		sqlStatements.add(SyncUtil.buildInsertStatement(obj, "USER_PROFILE", false));
+		sqlStatements.add(SyncUtil.buildInsertStatement(this, "USER_PROFILE", BaseUser.class));		
+//		for (UserGroup g:groups) {
+//			String[] myStmt = new String[2];
+//			myStmt[0] = "insert into USER_GROUP (USER_ID, GROUP_ID) values (?,?)";
+//			myStmt[1] = "["+this.getId()+","+g.getId()+"]";
+//			sqlStatements.add(myStmt);
+//		}
 		return sqlStatements;
 	}
 	
