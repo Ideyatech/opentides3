@@ -42,8 +42,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class DBEvolveManager {
 
 	@Autowired(required=false)
-	private List<DBEvolve> evolveList;
+	private List<Evolver> evolveList;
 
+	@Autowired
+	private Evolver adminEvolve;
+	
 	@Autowired
 	private SequenceDao sequenceDao;
 
@@ -65,13 +68,10 @@ public class DBEvolveManager {
 		} catch (NoResultException nre) {
 		    version = null;
 		}
+		
 		if (version==null) {
-			// no version available yet, lets create one
-			version = new Sequence("DB_VERSION", 0l);
-			sequenceDao.saveEntityModel(version);
 			// initialize default admin user
-			userGroupService.setupAdminGroup();
-			userService.setupAdminUser();
+			adminEvolve.doExecute();
 		}
 
 		// skip evolve if there is nothing in the evolve list
@@ -80,7 +80,6 @@ public class DBEvolveManager {
 			return;
 		}
 		
-
 		// sort the evolve list
 		Collections.sort(evolveList, new VersionComparator());
 		// check for duplicate version numbers
@@ -94,8 +93,11 @@ public class DBEvolveManager {
 			}
 		}
 		
+		long currVersion = 0;
 		// get number of latest evolve script
-		long currVersion   = version.getValue();
+		if (version != null)
+			currVersion = version.getValue();
+
 		long latestVersion = evolveList.get(evolveList.size()-1).getVersion();
 		
 		if (currVersion>=latestVersion) {
@@ -106,27 +108,19 @@ public class DBEvolveManager {
 		}
 		
 		// execute new evolve scripts
-		for (DBEvolve evolve:evolveList) {
+		for (Evolver evolve:evolveList) {
 			if (evolve.getVersion() > currVersion) {
 				// let's execute this evolve script
-				_log.info("Executing evolve version ["+evolve.getVersion()+"] - "+evolve.getDescription());
-				evolve.execute();
-				// if successful, update current db version
-				version.setValue(Long.valueOf(evolve.getVersion()));
-				sequenceDao.saveEntityModel(version);
-				_log.info("Evolve version  ["+evolve.getVersion()+"] successful.");
+				evolve.doExecute();
 			}
 		}
-		// as precaution let's update db version again
-		version.setValue(Long.valueOf(latestVersion));
-		sequenceDao.saveEntityModel(version);
 		_log.info("Database is now updated to version "+latestVersion);
 	}
 
 	/**
 	 * @param evolveList the evolveList to set
 	 */
-	public void setEvolveList(List<DBEvolve> evolveList) {
+	public void setEvolveList(List<Evolver> evolveList) {
 		this.evolveList = evolveList;
 	}
 

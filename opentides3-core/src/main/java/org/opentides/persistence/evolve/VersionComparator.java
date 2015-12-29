@@ -22,11 +22,11 @@ import java.io.Serializable;
 import java.util.Comparator;
 
 
-public class VersionComparator implements Comparator<DBEvolve>, Serializable {
+public class VersionComparator implements Comparator<Evolver>, Serializable {
     
     private static final long serialVersionUID = 3914989398031660136L;
 
-    public int compare(DBEvolve o1, DBEvolve o2) {
+    public int compare(Evolver o1, Evolver o2) {
 		return o1.getVersion()-o2.getVersion();
 	}
 }

@@ -18,10 +18,15 @@
  */
 package org.opentides.persistence.evolve;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import org.apache.log4j.Logger;
+import org.opentides.bean.Sequence;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -29,10 +34,13 @@ import org.springframework.transaction.annotation.Transactional;
  * 
  * @author allantan
  */
-public class Evolver {
+public abstract class Evolver {
 	// the entity manager
 	@PersistenceContext
     protected EntityManager em;
+	
+	private static final Logger _log = Logger.getLogger(Evolver.class);
+
 	
 	@Transactional
 	public int executeJpqlUpdate(String query) {
@@ -59,6 +67,50 @@ public class Evolver {
 		return 0;
 	}
 
+	/**
+	 * Wrapper method to handle updating of version within the transaction.
+	 */
+	@SuppressWarnings("unchecked")
+	@Transactional(propagation=Propagation.REQUIRES_NEW)
+	public void doExecute() {
+		_log.info("Executing evolve version ["+this.getVersion()+"] - "+this.getDescription());
+		this.execute();
+		List<Sequence> result = em.createQuery("from Sequence where key='DB_VERSION'").getResultList();
+		Sequence dbVersion = null;		
+		if (result.size() == 0) {
+			// no version available yet, lets create one
+			dbVersion = new Sequence(); 
+			dbVersion.setKey("DB_VERSION"); 
+		} else {
+			// use existing record
+			dbVersion = result.get(0);
+		}
+		dbVersion.setValue(new Long(this.getVersion())); 
+		em.persist(dbVersion); 
+		_log.info("Evolve version  ["+dbVersion.getValue()+"] successful.");		
+		em.flush();
+	}
+	
+	/**
+	 * Actual database evolve script operations.
+	 */
+	
+	public abstract void execute();
+	
+	/**
+	 * Returns the description of evolve script.
+	 * @return
+	 */
+	public abstract String getDescription();
+	
+	/**
+	 * Returns the version of this evolve script.
+	 * Ensures that execution of evolve script is in proper
+	 * sequence.
+	 * @return
+	 */
+	public abstract int getVersion();
+	
 	/**
 	 * Sets the EntityManager
 	 * @param em

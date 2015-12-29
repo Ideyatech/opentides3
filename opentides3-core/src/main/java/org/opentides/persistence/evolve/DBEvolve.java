@@ -24,8 +24,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author allantan
- *
+ * Do not use this interface, instead extend Evolver abstract class.
  */
+@Deprecated
 public interface DBEvolve{
 	/**
 	 * Actual database evolve script operations.

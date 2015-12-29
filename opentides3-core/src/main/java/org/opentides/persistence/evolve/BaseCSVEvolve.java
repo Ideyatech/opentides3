@@ -25,11 +25,9 @@ import org.springframework.core.io.support.ResourcePatternUtils;
  * @author allantan
  *
  */
-public class BaseCSVEvolve extends Evolver implements DBEvolve {
+public class BaseCSVEvolve extends Evolver {
 	
 	private static final Logger _log = Logger.getLogger(BaseCSVEvolve.class);
-
-	private static final Resource[] NO_FILES = {};
 
 	private String[] csvFiles = {"classpath:app/csv/*.csv"};
 	
@@ -77,7 +75,7 @@ public class BaseCSVEvolve extends Evolver implements DBEvolve {
 			try {
 				if (!StringUtil.isEmpty(tenant))
 					em.createNativeQuery("USE " + tenant).executeUpdate();
-				EvolveUtil.importCSVAsObject(data.getFile().getAbsolutePath(), entityName, em.unwrap(Session.class));
+				EvolveUtil.importCSVAsObject(data.getFile().getAbsolutePath(), entityName, em.unwrap(Session.class), tenant);
 			} catch (Exception e) {
 				_log.error("Failed to import " + data.getFilename(), e);
 				throw new RuntimeException(e);
