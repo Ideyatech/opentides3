@@ -64,7 +64,9 @@ public class CacheUtil {
 
 	public static final Map<Class<?>, String> readableName = new ConcurrentHashMap<Class<?>, String>();
 
-	public static final Map<Class<?>, List<String>> persistentFields = new ConcurrentHashMap<Class<?>, List<String>>();
+	public static final Map<String, List<String>> persistentFields = new ConcurrentHashMap<String, List<String>>();
+
+	public static final Map<String, Map<String, String>> columnNames = new ConcurrentHashMap<String, Map<String, String>>();
 
 	public static final Map<Class<?>, List<String>> searchableFields = new ConcurrentHashMap<Class<?>, List<String>>();
 
@@ -242,7 +244,18 @@ public class CacheUtil {
 	 * @return
 	 */
 	public static List<String> getPersistentFields(BaseEntity obj) {
-		return getPersistentFields(obj, true);
+		Class<?> clazz = obj.getClass();
+		return getPersistentFields(obj, clazz, true);
+	}
+	
+	/**
+	 * Retrieves persistent fields for specific class.
+	 * 
+	 * @param obj
+	 * @return
+	 */
+	public static List<String> getPersistentFields(BaseEntity obj, Class<?> clazz) {
+		return getPersistentFields(obj, clazz, false);
 	}
 	
 	/**
@@ -254,9 +267,9 @@ public class CacheUtil {
 	 * @param obj
 	 * @return
 	 */
-	public static List<String> getPersistentFields(BaseEntity obj, boolean includeParent) {
-		Class<?> clazz = obj.getClass();
-		List<String> ret = persistentFields.get(clazz);
+	public static List<String> getPersistentFields(BaseEntity obj, Class<?> clazz, boolean includeParent) {
+		String clazzCode = clazz.toString() + ";p=" + includeParent;
+		List<String> ret = persistentFields.get(clazzCode);
 		if (ret == null) {
 			List<String> persistents = new ArrayList<String>();
 			final List<Field> fields = CrudUtil.getAllFields(clazz, includeParent);
@@ -275,8 +288,8 @@ public class CacheUtil {
 					_log.debug(persistent);
 				}
 			}
-			persistentFields.put(obj.getClass(), persistents);
-			ret = persistentFields.get(obj.getClass());
+			persistentFields.put(clazzCode, persistents);
+			ret = persistentFields.get(clazzCode);
 		}
 		return ret;
 	}
@@ -288,7 +301,17 @@ public class CacheUtil {
 	 * @return
 	 */
 	public static Map<String, String> getColumnNames(BaseEntity obj) {
-		return getColumnNames(obj, true);
+		return getColumnNames(obj, obj.getClass(), true);
+	}
+
+	/**
+	 * Overloaded method to retrieve fields from cache, including parent fields.
+	 * 
+	 * @param obj
+	 * @return
+	 */
+	public static Map<String, String> getColumnNames(BaseEntity obj, Class<?> clazz) {
+		return getColumnNames(obj, clazz, true);
 	}
 
 	/**
@@ -300,68 +323,67 @@ public class CacheUtil {
 	 * @param obj
 	 * @return
 	 */
-	public static Map<String, String> getColumnNames(BaseEntity obj, boolean includeParent) {
-		Class<?> clazz = obj.getClass();
-		Map<String, String> columns = new HashMap<String, String>();
-		final List<Field> fields = CrudUtil.getAllFields(clazz, includeParent);
-		for (Field field : fields) {
-			if ((!Modifier.isTransient(field.getModifiers()))
-					&& (!Modifier.isVolatile(field.getModifiers()))
-					&& (!Modifier.isStatic(field.getModifiers()))
-					&& (!field.isAnnotationPresent(Transient.class))) {
-				Annotation annotation = field.getAnnotation(Column.class);
-				if(annotation == null){
-					annotation  = field.getAnnotation(JoinColumn.class);
-				}
-				if (annotation != null) {
-					try {
-						String name = (String) annotation.annotationType()
-								.getMethod("name").invoke(annotation);
-						columns.put(field.getName(), name);
-						
-					} catch (Exception e) {
-						_log.warn(
-								"Unable to execute annotated method @Column of "
-										+ obj.getClass().getSimpleName(), e);
+	public static Map<String, String> getColumnNames(BaseEntity obj, Class<?> clazz, boolean includeParent) {
+		String clazzCode = clazz.toString() + ";p=" + includeParent;
+		Map<String, String> ret = columnNames.get(clazzCode);
+		if (ret == null) {
+			Map<String, String> columns = new HashMap<String, String>();
+			final List<Field> fields = CrudUtil.getAllFields(clazz, includeParent);
+			for (Field field : fields) {
+				if ((!Modifier.isTransient(field.getModifiers()))
+						&& (!Modifier.isVolatile(field.getModifiers()))
+						&& (!Modifier.isStatic(field.getModifiers()))
+						&& (!field.isAnnotationPresent(Transient.class))) {
+					Annotation annotation = field.getAnnotation(Column.class);
+					if(annotation == null){
+						annotation  = field.getAnnotation(JoinColumn.class);
 					}
-				}else{
-					
-					annotation = field.getAnnotation(Columns.class);
-			        if (annotation != null) {
-			            try {
-			                Column[] cols = (Column[])annotation.annotationType().getMethod("columns").invoke(annotation);
-			                if(cols != null && cols.length > 0){
-			                	String name = "";
-			                	for(int i=0; i< cols.length; i++){
-			                		if(i > 0){
-			                			name += ",";
-			                		}
-			                		name += cols[i].name();
-			                	}
-			                	columns.put(field.getName(), name);
-			                	
-			                }
-			                
-			            } catch (Exception ex) {
-			            	_log.warn(
-									"Unable to execute annotated method @Columns of "
-											+ obj.getClass().getSimpleName(), ex);
-			            }
-			        }
+					if (annotation != null) {
+						try {
+							String name = (String) annotation.annotationType()
+									.getMethod("name").invoke(annotation);
+							columns.put(field.getName(), name);
+							
+						} catch (Exception e) {
+							_log.warn(
+									"Unable to execute annotated method @Column of "
+											+ obj.getClass().getSimpleName(), e);
+						}
+					} else {
+						annotation = field.getAnnotation(Columns.class);
+				        if (annotation != null) {
+				            try {
+				                Column[] cols = (Column[])annotation.annotationType().getMethod("columns").invoke(annotation);
+				                if(cols != null && cols.length > 0){
+				                	String name = "";
+				                	for(int i=0; i< cols.length; i++){
+				                		if(i > 0){
+				                			name += ",";
+				                		}
+				                		name += cols[i].name();
+				                	}
+				                	columns.put(field.getName(), name);
+				                }
+				            } catch (Exception ex) {
+				            	_log.warn(
+										"Unable to execute annotated method @Columns of "
+												+ obj.getClass().getSimpleName(), ex);
+				            }
+				        }
+					}
 				}
-
 			}
+			if (_log.isDebugEnabled()) {
+				_log.debug(clazz.getSimpleName()
+						+ " contains the following persistent fields");
+				for(String fieldName: columns.keySet()){
+					_log.debug(fieldName);
+				}
+			}			
+			columnNames.put(clazzCode, columns);
+			ret = columnNames.get(clazzCode);
 		}
-		if (_log.isDebugEnabled()) {
-			_log.debug(clazz.getSimpleName()
-					+ " contains the following persistent fields");
-			for(String fieldName: columns.keySet()){
-				_log.debug(fieldName);
-			}
-			
-		}
-
-		return columns;
+		return ret;
 	}
 
 	/**
