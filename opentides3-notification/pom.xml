@@ -22,7 +22,13 @@
 			<artifactId>atmosphere-runtime</artifactId>
 			<version>${org.atmosphere-version}</version>
 		</dependency>
-
+<!-- 	
+		<dependency>
+            <groupId>org.atmosphere</groupId>
+            <artifactId>atmosphere-spring</artifactId>
+            <version>${org.atmosphere-version}</version>
+        </dependency>
+ -->	
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
