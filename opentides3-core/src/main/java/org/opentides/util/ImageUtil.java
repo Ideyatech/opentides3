@@ -22,12 +22,14 @@ package org.opentides.util;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
 import javax.imageio.ImageIO;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.opentides.util.image.Image;
@@ -387,6 +389,45 @@ public class ImageUtil {
 			Integer fromX, Integer fromY) {
 		String command = "" + newWidth + "x" + newHeight + "-c@" + fromX + "x" + fromY;
 		return command;
+	}
+
+	/**
+	 * Converts the given image file into base64 format.
+	 * @param imageFile
+	 * @return
+	 */
+	public static String convertImageFiletoBase64(File imageFile){
+		FileInputStream fis = null;
+		String result = null;
+		try {
+			fis = new FileInputStream(imageFile);
+			 ByteArrayOutputStream bos = new ByteArrayOutputStream();
+
+		        byte[] buf = new byte[1024];
+		        
+		            for (int readNum; (readNum = fis.read(buf)) != -1;) {
+		                bos.write(buf, 0, readNum); 
+		                //no doubt here is 0
+		                /*Writes len bytes from the specified byte array starting at offset 
+		                off to this byte array output stream.*/
+		            }
+		            byte[] bytes = bos.toByteArray();
+		            Base64 base64 = new Base64();
+		            result = base64.encodeBase64String(bytes);
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			if(fis != null) {
+				try{ 
+					fis.close();
+				} catch(Exception e) {
+					
+				}
+			}
+		}
+       return result;
 	}
 	
 }

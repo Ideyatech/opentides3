@@ -40,25 +40,37 @@ public class SyncUtil {
 	 * @return
 	 */
 	public static String[] buildInsertStatement(BaseEntity obj) {
-		return buildInsertStatement(obj, null, true);
+		return buildInsertStatement(obj, null, null);
 	}
 
 	/**
 	 * Builds the insert statement for sqlLite.
 	 * @return
 	 */
-	public static String[] buildInsertStatement(BaseEntity obj, String tableName, boolean includeParent) {
+	public static String[] buildInsertStatement(BaseEntity obj, String tableName, Class<?> clazz) {
 		StringBuilder sql = new StringBuilder("insert into ");
 		StringBuilder columns = new StringBuilder("(");
 		StringBuilder values = new StringBuilder("(");
-
 		String[] insertQuery = new String[2];
 		StringBuilder param = new StringBuilder("[");
-
-		List<String> fields = CacheUtil.getPersistentFields(obj);
-		Map<String, String> columnFields = CacheUtil.getColumnNames(obj,includeParent);
+		
+		List<String> fields = null;
+		Map<String, String> columnFields = null;
+		
+		if (clazz == null) {
+			clazz = obj.getClass();
+			fields = CacheUtil.getPersistentFields(obj);
+			if (!fields.contains("id"))
+				fields.add("id");
+			columnFields = CacheUtil.getColumnNames(obj);
+		} else {
+			fields = CacheUtil.getPersistentFields(obj, clazz);
+			if (!fields.contains("id"))
+				fields.add("id");
+			columnFields = CacheUtil.getColumnNames(obj, clazz);			
+		}
 		int count = 0;
-
+		
 		for (String field : fields) {
 			Object ret = CrudUtil.retrieveNullableObjectValue(obj, field);
 			String column = columnFields.get(field);
@@ -116,7 +128,7 @@ public class SyncUtil {
 		if (tableName == null)
 			tableName = NamingUtil.toSQLName(obj.getClass().getSimpleName());
 		
-		Map<String, String> columns = CacheUtil.getColumnNames(obj, includeParent);
+		Map<String, String> columns = CacheUtil.getColumnNames(obj);
 		
 		StringBuilder sql = new StringBuilder("update ");
 		sql.append(tableName)
