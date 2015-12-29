@@ -5,7 +5,9 @@ import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +27,7 @@ public class EvolveUtil {
 	
 	private static final Logger _log = Logger.getLogger(EvolveUtil.class);
 	private static Map<List<String>, SQLQuery> queryCache = new HashMap<List<String>, SQLQuery>();
+	private static boolean enableChangeLog = false;
 	
 	/**
 	 * Hide the constructor.
@@ -32,17 +35,17 @@ public class EvolveUtil {
 	private EvolveUtil() {		
 	}
 	
-	public static void importCSV(String filename, String tableName, Session session) 
-			throws Exception{
-		importCSV(filename, tableName, session, false);
-	}
-	
-	public static void importCSVAsObject(String filename, String tableName, Session session)
+	public static void importCSV(String filename, String tableName, Session session, String tenant) 
 			throws Exception {
-		importCSV(filename, tableName, session, true);
+		importCSV(filename, tableName, session, tenant, false);
 	}
 	
-	public static void importCSV(String filename, String tableName, Session session, boolean useHibernate)
+	public static void importCSVAsObject(String filename, String tableName, Session session, String tenant)
+			throws Exception {
+		importCSV(filename, tableName, session, tenant, true);
+	}
+	
+	public static void importCSV(String filename, String tableName, Session session, String tenant, boolean useHibernate)
 			throws Exception {
 		int line = 1;
 			BufferedReader reader = null;
@@ -79,9 +82,9 @@ public class EvolveUtil {
 				}
 				// execute this query
 				if(useHibernate) {
-					EvolveUtil.executeHqlQuery(tableName, tmpHeaders, values, session);
+					EvolveUtil.executeHqlQuery(tableName, tmpHeaders, values, session, tenant);
 				} else {
-					EvolveUtil.executeQuery(tableName, tmpHeaders, values, session);
+					EvolveUtil.executeQuery(tableName, tmpHeaders, values, session, tenant);
 				}
 				line++;
 			}
@@ -105,7 +108,7 @@ public class EvolveUtil {
 	 * @param values
 	 * @param session
 	 */
-	private static void executeQuery(String tableName, List<String> headers, List<String> values, Session session) {
+	private static void executeQuery(String tableName, List<String> headers, List<String> values, Session session, String tenant) {
 		SQLQuery query;
 		if (queryCache.containsKey(headers)) {
 			query = queryCache.get(headers);
@@ -131,10 +134,15 @@ public class EvolveUtil {
 				query.setParameter(index++, value);
 		}
 		query.executeUpdate();
+		
+		if (enableChangeLog) {
+			insertChangeLog(query.getQueryString(), values.toString(), session, tenant);
+		}		
+
 	}
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private static void executeHqlQuery(String className, List<String> headers, List<String> values, Session session) 
+	private static void executeHqlQuery(String className, List<String> headers, List<String> values, Session session, String tenant) 
 			throws Exception {
 		Object entity = Class.forName(className).newInstance();
 		if(!(entity instanceof BaseEntity)) {
@@ -160,7 +168,11 @@ public class EvolveUtil {
 				if (props.length > 1) {
 					try {
 						Query q = session.createQuery("from " + type.getSimpleName() + " where " + props[1] + " = ?").setParameter(0, value);
-						method.invoke(entity, q.uniqueResult());
+						List result = q.list();
+						if (result.size() > 0)
+							method.invoke(entity, result.get(0));
+						else 
+							throw new Exception("Cannot find entity " + type.getSimpleName() + " using " + value);
 					} catch(Exception e) {
 						_log.error("Unable to convert "+value+" to "+type.getName(), e);
 						throw new Exception("Unable to convert "+value+" to "+type.getName(),e);
@@ -186,8 +198,51 @@ public class EvolveUtil {
 			}
 		}
 		BaseEntity baseEntity = (BaseEntity) entity;
-		baseEntity.setSkipAudit(true);
-		session.persist(baseEntity);
+		baseEntity.setDbName(tenant);
+		session.persist(baseEntity);	
+	}
+		
+	private static void insertChangeLog(String sqlQuery, String values, Session session, String tenant) {
+		if (enableChangeLog) {
+			String changeLogSql = "INSERT INTO change_log" + 
+					" (`CREATEDATE`, "
+					+ " `VERSION`, " 
+					+ " `ACTION`, " 
+					+ " `ENTITY_CLASS`, "
+					+ " `ENTITY_ID`, " 
+					+ " `SQL_COMMAND`,  "
+					+ " `PARAMS`) " 
+					+ " VALUES  " 
+						+ " (?,?,?,?,?,?,?);";
+			
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+			String dateStr = sdf.format(new Date());		
+			if (!StringUtil.isEmpty(tenant))
+				session.createSQLQuery("USE " + tenant).executeUpdate();
+			Query changeLogQuery = session.createSQLQuery(changeLogSql);
+			changeLogQuery.setParameter(0, dateStr);
+			changeLogQuery.setParameter(1, 0); //
+			changeLogQuery.setParameter(2, 1); //INSERT
+			changeLogQuery.setParameter(3, EvolveUtil.class);
+			changeLogQuery.setParameter(4, 0l); // Unknown
+			changeLogQuery.setParameter(5, sqlQuery);
+			changeLogQuery.setParameter(6, values);					
+			changeLogQuery.executeUpdate();				
+		}		
 	}
 
+	/**
+	 * @return the enableChangeLog
+	 */
+	public static boolean isEnableChangeLog() {
+		return enableChangeLog;
+	}
+
+	/**
+	 * @param enableChangeLog the enableChangeLog to set
+	 */
+	public static void setEnableChangeLog(boolean enableChangeLog) {
+		EvolveUtil.enableChangeLog = enableChangeLog;
+	}
+	
 }
