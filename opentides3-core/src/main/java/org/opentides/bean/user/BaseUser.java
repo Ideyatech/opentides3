@@ -44,14 +44,13 @@ import javax.persistence.Transient;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.opentides.annotation.Auditable;
-import org.opentides.annotation.BuildInsertStatement;
 import org.opentides.annotation.PrimaryField;
 import org.opentides.annotation.SearchableFields;
+import org.opentides.annotation.Synchronizable;
 import org.opentides.bean.BaseEntity;
 import org.opentides.bean.ImageInfo;
 import org.opentides.bean.ImageUploadable;
 import org.opentides.util.StringUtil;
-import org.opentides.util.SyncUtil;
 import org.opentides.web.json.Views;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -62,6 +61,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "USER_PROFILE")
 @Auditable
+@Synchronizable
 @Inheritance(strategy = InheritanceType.JOINED)
 public class BaseUser extends BaseEntity implements ImageUploadable {
 
@@ -291,24 +291,6 @@ public class BaseUser extends BaseEntity implements ImageUploadable {
 		props.add("emailAddress");
 		props.add("credential.username");
 		return props;
-	}
-
-	/**
-	 * Invoked by subclasses to manually handle change log.
-	 * @param obj
-	 * @return
-	 */
-	@BuildInsertStatement
-	public List<String[]> buildInsertStatement() {
-		List<String[]> sqlStatements = new ArrayList<String[]>();
-		sqlStatements.add(SyncUtil.buildInsertStatement(this, "USER_PROFILE", BaseUser.class));		
-//		for (UserGroup g:groups) {
-//			String[] myStmt = new String[2];
-//			myStmt[0] = "insert into USER_GROUP (USER_ID, GROUP_ID) values (?,?)";
-//			myStmt[1] = "["+this.getId()+","+g.getId()+"]";
-//			sqlStatements.add(myStmt);
-//		}
-		return sqlStatements;
 	}
 	
 	@Override

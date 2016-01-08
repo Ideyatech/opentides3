@@ -15,6 +15,7 @@
 			<artifactId>common</artifactId>
 			<version>${org.opentides-version}</version>
 		</dependency>
+		
 		<dependency>
 			<groupId>org.opentides</groupId>
 			<artifactId>core</artifactId>
@@ -27,6 +28,7 @@
 			<version>${org.opentides-version}</version>
 			<scope>compile</scope>
 		</dependency>
+		
 		<dependency>
 			<groupId>org.opentides</groupId>
 			<artifactId>codegen</artifactId>
@@ -40,6 +42,12 @@
 			<version>2.5</version>
 			<scope>provided</scope>
 		</dependency>
+		
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>1.7.1</version>
+  		</dependency>
 
 		<!-- Test -->
 		<dependency>
@@ -47,12 +55,7 @@
 			<artifactId>junit</artifactId>
 			<scope>test</scope>
 		</dependency>
-		
-		<dependency>
-			<groupId>com.google.code.gson</groupId>
-			<artifactId>gson</artifactId>
-			<version>1.7.1</version>
-  		</dependency>
+	
 	</dependencies>
 	
 	<profiles>

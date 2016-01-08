@@ -24,6 +24,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
+import junit.framework.Assert;
+
 public class StringUtil {
     
 	private static String zeros = "0000000000";
@@ -466,4 +468,17 @@ public class StringUtil {
     	return out.toString();
     }
 
+    /**
+     *  Splits the string with the givek
+     */
+    public static final String[] splitSafe(String word, String regex) {
+    	if (word == null) return null;
+    	if (StringUtil.isEmpty(regex)) return new String[] {word};
+    	String[] ret = word.split(regex);
+    	if (ret.length==0)
+    		return new String[] {word};
+    	else
+    		return ret;    	
+    }
+    
 }

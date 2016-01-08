@@ -39,6 +39,8 @@ public class BaseCSVEvolve extends Evolver {
 	private int version;
 	
 	private String tenant;
+	
+	private boolean enableChangeLog = false;
 
     private List<Resource> loadResources() {
     	List<Resource> resources = new ArrayList<Resource>();
@@ -75,6 +77,7 @@ public class BaseCSVEvolve extends Evolver {
 			try {
 				if (!StringUtil.isEmpty(tenant))
 					em.createNativeQuery("USE " + tenant).executeUpdate();
+				EvolveUtil.setEnableChangeLog(enableChangeLog);
 				EvolveUtil.importCSVAsObject(data.getFile().getAbsolutePath(), entityName, em.unwrap(Session.class), tenant);
 			} catch (Exception e) {
 				_log.error("Failed to import " + data.getFilename(), e);
@@ -119,6 +122,13 @@ public class BaseCSVEvolve extends Evolver {
 	 */
 	public void setTenant(String tenant) {
 		this.tenant = tenant;
+	}
+
+	/**
+	 * @param enableChangeLog the enableChangeLog to set
+	 */
+	public void setEnableChangeLog(boolean enableChangeLog) {
+		this.enableChangeLog = enableChangeLog;
 	}
 
 }

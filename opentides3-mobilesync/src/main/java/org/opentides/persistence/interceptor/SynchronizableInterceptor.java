@@ -19,31 +19,43 @@ under the License.
 
 package org.opentides.persistence.interceptor;
 
-import java.math.BigDecimal;
-import java.util.Collection;
+import java.io.Serializable;
+import java.lang.reflect.Method;
+import java.sql.Types;
+import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
+import java.util.Set;
+
 import javax.persistence.EntityManager;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.CallbackException;
+import org.hibernate.collection.internal.PersistentBag;
 import org.opentides.annotation.Synchronizable;
 import org.opentides.bean.BaseEntity;
 import org.opentides.bean.ChangeLog;
-import org.opentides.util.CacheUtil;
-import org.opentides.util.CrudUtil;
-import org.opentides.util.DatabaseUtil;
-import org.opentides.util.DateUtil;
-import org.opentides.util.NamingUtil;
+import org.opentides.bean.JoinTable;
 import org.opentides.bean.SystemCodes;
 import org.opentides.bean.user.BaseUser;
 import org.opentides.bean.user.UserCredential;
+import org.opentides.context.ApplicationContextProvider;
+import org.opentides.util.CacheUtil;
+import org.opentides.util.CrudUtil;
+import org.opentides.util.DatabaseUtil;
+import org.opentides.util.StringUtil;
+import org.opentides.util.SyncUtil;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 /**
+ * This interceptor is used by mobile sync to process hibernate operations 
+ * and save the corresponding SQL statement in the change log. The change log
+ * is sent to the mobile devices for sync of database operations.
+ * 
  * @author allantan
  *
  */
@@ -51,198 +63,307 @@ public class SynchronizableInterceptor extends AuditLogInterceptor {
 
 	private static final long serialVersionUID = 5476081576394866928L;
 	
-	private static final Logger _log = Logger.getLogger(AuditLogInterceptor.class);
+	private static final Logger _log = Logger.getLogger(SynchronizableInterceptor.class);
+	
+	private static boolean disableAuditLog = false;
+	
+    protected Set<PersistentBag> insertCollection = Collections.synchronizedSet(new HashSet<PersistentBag>()); 
+    protected Set<PersistentBag> updateCollection = Collections.synchronizedSet(new HashSet<PersistentBag>()); 
+    
+	@Override
+	public void onCollectionRecreate(Object collection, Serializable key) throws CallbackException {
+		if (isSynchronizable(collection)) {
+			synchronized(insertCollection) {
+				insertCollection.add((PersistentBag) collection);
+			}			
+		}
+	}
+	
+	@Override
+	public void onCollectionRemove(Object collection, Serializable key)
+			throws CallbackException {
+		if (isSynchronizable(collection)) {
+			PersistentBag entries = (PersistentBag) collection;			
+			BaseEntity owner = (BaseEntity) entries.getOwner();
+			Class<?> clazz = owner.getClass();
+			Class<?> clazz2 = entries.get(0).getClass();
+			
+			JoinTable join = CacheUtil.getJoinTableFields(owner, clazz2);
+			if (join != null) {
+				StringBuffer statementBuffer = new StringBuffer();
+				statementBuffer.append("delete from ")
+						.append(join.getTableName())
+						.append(" where ").append(join.getColumn1()).append(" = ?")
+						.append(" and ").append(join.getColumn2()).append(" = ?");
+				String stmt = statementBuffer.toString();
+				for (Object obj:entries) {
+					BaseEntity entity = (BaseEntity) obj;
+					this.saveLog(owner, ChangeLog.DELETE, "",
+							stmt, "["+owner.getId()+","+entity.getId()+"]");							
+				}						
+			}			
+		}
+	}
+	
+	@Override
+	public void onCollectionUpdate(Object collection, Serializable key)
+			throws CallbackException {
+		if (isSynchronizable(collection)) {
+			synchronized(updateCollection) {
+				updateCollection.add((PersistentBag) collection);
+			}
+		}
+	}
 
 	/* (non-Javadoc)
 	 * @see org.opentides.persistence.interceptor.AuditLogInterceptor#postFlush(java.util.Iterator)
 	 */
 	@Override
 	public void postFlush(Iterator iterator) throws CallbackException {
-		
-        try { 
-        	synchronized(inserts) {
-	        	for (BaseEntity entity:inserts) {
-	        		if (entity.getClass().isAnnotationPresent(Synchronizable.class) 
-	        				|| (entity instanceof SystemCodes)
-	        				|| (entity instanceof UserCredential)
-	        				|| (entity instanceof BaseUser)) {
-	        			String insertStmt = buildInsertStatement(entity);
-	        			SynchronizableInterceptor.saveLog(entity, ChangeLog.INSERT, "", insertStmt);
-	        		}
-	        	}
-        	}
-        	synchronized(deletes) {
-	        	for (BaseEntity entity:deletes) {
-	        		if (entity.getClass().isAnnotationPresent(Synchronizable.class) 
-	        				|| (entity instanceof SystemCodes)
-	        				|| (entity instanceof UserCredential)
-	        				|| (entity instanceof BaseUser)) {
-	        			String deleteStmt = buildDeleteStatement(entity);
-	        			SynchronizableInterceptor.saveLog(entity, ChangeLog.DELETE, "", deleteStmt);
-	        		}
-	        	}        	
-        	}
-        	synchronized (updates) {
-               	for (BaseEntity entity:updates) {
-               		if (entity.getClass().isAnnotationPresent(Synchronizable.class) 
-	        				|| (entity instanceof SystemCodes)
-	        				|| (entity instanceof UserCredential)
-	        				|| (entity instanceof BaseUser)) {
-	        			BaseEntity old = oldies.get(entity.getId());	        			
-       					List<String> fields = CrudUtil.getUpdatedFields(old, entity);
-       					String updateStmt = buildUpdateStatement(entity, fields);
-	        			SynchronizableInterceptor.saveLog(entity, ChangeLog.UPDATE, 
-	        					StringUtils.join(fields, ","), updateStmt);
-	        		}
-             	}
-        	}
-        } catch (Throwable e) {
-    		_log.error(e,e);
-    	}         
-		super.postFlush(iterator);
-	}
-
-	/**
-	 * Builds the insert statement for sqlLite.
-	 * @return
-	 */
-	public String buildInsertStatement(BaseEntity obj) {
-		StringBuilder sql = new StringBuilder("insert into ");
-		StringBuilder columns = new StringBuilder("(");
-		StringBuilder values = new StringBuilder("(");
-		
-		List<String> fields = CacheUtil.getPersistentFields(obj);
-		Map<String, String> columnFields = CacheUtil.getColumnNames(obj);
-		
-		int count = 0;
-		for (String field: fields) {
-			Object ret = CrudUtil.retrieveNullableObjectValue(obj, field);
-			String column = columnFields.get(field);
-			String n = normalizeValue(ret);
-			if (n.trim().length() > 0) {
-				if (count++ > 0) {
-					columns.append(",");
-					values.append(",");
+		String dbName = null;
+		try {
+			// we may now delete the parent
+			synchronized (deletes) {
+				for (BaseEntity entity : deletes) {
+					if (isEntitySynchronizable(entity)) {
+						String deleteStmt = SyncUtil.buildDeleteStatement(entity);
+						this.saveLog(entity, ChangeLog.DELETE, "", deleteStmt,
+								null);
+	        			if (StringUtil.isEmpty(dbName))
+	        				dbName = entity.getDbName();	        			
+					}
 				}
-				columns.append(column);
-				values.append(n);
+			}
+			
+			// insert the parent first
+			synchronized (inserts) {
+				for (BaseEntity entity : inserts) {
+					if (isEntitySynchronizable(entity)) { 
+	        			Method m = CacheUtil.getInsertMethod(entity.getClass());
+	        			if (m==null) {
+	        				String[] insertStmt = SyncUtil.buildInsertStatement(entity); 
+	        				this.saveLog(entity, ChangeLog.INSERT, "", insertStmt[0], insertStmt[1]);
+	        			} else {
+	        				List<String[]> stmts = (List<String[]>) m.invoke(entity);
+	        				for (String[] stmt:stmts) 
+	        					this.saveLog(entity, ChangeLog.INSERT, "", stmt[0], stmt[1]);	        				
+	        			}
+	        			if (StringUtil.isEmpty(dbName))
+	        				dbName = entity.getDbName();
+					}
+				}
+			}
+			
+			// then insert child records
+			synchronized (insertCollection) {
+				for (PersistentBag collection:insertCollection) {
+					if (collection.size() > 0) {
+						BaseEntity owner = (BaseEntity) collection.getOwner();
+						JoinTable join = CacheUtil.getJoinTableFields(owner, collection.get(0).getClass());
+						if (join != null) {
+							StringBuffer statementBuffer = new StringBuffer();
+							statementBuffer.append("insert into ")
+									.append(join.getTableName())
+									.append(" (").append(join.getColumn1()).append(",")
+									.append(join.getColumn2()).append(") VALUES (?,?)");
+							String stmt = statementBuffer.toString();
+							for (Object obj:collection) {
+								BaseEntity entity = (BaseEntity) obj;
+								this.saveLog(owner, ChangeLog.INSERT, "",
+										stmt, "["+owner.getId()+","+entity.getId()+"]");							
+							}							
+						}
+					}
+				}
+			}
+			
+			synchronized (updates) {
+				for (BaseEntity entity : updates) {
+					if (isEntitySynchronizable(entity)) {
+	
+						BaseEntity old = oldies.get(entity.getId());
+						EntityManager em = DatabaseUtil.getEntityManager();
+	
+						try {
+							old = em.find(old.getClass(), old.getId());
+						} catch (Exception e) {
+	
+						}
+	
+						List<String> fields = CrudUtil.getUpdatedFields(old,
+								entity);
+						if(!fields.contains("active")){
+							fields.add("active");
+						}
+						
+						String[] updateStmt = SyncUtil.buildUpdateStatement(entity, fields);
+						this.saveLog(entity, ChangeLog.UPDATE,
+								StringUtils.join(fields, ","), updateStmt[0], updateStmt[1]);
+	        			if (StringUtil.isEmpty(dbName))
+	        				dbName = entity.getDbName();        			
+					}
+				}
+			}
+			
+			synchronized (updateCollection) {
+				for (PersistentBag collection:updateCollection) {
+					if (collection.size() > 0) {
+						BaseEntity owner = (BaseEntity) collection.getOwner();
+						JoinTable join = CacheUtil.getJoinTableFields(owner, collection.get(0).getClass());
+						if (join!=null) {
+							// delete old record
+							this.saveLog(owner, ChangeLog.DELETE, "",
+									"delete from " + join.getTableName() + " where " + join.getColumn1() + " = ?",
+									"["+owner.getId()+"]");							
+							// insert the new
+							StringBuffer statementBuffer = new StringBuffer();
+							statementBuffer.append("insert into ")
+									.append(join.getTableName())
+									.append(" (").append(join.getColumn1()).append(",")
+									.append(join.getColumn2()).append(") VALUES (?,?)");
+							String stmt = statementBuffer.toString();
+							for (Object obj:collection) {
+								BaseEntity entity = (BaseEntity) obj;
+								this.saveLog(owner, ChangeLog.INSERT, "",
+										stmt, "["+owner.getId()+","+entity.getId()+"]");							
+							}													
+						}
+					}
+				}
+			}
+			// should we record auditLog from superclass?
+			if (!disableAuditLog)
+				super.postFlush(iterator);
+			
+		} catch (Throwable e) {
+			_log.error(e, e);
+		} finally {
+			synchronized (inserts) {
+	            inserts.clear(); 
+			} 
+	    	synchronized (insertCollection) {
+	            insertCollection.clear();
+			}
+			synchronized (updates) {
+	            updates.clear();
+			}
+	    	synchronized (updateCollection) {
+	    		updateCollection.clear();
+			}
+			synchronized (deletes) {
+	            deletes.clear();
+			}
+	    	synchronized (oldies) {
+	            oldies.clear();
 			}
 		}
-		columns.append(")");
-		values.append(")");
-		String tableName = NamingUtil.toSQLName(obj.getClass().getSimpleName());
-		sql.append(tableName)
-		   .append(" ").append(columns)
-		   .append(" values ").append(values);
-		return sql.toString();
-	}
-	
-	/**
-	 * Builds the insert statement for sqlLite.
-	 * @return
-	 */
-	public String buildUpdateStatement(BaseEntity obj, List<String> fields) {
-		String tableName = NamingUtil.toSQLName(obj.getClass().getSimpleName());
-		
-		Map<String, String> columns = CacheUtil.getColumnNames(obj);
-		
-		StringBuilder sql = new StringBuilder("update ");
-		sql.append(tableName)
-		   .append(" set ");		
-		
-		int count = 0;
-		for (String field:fields) {
-			String columnName = columns.get(field);
-			Object ret = CrudUtil.retrieveNullableObjectValue(obj, field);
-			String n = normalizeValue(ret);
-			if (n.trim().length() > 0) {
-				if (count++ > 0) {
-					sql.append(",");
-				}
-				sql.append(columnName)
-				   .append("=")
-				   .append(n);
-			}
-		}
-		sql.append(" where id=")
-		   .append(obj.getId());
-		return sql.toString();
-	}
-	
-	/**
-	 * Builds the delete statement for sqlLite.
-	 * @return
-	 */
-	public String buildDeleteStatement(BaseEntity obj) {
-		String tableName = NamingUtil.toSQLName(obj.getClass().getSimpleName());
-		StringBuilder sql = new StringBuilder("delete from ");
-		sql.append(tableName).append(" where id=").append(obj.getId());
-		return sql.toString();
 	}
 	
 	/**
 	 * Saves the change log into the database.
+	 * 
 	 * @param shortMessage
 	 * @param message
 	 * @param entity
 	 */
-	public static void saveLog(BaseEntity entity, int action, String updateFields, String sqlCommand) { 
-    	EntityManager em = DatabaseUtil.getEntityManager();    	
+	public void saveLog(BaseEntity entity, int action, String updateFields,
+			String sqlCommand, String param) {
+		
+		JdbcTemplate jTemplate = connectDb(entity.getDbName());
+		
 		try {
-			em.getTransaction().begin();
-			ChangeLog cl = new ChangeLog(entity.getId(), entity.getClass(), action, updateFields, sqlCommand);			
-			em.persist(cl);
-			em.flush(); 
-			em.getTransaction().commit();
+			String dateStr = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
+					.format(new Date());
+			
+			String changeLogSql = "INSERT INTO change_log" + 
+					" (`CREATEDATE`, "
+					+ " `VERSION`, " 
+					+ " `ACTION`, " 
+					+ " `ENTITY_CLASS`, "
+					+ " `ENTITY_ID`, " 
+					+ " `SQL_COMMAND`,  "
+					+ " `PARAMS`, "
+					+ " `UPDATE_FIELDS`"
+					+ ") " 
+					+ " VALUES (?,?,?,?,?,?,?,?); ";
+			
+			Object[] params = new Object[] {
+					dateStr, 
+					0, 
+					action, 
+					entity.getClass().getName(), 
+					(entity.getId() == null)?0:entity.getId(), 
+					sqlCommand, 
+					param, 
+					updateFields 
+			};
+			
+			int[] types = new int[] {
+					Types.VARCHAR,
+					Types.BIGINT,
+					Types.INTEGER,
+					Types.VARCHAR,
+					Types.BIGINT,
+					Types.BLOB,
+					Types.BLOB,
+					Types.VARCHAR
+			};
+			
+			jTemplate.update(changeLogSql, params, types);
 		} catch (Exception ex) {
-			_log.error("Failed to save change log on ["+entity.getClass().getSimpleName()+"]", ex);
-		} finally {
-			if(em != null && em.isOpen()) {
-				em.close(); 
-			}
+			_log.error("Failed to save change log on ["
+					+ entity.getClass().getSimpleName() + "]", ex);
 		}
-    }
-	
+	}
+
+	/**
+	 * @param disableAuditLog the disableAuditLog to set
+	 */
+	public static void setDisableAuditLog(boolean disableAuditLog) {
+		SynchronizableInterceptor.disableAuditLog = disableAuditLog;
+	}
+    
+	public JdbcTemplate connectDb(String schemaName){
+		//Get jdbc template
+		JdbcTemplate jTemplate = (JdbcTemplate) ApplicationContextProvider
+				.getApplicationContext().getBean("jdbcTemplate");
+		
+		if (!StringUtil.isEmpty(schemaName))
+			jTemplate.execute("USE " + schemaName);
+		
+		return jTemplate;
+	}
+
     /**
-     * Private helper that converts object into other form for 
-     * audit log comparison and display purposes.
-     * @param obj
+     * Private helper that checks if the given collection should be synchronized.
+     * @param collection
      * @return
      */
-    private static String normalizeValue(Object obj) {
-    	if (obj == null)
-    		return "";
-    	
-    	if (obj instanceof Collection) { 
-    		//ignore, we are not returning collections.
-    		return "";
-    	}
-    	
-    	// no quotes needed
-    	if (obj instanceof Long    ||
-    		obj instanceof Integer ||
-    		obj instanceof BigDecimal )
-    		return "" + obj;
-    	
-    	// convert date into string
-    	if (obj instanceof Date) {
-    		if (DateUtil.hasTime((Date) obj)) {
-    			return "'" + DateUtil.dateToString((Date) obj, "yyyy-MM-dd HH:mm:ss") + "'";
-    		} else
-    			return "'" + DateUtil.dateToString((Date) obj, "MM/dd/yy") + "'";
+    protected boolean isSynchronizable(Object collection) {
+		if (collection instanceof PersistentBag) {
+			PersistentBag entries = (PersistentBag) collection;
+			if (entries.size() > 0) {
+				BaseEntity owner = (BaseEntity) entries.getOwner();
+				Class<?> clazz = owner.getClass();
+				Class<?> clazz2 = entries.get(0).getClass();
+				if (clazz.isAnnotationPresent(Synchronizable.class) && 
+					clazz2.isAnnotationPresent(Synchronizable.class)) {
+					return true;
+				}				
+			}
 		}
-    	
-    	if (obj instanceof Boolean) {
-    		return (((Boolean) obj).booleanValue()) ? "1" : "0";
-    	}
-    	
-    	if (BaseEntity.class.isAssignableFrom(obj.getClass())) {
-    		return "" + ((BaseEntity) obj).getId();
-    	}
-    	
-    	if (obj.toString().length() > 0)
-    		return "'" + obj + "'";
-    	else
-    		return "";
+    	return false;
+    }
+    
+    /**
+     * Private helper that checks if the given fields should be synchronized.
+     * @param entity
+     * @return
+     */
+    protected boolean isEntitySynchronizable(BaseEntity entity) {
+		return (entity.getClass().isAnnotationPresent(Synchronizable.class) 
+				|| (entity instanceof SystemCodes)
+				|| (entity instanceof UserCredential)
+				|| (entity instanceof BaseUser));
     }
 }

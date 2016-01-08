@@ -21,18 +21,12 @@ package org.opentides.dao.impl;
 
 import java.util.Date;
 
-import javax.persistence.EntityManager;
-
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.log4j.Logger;
 import org.opentides.bean.AuditLog;
 import org.opentides.bean.BaseEntity;
-import org.opentides.bean.user.SessionUser;
 import org.opentides.dao.AuditLogDao;
-import org.opentides.listener.ApplicationStartupListener;
-import org.opentides.util.DatabaseUtil;
 import org.opentides.util.DateUtil;
-import org.opentides.util.SecurityUtil;
 import org.opentides.util.StringUtil;
 import org.springframework.stereotype.Repository;
 
@@ -50,35 +44,35 @@ public class AuditLogDaoImpl extends BaseEntityDaoJpaImpl<AuditLog, Long> implem
 	
 	@Override
 	public void logEvent(final String message, final BaseEntity entity, final boolean separateEm) {
-		if(separateEm) {
-			logEvent(message, entity);
-		} else {
-			Long userId = entity.getAuditUserId();
-			String username = entity.getAuditUsername();
-			
-			if (ApplicationStartupListener.isApplicationStarted()) {
-				if (userId==null) {
-					_log.error("No userId specified for audit logging on object ["+entity.getClass().getName()
-							+ "] for message ["+message+"]. Retrieving user from interceptor.");
-					final SessionUser user = SecurityUtil.getSessionUser();
-					userId = user.getId();
-					username = user.getUsername();
-				} 
-			} else {
-				userId = new Long(0);
-				username = "System Evolve";
-			}
-			
-			final AuditLog record = 
-		            new AuditLog(
-		            			message, 
-		            			entity.getId(), 
-		            			entity.getClass(), 
-		                        entity.getReference(),
-		                        userId,
-		                        username);
-			saveEntityModel(record);
-		}
+//		if(separateEm) {
+//			logEvent(message, entity);
+//		} else {
+//			Long userId = entity.getAuditUserId();
+//			String username = entity.getAuditUsername();
+//			
+//			if (ApplicationStartupListener.isApplicationStarted()) {
+//				if (userId==null) {
+//					_log.error("No userId specified for audit logging on object ["+entity.getClass().getName()
+//							+ "] for message ["+message+"]. Retrieving user from interceptor.");
+//					final SessionUser user = SecurityUtil.getSessionUser();
+//					userId = user.getId();
+//					username = user.getUsername();
+//				} 
+//			} else {
+//				userId = new Long(0);
+//				username = "System Evolve";
+//			}
+//			
+//			final AuditLog record = 
+//		            new AuditLog(
+//		            			message, 
+//		            			entity.getId(), 
+//		            			entity.getClass(), 
+//		                        entity.getReference(),
+//		                        userId,
+//		                        username);
+//			saveEntityModel(record);
+//		}
 	}
 	
 	/**
@@ -88,41 +82,41 @@ public class AuditLogDaoImpl extends BaseEntityDaoJpaImpl<AuditLog, Long> implem
 	 * @param entity
 	 */
 	public static void logEvent(final String message, final BaseEntity entity) { 		
-		Long userId = entity.getAuditUserId();
-		String username = entity.getAuditUsername();
-		
-		final SessionUser user = SecurityUtil.getSessionUser();
-		if (ApplicationStartupListener.isApplicationStarted() && user != null) {
-			if (userId==null) {
-				_log.error("No userId specified for audit logging on object ["+entity.getClass().getName()
-						+ "] for message ["+message+"]. Retrieving user from interceptor.");
-				userId = user.getId();
-				username = user.getUsername();
-			} 
-		} else {
-			userId = new Long(0);
-			username = "System Evolve";
-		}
-		
-    	final EntityManager em = DatabaseUtil.getEntityManager();
-		try {
-			em.getTransaction().begin();
-		     final AuditLog record = 
-	            new AuditLog(
-	            			message, 
-	            			entity.getId(), 
-	            			entity.getClass(), 
-	                        entity.getReference(),
-	                        userId,
-	                        username); 
-			em.persist(record);
-			em.flush(); 
-			em.getTransaction().commit();
-		} finally {
-			if(em != null && em.isOpen()) {
-				em.close(); 
-			}
-		}
+//		Long userId = entity.getAuditUserId();
+//		String username = entity.getAuditUsername();
+//		
+//		final SessionUser user = SecurityUtil.getSessionUser();
+//		if (ApplicationStartupListener.isApplicationStarted() && user != null) {
+//			if (userId==null) {
+//				_log.error("No userId specified for audit logging on object ["+entity.getClass().getName()
+//						+ "] for message ["+message+"]. Retrieving user from interceptor.");
+//				userId = user.getId();
+//				username = user.getUsername();
+//			} 
+//		} else {
+//			userId = new Long(0);
+//			username = "System Evolve";
+//		}
+//		
+//    	final EntityManager em = DatabaseUtil.getEntityManager();
+//		try {
+//			em.getTransaction().begin();
+//		     final AuditLog record = 
+//	            new AuditLog(
+//	            			message, 
+//	            			entity.getId(), 
+//	            			entity.getClass(), 
+//	                        entity.getReference(),
+//	                        userId,
+//	                        username); 
+//			em.persist(record);
+//			em.flush(); 
+//			em.getTransaction().commit();
+//		} finally {
+//			if(em != null && em.isOpen()) {
+//				em.close(); 
+//			}
+//		}
     }
 	
 	

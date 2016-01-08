@@ -22,6 +22,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -43,8 +44,10 @@ import org.opentides.annotation.FormBind;
 import org.opentides.annotation.FormBind.Load;
 import org.opentides.annotation.PrimaryField;
 import org.opentides.annotation.SearchableFields;
+import org.opentides.annotation.SynchronizableFields;
 import org.opentides.bean.AuditableField;
 import org.opentides.bean.BaseEntity;
+import org.opentides.bean.JoinTable;
 
 /**
  * Helper class to keep a cache of reusable attributes.
@@ -66,9 +69,13 @@ public class CacheUtil {
 
 	public static final Map<String, List<String>> persistentFields = new ConcurrentHashMap<String, List<String>>();
 
-	public static final Map<String, Map<String, String>> columnNames = new ConcurrentHashMap<String, Map<String, String>>();
+	public static final Map<Class<?>, List<String>> synchronizeFields = new ConcurrentHashMap<Class<?>, List<String>>();
 
 	public static final Map<Class<?>, List<String>> searchableFields = new ConcurrentHashMap<Class<?>, List<String>>();
+	
+	public static final Map<String, JoinTable> joinTableFields = new ConcurrentHashMap<String, JoinTable>();
+	
+	public static final Map<String, Map<String, String>> columnNames = new ConcurrentHashMap<String, Map<String, String>>();
 
 	private static final Map<Class<?>, Method> formBindNewMethods = new ConcurrentHashMap<Class<?>, Method>();
 
@@ -153,10 +160,7 @@ public class CacheUtil {
 				List<String> exclude = Arrays
 						.asList(annotation.excludeFields());
 				for (Field field : fields) {
-					if ((!Modifier.isTransient(field.getModifiers()))
-							&& (!Modifier.isVolatile(field.getModifiers()))
-							&& (!Modifier.isStatic(field.getModifiers()))
-							&& (!field.isAnnotationPresent(Transient.class))
+					if (CacheUtil.isPersistent(field)
 							&& (!exclude.contains(field.getName()))
 							&& (!excludeFields.contains(field.getName()))) {
 						auditableFields
@@ -189,10 +193,7 @@ public class CacheUtil {
 		AuditableField ret = primaryField.get(clazz);
 		if (ret == null) {
 			// loop all fields
-			final List<Field> fields = CrudUtil.getAllFields(clazz, true);// do
-																			// not
-																			// include
-																			// parentFields
+			final List<Field> fields = CrudUtil.getAllFields(clazz, true);
 			AuditableField pf = null;
 			for (Field field : fields) {
 				if (field.isAnnotationPresent(PrimaryField.class)) {
@@ -208,10 +209,7 @@ public class CacheUtil {
 			}
 
 			// loop all methods
-			final List<Method> methods = CrudUtil.getAllMethods(clazz, true);// do
-																				// not
-																				// include
-																				// parentFields
+			final List<Method> methods = CrudUtil.getAllMethods(clazz, true);
 			for (Method method : methods) {
 				if (method.isAnnotationPresent(PrimaryField.class)) {
 					PrimaryField annot = method
@@ -268,16 +266,14 @@ public class CacheUtil {
 	 * @return
 	 */
 	public static List<String> getPersistentFields(BaseEntity obj, Class<?> clazz, boolean includeParent) {
+		if (clazz == null) clazz = obj.getClass();
 		String clazzCode = clazz.toString() + ";p=" + includeParent;
 		List<String> ret = persistentFields.get(clazzCode);
 		if (ret == null) {
 			List<String> persistents = new ArrayList<String>();
 			final List<Field> fields = CrudUtil.getAllFields(clazz, includeParent);
 			for (Field field : fields) {
-				if ((!Modifier.isTransient(field.getModifiers()))
-						&& (!Modifier.isVolatile(field.getModifiers()))
-						&& (!Modifier.isStatic(field.getModifiers()))
-						&& (!field.isAnnotationPresent(Transient.class))) {
+				if (CacheUtil.isPersistent(field)) {
 					persistents.add(field.getName());
 				}
 			}
@@ -324,16 +320,14 @@ public class CacheUtil {
 	 * @return
 	 */
 	public static Map<String, String> getColumnNames(BaseEntity obj, Class<?> clazz, boolean includeParent) {
+		if (clazz==null) clazz = obj.getClass();
 		String clazzCode = clazz.toString() + ";p=" + includeParent;
 		Map<String, String> ret = columnNames.get(clazzCode);
 		if (ret == null) {
 			Map<String, String> columns = new HashMap<String, String>();
 			final List<Field> fields = CrudUtil.getAllFields(clazz, includeParent);
 			for (Field field : fields) {
-				if ((!Modifier.isTransient(field.getModifiers()))
-						&& (!Modifier.isVolatile(field.getModifiers()))
-						&& (!Modifier.isStatic(field.getModifiers()))
-						&& (!field.isAnnotationPresent(Transient.class))) {
+				if (CacheUtil.isPersistent(field)) {
 					Annotation annotation = field.getAnnotation(Column.class);
 					if(annotation == null){
 						annotation  = field.getAnnotation(JoinColumn.class);
@@ -343,7 +337,6 @@ public class CacheUtil {
 							String name = (String) annotation.annotationType()
 									.getMethod("name").invoke(annotation);
 							columns.put(field.getName(), name);
-							
 						} catch (Exception e) {
 							_log.warn(
 									"Unable to execute annotated method @Column of "
@@ -425,6 +418,131 @@ public class CacheUtil {
 			}
 			searchableFields.put(obj.getClass(), fields);
 			ret = searchableFields.get(obj.getClass());
+		}
+		return ret;
+	}
+	
+	/**
+	 * Retrieves synchronizable fields using getSynchronizableFields method, if
+	 * available. Otherwise, returns the list of field names that are persisted
+	 * in database.
+	 * 
+	 * @param obj
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public static List<String> getSynchronizableFields(BaseEntity obj) {
+		return getSynchronizableFields(obj, obj.getClass());
+	}
+	
+	/**
+	 * Retrieves synchronizable fields using getSynchronizableFields method, if
+	 * available. Otherwise, returns the list of field names that are persisted
+	 * in database.
+	 * 
+	 * @param obj
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public static List<String> getSynchronizableFields(BaseEntity obj, Class<?> clazz) {
+		if (clazz==null) clazz = obj.getClass();
+		List<String> ret = synchronizeFields.get(clazz);
+		if (ret == null) {
+			// check if method annotated with synchronizableFields is available
+			List<String> fields = null;
+			for (Method m : clazz.getDeclaredMethods()) {
+				if (m.isAnnotationPresent(SynchronizableFields.class)) {
+					try {
+						fields = (List<String>) m.invoke(obj);
+					} catch (Exception e) {
+						_log.warn(
+								"Unable to execute annotated method @SynchronizableFields of "
+										+ clazz.getSimpleName(), e);
+					}
+					break;
+				}
+			}
+			if (fields == null) {
+				fields = CacheUtil.getPersistentFields(obj, clazz);
+			}
+			if (_log.isDebugEnabled()) {
+				_log.debug(clazz.getSimpleName()
+						+ " contains the following synchronizable fields");
+				for (String field : fields) {
+					_log.debug(field);
+				}
+			}
+			synchronizeFields.put(clazz, fields);
+			ret = synchronizeFields.get(clazz);
+		}
+		return ret;
+	}
+	
+	/**
+	 * Retrieves list of jointable fields, if available.
+	 * 
+	 * @param obj
+	 * @return
+	 */
+	public static JoinTable getJoinTableFields(BaseEntity owner, Class<?> collection) {
+		String code = owner.getClass().toString() + ":" + collection.toString();
+		JoinTable ret = joinTableFields.get(code);
+		if (ret == null) {
+			// check if method annotated with JoinTable is available
+			JoinTable join = null;
+			final List<Field> fields = CrudUtil.getAllFields(owner.getClass());
+			for (Field field : fields) {
+		        if (field.getGenericType() instanceof ParameterizedType) {
+		        	Class<?> fieldClazz = (Class<?>) ((ParameterizedType) field.getGenericType()).getActualTypeArguments()[0];
+		        	if (fieldClazz.equals(collection)) {
+						String tableName = "";
+						String column1 = "";
+						String column2 = "";
+						Annotation annotation = field.getAnnotation(javax.persistence.JoinTable.class);
+						if (annotation != null) {
+							try {
+								tableName = (String) annotation.annotationType()
+										.getMethod("name").invoke(annotation);
+								
+								JoinColumn[] joinColumns = (JoinColumn[]) annotation
+										.annotationType().getMethod("joinColumns")
+										.invoke(annotation);
+								
+								JoinColumn[] inverseJoinColumn = (JoinColumn[]) annotation
+										.annotationType()
+										.getMethod("inverseJoinColumns")
+										.invoke(annotation);
+								
+								if (joinColumns != null && joinColumns.length > 0) {
+									column1 = joinColumns[0].name();
+								}
+
+								if (inverseJoinColumn != null
+										&& inverseJoinColumn.length > 0) {
+									column2 = inverseJoinColumn[0].name();
+								}
+								
+								if (!StringUtil.isEmpty(tableName) && 
+									!StringUtil.isEmpty(column1) &&
+									!StringUtil.isEmpty(column2)) {
+									 join = new JoinTable(tableName, column1, column2);
+									 break;
+								}
+							} catch (Exception e) {
+								_log.warn(
+										"Unable to retrieve 'name' of field with @JoinTable of "
+												+ owner.getClass().getSimpleName(), e);
+							}
+						}
+		        	}
+		        }
+			}
+			if (join!=null) {
+				joinTableFields.put(code, join);
+				ret = joinTableFields.get(code);				
+			} else {
+				_log.error("Unable to retrieve @JoinTable settings of " + collection.getSimpleName() +" in class " + owner.getClass().getSimpleName());
+			}
 		}
 		return ret;
 	}
@@ -538,5 +656,19 @@ public class CacheUtil {
 			}
 		}
 		return method;
+	}
+	
+
+	/**
+	 * Private helper to check if field is persistent.
+	 * @param field
+	 * @return
+	 */
+	private static boolean isPersistent(Field field) {
+		return (!Modifier.isTransient(field.getModifiers()))
+			&& (!Modifier.isVolatile(field.getModifiers()))
+			&& (!Modifier.isStatic(field.getModifiers()))
+			&& (!Modifier.isFinal(field.getModifiers()))
+			&& (!field.isAnnotationPresent(Transient.class));
 	}
 }

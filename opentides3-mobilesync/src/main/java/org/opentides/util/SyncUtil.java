@@ -19,13 +19,17 @@ under the License.
 
 package org.opentides.util;
 
+import java.lang.annotation.Annotation;
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.Table;
+
 import org.opentides.bean.BaseEntity;
+import org.opentides.editor.Normalizer;
 
 /**
  * 
@@ -35,19 +39,26 @@ import org.opentides.bean.BaseEntity;
 public class SyncUtil {
 
 	/**
+	 * List of normalizer to be executed when converting values to SQL.
+	 * Use setNormalizer method to add to the list.
+	 */
+	private static List<Normalizer> normalizer;
+	
+	/**
 	 * Overloaded method to build insert statement, including parent fields.
 	 * @param obj
 	 * @return
 	 */
 	public static String[] buildInsertStatement(BaseEntity obj) {
-		return buildInsertStatement(obj, null, null);
+		return buildInsertStatement(obj, null);
 	}
 
 	/**
 	 * Builds the insert statement for sqlLite.
 	 * @return
 	 */
-	public static String[] buildInsertStatement(BaseEntity obj, String tableName, Class<?> clazz) {
+	public static String[] buildInsertStatement(BaseEntity obj, Class<?> clazz) {
+		if (clazz == null) clazz = obj.getClass();
 		StringBuilder sql = new StringBuilder("insert into ");
 		StringBuilder columns = new StringBuilder("(");
 		StringBuilder values = new StringBuilder("(");
@@ -57,28 +68,22 @@ public class SyncUtil {
 		List<String> fields = null;
 		Map<String, String> columnFields = null;
 		
-		if (clazz == null) {
-			clazz = obj.getClass();
-			fields = CacheUtil.getPersistentFields(obj);
-			if (!fields.contains("id"))
-				fields.add("id");
-			columnFields = CacheUtil.getColumnNames(obj);
-		} else {
-			fields = CacheUtil.getPersistentFields(obj, clazz);
-			if (!fields.contains("id"))
-				fields.add("id");
-			columnFields = CacheUtil.getColumnNames(obj, clazz);			
-		}
+		fields = CacheUtil.getSynchronizableFields(obj, clazz);
+		columnFields = CacheUtil.getColumnNames(obj, clazz);			
+		if (!fields.contains("id"))
+			fields.add("id");
 		int count = 0;
 		
 		for (String field : fields) {
+			String[] pField = StringUtil.splitSafe(field, "\\.");
 			Object ret = CrudUtil.retrieveNullableObjectValue(obj, field);
-			String column = columnFields.get(field);
+			String column = columnFields.get(pField[0]);
+
 			if (column != null) {
-				String[] cols = column.split(",");
+				String[] cols = StringUtil.splitSafe(column, ",");
 				if (cols != null && cols.length > 0) {
 					for (int i = 0; i < cols.length; i++) {
-						String n = normalizeValue(ret);
+						String n = normalizeValue(ret, cols[i]);
 						if (n.trim().length() > 0) {
 							if (count++ > 0) {
 								columns.append(",");
@@ -98,9 +103,8 @@ public class SyncUtil {
 		columns.append(")");
 		values.append(")");
 		
-		if (StringUtil.isEmpty(tableName))
-			tableName = NamingUtil.toSQLName(obj.getClass().getSimpleName());
-
+		String tableName = SyncUtil.getTableName(obj);
+		
 		sql.append(tableName).append(" ").append(columns).append(" values ")
 				.append(values);
 		insertQuery[0] = sql.toString();
@@ -110,47 +114,52 @@ public class SyncUtil {
 
 		return insertQuery;
 	}
-	
-	/**
-	 * Overloaded method to build update statement, including parent fields.
-	 * @param obj
-	 * @return
-	 */	
-	public static String buildUpdateStatement(BaseEntity obj, List<String> fields) {
-		return SyncUtil.buildUpdateStatement(obj, fields, null, true);
-	}
-	
+
 	/**
 	 * Builds the insert statement for sqlLite.
 	 * @return
 	 */
-	public static String buildUpdateStatement(BaseEntity obj, List<String> fields, String tableName, boolean includeParent) {
-		if (tableName == null)
-			tableName = NamingUtil.toSQLName(obj.getClass().getSimpleName());
+	public static String[] buildUpdateStatement(BaseEntity obj, List<String> fields) {
+		String[] updateQuery = new String[2];
 		
+		String tableName = SyncUtil.getTableName(obj);
+
 		Map<String, String> columns = CacheUtil.getColumnNames(obj);
-		
+
+		StringBuilder params = new StringBuilder("[");
 		StringBuilder sql = new StringBuilder("update ");
-		sql.append(tableName)
-		   .append(" set ");		
-		
+		sql.append(tableName).append(" set ");
+
 		int count = 0;
-		for (String field:fields) {
-			String columnName = columns.get(field);
+		for (String field : fields) {
+			String[] pField = StringUtil.splitSafe(field, "\\.");
+			String column = columns.get(pField[0]);
 			Object ret = CrudUtil.retrieveNullableObjectValue(obj, field);
-			String n = normalizeValue(ret);
-			if (n.trim().length() > 0) {
-				if (count++ > 0) {
-					sql.append(",");
+			if (column != null) {
+				String[] cols = StringUtil.splitSafe(column, ",");
+				if (cols != null && cols.length > 0) {
+					for (int i = 0; i < cols.length; i++) {
+						String n = normalizeValue(ret, cols[i]);
+						if (n.trim().length() > 0) {
+							if (count++ > 0) {
+								sql.append(",");
+								params.append(",");
+							}
+							sql.append(cols[i]).append("=?");
+							params.append(n);
+						}
+					}
 				}
-				sql.append(columnName)
-				   .append("=")
-				   .append(n);
 			}
+
 		}
-		sql.append(" where id=")
-		   .append(obj.getId());
-		return sql.toString();
+		sql.append(" where id=?");
+		if (count > 0) params.append(",");
+		params.append(obj.getId());
+		params.append("]");
+		updateQuery[0] = sql.toString();
+		updateQuery[1] = params.toString();
+		return updateQuery;
 	}
 	
 	/**
@@ -158,20 +167,28 @@ public class SyncUtil {
 	 * @return
 	 */
 	public static String buildDeleteStatement(BaseEntity obj) {
-		String tableName = NamingUtil.toSQLName(obj.getClass().getSimpleName());
+		String tableName = SyncUtil.getTableName(obj);
 		StringBuilder sql = new StringBuilder("delete from ");
 		sql.append(tableName).append(" where id=").append(obj.getId());
 		return sql.toString();
 	}
 	
 	/**
-	 * Override this method for additional transformation of values.
-	 * 
+	 * Returns the table name of the given entity by checking the
+	 * Table annotation or by sql naming convention based on className. 
 	 * @param obj
-	 * @return
 	 */
-	public static String doNormalizeValue(Object obj) {
-		return "";
+	public static String getTableName(BaseEntity obj) {
+		Annotation annotation = obj.getClass().getAnnotation(Table.class);
+		String tableName = NamingUtil.toSQLName(obj.getClass().getSimpleName());
+		try {
+			if (annotation != null) {
+				tableName = (String) annotation.annotationType()
+						.getMethod("name").invoke(annotation);
+			}
+		} catch (Exception e) {
+		}
+		return tableName;
 	}
 	
     /**
@@ -180,7 +197,7 @@ public class SyncUtil {
      * @param obj
      * @return
      */
-	private static String normalizeValue(Object obj) {
+	private static String normalizeValue(Object obj, String column) {
 		if (obj == null)
 			return "";
 
@@ -188,22 +205,18 @@ public class SyncUtil {
 			// ignore, we are not returning collections.
 			return "";
 		}
-
-		String value = SyncUtil.doNormalizeValue(obj);
-		if (!StringUtil.isEmpty(value)) {
-			return value;
+		
+		if (normalizer != null && normalizer.size() > 0) {
+			for (Normalizer n:normalizer) {
+				if (n.handles(obj)) {
+					String value = n.normalize(obj, column);
+					if (!StringUtil.isEmpty(value)) {
+						return value;
+					}				
+				}
+			}
 		}
 		
-//		if (obj instanceof Money) {
-//			Money money = (Money) obj;
-//
-//			if (column.toLowerCase().contains("currency")) {
-//				return "'" + money.getCurrencyUnit().getCurrencyCode() + "'";
-//			} else {
-//				return "" + money.getAmount();
-//			}
-//		}
-
 		// no quotes needed
 		if (obj instanceof Long || obj instanceof Integer
 				|| obj instanceof BigDecimal || obj instanceof Double)
@@ -219,11 +232,6 @@ public class SyncUtil {
 				return "'" + DateUtil.dateToString((Date) obj, "yyyy-MM-dd")
 						+ "'";
 		}
-
-//		if (obj instanceof DateTime) {
-//			DateTime dateTime = (DateTime) obj;
-//			return "'" + dateTime.toString("yyyy-MM-dd HH:mm:ss") + "'";
-//		}
 
 		if (obj instanceof Boolean) {
 			return (((Boolean) obj).booleanValue()) ? "1" : "0";
@@ -242,4 +250,12 @@ public class SyncUtil {
 			return "";
 		}
 	}
+
+	/**
+	 * @param normalizer the normalizer to set
+	 */
+	public void setSyncNormalizerList(List<Normalizer> normalizer) {
+		SyncUtil.normalizer = normalizer;
+	}
+	
 }

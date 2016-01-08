@@ -124,7 +124,7 @@ public class CrudUtil {
 	 */
 	public static List<String> getUpdatedFields(final BaseEntity oldObject,
 			final BaseEntity newObject) {
-		final List<String> fields = CacheUtil.getPersistentFields(oldObject);
+		final List<String> fields = CacheUtil.getSynchronizableFields(oldObject);
 		final List<String> updatedFields = new ArrayList<String>();
 		for (final String field : fields) {
 			Object oldValue = retrieveNullableObjectValue(oldObject, field);
