@@ -24,8 +24,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
-import junit.framework.Assert;
-
 public class StringUtil {
     
 	private static String zeros = "0000000000";
