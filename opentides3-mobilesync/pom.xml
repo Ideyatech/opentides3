@@ -7,6 +7,7 @@
 
 	<properties>
 		<org.opentides-version>3.1.0</org.opentides-version>
+		<org.atmosphere-version>2.2.3</org.atmosphere-version>
 	</properties>
 
 	<dependencies>
@@ -48,6 +49,13 @@
 			<artifactId>gson</artifactId>
 			<version>1.7.1</version>
   		</dependency>
+  		
+  		<dependency>
+			<groupId>org.atmosphere</groupId>
+			<artifactId>atmosphere-runtime</artifactId>
+			<version>${org.atmosphere-version}</version>
+		</dependency>
+  		
 
 		<!-- Test -->
 		<dependency>

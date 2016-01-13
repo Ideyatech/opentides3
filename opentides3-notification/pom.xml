@@ -6,7 +6,7 @@
 	<packaging>jar</packaging>
 
 	<properties>
-		<org.atmosphere-version>2.3.4</org.atmosphere-version>
+		<org.atmosphere-version>2.2.3</org.atmosphere-version>
 	</properties>
 
 	<dependencies>
