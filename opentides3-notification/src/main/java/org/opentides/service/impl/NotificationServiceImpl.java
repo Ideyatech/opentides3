@@ -25,11 +25,15 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.servlet.ServletContext;
 import javax.transaction.Transactional;
 
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.log4j.Logger;
 import org.apache.velocity.app.VelocityEngine;
+import org.atmosphere.cpr.Broadcaster;
+import org.atmosphere.cpr.BroadcasterFactory;
+import org.atmosphere.util.ServletContextFactory;
 import org.ocpsoft.prettytime.PrettyTime;
 import org.opentides.bean.BaseEntity;
 import org.opentides.bean.Event;
@@ -45,6 +49,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * @author allantan
@@ -188,22 +195,23 @@ public class NotificationServiceImpl extends BaseCrudServiceImpl<Notification>
 	public void notify(String userId, int timezoneDiff) {
 		_log.info("Trying to notify user with userId " + userId
 				+ ". Retrieving Broadcaster...");
-//		Broadcaster b = atmosphereFramework.getBroadcasterFactory().lookup(userId);
-//		ObjectMapper mapper = new ObjectMapper();
-//		if (b != null) {
-//			String jsonString;
-//			try {
-//				jsonString = mapper.writeValueAsString(buildNotification(
-//						new Long(userId), timezoneDiff, "alert"));
-////				b.broadcast(jsonString);
-//			} catch (NumberFormatException e) {
-//				_log.error("Failed to convert to JSON.", e);
-//			} catch (JsonProcessingException e) {
-//				_log.error("Failed to convert to JSON.", e);
-//			}
-//		} else {
-//			_log.warn("Broadcaster not found... Exiting...");
-//		}
+		
+    	ServletContext servletContext = ServletContextFactory.getDefault().getServletContext();
+    	BroadcasterFactory broadcasterFactory = (BroadcasterFactory) servletContext.getAttribute("org.atmosphere.cpr.BroadcasterFactory");
+    	Broadcaster b = broadcasterFactory.lookup(userId);
+		if (b != null) {
+			String jsonString;
+			try {
+	    		ObjectMapper mapper = new ObjectMapper();
+				jsonString = mapper.writeValueAsString(buildNotification(
+				new Long(userId), timezoneDiff, "alert"));
+				b.broadcast(jsonString);
+			} catch (NumberFormatException e) {
+				_log.error("Failed to convert to JSON.", e);
+			} catch (JsonProcessingException e) {
+				_log.error("Failed to convert to JSON.", e);
+			}
+		}
 	}
 
 	@Override
