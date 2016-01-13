@@ -75,6 +75,9 @@ public class TenantServiceImpl extends BaseCrudServiceImpl<Tenant> implements
 	
 	@Value("${database.mysql.bin}")
 	private String mySQLBin = "/usr/local/mysql/bin";
+	
+	@Value("${multitenant.post_create_script}")
+	private File updateSchamanameScript;
 
 	@Override
 	public String findUniqueSchemaName(final String company) {
@@ -171,10 +174,16 @@ public class TenantServiceImpl extends BaseCrudServiceImpl<Tenant> implements
 		final String createSchema = mySQLBin + "/mysqladmin " + credential + " create "+ schema;
 		final String dumpSchema = mySQLBin + "/mysqldump " +credential+" " + template.getSchema() + " > " +sqlFile.getAbsolutePath();
 		final String loadSchema = mySQLBin +"/mysql " + credential + " " + schema + " < " + sqlFile.getAbsolutePath();
+		String updateSchema = null;
+		if (updateSchamanameScript != null && updateSchamanameScript.exists()) {
+			updateSchema = mySQLBin +"/mysql " + credential + " " + schema + " < " + updateSchamanameScript.getAbsolutePath();
+		}
+		
 		try {
 			this.executeShell(createSchema, logFile);
 			this.executeShell(dumpSchema, logFile);
 			this.executeShell(loadSchema, logFile);
+			if(updateSchema != null) this.executeShell(updateSchema, logFile);
 		} catch (Exception e) {
 			_log.error("Failed to execute command for cloning tenant.",e);
 		}
