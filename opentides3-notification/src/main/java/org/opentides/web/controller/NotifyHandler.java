@@ -25,7 +25,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.atmosphere.cpr.ApplicationConfig;
 import org.atmosphere.cpr.AtmosphereResource;
 import org.atmosphere.cpr.Broadcaster;
-import org.atmosphere.cpr.BroadcasterFactory;
 import org.opentides.service.impl.NotificationService;
 import org.opentides.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
