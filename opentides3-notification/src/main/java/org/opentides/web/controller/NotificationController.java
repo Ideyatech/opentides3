@@ -35,7 +35,6 @@ import org.opentides.service.UserService;
 import org.opentides.service.impl.NotificationService;
 import org.opentides.util.DateUtil;
 import org.opentides.util.SecurityUtil;
-import org.opentides.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
