@@ -44,6 +44,7 @@ import org.opentides.bean.SystemCodes;
 import org.opentides.bean.user.BaseUser;
 import org.opentides.bean.user.UserCredential;
 import org.opentides.context.ApplicationContextProvider;
+import org.opentides.job.NotifyDevices;
 import org.opentides.util.CacheUtil;
 import org.opentides.util.CrudUtil;
 import org.opentides.util.DatabaseUtil;
@@ -192,9 +193,6 @@ public class SynchronizableInterceptor extends AuditLogInterceptor {
 	
 						List<String> fields = CrudUtil.getUpdatedFields(old,
 								entity);
-						if(!fields.contains("active")){
-							fields.add("active");
-						}
 						
 						String[] updateStmt = SyncUtil.buildUpdateStatement(entity, fields);
 						this.saveLog(entity, ChangeLog.UPDATE,
@@ -275,7 +273,7 @@ public class SynchronizableInterceptor extends AuditLogInterceptor {
 			String dateStr = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
 					.format(new Date());
 			
-			String changeLogSql = "INSERT INTO change_log" + 
+			String changeLogSql = "INSERT INTO CHANGE_LOG" + 
 					" (`CREATEDATE`, "
 					+ " `VERSION`, " 
 					+ " `ACTION`, " 
@@ -310,6 +308,7 @@ public class SynchronizableInterceptor extends AuditLogInterceptor {
 			};
 			
 			jTemplate.update(changeLogSql, params, types);
+			NotifyDevices.notifySync("/"+entity.getDbName()+"/*");
 		} catch (Exception ex) {
 			_log.error("Failed to save change log on ["
 					+ entity.getClass().getSimpleName() + "]", ex);

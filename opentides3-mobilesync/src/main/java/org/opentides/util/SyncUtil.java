@@ -28,6 +28,7 @@ import java.util.Map;
 
 import javax.persistence.Table;
 
+import org.apache.log4j.Logger;
 import org.opentides.bean.BaseEntity;
 import org.opentides.editor.Normalizer;
 
@@ -38,6 +39,8 @@ import org.opentides.editor.Normalizer;
  */
 public class SyncUtil {
 
+	private static Logger _log = Logger.getLogger(SyncUtil.class);
+	
 	/**
 	 * List of normalizer to be executed when converting values to SQL.
 	 * Use setNormalizer method to add to the list.
