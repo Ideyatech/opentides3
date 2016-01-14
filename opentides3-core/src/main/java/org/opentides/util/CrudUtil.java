@@ -175,7 +175,8 @@ public class CrudUtil {
 			oldValue = normalizeValue(oldValue);
 			newValue = normalizeValue(newValue);
 
-			if (oldValue.getClass() != newValue.getClass()) {
+			if (!oldValue.getClass().getCanonicalName().startsWith(
+					newValue.getClass().getCanonicalName()) ) {
 				_log.debug("Old object: " + oldValue);
 				_log.warn("Unable to compare [" + property.getFieldName()
 						+ "] for audit logging due to difference in datatype. "
