@@ -15,4 +15,12 @@ public interface SyncEndpointService extends BaseCrudService<SyncEndpoint> {
 	
 	public SyncEndpoint findSyncEndpointByClientCode(String clientcode);
 
+	/**
+	 * For creating new sync endpoint.
+	 * 
+	 * @param clientCode
+	 * @return
+	 */
+	public SyncEndpoint createNewEndpoint(String clientCode);
+
 }

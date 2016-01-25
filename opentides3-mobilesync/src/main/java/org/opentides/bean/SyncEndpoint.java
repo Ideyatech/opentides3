@@ -32,6 +32,9 @@ public class SyncEndpoint extends BaseEntity {
 	@Column(name="SYNC_VERSION")
 	private Long syncVersion;
 	
+	@Column(name="DEVICE_NUMBER")
+	private Long dvNum;
+	
 	/**
 	 * @return the clientCode
 	 */
@@ -72,6 +75,20 @@ public class SyncEndpoint extends BaseEntity {
 	 */
 	public void setTokenId(String tokenId) {
 		this.tokenId = tokenId;
+	}
+
+	/**
+	 * @return the dvNum
+	 */
+	public Long getDvNum() {
+		return dvNum;
+	}
+
+	/**
+	 * @param dvNum the dvNum to set
+	 */
+	public void setDvNum(Long dvNum) {
+		this.dvNum = dvNum;
 	}
 	
 }

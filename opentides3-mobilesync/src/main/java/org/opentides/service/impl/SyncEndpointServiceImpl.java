@@ -4,11 +4,13 @@
 package org.opentides.service.impl;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.opentides.bean.SyncEndpoint;
+import org.opentides.dao.SequenceDao;
 import org.opentides.service.SyncEndpointService;
+import org.opentides.util.StringUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -20,11 +22,29 @@ import org.springframework.stereotype.Service;
  @Service(value = "syncEndpointService")
 public class SyncEndpointServiceImpl extends BaseCrudServiceImpl<SyncEndpoint>
 		implements SyncEndpointService {
+	 
+	@Autowired
+    private SequenceDao sequenceDao;
 
-	 	@Override
-		public SyncEndpoint findSyncEndpointByClientCode(String clientcode){
-			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("clientcode", clientcode);
-			return getDao().findSingleResultByNamedQuery("jpql.syncendpoint.findEndpointByClientCode", map);
-		}
+ 	@Override
+	public SyncEndpoint findSyncEndpointByClientCode(String clientcode){
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("clientcode", clientcode);
+		return getDao().findSingleResultByNamedQuery("jpql.syncendpoint.findEndpointByClientCode", map);
+	}
+ 	
+
+ 	@Override
+	public SyncEndpoint createNewEndpoint(String clientCode) {
+		SyncEndpoint endpoint = new SyncEndpoint();
+		endpoint.setClientCode(clientCode);
+		endpoint.setSyncVersion(0L);
+		endpoint.setTokenId(StringUtil.generateRandomString(16));
+		Long dvNum = sequenceDao.incrementValue("DEVICE_NUMBER");
+		endpoint.setDvNum(dvNum);
+		this.save(endpoint);	
+		return endpoint;
+	}
+
+ 	
 }
