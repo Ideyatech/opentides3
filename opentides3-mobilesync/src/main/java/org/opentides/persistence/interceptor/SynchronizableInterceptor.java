@@ -167,9 +167,8 @@ public class SynchronizableInterceptor extends AuditLogInterceptor {
 	 */
 	@Override
 	public void postFlush(Iterator iterator) throws CallbackException {
-		try {
-			// we may now delete the parent
-			synchronized (deletes) {
+		synchronized (SynchronizableInterceptor.class) {
+			try {
 				for (BaseEntity entity : deletes) {
 					if (isEntitySynchronizable(entity)) {
 						String deleteStmt = SyncUtil
@@ -178,10 +177,7 @@ public class SynchronizableInterceptor extends AuditLogInterceptor {
 								null);
 					}
 				}
-			}
 
-			// insert the parent first
-			synchronized (inserts) {
 				for (BaseEntity entity : inserts) {
 					if (isEntitySynchronizable(entity)) {
 						Method m = CacheUtil.getInsertMethod(entity.getClass());
@@ -198,10 +194,7 @@ public class SynchronizableInterceptor extends AuditLogInterceptor {
 						}
 					}
 				}
-			}
-
-			// then insert child records
-			synchronized (insertCollection) {
+				
 				for (PersistentBag collection : insertCollection) {
 					if (collection.size() > 0) {
 						BaseEntity owner = (BaseEntity) collection.getOwner();
@@ -228,9 +221,7 @@ public class SynchronizableInterceptor extends AuditLogInterceptor {
 						}
 					}
 				}
-			}
-
-			synchronized (updateRecords) {
+				
 				for (ChangedRecord record:updateRecords) {
 					if (isEntitySynchronizable(record.getEntity())) {
 						BaseEntity entity = (BaseEntity) record.getEntity();
@@ -252,10 +243,8 @@ public class SynchronizableInterceptor extends AuditLogInterceptor {
 										stmt[0], stmt[1]);
 						}						
 					}
-				}
-			}
-
-			synchronized (updateCollection) {
+				}		
+				
 				for (PersistentBag collection : updateCollection) {
 					if (collection.size() > 0) {
 						BaseEntity owner = (BaseEntity) collection.getOwner();
@@ -288,33 +277,20 @@ public class SynchronizableInterceptor extends AuditLogInterceptor {
 						}
 					}
 				}
-			}
-			// should we record auditLog from superclass?
-			if (!disableAuditLog)
-				super.postFlush(iterator);
+				
+				// should we record auditLog from superclass?
+				if (!disableAuditLog)
+					super.postFlush(iterator);
 
-		} catch (Throwable e) {
-			_log.error(e, e);
-		} finally {
-			synchronized (inserts) {
+			} catch (Throwable e) {
+				_log.error(e, e);
+			} finally {
 				inserts.clear();
-			}
-			synchronized (insertCollection) {
 				insertCollection.clear();
-			}
-			synchronized (updates) {
 				updates.clear();
-			}
-			synchronized (updateRecords) {
 				updateRecords.clear();
-			}
-			synchronized (updateCollection) {
 				updateCollection.clear();
-			}
-			synchronized (deletes) {
 				deletes.clear();
-			}
-			synchronized (oldies) {
 				oldies.clear();
 			}
 		}
