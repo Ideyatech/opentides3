@@ -31,7 +31,6 @@ import org.opentides.dao.UserWidgetsDao;
 import org.opentides.service.UserService;
 import org.opentides.service.UserWidgetsService;
 import org.opentides.service.WidgetService;
-import org.opentides.util.SecurityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -54,7 +53,7 @@ public class UserWidgetsServiceImpl extends BaseCrudServiceImpl<UserWidgets> imp
 	@Override
 	public void addUserWidgets(long userId, String selectedWidgets) {
 		String[] widgetIds = selectedWidgets.split(",");
-		BaseUser user = userService.load(SecurityUtil.getSessionUser().getId());
+		BaseUser user = userService.load(userId);
 		for (String widgetId:widgetIds) {
 			
 			int[] pos = getColumnRowOfUserWidget(userId);
