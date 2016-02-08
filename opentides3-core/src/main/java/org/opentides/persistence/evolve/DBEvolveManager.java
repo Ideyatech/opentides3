@@ -58,8 +58,12 @@ public class DBEvolveManager {
 	
 	private static final Logger _log = Logger.getLogger(DBEvolveManager.class);
 
-	@Transactional
 	public void evolve() {
+		this.evolve(null);
+	}
+	
+	@Transactional
+	public void evolve(String schemaName) {
 
 		// get current db version
 		Sequence version;
@@ -71,7 +75,7 @@ public class DBEvolveManager {
 		
 		if (version==null) {
 			// initialize default admin user
-			adminEvolve.doExecute();
+			adminEvolve.doExecute(schemaName);
 		}
 
 		// skip evolve if there is nothing in the evolve list
@@ -111,7 +115,7 @@ public class DBEvolveManager {
 		for (Evolver evolve:evolveList) {
 			if (evolve.getVersion() > currVersion) {
 				// let's execute this evolve script
-				evolve.doExecute();
+				evolve.doExecute(schemaName);
 			}
 		}
 		_log.info("Database is now updated to version "+latestVersion);

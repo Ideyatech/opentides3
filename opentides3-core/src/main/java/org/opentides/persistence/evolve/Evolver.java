@@ -26,6 +26,7 @@ import javax.persistence.Query;
 
 import org.apache.log4j.Logger;
 import org.opentides.bean.Sequence;
+import org.opentides.util.StringUtil;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -67,13 +68,21 @@ public abstract class Evolver {
 		return 0;
 	}
 
+	public void doExecute() {
+		doExecute(null);
+	}
+
 	/**
 	 * Wrapper method to handle updating of version within the transaction.
 	 */
 	@SuppressWarnings("unchecked")
 	@Transactional(propagation=Propagation.REQUIRES_NEW)
-	public void doExecute() {
-		_log.info("Executing evolve version ["+this.getVersion()+"] - "+this.getDescription());
+	public void doExecute(String schemaName) {
+		_log.info("Executing evolve on version ["+this.getVersion()+"] - "+this.getDescription());
+		if (StringUtil.isEmpty(schemaName)) {
+			_log.info("Switching to schema " + schemaName);
+			em.createNativeQuery("USE " + schemaName);
+		}
 		this.execute();
 		List<Sequence> result = em.createQuery("from Sequence where key='DB_VERSION'").getResultList();
 		Sequence dbVersion = null;		
