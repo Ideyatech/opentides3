@@ -5,7 +5,6 @@ import java.util.List;
 import org.opentides.bean.SearchResults;
 import org.opentides.bean.user.BaseUser;
 import org.opentides.bean.user.PasswordReset;
-import org.opentides.bean.user.UserCredential;
 import org.opentides.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
