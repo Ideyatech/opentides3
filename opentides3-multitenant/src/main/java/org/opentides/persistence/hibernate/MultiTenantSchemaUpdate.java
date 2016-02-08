@@ -18,31 +18,36 @@
  */
 package org.opentides.persistence.hibernate;
 
+import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.Writer;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
 
-import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 import javax.transaction.Transactional;
 
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.dialect.Dialect;
 import org.hibernate.engine.jdbc.connections.internal.DatasourceConnectionProviderImpl;
-import org.hibernate.engine.jdbc.connections.spi.ConnectionProvider;
+import org.hibernate.engine.jdbc.internal.FormatStyle;
+import org.hibernate.engine.jdbc.internal.Formatter;
+import org.hibernate.tool.hbm2ddl.DatabaseMetadata;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
+import org.hibernate.tool.hbm2ddl.SchemaUpdateScript;
 import org.opentides.util.DatabaseUtil;
 import org.opentides.util.DateUtil;
 import org.opentides.util.FileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -58,13 +63,8 @@ public class MultiTenantSchemaUpdate {
 	private static final Logger _log = Logger
 			.getLogger(MultiTenantSchemaUpdate.class);
 
-	private ConnectionProvider connectionProvider;
-
 	@Autowired
 	private PersistenceScanner persistenceScanner;
-
-	@Autowired
-	private DataSource dataSource;
 
 	@Autowired
 	private MultiTenantDBEvolveManager multiTenantDBEvolveManager;
@@ -72,15 +72,11 @@ public class MultiTenantSchemaUpdate {
 	@Value("${jpa.log_ddl.directory}")
 	private String ddlLogs = "/var/log/ss_ddl/";
 
-	@Value("${jpa.script_ddl.latest}")
-	private Resource ddlScript;
-
-	@Value("${jpa.script_evolve.latest}")
-	private Resource evolveScript;
-
 	@Value("${jpa.log_ddl}")
 	private Boolean logDdl = false;
-
+	
+	private Connection defaultConnection;
+	
 	/**
 	 * Persistence name in hibernate.
 	 */
@@ -101,12 +97,31 @@ public class MultiTenantSchemaUpdate {
 	public boolean schemaEvolve(final String schema) {
 		Assert.notNull(schema);
 		_log.info("Performing schema update for schema = " + schema);
+		Connection connection = null;
+		DatasourceConnectionProviderImpl connectionProvider = null;
 		try {
-			final Connection connection = connectionProvider.getConnection();
-			connection.createStatement().execute(
+			
+			if (defaultConnection==null) {
+				final DataSource dataSource =  new DriverManagerDataSource(DatabaseUtil.getUrl(), 
+						DatabaseUtil.getUsername(), DatabaseUtil.getPassword());
+				final Map<String, String> config = new HashMap<String, String>();
+				DatasourceConnectionProviderImpl dcp = new DatasourceConnectionProviderImpl();
+				dcp.setDataSource(dataSource);
+				dcp.configure(config);
+				defaultConnection = dcp.getConnection();				
+			}
+			
+			defaultConnection.createStatement().execute(
 					"CREATE SCHEMA IF NOT EXISTS " + schema + ";");
-			connection.createStatement().execute("USE " + schema + ";");
 
+			final DataSource dataSource =  new DriverManagerDataSource("jdbc:mysql://localhost/"+schema, 
+					DatabaseUtil.getUsername(), DatabaseUtil.getPassword());
+			final Map<String, String> config = new HashMap<String, String>();
+			connectionProvider = new DatasourceConnectionProviderImpl();
+			connectionProvider.setDataSource(dataSource);
+			connectionProvider.configure(config);
+			connection = connectionProvider.getConnection();
+			
 			// Code below is specific to hibernate
 			final Configuration cfg = new Configuration();
 			for (final String clazz : DatabaseUtil.getClasses()) {
@@ -133,8 +148,9 @@ public class MultiTenantSchemaUpdate {
 					.executeQuery("SHOW TABLES LIKE 'SYSTEM_CODES'").next() == false) {
 				// new schema, let's build it
 				initializeSchema(cfg, connection, schema);
-				// evolve it
-				evolveSchema(connection, schema);
+			} else {
+				// old schema, let's evolve it
+				updateSchema(cfg, connection, schema);
 			}
 			return true;
 		} catch (final HibernateException e) {
@@ -143,128 +159,95 @@ public class MultiTenantSchemaUpdate {
 		} catch (final SQLException e) {
 			_log.error("Failed to update schema for [" + schema + "].", e);
 			return false;
+		} finally {
+			try {
+				if( connection != null ) {
+					connection.close();
+				}
+			} catch(Exception e) {
+				
+			}	
 		}
 	}
 
 	/**
-	 * This is the helper function that initializes the schema and tables.
-	 * Initialization is as follows: (1) Get the latest initialization sql
-	 * script. Execute the sql script. (2) If there is no initialization script,
-	 * use the hibernate SchemaExport.
+	 * This is the helper function that initializes the schema and tables
+	 * using hibernate SchemaExport.
 	 * 
 	 * @param tenantId
 	 */
 	@Transactional
 	private void initializeSchema(final Configuration cfg,
 			final Connection connection, final String schema) {
-		// check if there SQL file under the sslScript folder
-		boolean initialized = false;
-
-		if (ddlScript != null && ddlScript.exists()) {
-			_log.info("Initializing schema [" + schema + "] using DDL script ["
-					+ ddlScript.getFilename() + "].");
-			initialized = executeResource(connection, ddlScript);
+		_log.info("Initializing schema [" + schema
+				+ "] using SchemaExport. ");
+		final SchemaExport export = new SchemaExport(cfg, connection);
+		if (logDdl) {
+			final String dir = ddlLogs + schema;
+			final String file= dir + "/create-" 
+					+ DateUtil.convertShortDate(new Date()) + ".sql";
+			_log.info("DDL logs can be found in " + file);
+			FileUtil.createDirectory(dir);
+			export.setOutputFile(file);
+			export.setDelimiter(";");
 		}
-
-		if (!initialized) {
-			_log.info("Initializing schema [" + schema
-					+ "] using SchemaExport. ");
-			final SchemaExport export = new SchemaExport(cfg, connection);
-			if (logDdl) {
-				final String dir = ddlLogs + "/"
-						+ DateUtil.convertShortDate(new Date());
-				_log.info("DDL logs can be found in " + dir + "/schema-"
-						+ schema + ".sql");
-				FileUtil.createDirectory(dir);
-				export.setOutputFile(dir + "/schema-" + schema + ".sql");
-				export.setDelimiter(";");
-			}
-
-			export.execute(logDdl, true, false, true);
-		}
+		export.execute(logDdl, true, false, true);
 	}
-
+	
 	/**
+	 * This is the helper function that updates the schema and tables
+	 * using Hibernate SchemaUpdate.
 	 * 
-	 * @param connection
-	 * @param schema
+	 * @param tenantId
 	 */
-	private void evolveSchema(final Connection connection, final String schema) {
-		boolean evolved = false;
-		if (evolveScript != null && evolveScript.exists()) {
-			_log.info("Evolving schema [" + schema + "] using evolve script ["
-					+ evolveScript.getFilename() + "].");
-			evolved = executeResource(connection, evolveScript);
-		}
-
-		if (!evolved) {
-			_log.info("Evolving schema [" + schema + "] using DB evolve. ");
-			multiTenantDBEvolveManager.evolve(schema);
-		}
-	}
-
-	/**
-	 * 
-	 * @param connection
-	 * @param resource
-	 * @return
-	 */
-	private boolean executeResource(final Connection connection,
-			final Resource resource) {
-		InputStream inputStream = null;
-		try {
-			inputStream = resource.getInputStream();
-			final Scanner f = new Scanner(inputStream);
-			final StringBuilder stmt = new StringBuilder();
-			while (f.hasNext()) {
-				final String line = f.nextLine();
-				// ignore comment
-				if (line.startsWith("--")) {
-					continue;
-				}
-				stmt.append(" ").append(line);
-				if (line.endsWith(";")) {
-					// end of statement, execute then clear
-					connection.createStatement().execute(stmt.toString());
-					_log.info(stmt.toString());
-					stmt.setLength(0);
-				}
+	@Transactional
+	private void updateSchema(final Configuration cfg, final Connection connection, final String schema) {
+		_log.info("Updating schema [" + schema + "]. ");
+		final Dialect dialect = Dialect.getDialect( cfg.getProperties() );
+		final Formatter formatter = FormatStyle.DDL.getFormatter();
+		
+		Statement stmt = null;
+		Writer outputFileWriter = null;
+		
+		if (logDdl) {
+			final String dir = ddlLogs + schema;
+			final String file= dir + "/evolve-" 
+					+ DateUtil.convertShortDate(new Date()) + ".sql";
+			_log.info("DDL logs can be found in " + file);
+			FileUtil.createDirectory(dir);
+			try {
+				outputFileWriter = new FileWriter(file);
+			} catch (IOException e) {
+				_log.error(e,e);
 			}
-			f.close();
-			return true;
-		} catch (final SQLException e) {
-			_log.error("Failed to execute sql script for initialization", e);
-		} catch (final IOException e) {
-			_log.error("Failed to read sql script for initialization", e);
-		} finally {
-			if (inputStream != null) {
+		}
+		
+		try {			
+			DatabaseMetadata meta = new DatabaseMetadata(connection, dialect, cfg );
+			stmt = connection.createStatement();
+
+			List<SchemaUpdateScript> scripts = cfg.generateSchemaUpdateScriptList( dialect, meta );
+			for ( SchemaUpdateScript script : scripts ) {
+				String formatted = formatter.format( script.getScript() );
 				try {
-					inputStream.close();
-				} catch (final IOException e) {
+					formatted += ";";
+					stmt.executeUpdate( formatted );						
+					if ( logDdl != null ) {
+						outputFileWriter.write( formatted + "\n" );
+					}
+				} catch ( SQLException e ) {
+					_log.error("Error in schema update using statement:" + formatted, e);
 				}
 			}
+		} catch ( Exception e ) {
+			_log.error("Error in schema update.", e);
+		} finally {
+			try {
+				if( outputFileWriter != null ) {
+					outputFileWriter.close();
+				}
+			} catch(Exception e) {
+			}
 		}
-
-		return false;
-	}
-
-	/**
-	 * This is a post construct that set ups the connection provider.
-	 * 
-	 * @throws Exception
-	 */
-	@PostConstruct
-	public void afterPropertiesSet() throws Exception {
-		if (dataSource != null) {
-			final DatasourceConnectionProviderImpl ds = new DatasourceConnectionProviderImpl();
-			final Map<String, String> config = new HashMap<String, String>();
-			ds.setDataSource(dataSource);
-			ds.configure(config);
-			connectionProvider = ds;
-		}
-
-		Assert.notNull(connectionProvider, this.getClass().getSimpleName()
-				+ " does not have a datasource for the database connection."
-				+ " Please check your configuration.");
 	}
 }

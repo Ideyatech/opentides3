@@ -19,9 +19,14 @@
 
 package org.opentides.listener.command;
 
+import java.util.List;
+
 import org.apache.log4j.Logger;
+import org.opentides.bean.user.Tenant;
 import org.opentides.persistence.hibernate.MultiTenantDBEvolveManager;
 import org.opentides.persistence.hibernate.MultiTenantSchemaUpdate;
+import org.opentides.persistence.jdbc.MultitenantJdbcTemplate;
+import org.opentides.service.TenantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -46,6 +51,12 @@ public class MTSchemaUpdateCommand implements StartupCommand {
 	
 	@Autowired
 	private MultiTenantDBEvolveManager multiTenantDBEvolveManager;
+	
+	@Autowired
+	protected MultitenantJdbcTemplate jdbcTemplate;
+	
+	@Autowired
+	private TenantService tenantService;
 
 	@Override
 	public void execute() {
@@ -54,6 +65,16 @@ public class MTSchemaUpdateCommand implements StartupCommand {
 		// create the master database
 		multiTenantSchemaUpdate.schemaEvolve(defaultSchema);
 		// evolve the master database
-		multiTenantDBEvolveManager.evolve(defaultSchema);
+		multiTenantDBEvolveManager.evolve(defaultSchema);		
+		
+		List<Tenant> tenants = tenantService.findAll();		
+		for (Tenant t:tenants) {
+			_log.info("Running evolve for " + t.getSchema());
+			// now let's schema update all tenants
+			multiTenantSchemaUpdate.schemaEvolve(t.getSchema());
+			// and evolve all tenants
+			multiTenantDBEvolveManager.evolve(t.getSchema());
+		}
+				
 	}
 }

@@ -63,21 +63,7 @@ public class MultitenantUser extends BaseUser {
 		props.add("credential.enabled");
 		return props;
 	}
-//	
-//	@BuildInsertStatement
-//	public List<String[]> buildInsertStatement() {
-//		List<String[]> sqlStatements = new ArrayList<String[]>();
-//		sqlStatements.addAll(super.buildInsertStatement());
-//		String[] myStmt = new String[2];
-//		myStmt[0] = "insert into MT_USER_PROFILE(ID, TENANT_ID) values (?,?)";
-//		if (getTenant() == null)
-//			myStmt[1] =	"["+getId()+",null]";
-//		else
-//			myStmt[1] =	"["+getId()+","+getTenant().getId()+"]";
-//		sqlStatements.add(myStmt);		
-//		return sqlStatements;
-//	}
-//	
+
 	/**
 	 * @return the tenant
 	 */

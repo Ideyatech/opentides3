@@ -32,11 +32,14 @@ import org.springframework.util.Assert;
  * @author Jeric
  *
  */
-public class MultiTenantDBEvolveManager extends DBEvolveManager {
+public class MultiTenantDBEvolveManager {
 	private static final Logger _log = Logger.getLogger(DBEvolveManager.class);
 	
 	@Autowired
 	protected MultitenantJdbcTemplate jdbcTemplate;
+	
+	@Autowired
+	private DBEvolveManager dbEvolveManager;
 
 	/**
 	 * Evolves the given schema using the same evolve list of the master schema.
@@ -49,7 +52,7 @@ public class MultiTenantDBEvolveManager extends DBEvolveManager {
 		final String originatingSchema = jdbcTemplate.getCurrentSchemaName();
 		_log.debug("Evolving schema [" + schemaName + "]");
 		jdbcTemplate.switchSchema(schemaName);
-		super.evolve();
+		dbEvolveManager.evolve(schemaName);
 		jdbcTemplate.switchSchema(originatingSchema);
 	}
 
