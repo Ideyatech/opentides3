@@ -14,11 +14,7 @@
 		class="org.opentides.persistence.hibernate.MultiTenantIdentifierResolver" />
 
 	<bean id="multiTenantDBEvolveManager"
-		class="org.opentides.persistence.hibernate.MultiTenantDBEvolveManager">
-		<property name="evolveList">
-			<ref bean="evolveList" />
-		</property>
-	</bean>
+		class="org.opentides.persistence.hibernate.MultiTenantDBEvolveManager" />
 	
 	<bean id="jdbcTemplate" class="org.opentides.persistence.jdbc.MultitenantJdbcTemplate" autowire="byName">
 		<property name="dataSource" ref="dataSource" />
