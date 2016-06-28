@@ -34,21 +34,22 @@ public class NotifyDevices implements Runnable {
 	 * @see java.lang.Runnable#run()
 	 */
 	@Override
+	@SuppressWarnings("deprecation")
 	public void run() {		
 		synchronized(lookups) {
 			for (String lookup:lookups) {
-//				_log.info("Trying to notify devices with lookup " + lookup
-//						+ ". Retrieving Broadcaster...");		
-//				
-//				try {
-//		    		ObjectMapper mapper = new ObjectMapper();
-//					SyncMessage syncCommand = new SyncMessage();
-//					syncCommand.setCommand("getVersion");			    		
-//					String jsonString = mapper.writeValueAsString(syncCommand);
-//					MetaBroadcaster.getDefault().broadcastTo(lookup, jsonString);					
-//				} catch (JsonProcessingException e) {
-//					_log.error("Failed to convert to JSON.", e);
-//				}
+				_log.info("Trying to notify devices with lookup " + lookup
+						+ ". Retrieving Broadcaster...");		
+				
+				try {
+		    		ObjectMapper mapper = new ObjectMapper();
+					SyncMessage syncCommand = new SyncMessage();
+					syncCommand.setCommand("getVersion");			    		
+					String jsonString = mapper.writeValueAsString(syncCommand);
+					MetaBroadcaster.getDefault().broadcastTo(lookup, jsonString);					
+				} catch (JsonProcessingException e) {
+					_log.error("Failed to convert to JSON.", e);
+				}
 			}
 			lookups.clear();
 		}

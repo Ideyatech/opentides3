@@ -172,7 +172,7 @@ public class SyncUtil {
 	public static String buildDeleteStatement(BaseEntity obj) {
 		String tableName = SyncUtil.getTableName(obj);
 		StringBuilder sql = new StringBuilder("delete from ");
-		sql.append(tableName).append(" where id=").append(obj.getId());
+		sql.append(tableName).append(" where id=?");
 		return sql.toString();
 	}
 	
