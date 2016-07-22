@@ -71,6 +71,7 @@ public class RequestPasswordController {
 		try {
 			userService.requestPasswordReset(passwd.getEmailAddress());
 			messages.add("msg.instructions-for-reset-sent");
+			model.put("showForm", "hide");
 		} catch (Exception ce) {
 			messages.add("msg.failed-to-send-email");
 		}

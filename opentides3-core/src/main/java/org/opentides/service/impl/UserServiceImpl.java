@@ -440,9 +440,10 @@ public class UserServiceImpl extends BaseCrudServiceImpl<BaseUser> implements
 	@Override
 	public boolean resetPassword(PasswordReset passwd) {
 		// check if password reset is active and not expired
+		_log.info("Password reset is " + passwd);
 		PasswordReset example = new PasswordReset();
 		example.setEmailAddress(passwd.getEmailAddress());
-		example.setToken(passwd.getToken());
+		example.setCipher(passwd.getCipher());
 		example.setStatus("active");
 		List<PasswordReset> actuals = passwordResetDao.findByExample(example,
 				true);

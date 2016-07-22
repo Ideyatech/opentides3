@@ -111,7 +111,7 @@ public class PasswordReset extends BaseEntity {
 	public List<String> getSearchProperties() {
 		List<String> props = new ArrayList<String>();
 		props.add("emailAddress");
-		props.add("token");
+		props.add("cipher");
 		props.add("status");		
 		return props;
 	}
@@ -140,5 +140,13 @@ public class PasswordReset extends BaseEntity {
 		this.confirmPassword = confirmPassword;
 	}
 
-	
+	@Override
+	public String toString() {
+		return "PasswordReset{" +
+				"emailAddress='" + emailAddress + '\'' +
+				", token='" + token + '\'' +
+				", cipher='" + cipher + '\'' +
+				", status='" + status + '\'' +
+				'}';
+	}
 }

@@ -20,7 +20,7 @@
 	
 	<c:forEach var="message" items="${messages}">
 		<div class="alert alert-info">
-			<spring:message code="${message}" />
+			<spring:message code="${message}" text="${message}" />
 		</div>
 	</c:forEach>
 
@@ -29,17 +29,21 @@
 			<c:when test="${action == 'request'}">
 				<form:form commandName="passwordReset"
 					action="${home}/request-password-reset/request">
-					
-					<small>
-						<spring:message code="msg.forgot-password-instructions" />
-					</small>
-					<hr/>
-					<tides:input path="emailAddress" label="label.email-address" />
-					
-					<div class="control-group">
-						<div class="controls pagination-centered">
-							<input type="submit" class="btn btn-info"
-								value="<spring:message code="label.submit" />" />
+
+					<input type="hidden" name="cipher" value="${passwd.cipher}"/>
+
+					<div class="${showForm}">
+						<small>
+							<spring:message code="msg.forgot-password-instructions" />
+						</small>
+						<hr/>
+						<tides:input path="emailAddress" label="label.email-address" />
+
+						<div class="control-group">
+							<div class="controls pagination-centered">
+								<input type="submit" class="btn btn-info"
+									value="<spring:message code="label.submit" />" />
+							</div>
 						</div>
 					</div>
 				</form:form>
@@ -47,6 +51,7 @@
 			<c:when test="${action == 'change'}">
 				<form:form commandName="passwordReset"
 					action="${home}/change-password-reset/change">
+					<form:hidden path="cipher" />
 					<form:hidden path="emailAddress" />
 					
 					<small><spring:message code="msg.change-password-instructions" /></small>
