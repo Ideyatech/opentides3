@@ -76,6 +76,7 @@ public class ChangePasswordController {
 				messages.add(messageSource.getMessage(error, request.getLocale()));
 			}
 			model.put("messages", messages);
+			model.put("success", false);
 			model.put("displayForm", true);
 			return "forgot-password";
 		}
@@ -96,8 +97,10 @@ public class ChangePasswordController {
 
 		if (success) {
 			messages.add("msg.password-change-successful");
+			model.put("success", true);
 		} else {
 			messages.add("error.unauthorized-access-to-change-password");
+			model.put("success", false);
 		}
 		model.put("messages", messages);
 		return "forgot-password";

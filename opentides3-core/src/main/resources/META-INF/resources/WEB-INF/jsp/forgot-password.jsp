@@ -19,7 +19,7 @@
 	<h2><spring:message code="label.forgot-password" /></h2>
 	
 	<c:forEach var="message" items="${messages}">
-		<div class="alert alert-info">
+		<div class="alert ${success ? 'alert-info' : 'alert-error'}">
 			<spring:message code="${message}" text="${message}" />
 		</div>
 	</c:forEach>
