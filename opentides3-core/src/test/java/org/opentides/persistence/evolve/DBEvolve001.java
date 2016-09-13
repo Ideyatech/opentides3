@@ -23,7 +23,7 @@ package org.opentides.persistence.evolve;
  * @author gino
  *
  */
-public class DBEvolve001 implements DBEvolve {
+public class DBEvolve001 extends Evolver {
 
 	@Override
 	public void execute() {
