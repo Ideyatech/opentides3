@@ -1,47 +1,25 @@
 package org.opentides.example.bean;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
+import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.opentides.annotation.Auditable;
 import org.opentides.annotation.PrimaryField;
-import org.opentides.annotation.field.CheckBox;
-import org.opentides.annotation.field.DatePicker;
-import org.opentides.annotation.field.DisplayOnly;
-import org.opentides.annotation.field.TextArea;
-import org.opentides.annotation.field.TextField;
-import org.opentides.annotation.field.Validation;
-import org.opentides.bean.BaseEntity;
-import org.opentides.bean.Comment;
-import org.opentides.bean.Commentable;
-import org.opentides.bean.ImageInfo;
-import org.opentides.bean.ImageUploadable;
-import org.opentides.bean.SystemCodes;
-import org.opentides.bean.Tag;
-import org.opentides.bean.Taggable;
+import org.opentides.annotation.field.*;
+import org.opentides.bean.*;
 import org.opentides.util.StringUtil;
 import org.opentides.web.json.Views;
 import org.opentides.web.json.serializer.TagsSerializer;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.fasterxml.jackson.annotation.JsonView;
+import javax.persistence.*;
+import javax.persistence.JoinTable;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
+
 //import org.opentides.annotation.Secure;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 /**
  * This is the master class for testing all annotations
@@ -57,7 +35,7 @@ public class Ninja extends BaseEntity implements Commentable, ImageUploadable, T
 	// Label: specified
 	// Validation: required
 	// Use: crud, search criteria
-	@Validation({"required", "maxLength=128"})
+	@Validation(isRequired = true, maxLength = 128)
 	@Column(name = "FIRST_NAME", nullable=false)
 	@JsonView(Views.FormView.class)
 	@TextField(label="Name", isSearchCriteria=true)
@@ -67,7 +45,7 @@ public class Ninja extends BaseEntity implements Commentable, ImageUploadable, T
 	// Label: default
 	// Validation: required
 	// Use: crud, search criteria
-	@Validation({"required"})
+	@Validation(isRequired = true)
 	@TextField(isSearchCriteria=true)
 	@Column(name = "LAST_NAME", nullable=false)
 	@JsonView(Views.FormView.class)
@@ -77,7 +55,7 @@ public class Ninja extends BaseEntity implements Commentable, ImageUploadable, T
 	// Label: specified
 	// Validation: email, required
 	// Use: crud, search criteria, search results
-	@Validation({"required", "email"})
+	@Validation(isRequired = true, isEmailFormat = true)
 	@TextField(label="Email Address", isSearchCriteria=true, isSearchResult=true)
 	@Column(name="EMAIL", nullable=false)	
 	@JsonView(Views.SearchView.class)
@@ -91,7 +69,7 @@ public class Ninja extends BaseEntity implements Commentable, ImageUploadable, T
 	@TextArea
 	private String description;
 	
-	@Validation({"number","min=17","max=65"})
+	@Validation(minAllowValue = 17, maxAllowValue = 65)
 	@JsonView(Views.SearchView.class)
 	private Integer age;
 	
@@ -106,7 +84,7 @@ public class Ninja extends BaseEntity implements Commentable, ImageUploadable, T
 	// Label: specified
 	// Validation: today or past date
 	// Use: crud
-	@Validation({"required","past"})
+	@Validation(isRequired = true, rejectPastDate = true)
 	@DatePicker
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonView(Views.SearchView.class)
@@ -116,7 +94,7 @@ public class Ninja extends BaseEntity implements Commentable, ImageUploadable, T
 	// Validation: none
 	// Use: crud
 	// Secured to authz only
-	@CheckBox
+	@Checkbox
 	//@Secure
 	@JsonView(Views.SearchView.class)
 	private Boolean active;
@@ -162,7 +140,7 @@ public class Ninja extends BaseEntity implements Commentable, ImageUploadable, T
 	
 	// Radiobutton
 	// Searchable
-	@Validation({"required"})
+	@Validation(isRequired = true)
 	@JsonView(Views.FormView.class)
 	private String gender;
 	

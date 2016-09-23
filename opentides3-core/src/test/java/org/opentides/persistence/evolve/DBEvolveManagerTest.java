@@ -115,7 +115,7 @@ public class DBEvolveManagerTest {
 		
 		when(sequenceDao.loadSequenceByKey("DB_VERSION")).thenReturn(dbVersion);
 		
-		manager.setEvolveList(new ArrayList<DBEvolve>());
+		manager.setEvolveList(new ArrayList<Evolver>());
 		manager.evolve();
 		
 		/*
@@ -139,15 +139,15 @@ public class DBEvolveManagerTest {
 		
 	}
 	
-	private List<DBEvolve> getDbEvolveList() {
-		List<DBEvolve> dbEvolveList = new ArrayList<>();
+	private List<Evolver> getDbEvolveList() {
+		List<Evolver> dbEvolveList = new ArrayList<>();
 		dbEvolveList.add(new DBEvolve001());
 		dbEvolveList.add(new DBEvolve002());
 		return dbEvolveList;
 	}
 	
-	private List<DBEvolve> getDuplicateDbEvolveList() {
-		List<DBEvolve> dbEvolveList = new ArrayList<>();
+	private List<Evolver> getDuplicateDbEvolveList() {
+		List<Evolver> dbEvolveList = new ArrayList<>();
 		dbEvolveList.add(new DBEvolve001());
 		dbEvolveList.add(new DBEvolve001());
 		dbEvolveList.add(new DBEvolve002());

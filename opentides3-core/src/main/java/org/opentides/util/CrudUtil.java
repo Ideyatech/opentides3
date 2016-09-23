@@ -138,6 +138,25 @@ public class CrudUtil {
 		return updatedFields;
 	}
 
+	public static String convertAuditableFieldsToJson(BaseEntity obj) {
+		StringBuilder sb = new StringBuilder();
+		final AuditableField pf = CacheUtil.getPrimaryField(obj);
+
+		// loop through the fields list
+		final List<AuditableField> auditFields = CacheUtil
+				.getAuditable(obj);
+
+		for (final AuditableField property : auditFields) {
+			Object ret = retrieveNullableObjectValue(obj,
+					property.getFieldName());
+			ret = normalizeValue(ret);
+
+
+		}
+
+		return sb.toString();
+	}
+
 	/**
 	 * Creates the logging message for update audit logs
 	 * 

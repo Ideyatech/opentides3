@@ -26,6 +26,7 @@
 		<module>opentides3-multitenant</module>
 		<module>opentides3-mobilesync</module>
 		<module>opentides3-dashboard</module>
+		<module>opentides3-couchbase</module>
 	</modules>
 
 	<dependencyManagement>
