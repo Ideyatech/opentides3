@@ -7,8 +7,6 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 import org.opentides.bean.SystemCodes;
-import org.opentides.util.DateUtil;
-import org.opentides.util.SyncUtil;
 
 public class SyncUtilTest {
 
