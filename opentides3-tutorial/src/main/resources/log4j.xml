@@ -11,7 +11,7 @@
 	</appender>
 	
 	<!-- Application Loggers -->	
-	<logger name="org.opentides.context.support.PatternResourceBundleMessageSource">
+	<!--<logger name="org.opentides.context.support.PatternResourceBundleMessageSource">
 		<level value="info" />
 	</logger>
 
@@ -19,7 +19,7 @@
 		<level value="debug" />
 	</logger>
  	
-	<!-- 3rdparty Loggers -->
+	&lt;!&ndash; 3rdparty Loggers &ndash;&gt;
 	<logger name="org.springframework.core">
 		<level value="debug" />
 	</logger>
@@ -38,7 +38,7 @@
 
 	<logger name="org.springframework.orm.jpa.JpaTransactionManager">
 		<level value="debug" />
-	</logger>
+	</logger>-->
 	
 
 	<!-- Root Logger -->
