@@ -10,13 +10,16 @@ import javax.servlet.http.HttpServletRequest;
 import org.opentides.annotation.Valid;
 import org.opentides.bean.MessageResponse;
 import org.opentides.bean.user.BaseUser;
+import org.opentides.bean.user.PasswordReset;
 import org.opentides.service.UserService;
 import org.opentides.util.CrudUtil;
+import org.opentides.web.validator.ChangePasswordValidator;
 import org.opentides.web.validator.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -38,9 +41,17 @@ public class UserAccountSettingsController {
 	@Autowired
 	private UserValidator userValidator;
 	
+	@Autowired
+	private ChangePasswordValidator passwordValidator;
+	
 	@ModelAttribute("user")
 	private BaseUser formBackingObject() {
 		return userService.getCurrentUser();
+	}
+	
+	@ModelAttribute("passwordReset")
+	private PasswordReset newPasswordReset() {
+		return new PasswordReset();
 	}
 	
 	@RequestMapping(method = RequestMethod.GET)
@@ -70,14 +81,17 @@ public class UserAccountSettingsController {
 	}
 	
 	@RequestMapping(method = RequestMethod.POST, value="/change-password", produces = "application/json")
-	public @ResponseBody Map<String, Object> changePassword(@Valid @ModelAttribute("user") BaseUser user,
-			BindingResult result, HttpServletRequest request) {
+	public @ResponseBody Map<String, Object> changePassword(@ModelAttribute("user") BaseUser user, 
+			@ModelAttribute("passwordReset") PasswordReset passwordReset, HttpServletRequest request) {
 		
 		Map<String, Object> model = new HashMap<String, Object>();
 		List<MessageResponse> messages = new ArrayList<MessageResponse>();
 		
-		if(result.hasErrors()) {
-			messages.addAll(CrudUtil.convertErrorMessage(result,
+		BindException errors = new BindException(passwordReset, "passwordReset");
+		passwordValidator.validate(passwordReset, errors);
+		
+		if(errors.hasErrors()) {
+			messages.addAll(CrudUtil.convertErrorMessage(errors,
 					request.getLocale(), messageSource));
 			model.put("messages", messages);
 			return model;
@@ -94,7 +108,7 @@ public class UserAccountSettingsController {
 		return model;
 	}
 
-	@InitBinder
+	@InitBinder("user")
 	protected void initBinder(WebDataBinder binder){
 		binder.setValidator(userValidator);
 	}
