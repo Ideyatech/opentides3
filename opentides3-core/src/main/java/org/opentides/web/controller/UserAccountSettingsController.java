@@ -87,6 +87,7 @@ public class UserAccountSettingsController {
 		Map<String, Object> model = new HashMap<String, Object>();
 		List<MessageResponse> messages = new ArrayList<MessageResponse>();
 		
+		passwordReset.setEmailAddress(user.getEmailAddress());
 		BindException errors = new BindException(passwordReset, "passwordReset");
 		passwordValidator.validate(passwordReset, errors);
 		
@@ -98,7 +99,7 @@ public class UserAccountSettingsController {
 		}
 		
 		user.getCredential().setPassword(
-				userService.encryptPassword(user.getCredential().getNewPassword())
+				userService.encryptPassword(passwordReset.getPassword())
 				);
 		
 		userService.save(user);
