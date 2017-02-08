@@ -45,7 +45,7 @@ public class UserGroupValidator implements Validator {
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "name", "error.required", new Object[]{"Name"});
 		UserGroup lookFor = new UserGroup();
         lookFor.setName(userGroup.getName());
-        List<UserGroup> groups = userGroupService.findByExample(lookFor);
+        List<UserGroup> groups = userGroupService.findByExample(lookFor, true);
         if(groups != null && !groups.isEmpty()) {
         	if(userGroup.isNew()) {
         		errors.reject("error.user-group.duplicate", new Object[]{userGroup.getName()},userGroup.getName());
