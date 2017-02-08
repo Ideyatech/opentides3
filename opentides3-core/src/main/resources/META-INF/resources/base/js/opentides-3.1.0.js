@@ -652,7 +652,8 @@ var opentides3 = (function() {
 			'add'        : '.add-action',
 			'edit'       : '.edit-action',
 			'display'  	 : '.view-action',
-			'remove'     : '.remove-action'
+			'remove'     : '.remove-action',
+			'onEntityLoaded' : function(data) {}
 		}, options);
 
 		return this
@@ -862,6 +863,10 @@ var opentides3 = (function() {
 						"", // data
 						function(json) { // callback
 							displayForm('update', form, path, json)
+							var onEntityLoaded = settings['onEntityLoaded'];
+							if(onEntityLoaded) {
+								onEntityLoaded(json);
+							}
 							if (form.hasClass('modal'))
 								form.modal();
 							else if (form.hasClass('page')) {
