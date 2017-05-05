@@ -118,7 +118,12 @@ public class AuditLogDaoImpl extends BaseEntityDaoJpaImpl<AuditLog, Long> implem
 			em.persist(record);
 			em.flush(); 
 			em.getTransaction().commit();
-		} finally {
+		} catch(Exception e){
+			if(em != null){
+				em.getTransaction().rollback();
+			}
+		}
+		finally {
 			if(em != null && em.isOpen()) {
 				em.close(); 
 			}
