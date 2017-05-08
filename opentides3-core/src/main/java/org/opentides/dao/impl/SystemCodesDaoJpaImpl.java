@@ -54,7 +54,7 @@ public class SystemCodesDaoJpaImpl extends BaseEntityDaoJpaImpl<SystemCodes, Lon
 	public SystemCodes loadBySystemCodesByKey(String key) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("keyName", key);
-		map.put("hint.org.hibernate.cacheable", true);
+		//map.put("hint.org.hibernate.cacheable", true);
 		return findSingleResultByNamedQuery("jpql.systemcodes.findByKey", map);
 	}
 	
