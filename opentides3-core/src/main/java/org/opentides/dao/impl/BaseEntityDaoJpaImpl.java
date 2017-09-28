@@ -307,6 +307,7 @@ public class BaseEntityDaoJpaImpl<T extends BaseEntity,ID extends Serializable>
 	 */
 	@Override	
 	public final long countByExample(final T example, final boolean exactMatch) {
+		String joinClause = appendJoinToExample(example);
 		String whereClause = CrudUtil.buildJpaQueryString(example, exactMatch);
 		String filterClause = this.buildSecurityFilterClause(example);
 		String append = appendClauseToExample(example, exactMatch);
@@ -314,7 +315,7 @@ public class BaseEntityDaoJpaImpl<T extends BaseEntity,ID extends Serializable>
 		whereClause = doSQLAppend(whereClause, filterClause);
 		if (_log.isDebugEnabled()) _log.debug("Count QBE >> "+whereClause);
 		String sql = "select count(obj) from " + 
-				getEntityBeanType().getName() + " obj " + whereClause;
+				getEntityBeanType().getName() + " obj " + joinClause + whereClause;
 		Query query = getEntityManager().createQuery(sql);
 		setQueryParameters(query, sql, example);
 		setHints(example, query);
