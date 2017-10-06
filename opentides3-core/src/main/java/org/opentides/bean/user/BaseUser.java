@@ -77,7 +77,7 @@ public class BaseUser extends BaseEntity implements ImageUploadable {
 	@JsonView(Views.FormView.class)
 	private String middleName;
 
-	@Column(name = "EMAIL", unique=true)
+	@Column(name = "EMAIL")
 	@JsonView(Views.SearchView.class)
 	private String emailAddress;
 	
