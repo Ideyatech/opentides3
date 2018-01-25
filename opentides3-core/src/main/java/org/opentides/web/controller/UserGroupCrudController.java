@@ -36,6 +36,10 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
+
+import org.opentides.web.event.UserGroupChangeEvent;
 
 /**
  * This is the controller class for {@link UserGroup}. It extends the
@@ -45,14 +49,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Controller 
 @RequestMapping("/organization/usergroups")
-public class UserGroupCrudController extends BaseCrudController<UserGroup> {
+public class UserGroupCrudController extends BaseCrudController<UserGroup> implements ApplicationEventPublisherAware {
 	
 	@Autowired
 	private UserGroupValidator userGroupValidator;
 	
+	private ApplicationEventPublisher publisher;
+	
 	@InitBinder("formCommand")
     protected void transactionInitBinder(WebDataBinder binder) {
         binder.setValidator(userGroupValidator);
+    }
+	
+	@Override
+	public void setApplicationEventPublisher(ApplicationEventPublisher publisher) {
+        this.publisher = publisher;
     }
 
 	/**
@@ -119,6 +130,8 @@ public class UserGroupCrudController extends BaseCrudController<UserGroup> {
 	protected void postUpdate(UserGroup command) {
 		if(command.getIsDefault() != null && command.getIsDefault())
 			((UserGroupService) getService()).removeOldDefaultUserGroup(command.getId());
+		
+		publisher.publishEvent(new UserGroupChangeEvent(this, command.getOldName(), command.getName()));
 	}
 
 	/**
