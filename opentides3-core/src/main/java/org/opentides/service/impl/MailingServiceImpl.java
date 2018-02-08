@@ -45,10 +45,10 @@ public class MailingServiceImpl implements MailingService {
 	@Autowired(required = false)
 	private TaskExecutor taskExecutor;
 	
-	@Value("#{applicationSettings['mail.server.username']}")
+	@Value("${mail.server.username:#{applicationSettings['mail.server.username']}}")
 	private String adminEmail;
 	
-	@Value("#{applicationSettings['mail.server.password']}")
+	@Value("${mail.server.password:#{applicationSettings['mail.server.password']}}")
 	private String adminPassword;
 	
 	@Value("#{applicationSettings['mail.server.domain']}")
