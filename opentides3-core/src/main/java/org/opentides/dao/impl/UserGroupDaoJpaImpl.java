@@ -79,6 +79,7 @@ public class UserGroupDaoJpaImpl extends BaseEntityDaoJpaImpl<UserGroup, Long>
 	public UserGroup loadUserGroupByName(String name){
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("name", name);
+		map.put("hint.org.hibernate.cacheable", true);
 		List<UserGroup> list = findByNamedQuery("jpql.usergroup.findByName", map);
 		if (list == null || list.size() == 0)
 			return null;

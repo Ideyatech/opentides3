@@ -78,6 +78,10 @@ public class UserGroup extends BaseEntity{
 	
 	@Transient
 	private transient Map<String, String> userAuthorityMap; // user for permission matrix in UI
+	
+	@Transient
+	@JsonView(Views.FormView.class)
+	private String oldName;
 
 	public UserGroup() {
 		authorities = new HashSet<UserAuthority>();
@@ -325,4 +329,13 @@ public class UserGroup extends BaseEntity{
 		return true;
 	}
 
+	public String getOldName() {
+		if(StringUtil.isEmpty(oldName))
+			return name;
+		return oldName;
+	}
+	
+	public void setOldName(String oldName) {
+		this.oldName = oldName;
+	}
 }
