@@ -26,12 +26,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 public class HomeController {
 
-	@RequestMapping(value="/", method=RequestMethod.GET)
+	@RequestMapping(value="/", method = {RequestMethod.GET, RequestMethod.HEAD})
 	public String index() {
 		return "home";
 	}
 	
-	@RequestMapping(value="/login", method=RequestMethod.GET)
+	@RequestMapping(value="/login", method={RequestMethod.GET, RequestMethod.HEAD})
 	public String login() {
 		return "login";
 	}
