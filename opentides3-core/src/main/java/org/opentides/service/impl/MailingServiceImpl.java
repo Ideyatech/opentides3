@@ -104,7 +104,7 @@ public class MailingServiceImpl implements MailingService {
 				//message.setReplyTo(new InternetAddress[]{new InternetAddress(mailFromEmail)});
 			}
 			
-			//message.setSender(new InternetAddress(mailFromEmail, adminEmail));
+			message.setSender(new InternetAddress(mailFromEmail, adminEmail));
 			for (String addr : toEmail) {
 				message.addRecipient(RecipientType.TO,
 						new InternetAddress(addr));
