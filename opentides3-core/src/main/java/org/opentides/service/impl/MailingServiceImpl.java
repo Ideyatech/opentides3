@@ -29,6 +29,8 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 
+import org.opentides.util.ValidatorUtil;
+
 /**
  * 
  * @author AJ
@@ -60,6 +62,9 @@ public class MailingServiceImpl implements MailingService {
 	@Value("#{applicationSettings['mail.from-name']}")
 	private String mailFrom;
 	
+	@Value("#{applicationSettings['mail.from-email-address']}")
+	private String mailFromEmail;
+	
 	@Value("#{applicationSettings['application.name']}")
 	private String applicationName;
 
@@ -86,12 +91,20 @@ public class MailingServiceImpl implements MailingService {
             }
         });
 		
-		Message message = new MimeMessage(session);
+		MimeMessage message = new MimeMessage(session);
 		Multipart multipart = new MimeMultipart();
 		MimeBodyPart htmlPart = new MimeBodyPart();
 
 		try {
-			message.setFrom(new InternetAddress(adminEmail, fromMail));
+			if(ValidatorUtil.isEmail(fromMail)){
+				message.setFrom(new InternetAddress(fromMail, adminEmail));
+				message.setReplyTo(new InternetAddress[]{new InternetAddress(fromMail)});
+			} else{
+				message.setFrom(new InternetAddress(mailFromEmail, fromMail));
+				message.setReplyTo(new InternetAddress[]{new InternetAddress(mailFromEmail)});
+			}
+			
+			message.setSender(new InternetAddress(mailFromEmail, adminEmail));
 			for (String addr : toEmail) {
 				message.addRecipient(RecipientType.TO,
 						new InternetAddress(addr));
