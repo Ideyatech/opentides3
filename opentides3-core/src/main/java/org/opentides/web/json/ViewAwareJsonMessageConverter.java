@@ -41,8 +41,13 @@ public class ViewAwareJsonMessageConverter extends
 				super.writeInternal(object, outputMessage);
 			}
 		} catch (Exception e) {
-			_log.error("Failed to convert object to json.", e);
-			throw e;
+			if (e.getMessage() != null && e.getMessage().contains("Connection remotely closed for")) {
+			    // Ignore https://github.com/Atmosphere/atmosphere/issues/1788
+				_log.info("Atmosphere error " + e.getMessage());
+			} else {
+				_log.error("Failed to convert object to json.", e);
+				throw e;
+			}
 		}
 	}		
 
