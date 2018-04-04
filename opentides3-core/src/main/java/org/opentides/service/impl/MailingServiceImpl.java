@@ -97,7 +97,7 @@ public class MailingServiceImpl implements MailingService {
 
 		try {
 			if(ValidatorUtil.isEmail(fromMail)){
-				message.setFrom(new InternetAddress(fromMail, adminEmail));
+				message.setFrom(new InternetAddress(fromMail, mailFrom));
 				//message.setReplyTo(new InternetAddress[]{new InternetAddress(fromMail)});
 			} else{
 				message.setFrom(new InternetAddress(mailFromEmail, fromMail));
